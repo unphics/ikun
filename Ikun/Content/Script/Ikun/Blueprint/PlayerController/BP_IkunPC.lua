@@ -48,18 +48,15 @@ end
 ]]
 
 local EnhancedInput = require("UnLua.EnhancedInput")
+
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Test.IA_Test', 'Triggered', 
     function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         log.warn('不知道为啥数值总是不对', ActionValue) -- UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D(ActionValue)
     end)
-
-local EnhancedInput = require("UnLua.EnhancedInput")
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move', 'Triggered', 
     function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-        log.warn('move input', ActionValue.X, ActionValue.Y) -- UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D(ActionValue)
+        log.warn('move input 好像数值挺对的', ActionValue.X, ActionValue.Y) -- UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D(ActionValue)
     end)
-
-local EnhancedInput = require("UnLua.EnhancedInput")
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Look.IA_Look', 'Triggered', 
     function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         log.warn('look input', ActionValue.X, ActionValue.Y) -- UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D(ActionValue)
