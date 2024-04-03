@@ -13,6 +13,33 @@ function BP_IkunPC:UserConstructionScript()
 end
 
 function BP_IkunPC:ReceiveBeginPlay()
+    self:InitEnhancedInput()
+    self:InitCamera()
+end
+
+-- function BP_IkunPC:ReceiveEndPlay()
+-- end
+
+function BP_IkunPC:ReceiveTick(DeltaSeconds)
+end
+
+-- function BP_IkunPC:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
+-- end
+
+-- function BP_IkunPC:ReceiveActorBeginOverlap(OtherActor)
+-- end
+
+-- function BP_IkunPC:ReceiveActorEndOverlap(OtherActor)
+-- end
+
+function BP_IkunPC:ReceivePossess(PossessedPawn)
+    if PossessedPawn:Cast(BP_ChrBase) then
+        self.OwnerChr = PossessedPawn
+    end
+end
+
+---@private
+function BP_IkunPC:InitEnhancedInput()
     ---@type UEnhancedInputLocalPlayerSubsystem
     local EnhancedInputSystem = UE.USubsystemBlueprintLibrary.GetLocalPlayerSubSystemFromPlayerController(self, UE.UEnhancedInputLocalPlayerSubsystem)
     if EnhancedInputSystem then
@@ -30,30 +57,19 @@ function BP_IkunPC:ReceiveBeginPlay()
     end
 end
 
--- function BP_IkunPC:ReceiveEndPlay()
--- end
-
--- function BP_IkunPC:ReceiveTick(DeltaSeconds)
--- end
-
--- function BP_IkunPC:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
--- end
-
--- function BP_IkunPC:ReceiveActorBeginOverlap(OtherActor)
--- end
-
--- function BP_IkunPC:ReceiveActorEndOverlap(OtherActor)
--- end
-
-function BP_IkunPC:ReceivePossess(PossessedPawn)
-    if PossessedPawn:Cast(BP_ChrBase) then
-        self.OwnerChr = PossessedPawn
-    end
+---@private
+function BP_IkunPC:InitCamera()
+    local SpawnParams = UE.FSpawnParamters()
+    SpawnParams.CollisionHandling = UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn
+    SpawnParams.Instigator = self:Cast(UE.APawn)
+    local CameraClass = UE.UClass.Load('/Game/Ikun/Blueprint/Camera/BP_Camera.BP_Camera_C')
+    local Transform = self:GetTransform()
+    local AlwaysSpawn = UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn
+    self:GetWorld():SpawnActor(CameraClass, Transform, AlwaysSpawn, self, self, "")
 end
 
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move', 'Triggered', 
     function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-        -- log.warn('move input', ActionValue.X, ActionValue.Y)
         local PC = SourceObj
         local Rot = PC:GetControlRotation()
         local YawRot = UE.FRotator(0, Rot.Yaw, 0)

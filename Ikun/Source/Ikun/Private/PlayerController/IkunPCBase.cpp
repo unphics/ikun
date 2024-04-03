@@ -25,18 +25,3 @@ void AIkunPCBase::Tick(float DeltaTime) {
 void AIkunPCBase::SetupInputComponent() {
 	Super::SetupInputComponent();
 }
-
-void AIkunPCBase::InitCamera() {
-	FActorSpawnParameters SpawnParam;
-	SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	auto location = this->K2_GetActorLocation();
-	auto rotation = this->K2_GetActorRotation();
-	this->ViewCamera = Cast<AIkunCameraBase>(GetWorld()->SpawnActor(this->CameraActorClass, &location, &rotation, SpawnParam));
-	if (this->ViewCamera) {
-		this->SetViewTarget(this->ViewCamera);
-		FAttachmentTransformRules AttachRule(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
-		this->ViewCamera->AttachToActor(this, AttachRule);
-	} else {
-		UE_LOG(LogTemp, Error, TEXT("Failed To Spawn Player Camera !!"))
-	}
-}
