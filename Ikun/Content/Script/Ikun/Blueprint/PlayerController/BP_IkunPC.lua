@@ -1,13 +1,21 @@
+local BP_ChrBase = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/BP_ChrBase.BP_ChrBase_C')
+local EnhancedInput = require("UnLua.EnhancedInput")
+
 ---@class BP_IkunPC: BP_IkunPC_C
+---@field OwnerChr BP_ChrBase
 local BP_IkunPC = UnLua.Class()
 
 -- function BP_IkunPC:Initialize(Initializer)
 -- end
 
--- function BP_IkunPC:UserConstructionScript()
--- end
+
+
+
+function BP_IkunPC:UserConstructionScript()
+end
 
 function BP_IkunPC:ReceiveBeginPlay()
+    self.aaa = 2222
     ---@type UEnhancedInputLocalPlayerSubsystem
     local EnhancedInputSystem = UE.USubsystemBlueprintLibrary.GetLocalPlayerSubSystemFromPlayerController(self, UE.UEnhancedInputLocalPlayerSubsystem)
     if EnhancedInputSystem then
@@ -24,6 +32,22 @@ function BP_IkunPC:ReceiveBeginPlay()
         end
     end
 end
+EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move', 'Triggered', 
+function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+    log.warn('move input', ActionValue.X, ActionValue.Y)
+    local a = SourceObj.aaa
+    do
+        local PC = SourceObj
+        local Rot = PC:GetControlRotation()
+        local YawRot = UE.FRotator(0, Rot.Yaw, 0)
+        local Forward = YawRot:GetForwardVector()
+        if PC.OwnerChr then
+            local b = PC.OwnerChr.aaa
+            -- PC.OwnerChr:MoveForwardBack(Forward, ActionValue)
+            PC.OwnerChr:func()
+        end
+    end
+end)
 
 -- function BP_IkunPC:ReceiveEndPlay()
 -- end
@@ -40,13 +64,19 @@ end
 -- function BP_IkunPC:ReceiveActorEndOverlap(OtherActor)
 -- end
 
+function BP_IkunPC:ReceivePossess(PossessedPawn)
+    if PossessedPawn:Cast(BP_ChrBase) then
+        self.OwnerChr = PossessedPawn
+    end
+end
+
 --[[
     UE.UEnhancedInputLibrary.Conv_InputActionValueToBool
     UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis1D
     UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D
     UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis3D
 ]]
-
+--[[
 local EnhancedInput = require("UnLua.EnhancedInput")
 
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Test.IA_Test', 'Triggered', 
@@ -56,10 +86,20 @@ EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Test.IA_Te
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move', 'Triggered', 
     function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         log.warn('move input 好像数值挺对的', ActionValue.X, ActionValue.Y) -- UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D(ActionValue)
+        do
+            local PC = UE.UGameplayStatics.GetPlayerController(nil, 0)
+            local Rot = PC:GetControlRotation()
+            local YawRot = UE.FRotator(0, Rot.Yaw, 0)
+            local Forward = YawRot:GetForwardVector()
+            if PC.OwnerChr then
+                PC.OwnerChr:MoveForwardBack(Forward, ActionValue)
+            end
+        end
+
     end)
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Look.IA_Look', 'Triggered', 
     function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         log.warn('look input', ActionValue.X, ActionValue.Y) -- UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D(ActionValue)
     end)
-
+]]
 return BP_IkunPC

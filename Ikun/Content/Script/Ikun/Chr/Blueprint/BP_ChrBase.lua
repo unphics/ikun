@@ -14,8 +14,10 @@ local BP_ChrBase = UnLua.Class()
 -- function BP_ChrBase:UserConstructionScript()
 -- end
 
--- function BP_ChrBase:ReceiveBeginPlay()
--- end
+function BP_ChrBase:ReceiveBeginPlay()
+    log.error("BP_ChrBase:ReceiveBeginPlay")
+    self.aaa = 11111
+end
 
 -- function BP_ChrBase:ReceiveEndPlay()
 -- end
@@ -32,6 +34,14 @@ end
 
 -- function BP_ChrBase:ReceiveActorEndOverlap(OtherActor)
 -- end
+
+-- function BP_ChrBase:func()
+--     log.error("BP_ChrBase:func")
+-- end
+
+BP_ChrBase.func = function(self)
+    log.error("BP_ChrBase:func")
+end
 
 ---@public 前后移动输入
 ---@param Fwd FVector
