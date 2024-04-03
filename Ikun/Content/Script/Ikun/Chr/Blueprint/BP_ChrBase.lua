@@ -15,8 +15,6 @@ local BP_ChrBase = UnLua.Class()
 -- end
 
 function BP_ChrBase:ReceiveBeginPlay()
-    log.error("BP_ChrBase:ReceiveBeginPlay")
-    self.aaa = 11111
 end
 
 -- function BP_ChrBase:ReceiveEndPlay()
@@ -35,19 +33,11 @@ end
 -- function BP_ChrBase:ReceiveActorEndOverlap(OtherActor)
 -- end
 
--- function BP_ChrBase:func()
---     log.error("BP_ChrBase:func")
--- end
-
-BP_ChrBase.func = function(self)
-    log.error("BP_ChrBase:func")
-end
-
 ---@public 前后移动输入
 ---@param Fwd FVector
 ---@param Val number
-function BP_ChrBase:MoveForwardBack(Fwd, Val)
-    self.Overridden.MoveForwardBack(self, Fwd, Val)
+BP_ChrBase.MoveForwardBack = function(self, Fwd, Val)
+    -- self.Overridden.MoveForwardBack(self, Fwd, Val)
     local Rot = self:GetControlRotation()
     local YawRot = UE.FRotator(0, Rot.Yaw, 0)
     local Forward = YawRot:GetForwardVector()
@@ -57,8 +47,8 @@ end
 ---@public 左右移动输入
 ---@param Fwd FVector
 ---@param Val number
-function BP_ChrBase:MoveRightLeft(Fwd, Val)
-    self.Overridden.MoveRightLeft(self, Fwd, Val)
+BP_ChrBase.MoveRightLeft = function(self, Fwd, Val)
+    -- self.Overridden.MoveRightLeft(self, Fwd, Val)
     local Rot = self:GetControlRotation()
     local YawRot = UE.FRotator(0, Rot.Yaw, 0)
     local Right = YawRot:GetRightVector()
