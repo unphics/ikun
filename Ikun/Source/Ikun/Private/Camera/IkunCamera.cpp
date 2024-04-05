@@ -14,7 +14,7 @@ AIkunCamera::AIkunCamera() {
 	this->SpringArmComp = this->CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
 	this->SpringArmComp->SetupAttachment(this->RootComponent);
 	this->SpringArmComp->bUsePawnControlRotation = true;
-	this->SpringArmComp->TargetArmLength = 250.0f;
+	this->SpringArmComp->TargetArmLength = 350.0f;
 	this->SpringArmComp->SocketOffset = FVector(0.0f, 0.0f, 90.0f);
 	this->SpringArmComp->bDoCollisionTest = false;
 	

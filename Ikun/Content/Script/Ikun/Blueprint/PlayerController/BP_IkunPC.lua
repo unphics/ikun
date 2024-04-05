@@ -65,7 +65,9 @@ function BP_IkunPC:InitCamera()
     local CameraClass = UE.UClass.Load('/Game/Ikun/Blueprint/Camera/BP_Camera.BP_Camera_C')
     local Transform = self:GetTransform()
     local AlwaysSpawn = UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn
-    self:GetWorld():SpawnActor(CameraClass, Transform, AlwaysSpawn, self, self, "")
+    local Camera = self:GetWorld():SpawnActor(CameraClass, Transform, AlwaysSpawn, self, self, "")
+    self:SetViewTargetWithBlend(Camera)
+    Camera:K2_AttachToActor(self, nil, UE.EAttachmentRule.SnapToTarget, UE.EAttachmentRule.SnapToTarget, UE.EAttachmentRule.SnapToTarget, true)
 end
 
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move', 'Triggered', 
