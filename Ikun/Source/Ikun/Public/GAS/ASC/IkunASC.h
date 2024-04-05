@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "IkunASC.generated.h"
 
+class UIkunGABase;
 /**
  * 
  */
@@ -17,4 +18,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	static UIkunASC* GetAscFromActor(const AActor* Actor, bool bLookForComp = false);
+	UFUNCTION(BlueprintCallable)
+	void GetActivateAbilitiesWithTag(const FGameplayTagContainer& GameplayTagContainer, TArray<UIkunGABase*>& ActiveAbilities);
+	
 };

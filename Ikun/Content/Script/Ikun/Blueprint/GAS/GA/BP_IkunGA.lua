@@ -6,7 +6,7 @@
 -- @DATE ${date} ${time}
 --
 
----@type GA_Born_C
+---@type BP_IkunGA_C
 local M = UnLua.Class()
 
 return M

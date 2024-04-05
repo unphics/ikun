@@ -16,11 +16,9 @@ local M = UnLua.Class()
 -- end
 
 function M:ReceiveBeginPlay()
-    self:InitMainUI()
     if self:HasAuthority() then
-
     else
-
+        self:InitMainUI()
     end
 end
 
