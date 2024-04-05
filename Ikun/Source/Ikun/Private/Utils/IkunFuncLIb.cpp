@@ -1,18 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Utils/IkunFuncLIb.h"
+#include "Utils/IkunFuncLib.h"
 
 #include "EnhancedInputComponent.h"
 #include "GameplayTagContainer.h"
 #include "Blueprint/UserWidget.h"
 #include "Utils/UtilType.h"
 
-UUserWidget* UIkunFuncLIb::CreateWidget(UWorld* World, UClass* Class) {
+UUserWidget* UIkunFuncLib::CreateWidget(UWorld* World, UClass* Class) {
 	return ::CreateWidget<UUserWidget>(World, Class);
 }
 
-void UIkunFuncLIb::BindAction(UEnhancedInputComponent* EnhancedInputComp, const UInputAction* Action,
+void UIkunFuncLib::BindAction(UEnhancedInputComponent* EnhancedInputComp, const UInputAction* Action,
 	ETriggerEvent TriggerEvent, UObject* Object, FName FunctionName) {
 	FEnhancedInputActionEventBinding& binding = EnhancedInputComp->BindAction(Action, TriggerEvent, Object, FunctionName);
 	if (&binding == nullptr) {
@@ -20,15 +20,15 @@ void UIkunFuncLIb::BindAction(UEnhancedInputComponent* EnhancedInputComp, const 
 	}
 }
 
-FGameplayTag UIkunFuncLIb::RequestGameplayTag(FName TagName) {
+FGameplayTag UIkunFuncLib::RequestGameplayTag(FName TagName) {
 	return FGameplayTag::RequestGameplayTag(TagName);
 }
 
-void UIkunFuncLIb::AddTagToContainer(FGameplayTagContainer& Container, FGameplayTag& Tag) {
+void UIkunFuncLib::AddTagToContainer(FGameplayTagContainer& Container, FGameplayTag& Tag) {
 	Container.AddTag(Tag);
 }
 
-AActor* UIkunFuncLIb::SpawnActor(UWorld* World, UClass* Class, FTransform Transform, const FSpawnParamters& Param) {
+AActor* UIkunFuncLib::SpawnActor(UWorld* World, UClass* Class, FTransform Transform, const FSpawnParamters& Param) {
 	FActorSpawnParameters param;
 	param.Name = Param.Name;
 	param.Owner = Param.Owner;
@@ -39,6 +39,6 @@ AActor* UIkunFuncLIb::SpawnActor(UWorld* World, UClass* Class, FTransform Transf
 	return World->SpawnActor(Class, &Transform, param);
 }
 
-FQuat UIkunFuncLIb::MakeQuatFromRot(FRotator& Rot) {
+FQuat UIkunFuncLib::MakeQuatFromRot(FRotator& Rot) {
 	return Rot.Quaternion();
 }

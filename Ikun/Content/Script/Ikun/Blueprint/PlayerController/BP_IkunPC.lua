@@ -13,8 +13,11 @@ function BP_IkunPC:UserConstructionScript()
 end
 
 function BP_IkunPC:ReceiveBeginPlay()
-    self:InitEnhancedInput()
-    self:InitCamera()
+    if self:HasAuthority() then
+    else
+        self:InitEnhancedInput()
+        self:InitCamera()
+    end
 end
 
 -- function BP_IkunPC:ReceiveEndPlay()

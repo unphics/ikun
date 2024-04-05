@@ -19,7 +19,7 @@ function log.log(tag, ...)
     else
         log.tb_log[tag] = log.tb_log[tag] + 1
     end
-    print( tag .. '_' .. log.tb_log[tag], ...)
+    print( tag .. ' <' .. log.tb_log[tag] .. '> :', ...)
 end
 
 ---@param tag string
@@ -30,7 +30,7 @@ function log.warn(tag, ...)
     else
         log.tb_warn[tag] = log.tb_warn[tag] + 1
     end
-    UnLua.LogWarn(tag .. '_' .. log.tb_warn[tag], ...)
+    UnLua.LogWarn(tag .. ' <' .. log.tb_warn[tag] .. '> :', ...)
 end
 
 ---@param tag string
@@ -41,7 +41,7 @@ function log.error(tag, ...)
     else
         log.tb_error[tag] = log.tb_error[tag] + 1
     end
-    UnLua.LogError(tag .. '_' .. log.tb_error[tag], ...)
+    UnLua.LogError(tag .. ' <' .. log.tb_error[tag] .. '> :', ...)
 end
 
 return log

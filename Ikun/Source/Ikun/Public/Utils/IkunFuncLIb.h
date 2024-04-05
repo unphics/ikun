@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Engine/World.h"
-#include "IkunFuncLIb.generated.h"
+#include "IkunFuncLib.generated.h"
 
 struct FGameplayTagContainer;
 struct FGameplayTag;
@@ -15,7 +15,7 @@ struct FSpawnParamters;
  * 
  */
 UCLASS()
-class IKUN_API UIkunFuncLIb : public UBlueprintFunctionLibrary {
+class IKUN_API UIkunFuncLib : public UBlueprintFunctionLibrary {
 	GENERATED_BODY()
 	UFUNCTION(BlueprintCallable)
 	static UUserWidget* CreateWidget(UWorld* World, UClass* Class);

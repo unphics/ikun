@@ -4,24 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AbilitySystemInterface.h"
 #include "IkunChrBase.generated.h"
 
+class UIkunAttrSet;
+class UIkunASC;
+
 UCLASS()
-class IKUN_API AIkunChrBase : public ACharacter {
+class IKUN_API AIkunChrBase : public ACharacter, public IAbilitySystemInterface {
 	GENERATED_BODY()
-
 public:
-	// Sets default values for this character's properties
 	AIkunChrBase();
-
-protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UFUNCTION(BlueprintCallable)
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GAS")
+	UIkunAttrSet* AttrSet;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GAS")
+	UIkunASC* ASC;
 };

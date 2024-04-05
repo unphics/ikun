@@ -56,6 +56,7 @@ function IkunAnimInst:BlueprintBeginPlay()
 end
 
 function IkunAnimInst:BlueprintUpdateAnimation(DeltaTimeX)
+    do return end
     self.DeltaTimeX = DeltaTimeX
     -- if 1 then return end
     if DeltaTimeX ~= 0 then
