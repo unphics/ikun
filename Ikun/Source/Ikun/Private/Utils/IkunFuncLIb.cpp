@@ -24,6 +24,10 @@ FGameplayTag UIkunFuncLib::RequestGameplayTag(FName TagName) {
 	return FGameplayTag::RequestGameplayTag(TagName);
 }
 
+bool UIkunFuncLib::IsGameplayTagEqual(FGameplayTag TagA, FGameplayTag TagB) {
+	return TagA == TagB;
+}
+
 void UIkunFuncLib::AddTagToContainer(FGameplayTagContainer& Container, FGameplayTag& Tag) {
 	Container.AddTag(Tag);
 }

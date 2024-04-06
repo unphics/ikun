@@ -29,18 +29,21 @@ function M:OnActivateAbility()
 end
 
 function M:OnEndAbility(WasCancelled)
-    self.Overridden.OnEndAbility(self,WasCancelled)
+    self.Overridden.OnEndAbility(self, WasCancelled)
 end
 
 function M:OnCompleted(EventTag, EventData)
+    self.Result = true
     self:K2_EndAbility()
 end
 
 function M:OnCancelled(EventTag, EventData)
+    self.Result = false
     self:K2_EndAbility()
 end
 
 function M:EventReceived(EventTag, EventData)
+    self.Result = true
     self:K2_EndAbility()
 end
 

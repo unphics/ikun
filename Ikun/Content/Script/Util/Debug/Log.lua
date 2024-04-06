@@ -9,19 +9,19 @@ log = {}
 
 ---@param tag string
 ---@param vararg string
-function log.log(tag, ...)
+function log.log(...)
     print( ...)
 end
 
 ---@param tag string
 ---@param vararg string
-function log.warn(tag, ...)
+function log.warn(...)
     UnLua.LogWarn(...)
 end
 
 ---@param tag string
 ---@param vararg string
-function log.error(tag, ...)
+function log.error(...)
     UnLua.LogError(...)
 end
 

@@ -17,16 +17,26 @@ struct FSpawnParamters;
 UCLASS()
 class IKUN_API UIkunFuncLib : public UBlueprintFunctionLibrary {
 	GENERATED_BODY()
+
+public:
 	UFUNCTION(BlueprintCallable)
 	static UUserWidget* CreateWidget(UWorld* World, UClass* Class);
+
 	UFUNCTION(BlueprintCallable)
 	static void BindAction(UEnhancedInputComponent* EnhancedInputComp, const UInputAction* Action, ETriggerEvent TriggerEvent, UObject* Object, FName FunctionName);
+	
 	UFUNCTION(BlueprintCallable)
 	static FGameplayTag RequestGameplayTag(FName TagName);
+
+	UFUNCTION(BlueprintCallable)
+	static bool IsGameplayTagEqual(FGameplayTag TagA, FGameplayTag TagB);
+	
 	UFUNCTION(BlueprintCallable)
 	static void AddTagToContainer(FGameplayTagContainer& Container, FGameplayTag& Tag);
+	
 	UFUNCTION(BlueprintCallable)
 	static AActor* SpawnActor(UWorld* World, UClass* Class, FTransform Transform, const FSpawnParamters& Param);
+	
 	UFUNCTION(BlueprintCallable)
 	static FQuat MakeQuatFromRot(FRotator& Rot);
 };

@@ -37,3 +37,8 @@ void UIkunASC::GetActivateAbilitiesWithTag(const FGameplayTagContainer& Gameplay
 		}
 	}
 }
+
+bool UIkunASC::HasGameplayTag(FGameplayTag TagToCheck) const
+{
+	return this->HasMatchingGameplayTag(TagToCheck);
+}

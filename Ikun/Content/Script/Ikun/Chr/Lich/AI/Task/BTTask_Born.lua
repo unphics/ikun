@@ -12,30 +12,28 @@ local BTTask_Born = UnLua.Class()
 function BTTask_Born:ReceiveExecuteAI(OwnerController, ControlledPawn)
     self.Overridden.ReceiveExecuteAI(self, OwnerController, ControlledPawn)
 
-    -- ControlledPawn:BornTask(self)
-    -- ControlledPawn.ASC:TryActivateAbility(ControlledPawn.GABornHandle)
-
-    -- self:FinishExecute(true)
-
     local TagContainer = UE.FGameplayTagContainer()
     TagContainer.GameplayTags:Add(UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Born'))
     if not ControlledPawn:GetAbilitySystemComponent():TryActivateAbilitiesByTag(TagContainer) then
         log.error('failed to activate born')
     end
-    local GA = nil
-    local Abilitys = UE.TArray(UE.UIkunGABase)
-    ControlledPawn:GetAbilitySystemComponent():GetActivateAbilitiesWithTag(TagContainer, Abilitys)
-    for _, Ability in pairs(Abilitys) do
-        -- if Ability:HasMatchingGameplayTag(UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Born')) then
-        --     GA = Ability
-        -- end
-        local a = Ability.AbilityTags
+    local GA = gas_util.find_active_by_container(ControlledPawn, TagContainer)
+
+    if GA then
+        self.BornChr = ControlledPawn
+        GA.OnAbilityEnd:Add(self, self.OnAbilityEnd)
+    else
+        log.error('failed to find activated ability')
+        self:FinishExecute(false)
     end
-    -- GA.OnAbilityEnd:Add(self, self.OnAbilityEnd)
 end
 
 function BTTask_Born:OnAbilityEnd(Result)
-    log.error('qqqqqqqqqqqqqqqqqqq', Result)
+    -- self.Overridden.OnAbilityEnd(self, Result)
+
+    gas_util.asc_add_tag_by_name(self.BornChr, 'Chr.State.Born')
+
+    self:FinishExecute(Result)
 end
 
 return BTTask_Born

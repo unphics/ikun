@@ -20,5 +20,6 @@ public:
 	static UIkunASC* GetAscFromActor(const AActor* Actor, bool bLookForComp = false);
 	UFUNCTION(BlueprintCallable)
 	void GetActivateAbilitiesWithTag(const FGameplayTagContainer& GameplayTagContainer, TArray<UIkunGABase*>& ActiveAbilities);
-	
+	UFUNCTION(BlueprintCallable)
+	bool HasGameplayTag(FGameplayTag TagToCheck) const;
 };
