@@ -12,6 +12,9 @@ local BTTask_Born = UnLua.Class()
 function BTTask_Born:ReceiveExecuteAI(OwnerController, ControlledPawn)
     self.Overridden.ReceiveExecuteAI(self, OwnerController, ControlledPawn)
 
+    -- 记录出生点(据点)
+    ControlledPawn.StrongholdLoc = ControlledPawn:K2_GetActorLocation()
+
     local TagContainer = UE.FGameplayTagContainer()
     TagContainer.GameplayTags:Add(UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Born'))
     if not ControlledPawn:GetAbilitySystemComponent():TryActivateAbilitiesByTag(TagContainer) then

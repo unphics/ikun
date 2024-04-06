@@ -46,4 +46,14 @@ gas_util.asc_add_tag_by_name = function(ikun_chr, name)
     gas_util.asc_add_tag_by_tag(ikun_chr, UE.UIkunFuncLib.RequestGameplayTag(name))
 end
 
+---@public 判断ASC包含Tag
+gas_util.asc_has_tag_by_tag = function(ikun_chr, tag)
+    return ikun_chr:GetAbilitySystemComponent():HasGameplayTag(tag)
+end
+
+---@public 判断ASC包含Tag
+gas_util.asc_has_tag_by_name = function(ikun_chr, name)
+    return ikun_chr:GetAbilitySystemComponent():HasGameplayTag(UE.UIkunFuncLib.RequestGameplayTag(name))
+end
+
 return gas_util
