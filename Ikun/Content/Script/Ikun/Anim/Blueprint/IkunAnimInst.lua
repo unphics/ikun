@@ -6,8 +6,8 @@ local EStance = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/Stance.Stance')
 local EViewModel = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/ViewModel.ViewModel')
 
 local BP_ChrBase = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/BP_ChrBase.BP_ChrBase_C')
-local StructLeanAmount = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/Structure/LeanAmount.LeanAmount')
-local StructVelBlend = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/Structure/VelBlend.VelBlend')
+local StructLeanAmount = UE.UObject.Load('/Game/Ikun/Chr/Blueprint/Structure/LeanAmount.LeanAmount')
+local StructVelBlend = UE.UObject.Load('/Game/Ikun/Chr/Blueprint/Structure/VelBlend.VelBlend')
 
 ---@class IkunAnimInst: IkunAnimInst_C
 local IkunAnimInst = UnLua.Class()
@@ -56,9 +56,7 @@ function IkunAnimInst:BlueprintBeginPlay()
 end
 
 function IkunAnimInst:BlueprintUpdateAnimation(DeltaTimeX)
-    do return end
     self.DeltaTimeX = DeltaTimeX
-    -- if 1 then return end
     if DeltaTimeX ~= 0 then
         if not UE.UKismetSystemLibrary.IsValid(self.Chr) then
             return
@@ -100,8 +98,8 @@ end
 
 ---@private [Update] 
 function IkunAnimInst:UpdateChrInfo()
-    self.Vel, self.Acc, self.MoveInput, self.IsMove, self.HasMoveInput, self.Speed, self.MoveInputAmount, self.AimRot, self.AimYawRate = self.Chr:BPIGetEssentialVal()
-    self.MoveState, self.RotMode, self.Gait, self.Stance, self.ViewModel = self.Chr:BPIGetChrState()
+    self.Vel, self.Acc, self.MoveInput, self.IsMove, self.HasMoveInput, self.Speed, self.MoveInputAmount, self.AimRot, self.AimYawRate = self.Chr.AnimComp:GetEssentialVal()
+    self.MoveState, self.RotMode, self.Gait, self.Stance, self.ViewModel = self.Chr.AnimComp:GetChrState()
 end
 
 ---@private [Update] 

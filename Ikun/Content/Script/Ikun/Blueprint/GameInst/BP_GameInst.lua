@@ -3,6 +3,7 @@ local log = require('Util.Debug.Log')
 local class = require('Util.Class.class')
 local MdMgr = require('Ikun.Module.MdMgr')
 local GasUtil = require('Util.Gas.GasUtil')
+local ActorUtil = require('Util.Actor.ActorUtil')
 
 ---@class BP_GameInst: BP_GameInst_C
 local M = UnLua.Class()
