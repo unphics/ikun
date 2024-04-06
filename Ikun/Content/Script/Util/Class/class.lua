@@ -102,7 +102,7 @@ local function create(...)
     local new = function(self, ...)
         local instance = deepcopy(self)
 
-        for _,m in pairs(self) do
+        for _, m in pairs(self) do
             if m == purevirtual then
                 error("try to ctor abstract class !!!")
             end

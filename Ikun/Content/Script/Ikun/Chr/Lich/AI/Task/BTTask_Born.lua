@@ -40,25 +40,3 @@ function BTTask_Born:OnAbilityEnd(Result)
 end
 
 return BTTask_Born
-
---[[
-
-void URPGAbilitySystemComponent::GetActiveAbilitiesWithTags(const FGameplayTagContainer& GameplayTagContainer, TArray<URPGGameplayAbility*>& ActiveAbilities)
-{
-	TArray<FGameplayAbilitySpec*> AbilitiesToActivate;
-	GetActivatableGameplayAbilitySpecsByAllMatchingTags(GameplayTagContainer, AbilitiesToActivate, false);
-
-	// Iterate the list of all ability specs
-	for (FGameplayAbilitySpec* Spec : AbilitiesToActivate)
-	{
-		// Iterate all instances on this ability spec
-		TArray<UGameplayAbility*> AbilityInstances = Spec->GetAbilityInstances();
-
-		for (UGameplayAbility* ActiveAbility : AbilityInstances)
-		{
-			ActiveAbilities.Add(Cast<URPGGameplayAbility>(ActiveAbility));
-		}
-	}
-}
-
-]]
