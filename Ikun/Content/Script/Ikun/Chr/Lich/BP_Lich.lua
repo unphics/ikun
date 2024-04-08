@@ -19,6 +19,9 @@ function M:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     local GA_Born_Class = UE.UClass.Load('/Game/Ikun/Chr/Lich/Skill/GA/Born/GA_Born.GA_Born_C')
     self.GABornHandle = self.ASC:K2_GiveAbility(GA_Born_Class, 1, 1)
+
+    local GA_Spell_Class = UE.UClass.Load('/Game/Ikun/Chr/Lich/Skill/GA/Spell/GA_Spell.GA_Spell_C')
+    self.GASpellHandle = self.ASC:K2_GiveAbility(GA_Spell_Class, 1, 1)
 end
 
 -- function M:ReceiveEndPlay()

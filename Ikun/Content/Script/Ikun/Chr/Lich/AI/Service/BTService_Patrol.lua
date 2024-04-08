@@ -35,7 +35,7 @@ function M:CheckNearbyActor(OwnerController, ControlledPawn, NearbyActor)
         local BB = UE.UAIBlueprintHelperLibrary.GetBlackboard(OwnerController)
         BB:SetValueAsObject('FightTargetActor', NearbyActor)
         OwnerController:StopMovement()
-        log.warn('fight')
+        log.warn('lich begin fight')
     end
 end
 

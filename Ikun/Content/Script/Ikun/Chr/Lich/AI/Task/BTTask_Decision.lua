@@ -26,6 +26,13 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
         -- TODO 随机远距离移动
         -- TODO 考虑障碍物遮挡(can aim)
         -- TODO 释放远程技能
+        
+        local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, 'Chr.Skill.Far')
+        
+        -- TODO Last
+        
+        -- local Distance = Ability.Distance
+        -- BB:SetValueAsObject('FightTargetActor', NearbyActor)
     else
         -- TODO 增加血量因素
         log.warn('近战')
