@@ -21,28 +21,45 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
 
     -- self:LotPotDecision(Distance)
 
+    local Pos = UE.FVector()
+    local AbilityHandle = nil
+    -- BB:SetValueAsObject('FightTargetActor', NearbyActor) -- TODO 仇恨值
+    -- TODO 增加血量因素
     if Distance > FarOrNearDistance then
         log.warn('远程')
-        -- TODO 随机远距离移动
-        -- TODO 考虑障碍物遮挡(can aim)
-        -- TODO 释放远程技能
-        
         local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, 'Chr.Skill.Far')
-        
-        -- TODO Last
-        
-        -- local Distance = Ability.Distance
-        -- BB:SetValueAsObject('FightTargetActor', NearbyActor)
+        AbilityHandle = ActivableAbilities[1].Handle
+        local NeedDistance = ActivableAbilities[1].Ability.Distance
+        if Distance > NeedDistance then
+            UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, FightTargetActor:K2_GetActorLocation(), Pos, NeedDistance, nil, nil)
+        else
+            if CanAim then
+                -- 随机移动
+                UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, ControlledPawn:K2_GetActorLocation(), Pos, 200, nil, nil)
+            else
+                UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, FightTargetActor:K2_GetActorLocation(), Pos, 500, nil, nil)
+            end
+        end
     else
-        -- TODO 增加血量因素
         log.warn('近战')
-        -- TODO 追逐至攻击范围内
-        -- TODO 释放近战技能
+        local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, 'Chr.Skill.Near')
+        AbilityHandle = ActivableAbilities[1].Handle
+        local NeedDistance = ActivableAbilities[1].Ability.Distance
+        if Distance > NeedDistance then
+            UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, FightTargetActor:K2_GetActorLocation(), Pos, NeedDistance, nil, nil)
+        else
+            if not CanAim then
+                UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, FightTargetActor:K2_GetActorLocation(), Pos, Distance, nil, nil)
+            end
+        end
     end
+    BB:SetValueAsVector('PatrolLoc', Pos)
+    -- BB:SetValueAsObject('DecisionAbilityHandle', AbilityHandle)
     
     self:FinishExecute(true)
 end
 
+-- 抽签
 function M:LotPotDecision(Distance)
     local pot = decision_util.lot_pot:new()
     local far = pot:add_stick(true)

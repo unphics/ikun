@@ -67,7 +67,7 @@ gas_util.find_abilities_by_name = function(ikun_chr, name)
     for i = 1, AbilityHandles:Length() do
         local Handle = AbilityHandles:Get(i)
         local Ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(ASC, Handle)
-        if UE.UBlueprintGameplayTagLibrary.HasTag(Ability.AbilityTags, name, true) then
+        if UE.UBlueprintGameplayTagLibrary.HasTag(Ability.AbilityTags, UE.UIkunFuncLib.RequestGameplayTag(name), true) then
             table.insert(ActivableAbilities, {Handle = Handle, Ability = Ability})
         end
     end
