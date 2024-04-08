@@ -17,8 +17,8 @@ local M = UnLua.Class()
 
 function M:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
-    local GA_born_Class = UE.UClass.Load('/Game/Ikun/Chr/Lich/Skill/GA/GA_Born.GA_Born_C')
-    self.GABornHandle = self.ASC:K2_GiveAbility(GA_born_Class, 1, 1)
+    local GA_Born_Class = UE.UClass.Load('/Game/Ikun/Chr/Lich/Skill/GA/Born/GA_Born.GA_Born_C')
+    self.GABornHandle = self.ASC:K2_GiveAbility(GA_Born_Class, 1, 1)
 end
 
 -- function M:ReceiveEndPlay()
