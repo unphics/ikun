@@ -19,12 +19,15 @@ function BTTask_Born:ReceiveExecuteAI(OwnerController, ControlledPawn)
     TagContainer.GameplayTags:Add(UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Born'))
     if not ControlledPawn:GetAbilitySystemComponent():TryActivateAbilitiesByTag(TagContainer) then
         log.error('failed to activate born')
+        self:FinishExecute(false)
+        return 
     end
     local GA = gas_util.find_active_by_container(ControlledPawn, TagContainer)
 
     if GA then
         self.BornChr = ControlledPawn
         GA.OnAbilityEnd:Add(self, self.OnAbilityEnd)
+        log.log('wait ability exec')
     else
         log.error('failed to find activated ability')
         self:FinishExecute(false)

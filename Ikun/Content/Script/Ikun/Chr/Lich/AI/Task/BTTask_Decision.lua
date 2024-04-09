@@ -23,11 +23,13 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
 
     local Pos = UE.FVector()
     local AbilityHandle = nil
+    local TagName = nil
     -- BB:SetValueAsObject('FightTargetActor', NearbyActor) -- TODO 仇恨值
     -- TODO 增加血量因素
     if Distance > FarOrNearDistance then
         log.warn('远程')
-        local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, 'Chr.Skill.Far')
+        TagName = 'Chr.Skill.Far'
+        local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, TagName)
         AbilityHandle = ActivableAbilities[1].Handle
         local NeedDistance = ActivableAbilities[1].Ability.Distance
         if Distance > NeedDistance then
@@ -42,7 +44,8 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
         end
     else
         log.warn('近战')
-        local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, 'Chr.Skill.Near')
+        TagName = 'Chr.Skill.Near'
+        local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, TagName)
         AbilityHandle = ActivableAbilities[1].Handle
         local NeedDistance = ActivableAbilities[1].Ability.Distance
         if Distance > NeedDistance then
@@ -54,7 +57,10 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
         end
     end
     BB:SetValueAsVector('PatrolLoc', Pos)
-    -- BB:SetValueAsObject('DecisionAbilityHandle', AbilityHandle)
+    local Obj = obj_util.new_uobj()
+    Obj.Handle = AbilityHandle
+    Obj.TagName = TagName
+    BB:SetValueAsObject('DecisionAbilityInfo', Obj)
     
     self:FinishExecute(true)
 end

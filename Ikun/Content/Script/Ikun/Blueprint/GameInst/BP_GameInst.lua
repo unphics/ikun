@@ -5,6 +5,7 @@ local MdMgr = require('Ikun.Module.MdMgr')
 local GasUtil = require('Util.Gas.GasUtil')
 local ActorUtil = require('Util.Actor.ActorUtil')
 local DecisionUtil = require('Util.AI.DecisionUtil')
+local ObjUtil = require('Util.Obj.ObjUtil')
 
 ---@class BP_GameInst: BP_GameInst_C
 local M = UnLua.Class()
