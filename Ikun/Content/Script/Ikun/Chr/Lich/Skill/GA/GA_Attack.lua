@@ -6,14 +6,14 @@
 -- @DATE ${date} ${time}
 --
 
----@class GA_Born: BP_IkunGA
+---@class GA_Attack: BP_IkunGA
 local M = UnLua.Class('Ikun.Blueprint.GAS.GA.BP_IkunGA')
 
 function M:OnActivateAbility()
     self.Overridden.OnActivateAbility(self)
 
     if not self.MontageToPlay then
-        log.error('lich born', 'failed to find montage')
+        log.error('lich attack', 'failed to find montage')
         self:GAFail()
         return
     end
@@ -25,7 +25,6 @@ function M:OnActivateAbility()
     AT.OnInterrupted:Add(self, self.OnCancelled)
     AT.OnCancelled:Add(self, self.OnCancelled)
     AT.EventReceived:Add(self, self.EventReceived)
-    -- ReadyForActivation()是在C++中激活AbilityTask的方法。蓝图具有K2Node_LatentGameplayTaskCall的能力，它会自动调用ReadyForActivation()
     AT:ReadyForActivation()
 end
 

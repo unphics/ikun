@@ -11,6 +11,8 @@ local FarOrNearDistance = 800 -- 远程和近战分界距离
 ---@type BTTask_Decision_C
 local M = UnLua.Class()
 
+local last = 1
+
 function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
     self.Overridden.ReceiveExecuteAI(self, OwnerController, ControlledPawn)
     
@@ -37,7 +39,7 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
         else
             if CanAim then
                 -- 随机移动
-                UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, ControlledPawn:K2_GetActorLocation(), Pos, 200, nil, nil)
+                UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, ControlledPawn:K2_GetActorLocation(), Pos, 300, nil, nil)
             else
                 UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, FightTargetActor:K2_GetActorLocation(), Pos, 500, nil, nil)
             end
@@ -46,8 +48,18 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
         log.warn('近战')
         TagName = 'Chr.Skill.Near'
         local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, TagName)
-        AbilityHandle = ActivableAbilities[1].Handle
-        local NeedDistance = ActivableAbilities[1].Ability.Distance
+
+        local ActivableAbilitie
+        if last == 1 then
+            ActivableAbilitie = ActivableAbilities[2]
+            last = 2
+        else
+            ActivableAbilitie = ActivableAbilities[1]
+            last = 1
+        end
+
+        AbilityHandle = ActivableAbilitie.Handle
+        local NeedDistance = ActivableAbilitie.Ability.Distance
         if Distance > NeedDistance then
             UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, FightTargetActor:K2_GetActorLocation(), Pos, NeedDistance, nil, nil)
         else

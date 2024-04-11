@@ -6,7 +6,7 @@ local function find_active(ikun_chr, tag_container)
     ikun_chr:GetAbilitySystemComponent():GetActivateAbilitiesWithTag(tag_container, Abilitys)
     for _, Ability in pairs(Abilitys) do
         -- 判断TagContainer中包含Tag
-        if UE.UBlueprintGameplayTagLibrary.HasTag(Ability.AbilityTags, UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Born'), true) then
+        if UE.UBlueprintGameplayTagLibrary.HasAnyTags(Ability.AbilityTags, tag_container, true) then
             GA = Ability
         end
     end

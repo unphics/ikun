@@ -40,7 +40,7 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
 end
 
 function M:OnAbilityEnd(Result)
-
+    
     self:FinishExecute(Result)
 end
 
