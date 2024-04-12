@@ -29,7 +29,7 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
     -- BB:SetValueAsObject('FightTargetActor', NearbyActor) -- TODO 仇恨值
     -- TODO 增加血量因素
     if Distance > FarOrNearDistance then
-        log.warn('远程')
+        log.log('lich 远程')
         TagName = 'Chr.Skill.Far'
         local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, TagName)
         AbilityHandle = ActivableAbilities[1].Handle
@@ -39,13 +39,14 @@ function M:ReceiveExecuteAI(OwnerController, ControlledPawn)
         else
             if CanAim then
                 -- 随机移动
-                UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, ControlledPawn:K2_GetActorLocation(), Pos, 300, nil, nil)
+                UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, ControlledPawn:K2_GetActorLocation(), Pos, 60, nil, nil)
+                -- log.warn('move', ControlledPawn:K2_GetActorLocation(), Pos)
             else
                 UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(ControlledPawn, FightTargetActor:K2_GetActorLocation(), Pos, 500, nil, nil)
             end
         end
     else
-        log.warn('近战')
+        log.log('lich 近战')
         TagName = 'Chr.Skill.Near'
         local ActivableAbilities = gas_util.find_abilities_by_name(ControlledPawn, TagName)
 

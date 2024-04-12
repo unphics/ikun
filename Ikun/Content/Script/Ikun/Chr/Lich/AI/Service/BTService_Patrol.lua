@@ -8,7 +8,7 @@
 
 local IkunChrClass = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/BP_ChrBase.BP_ChrBase_C')
 
-local AlertDistance = 1000
+local AlertDistance = 1300 -- 警报距离, 入战距离
 
 ---@type BTService_Patrol_C
 local M = UnLua.Class()
