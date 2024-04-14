@@ -26,6 +26,8 @@ function M:OnActivateAbility()
     AT.OnCancelled:Add(self, self.OnCancelled)
     AT.EventReceived:Add(self, self.EventReceived)
     AT:ReadyForActivation()
+
+    self.OwnerChr = self:GetAvatarActorFromActorInfo() -- notice
 end
 
 function M:OnEndAbility(WasCancelled)
@@ -42,6 +44,13 @@ end
 
 function M:EventReceived(EventTag, EventData)
     self:GASuccess()
+
+    if self.OwnerChr:HasAuthority() and EventTag.TagName == UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Attack').TagName then
+        local IkunChr = self.OwnerChr:Cast(UE.AIkunChrBase)
+        if IkunChr then
+            IkunChr:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, UE.FGameplayEffectContextHandle())
+        end
+    end
 end
 
 return M

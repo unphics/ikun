@@ -18,7 +18,7 @@ function M:OnActivateAbility()
         return
     end
     
-    self.OwnerChr = self:GetAvatarActorFromActorInfo()
+    self.OwnerChr = self:GetAvatarActorFromActorInfo() -- notice
     
     ---@type UATPlayMtgAndWaitEvent
     local AT = UE.UATPlayMtgAndWaitEvent.PlayMtgAndWaitEvent(self, 'task name', self.MontageToPlay, UE.UGameplayTagContainer,  1.0 , '', false, 1.0)
