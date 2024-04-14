@@ -1,7 +1,7 @@
 obj_util = {}
 
 obj_util.new_uobj = function()
-    local ComObjClass = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/Util/ComObj.ComObj_C')
+    local ComObjClass = UE.UClass.Load('/Game/Ikun/Blueprint/Util/ComObj.ComObj_C')
     return NewObject(ComObjClass)
 end
 
