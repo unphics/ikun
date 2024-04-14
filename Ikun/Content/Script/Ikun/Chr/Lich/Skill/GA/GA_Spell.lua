@@ -61,7 +61,11 @@ function M:EventReceived(EventTag, EventData)
             SpawnParams.Instigator = self.OwnerChr
             local ProjectileClass = UE.UClass.Load('/Game/Ikun/Chr/Lich/Skill/GA/Spell/BP_Spell.BP_Spell_C')
             local Projectile = UE.UIkunFuncLib.SpawnActor(self:GetWorld(), ProjectileClass, Transform, SpawnParams)
-
+            if Projectile then
+                Projectile.GE = self.GameplayEffectClass
+            else
+                log.error('failed to spawn projectile')
+            end
         end
     end
 end

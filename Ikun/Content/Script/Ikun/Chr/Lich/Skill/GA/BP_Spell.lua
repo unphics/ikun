@@ -48,7 +48,11 @@ function M:SphereComp_OnBeginOverlap(OverlappedComponent, OtherActor, OtherComp,
     if not IkunChr then
         return
     end
-    -- IkunChr:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GE, 1, UE.FGameplayEffectContextHandle())
+    if self.GE then
+        IkunChr:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GE, 1, UE.FGameplayEffectContextHandle())
+    else
+        log.error('failed to find GE')
+    end
     self:K2_DestroyActor()
 end
 

@@ -25,4 +25,8 @@ function M:InitUI(Authority)
     self.TxtAuthority:SetText(Authority)
 end
 
+function M:SetHealth(num)
+    self.HealthBar:SetPercent(num)
+end
+
 return M

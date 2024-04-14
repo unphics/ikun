@@ -50,6 +50,7 @@ function M:InitMainUI()
     end
     Widget:AddToViewport(0)
     Widget:InitUI(self:HasAuthority() and 'Server' or 'Client')
+    self.MainHud = Widget
 end
 
 return M
