@@ -25,6 +25,10 @@
 		{
 			"Name": "GameplayAbilities",
 			"Enabled": true
+		},
+		{
+			"Name": "SlateScripting",
+			"Enabled": true
 		}
 	]
 }

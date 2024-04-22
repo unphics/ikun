@@ -39,4 +39,16 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	static FQuat MakeQuatFromRot(FRotator& Rot);
+
+#pragma region python
+	/*
+	for x in sorted(dir(unreal.IkunFuncLib)):
+		print(x)
+	*/
+	UFUNCTION(BlueprintCallable)
+	static void CalledFromPython(FString InStr);
+	UFUNCTION(BlueprintCallable)
+	static void SetFloderColor(FString Path, FLinearColor Color);
+#pragma endregion
+
 };

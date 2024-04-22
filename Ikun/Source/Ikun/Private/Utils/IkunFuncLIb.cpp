@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "Blueprint/UserWidget.h"
 #include "Utils/UtilType.h"
+#include "Misc/ConfigCacheIni.h"
 
 UUserWidget* UIkunFuncLib::CreateWidget(UWorld* World, UClass* Class) {
 	return ::CreateWidget<UUserWidget>(World, Class);
@@ -45,4 +46,12 @@ AActor* UIkunFuncLib::SpawnActor(UWorld* World, UClass* Class, FTransform Transf
 
 FQuat UIkunFuncLib::MakeQuatFromRot(FRotator& Rot) {
 	return Rot.Quaternion();
+}
+
+void UIkunFuncLib::CalledFromPython(FString InStr) {
+	UE_LOG(LogTemp, Error, TEXT("%s"), *InStr);
+}
+
+void UIkunFuncLib::SetFloderColor(FString Path, FLinearColor Color) {
+	GConfig->SetString(TEXT("PathColor"), *Path, *Color.ToString(), GEditorPerProjectIni);
 }
