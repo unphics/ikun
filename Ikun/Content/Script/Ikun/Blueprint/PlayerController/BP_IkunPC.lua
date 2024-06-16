@@ -41,6 +41,12 @@ function BP_IkunPC:ReceivePossess(PossessedPawn)
     end
 end
 
+
+function BP_IkunPC:MouseLeft_Server_RPC()
+    -- 主动入战
+    self.OwnerChr.FightComp:Equip()
+end
+
 ---@private
 function BP_IkunPC:InitEnhancedInput()
     ---@type UEnhancedInputLocalPlayerSubsystem
@@ -89,6 +95,16 @@ EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Look.IA_Lo
         local PC = SourceObj
         PC:AddYawInput(ActionValue.X * 50 * UE.UGameplayStatics.GetWorldDeltaSeconds(PC))
         PC:AddPitchInput(ActionValue.Y * 50 * UE.UGameplayStatics.GetWorldDeltaSeconds(PC))
+    end)
+EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_MouseL.IA_MouseL', 'Started', 
+    function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        local PC = SourceObj
+        PC:MouseLeft_Server()
+    end)
+EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Jump.IA_Jump', 'Started', 
+    function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        local PC = SourceObj
+        PC.OwnerChr:Jump()
     end)
 
 

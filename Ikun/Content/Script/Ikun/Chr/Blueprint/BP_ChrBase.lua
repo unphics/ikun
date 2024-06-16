@@ -43,7 +43,7 @@ function BP_ChrBase:BPIGetChrState()
     return self.AnimComp:GetChrState()
 end
 
----@public 前后移动输入
+---@public [Input] 前后移动输入
 ---@param Fwd FVector
 ---@param Val number
 BP_ChrBase.MoveForwardBack = function(self, Fwd, Val)
@@ -54,7 +54,7 @@ BP_ChrBase.MoveForwardBack = function(self, Fwd, Val)
     self:AddMovementInput(Forward, Val)
 end
 
----@public 左右移动输入
+---@public [Input] 左右移动输入
 ---@param Fwd FVector
 ---@param Val number
 BP_ChrBase.MoveRightLeft = function(self, Fwd, Val)

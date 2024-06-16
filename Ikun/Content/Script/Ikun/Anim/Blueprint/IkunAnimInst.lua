@@ -55,6 +55,7 @@ function IkunAnimInst:BlueprintBeginPlay()
     end
 end
 
+---@override [Tick]
 function IkunAnimInst:BlueprintUpdateAnimation(DeltaTimeX)
     self.DeltaTimeX = DeltaTimeX
     if DeltaTimeX ~= 0 then
@@ -98,6 +99,8 @@ end
 
 ---@private [Update] 
 function IkunAnimInst:UpdateChrInfo()
+    
+    self.InFight = gas_util.asc_has_tag_by_name(self.Chr, 'Chr.State.InFight')
     self.Vel, self.Acc, self.MoveInput, self.IsMove, self.HasMoveInput, self.Speed, self.MoveInputAmount, self.AimRot, self.AimYawRate = self.Chr.AnimComp:GetEssentialVal()
     self.MoveState, self.RotMode, self.Gait, self.Stance, self.ViewModel = self.Chr.AnimComp:GetChrState()
 end
