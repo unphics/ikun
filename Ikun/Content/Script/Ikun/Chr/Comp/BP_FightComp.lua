@@ -9,7 +9,7 @@
 ---@type FightComp_C
 local M = UnLua.Class()
 
-local Departure_Time = 3 -- 脱战计时
+local Departure_Time = 10 -- 脱战计时
 
 -- function M:Initialize(Initializer)
 --     self.Overridden.Initialize(self)
@@ -52,6 +52,8 @@ function M:EngageFight()
         self:DelayPromiseByKey('InFight', Departure_Time, function ()
             gas_util.asc_remove_tag_by_name(self:GetOwner(), 'Chr.State.InFight')
         end)
+    else
+        self:ReclockPromise('InFight')
     end
     if not gas_util.asc_has_tag_by_name(self:GetOwner(), 'Chr.State.InFight') then
         gas_util.asc_add_tag_by_name(self:GetOwner(), 'Chr.State.InFight')
