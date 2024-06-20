@@ -65,4 +65,19 @@ BP_ChrBase.MoveRightLeft = function(self, Fwd, Val)
     self:AddMovementInput(Right, Val)
 end
 
+---@public [Input] 跳跃
+BP_ChrBase.ChrJump = function(self)
+    self:Jump()
+    self.AnimComp.MainAnimInst.Jumped = true
+end
+
+---@public [Input] dunfu
+BP_ChrBase.ChrCrouch = function(self)
+    if not self.CharacterMovement:IsCrouching() then
+        self:Crouch()
+    else
+        self:UnCrouch()
+    end
+end
+
 return BP_ChrBase

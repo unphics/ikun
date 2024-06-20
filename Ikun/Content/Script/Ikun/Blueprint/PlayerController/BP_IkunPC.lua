@@ -104,7 +104,16 @@ EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_MouseL.IA_
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Jump.IA_Jump', 'Started', 
     function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         local PC = SourceObj
-        PC.OwnerChr:Jump()
+        if PC.OwnerChr then
+            PC.OwnerChr:ChrJump()
+        end
+    end)
+EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Crouch.IA_Crouch', 'Started', 
+    function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        local PC = SourceObj
+        if PC.OwnerChr then
+            PC.OwnerChr:ChrCrouch()
+        end
     end)
 
 

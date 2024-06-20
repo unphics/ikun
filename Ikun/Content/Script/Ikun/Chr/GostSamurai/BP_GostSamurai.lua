@@ -8,7 +8,7 @@
 local ERotMode = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/RotMode.RotMode')
 
 ---@type BP_GhostSamurai_C
-local M = UnLua.Class()
+local M = UnLua.Class('/Ikun/Chr/Blueprint/BP_ChrBase')
 
 -- function M:Initialize(Initializer)
 -- end
