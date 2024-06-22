@@ -9,7 +9,7 @@
 ---@type FightComp_C
 local M = UnLua.Class()
 
-local Departure_Time = 10 -- 脱战计时
+local Departure_Time = 3 -- 脱战计时
 
 -- function M:Initialize(Initializer)
 --     self.Overridden.Initialize(self)
