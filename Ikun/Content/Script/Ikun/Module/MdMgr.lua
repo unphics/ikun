@@ -5,17 +5,22 @@ local ConMgr = require("Content.ConMgr")
 ---@field tbMd table
 local MdMgr = class.create(MdBase)
 
--- register
-MdMgr.tbMd = {
-    ConMgr = ConMgr:new()
-}
-
 function MdMgr:ctor()
-    
+    self.super.ctor(self)
+    self.name = 'MdMgr'
+    self.tbMd = {
+        ConMgr = ConMgr:new()
+    }
+    log.warn('zys 1')
 end
 
 function MdMgr:Init()
-    for _,Md in pairs(self.tbMd) do
+    self.q = self.q and self.q + 1 or 0
+    self.super.Init(self)
+    log.warn("zys test", type(self.tbMd), debug.traceback())
+    a = a + 1
+    log.error('zys a', a)
+    for _, Md in pairs(self.tbMd) do
         Md:Init()
     end
 end

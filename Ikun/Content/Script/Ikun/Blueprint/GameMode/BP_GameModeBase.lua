@@ -7,7 +7,10 @@ local M = UnLua.Class()
 -- end
 
 function M:UserConstructionScript()
-    MdMgr:Init()
+    _G.MdMgr = MdMgr:new()
+    log.warn("zys authority", self:HasAuthority())
+    a = 1
+    _G.MdMgr:Init()
 end
 
 function M:ReceiveBeginPlay()
@@ -18,7 +21,7 @@ end
 -- end
 
 function M:ReceiveTick(DeltaSeconds)
-    MdMgr:Tick(DeltaSeconds)
+    _G.MdMgr:Tick(DeltaSeconds)
 end
 
 -- function M:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)

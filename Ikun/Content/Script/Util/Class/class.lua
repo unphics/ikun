@@ -20,13 +20,19 @@ end
 ---@param key any
 ---@return any
 local function serach(supers, key)
-    if not supers then
+    local bnil = true
+    for _, _ in pairs(supers) do
+        bnil = false
+        break
+    end
+    if bnil then
         return nil
     end
     -- 在父类中寻找
     for _, super in pairs(supers) do
-        if super[key] then
-            return super[key]
+        local ret = rawget(super, key)
+        if ret then
+            return ret
         end
     end
     -- 找不到就去祖宗类里找
@@ -60,7 +66,8 @@ local function create(...)
 
     local indexer = function(self, key)
         -- 当寻找方法时, 先找自己的
-        local ret -- = self[key]
+        -- local a = 1
+        local ret = rawget(self, key) -- 这玩意会递归成环
         if ret ~= nil then
             return ret
         end
