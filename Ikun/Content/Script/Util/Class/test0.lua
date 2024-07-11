@@ -1,6 +1,6 @@
 
 
-local class = require('IKUN.Module.Lua.class')
+local class = require('IKUN.Module.Lua.class0')
 
 ---@class class_test_1
 local class_test_1 = class.create()

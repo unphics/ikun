@@ -1,12 +1,7 @@
 
-local WillMgr = class.create()
+local class = require("Util.Class.class1")
 
-function WillMgr:ctor()
-    log.error("WillMgr:ctor")
-end
-
-function WillMgr:Init()
-    log.error("WillMgr:Init")
-end
-
-return WillMgr
+class.class "WillMgr" {
+    ctor = function(self) end,
+    Init = function(self) end,
+}

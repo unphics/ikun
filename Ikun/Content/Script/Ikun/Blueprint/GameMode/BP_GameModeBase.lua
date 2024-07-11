@@ -1,4 +1,5 @@
 local MdMgr = require('Ikun.Module.MdMgr')
+local class = require("Util.Class.class1")
 
 ---@type BP_IkunGameModeBase_C
 local M = UnLua.Class()
@@ -7,9 +8,8 @@ local M = UnLua.Class()
 -- end
 
 function M:UserConstructionScript()
-    _G.MdMgr = MdMgr:new()
+    _G.MdMgr = class.new"MdMgr"()
     log.warn("zys authority", self:HasAuthority())
-    a = 1
     _G.MdMgr:Init()
 end
 

@@ -1,35 +1,25 @@
 local MdBase = require("Ikun.Module.MdBase")
 local ConMgr = require("Content.ConMgr")
+local class = require("Util.Class.class1")
 
 ---@class MdMgr
----@field tbMd table
-local MdMgr = class.create(MdBase)
-
-function MdMgr:ctor()
-    self.super.ctor(self)
-    self.name = 'MdMgr'
-    self.tbMd = {
-        ConMgr = ConMgr:new()
-    }
-    log.warn('zys 1')
-end
-
-function MdMgr:Init()
-    self.q = self.q and self.q + 1 or 0
-    self.super.Init(self)
-    log.warn("zys test", type(self.tbMd), debug.traceback())
-    a = a + 1
-    log.error('zys a', a)
-    for _, Md in pairs(self.tbMd) do
-        Md:Init()
+class.class "MdMgr" : extends "MdBase" {
+    MdName = "MdMgr",
+    tbMd = {
+        ConMgr = class.new"ConMgr"()
+    },
+    ctor = function(self)
+        
+    end,
+    Init = function(self)
+        self.super.Init(self)
+        for _, Md in pairs(self.tbMd) do
+            Md:Init()
+        end
+    end,
+    Tick = function(self, DeltaTime)
+        for _, Md in pairs(self.tbMd) do 
+            Md:Tick(DeltaTime)
+        end
     end
-end
-
----@param DeltaTime number
-function MdMgr:Tick(DeltaTime)
-    for _, Md in pairs(self.tbMd) do 
-        Md:Tick(DeltaTime)
-    end
-end
-
-return MdMgr
+}

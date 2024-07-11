@@ -1,4 +1,5 @@
-
+require("Util.Debug.Log")
+log.log("全局class0使用")
 --- # 深拷贝
 ---@param res table
 ---@return table
@@ -146,9 +147,7 @@ local function create(...)
     return class
 end
 
-class = {
+return {
     create = create,
     purevirtual = purevirtual,
 }
-
-return class

@@ -1,14 +1,12 @@
-local MdBase = class.create()
 
-function MdBase:ctor()
-    self.name = 'MdBase'
-end
+local class = require("Util.Class.class1")
 
-function MdBase:Init()
-    local a = 1
-end
-
-function MdBase:Tick(DeltaTime)
-end
-
-return MdBase
+class.class "MdBase" {
+    ctor = function(self)
+        self.MdName = "MdBase"
+    end,
+    Init = function()
+    end,
+    Tick = function(DeltaTime)
+    end
+}
