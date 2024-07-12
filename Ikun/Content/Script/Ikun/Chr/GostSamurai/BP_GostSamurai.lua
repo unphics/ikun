@@ -17,7 +17,6 @@ local M = UnLua.Class('/Ikun/Chr/Blueprint/BP_ChrBase')
 -- end
 
 function M:ReceiveBeginPlay()
-
     self.AnimComp.RotMode = ERotMode.LookDir
 end
 

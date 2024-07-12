@@ -14,7 +14,11 @@ end
 
 function BP_IkunPC:ReceiveBeginPlay()
     if self:HasAuthority() then
+        log.log("GamePlay PlayerController ReceiveBeginPlay Server")
+        world_util.GameWorld = self
     else
+        log.log("GamePlay PlayerController ReceiveBeginPlay Client")
+        world_util.GameWorld = self
         self:InitEnhancedInput()
         self:InitCamera()
     end

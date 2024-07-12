@@ -17,7 +17,11 @@ local M = UnLua.Class()
 
 function M:ReceiveBeginPlay()
     if self:HasAuthority() then
+        log.log("GamePlay GameState ReceiveBeginPlay Server")
+        world_util.GameWorld = self
     else
+        log.log("GamePlay GameState ReceiveBeginPlay Client")
+        world_util.GameWorld = self
         self:InitMainUI()
     end
 end
