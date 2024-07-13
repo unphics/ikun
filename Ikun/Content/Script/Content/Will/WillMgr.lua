@@ -1,7 +1,6 @@
+require("SharedPCH")
 
-local class = require("Util.Class.class1")
-
-class.class "WillMgr" {
+class.class "WillMgr" :  extends "MdBase" {
     ctor = function(self) end,
     Init = function(self) end,
 }

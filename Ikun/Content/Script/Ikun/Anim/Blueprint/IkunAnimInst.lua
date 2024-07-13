@@ -200,7 +200,7 @@ end
 function IkunAnimInst:CalcStrideBlend()
     local Walk = Remap(self.Speed, 0, 150, 0, 1)
     local Run = Remap(self.Speed, 0, 350, 0, 1)
-    local Lerp = UE.UKismetMathLibrary.Lerp(Walk, Run, self:GetAnimCurveClamped(Weight_Gait, -1, 0, 1))
+    local Lerp = UE.UKismetMathLibrary.Lerp(Walk, Run, self:GetAnimCurveClamped('Weight_Gait', -1, 0, 1))
     local Crouch = Remap(self.Speed, 0, 150, 0, 1)
     return UE.UKismetMathLibrary.Lerp(Lerp, Crouch, self:GetCurveValue('BasePose_CLF'))
 end
