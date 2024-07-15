@@ -1,3 +1,6 @@
+--[[
+    @brief 宇宙
+]]
 require("Content/Area/Star")
 local CosmosCfg = require("Content/Area/Config")
 
@@ -8,7 +11,7 @@ class.class "Cosmos" : extends "MdBase" {
     end,
     Init = function(self)
     end,
-    ---@private
+    ---@private 初始化所有星球
     InitAllStar = function(self)
         for i, cfg in ipairs(CosmosCfg.Star) do
             local star = class.new "Star" (cfg.Name)
