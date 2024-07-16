@@ -8,17 +8,17 @@ require("Content/District/Settlements/Settlement")
 require("Content/District/Settlements/City")
 require("Content/District/Settlements/Village")
 
-local CfgKingdom = require("Content/District/Config.Kingdom")
-local CfgSettlement = require("Content/District/Config.Settlement")
+local CfgKingdom = require("Content/District/Config/Kingdom")
+local CfgSettlement = require("Content/District/Config/Settlement")
 
 class.class"DistrictMgr" : extends "MdBase" {
     tbKingdom = {},
     StarName = nil,
     ctor = function(self, StarName)
         self.StarName = StarName
+        self:InitAllKingdom()
     end,
     Init = function(self)
-        self:InitAllKingdom()
     end,
     ---@private
     InitAllKingdom = function (self)
@@ -34,5 +34,9 @@ class.class"DistrictMgr" : extends "MdBase" {
             end
             self.tbKingdom[ele.Kingdom]:AddSettlement(settlement)
         end
+    end,
+    ---@public
+    GetKingdom = function(self, Id)
+        return self.tbKingdom[Id]
     end
 }

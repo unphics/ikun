@@ -8,4 +8,8 @@ class.class "AreaMgr" : extends "MdBase" {
     ctor = function(self)
         self.Cosmos = class.new"Cosmos"()
     end,
+    GetStar = function(self)
+        -- TODO
+        return self.Cosmos.tbStar[1]
+    end
 }
