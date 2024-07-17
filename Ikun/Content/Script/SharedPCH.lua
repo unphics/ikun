@@ -11,5 +11,6 @@ require('Util.AI.DecisionUtil')
 require('Util.Obj.ObjUtil')
 require("Util.Net.NetUitl")
 require("Util.World.WorldUtil")
+require("Util.AsyncUtil")
 
 require('Ikun.Module.MdMgr')

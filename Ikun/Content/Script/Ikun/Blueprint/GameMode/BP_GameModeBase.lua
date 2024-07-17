@@ -9,7 +9,6 @@ local M = UnLua.Class()
 
 function M:UserConstructionScript()
     _G.MdMgr = class.new"MdMgr"()
-    log.warn("zys authority", self:HasAuthority())
     _G.MdMgr:Init()
 end
 

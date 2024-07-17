@@ -18,16 +18,26 @@ local M = UnLua.Class()
 -- end
 
 function M:ReceiveBeginPlay()
+    self.Overridden.ReceiveBeginPlay(self)
     if self:HasAuthority() then
-        self:InitSettlement()
+        async_util.delay(self, 2, self.InitSettlement, self)
     end
 end
 
 -- function M:ReceiveEndPlay()
 -- end
 
--- function M:ReceiveTick(DeltaSeconds)
--- end
+function M:ReceiveTick(DeltaSeconds)
+    if not self:HasAuthority() then
+        -- TODO 可以优化
+        ---@type APawn
+        local PlayerPawn = UE.UGameplayStatics.GetPlayerPawn(self, 0)
+        local Rot = UE.UKismetMathLibrary.FindLookAtRotation(self:K2_GetActorLocation(), PlayerPawn:K2_GetActorLocation())
+        Rot.Roll = 0
+        Rot.Pitch = 0
+        self.WidgetComp:K2_SetRelativeRotation(Rot, false, UE.FHitResult(), false)
+    end
+end
 
 -- function M:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
 -- end
@@ -42,14 +52,11 @@ function M:InitSettlement()
     -- register settlement ue entity to content module
     local SettlementLua = MdMgr.tbMd.ConMgr.tbCon.AreaMgr:GetStar().DistrictMgr:GetKingdom(CfgSettlement[self.SettlementId].Kingdom):FindSettlementLua(self.SettlementId)
     SettlementLua.Actor = self
-    log.warn("zys SettlementLua.SettlementName", SettlementLua.SettlementName)
     self:SetTopMarkName(SettlementLua.SettlementName)
 end
 
-function M:SetTopMarkName_Milticast(Name)
-    -- todo last
+function M:SetTopMarkName_RPC(Name)
     self.WidgetComp:GetWidget().TxtName:SetText(Name)
-    log.warn("zys set top mark", self:HasAuthority())
 end
 
 return M
