@@ -22,7 +22,7 @@ function M:ReceiveBeginPlay()
     else
         log.log("GamePlay GameState ReceiveBeginPlay Client")
         world_util.GameWorld = self
-        self:InitMainUI()
+        self:InitUIModule()
     end
 end
 
@@ -41,20 +41,10 @@ end
 -- function M:ReceiveActorEndOverlap(OtherActor)
 -- end
 
-function M:InitMainUI()
-    local MainHudClass = UE.UClass.Load('/Game/Ikun/UI/UMG/MainHud/UIMainHud.UIMainHud_C')
-    if not MainHudClass then
-        log.error('GameStateInitMainUI', 'Failed to Load MainHud')
-        return
-    end
-    local Widget = UE.UWidgetBlueprintLibrary.Create(self, MainHudClass, UE.UGameplayStatics.GetPlayerController(self, 0))
-    if not Widget then
-        log.error('GameStateInitMainUI', 'Failed to Create MainHud Widget')
-        return
-    end
-    Widget:AddToViewport(0)
-    Widget:InitUI(self:HasAuthority() and 'Server' or 'Client')
-    self.MainHud = Widget
+function M:InitUIModule()
+    local LayerMgrClass = UE.UClass.Load('/Game/Ikun/UI/UMG/LayerMgr.LayerMgr_C')
+    local LayerMgr = UE.UWidgetBlueprintLibrary.Create(self, LayerMgrClass, UE.UGameplayStatics.GetPlayerController(self, 0))
+    LayerMgr:AddToViewport(0)
 end
 
 return M

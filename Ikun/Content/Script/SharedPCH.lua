@@ -12,5 +12,6 @@ require('Util.Obj.ObjUtil')
 require("Util.Net.NetUitl")
 require("Util.World.WorldUtil")
 require("Util.AsyncUtil")
+require("Util.UI.UI_Util")
 
 require('Ikun.Module.MdMgr')

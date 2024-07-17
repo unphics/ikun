@@ -37,10 +37,7 @@ function M:OnHealthChanged(Attr, NewVal, OldVal)
 end
 
 function M:SetUIHealthValue(num)
-    local GS = UE.UGameplayStatics.GetGameState(self)
-    if GS and GS.MainHud then
-        GS.MainHud:SetHealth(num)
-    end
+    ui_util.mainhud:SetHealth(num)
 end
 
 return M
