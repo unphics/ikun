@@ -36,6 +36,9 @@ function M:ReceiveTick(DeltaSeconds)
         Rot.Roll = 0
         Rot.Pitch = 0
         self.WidgetComp:K2_SetRelativeRotation(Rot, false, UE.FHitResult(), false)
+
+        -- TODO Test TopMark WidgetComp测试
+        -- self.WidgetComp:GetWidget().TxtName:SetText("请问如何iOS吧覅哦为方便五哦啊是发表欧维设备嗲数量的报复为方便")
     end
 end
 
