@@ -29,6 +29,10 @@
 		{
 			"Name": "SlateScripting",
 			"Enabled": true
+		},
+		{
+			"Name": "HDRIBackdrop",
+			"Enabled": true
 		}
 	]
 }
