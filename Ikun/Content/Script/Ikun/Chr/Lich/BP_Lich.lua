@@ -9,6 +9,12 @@
 ---@type BP_Lich_C
 local M = UnLua.Class()
 
+---@private 私有方法的前向声明
+local fn1 = function()end
+
+---@public 公有方法的前向声明
+M.fn2 = function()end
+
 -- function M:Initialize(Initializer)
 -- end
 
@@ -28,14 +34,15 @@ function M:ReceiveBeginPlay()
 
     local GA_Attack_Right_Class = UE.UClass.Load('/Game/Ikun/Chr/Lich/Skill/GA/Attack/GA_Attack_Right.GA_Attack_Right_C')
     self.GAAttackRightHandle = self.ASC:K2_GiveAbility(GA_Attack_Right_Class, 1, 1)
-    
+
 end
 
 -- function M:ReceiveEndPlay()
 -- end
 
--- function M:ReceiveTick(DeltaSeconds)
--- end
+function M:ReceiveTick(DeltaSeconds)
+    self.Overridden.ReceiveTick(self, DeltaSeconds)
+end
 
 -- function M:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
 -- end
@@ -45,5 +52,14 @@ end
 
 -- function M:ReceiveActorEndOverlap(OtherActor)
 -- end
+
+---@brief 私有方法的函数实现
+fn1 = function()
+    log.log("forward declare 2")
+end
+---@brief 公有方法的函数实现
+function M:fn2()
+    log.log("forward declare 4")
+end
 
 return M
