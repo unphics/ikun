@@ -119,6 +119,20 @@ EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Crouch.IA_
             PC.OwnerChr:ChrCrouch()
         end
     end)
+EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Sprint.IA_Sprint', 'Started', 
+    function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        local PC = SourceObj
+        if PC.OwnerChr then
+            PC.OwnerChr:ChrSprint(true)
+        end
+    end)
+EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Sprint.IA_Sprint', 'Completed', 
+    function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        local PC = SourceObj
+        if PC.OwnerChr then
+            PC.OwnerChr:ChrSprint(false)
+        end
+    end)
 
 
 return BP_IkunPC

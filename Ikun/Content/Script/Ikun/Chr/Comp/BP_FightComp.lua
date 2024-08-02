@@ -31,7 +31,7 @@ function M:ReceiveTick(DeltaSeconds)
         -- log.warn('进站', gas_util.asc_has_tag_by_name(self:GetOwner(), 'Chr.State.InFight'))
         for key, promise in pairs(self.tbPromise) do
             promise.SpentTime = promise.SpentTime + DeltaSeconds
-            if promise.SpentTime > promise.RequiredTime then
+            if promise.SpentTime > promise.RequiredTime and promise.CheckCB() then
                 promise.FnCB()
                 self.tbPromise[key] = nil
             end
@@ -51,6 +51,8 @@ function M:EngageFight()
     if not self:IsExitPromiseByKey('InFight') then
         self:DelayPromiseByKey('InFight', Departure_Time, function ()
             gas_util.asc_remove_tag_by_name(self:GetOwner(), 'Chr.State.InFight')
+        end, function()
+            return true -- not self:GetOwner().AnimComp.IsMove
         end)
     else
         self:ReclockPromise('InFight')
@@ -71,12 +73,14 @@ end
 ---@param Key string
 ---@param Time number
 ---@param FnCB function
-function M:DelayPromiseByKey(Key, Time, FnCB)
+---@param CheckCB function
+function M:DelayPromiseByKey(Key, Time, FnCB, CheckCB)
     local Promise = {}
     Promise.Key = Key
     Promise.RequiredTime = Time
     Promise.SpentTime = 0
     Promise.FnCB = FnCB
+    Promise.CheckCB = CheckCB
     self.tbPromise[Key] = Promise
 end
 

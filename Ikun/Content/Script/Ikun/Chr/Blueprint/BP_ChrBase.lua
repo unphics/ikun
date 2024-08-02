@@ -71,12 +71,21 @@ BP_ChrBase.ChrJump = function(self)
     self.AnimComp.MainAnimInst.Jumped = true
 end
 
----@public [Input] dunfu
+---@public [Input] 蹲伏
 BP_ChrBase.ChrCrouch = function(self)
     if not self.CharacterMovement:IsCrouching() then
         self:Crouch()
     else
         self:UnCrouch()
+    end
+end
+
+---@public [Input] 冲刺
+BP_ChrBase.ChrSprint = function(self, bSprint)
+    if bSprint then
+        self.AnimComp.Gait = EGait.Sprint
+    else
+        self.AnimComp.Gait = EGait.Run
     end
 end
 
