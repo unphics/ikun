@@ -31,6 +31,14 @@ UIInfo.GameMaster = {
     ReleaseMouse = true,
 }
 
+---@type UIWnd
+UIInfo.AnimDebug = {
+    ClassPath = '/Game/Ikun/UI/UMG/AnimDebug/UIAnimDebug.UIAnimDebug',
+    Layer = Layer.TopLayer,
+    DefaultOpen = true,
+    ReleaseMouse = false,
+}
+
 
 for i, ui in pairs(UIInfo) do
     ui.UIName = i

@@ -24,6 +24,9 @@ GMCmd[1] = {
     make_gm_cmd("测试指令", function ()
         log.warn("测试指令")
     end, true),
+    make_gm_cmd("动画调试", function()
+        ui_util.uimgr:OpenUI(ui_util.uidef.UIInfo.AnimDebug)
+    end, true)
 }
 
 --function M:Initialize(Initializer)
