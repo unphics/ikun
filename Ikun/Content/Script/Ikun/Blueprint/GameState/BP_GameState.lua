@@ -19,10 +19,12 @@ function M:ReceiveBeginPlay()
     if self:HasAuthority() then
         log.log("GamePlay GameState ReceiveBeginPlay Server")
         world_util.GameWorld = self
+        net_util.b_svr = true
     else
         log.log("GamePlay GameState ReceiveBeginPlay Client")
         world_util.GameWorld = self
         self:InitUIModule()
+        net_util.b_svr = false
     end
 end
 

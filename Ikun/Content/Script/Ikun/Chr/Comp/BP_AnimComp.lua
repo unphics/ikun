@@ -300,5 +300,7 @@ function AnimComp:GetAnimCurveVal(CurveName)
     end
 end
 
+-- GetCurveValueFormSequence SetPosition
+
 
 return AnimComp

@@ -1,3 +1,4 @@
+
 local EGait = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/Gait.Gait')
 local EMoveDir = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/MoveDir.MoveDir')
 local EMoveState = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/MoveState.MoveState')
@@ -87,6 +88,13 @@ BP_ChrBase.ChrSprint = function(self, bSprint)
     else
         self.AnimComp.Gait = EGait.Run
     end
+end
+
+---@public [Input] [Server] 普攻
+BP_ChrBase.NormalAttack = function(self)
+    -- 主动入战
+    self.FightComp:Equip()
+    log.log('BP_ChrBase.NormalAttack')
 end
 
 return BP_ChrBase

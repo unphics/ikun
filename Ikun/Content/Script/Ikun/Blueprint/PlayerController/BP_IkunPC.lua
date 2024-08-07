@@ -16,8 +16,10 @@ function BP_IkunPC:ReceiveBeginPlay()
     if self:HasAuthority() then
         log.log("GamePlay PlayerController ReceiveBeginPlay Server")
         world_util.GameWorld = self
+        net_util.b_svr = true
     else
         log.log("GamePlay PlayerController ReceiveBeginPlay Client")
+        net_util.b_svr = false
         world_util.GameWorld = self
         self:InitEnhancedInput()
         self:InitCamera()
@@ -47,8 +49,7 @@ end
 
 
 function BP_IkunPC:MouseLeft_Server_RPC()
-    -- 主动入战
-    self.OwnerChr.FightComp:Equip()
+    self.OwnerChr:NormalAttack()
 end
 
 ---@private
