@@ -7,6 +7,7 @@
 --
 
 local ERotMode = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/RotMode.RotMode')
+local EGait = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/Gait.Gait')
 
 ---@type BP_Chr_Katana_C
 local M = UnLua.Class('/Ikun/Chr/Blueprint/BP_ChrBase')
@@ -19,6 +20,7 @@ local M = UnLua.Class('/Ikun/Chr/Blueprint/BP_ChrBase')
 
 function M:ReceiveBeginPlay()
     self.AnimComp.RotMode = ERotMode.LookDir
+    self.AnimComp.Gait = EGait.Run
 end
 
 -- function M:ReceiveEndPlay()

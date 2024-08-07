@@ -57,12 +57,14 @@ end
 
 ---@override [Tick]
 function IkunAnimInst:BlueprintUpdateAnimation(DeltaTimeX)
+    self:Test()
     self.DeltaTimeX = DeltaTimeX
     if DeltaTimeX ~= 0 then
         if not UE.UKismetSystemLibrary.IsValid(self.Chr) then
             return
         end
         self:UpdateChrInfo()
+        self:UpdateAimVal()
         if self.MoveState == EMoveState.Ground then
             local ShouldMove = self:CheckShouldMove()
             if self.ShouldMove and ShouldMove then
@@ -99,10 +101,31 @@ end
 
 ---@private [Update] 
 function IkunAnimInst:UpdateChrInfo()
-    
     self.InFight = gas_util.asc_has_tag_by_name(self.Chr, 'Chr.State.InFight')
     self.Vel, self.Acc, self.MoveInput, self.IsMove, self.HasMoveInput, self.Speed, self.MoveInputAmount, self.AimRot, self.AimYawRate = self.Chr.AnimComp:GetEssentialVal()
     self.MoveState, self.RotMode, self.Gait, self.Stance, self.ViewModel = self.Chr.AnimComp:GetChrState()
+end
+
+---@private [Update]
+function IkunAnimInst:UpdateAimVal()
+    self.SmoothAimRot = UE.UKismetMathLibrary.RInterpTo(self.SmoothAimRot, self.AimRot, self.DeltaTimeX, self.CfgSmoothAimRotInterpSpeed) -- 平滑当前Rot
+    local ResultRot = UE.UKismetMathLibrary.NormalizedDeltaRotator(self.AimRot, self.Chr:K2_GetActorRotation())
+    self.AimAngle.X = ResultRot.Yaw
+    self.AimAngle.Y = ResultRot.Pitch
+    ResultRot = UE.UKismetMathLibrary.NormalizedDeltaRotator(self.SmoothAimRot, self.Chr:K2_GetActorRotation())
+    self.SmoothAimAngle.X = ResultRot.Yaw
+    self.SmoothAimAngle.Y = ResultRot.Pitch
+    if (self.RotMode == ERotMode.LookDir) or (self.RotMode == ERotMode.AimDir) then
+        self.AimSweepTime = Remap(self.AimAngle.X, -90, 90, 1, 0)
+        self.SpineRot.Yaw = self.AimAngle.X / 4
+    elseif self.RotMode == ERotMode.VelDir then
+        if self.HasMoveInput then
+            self.InputYawOffsetTime = UE.UKismetMathLibrary.FInterpTo(self.InputYawOffsetTime, Remap(UE.UKismetMathLibrary.NormalizedDeltaRotator(UE.UKismetMathLibrary.Conv_VectorToRotator(self.MoveInput), self.Chr:K2_GetActorRotation()), -180, 180, 0, 1), self.DeltaTimeX, self.CfgInputYawOffsetInterpSpeed)
+        end
+    end
+    self.LeftYawTime = Remap(math.abs(self.SmoothAimAngle.X), 0, 180, 0.5, 0)
+    self.RightYawTime = Remap(math.abs(self.SmoothAimAngle.X), 0, 180, 0.5, 1)
+    self.FwdYawTime = Remap(self.SmoothAimAngle.X, -180, 180, 0, 1)
 end
 
 ---@private [Update] 
@@ -150,8 +173,8 @@ end
 
 ---@private [Ground] 
 function IkunAnimInst:RotateInPlaceCheck()
-    self.RotL = self.AimAngele.X < self.RotateMinThreshold
-    self.RotR = self.AimAngele.X > self.RotateMaxThreshold
+    self.RotL = self.AimAngle.X < self.RotateMinThreshold
+    self.RotR = self.AimAngle.X > self.RotateMaxThreshold
     if self.RotL or self.RotR then
         self.RotRate = UE.UKismetMathLibrary.MapRangeClamped(self.AimYawRate, self.AimYawRateMinRange, self.AimYawRateMinRange, self.MinPlayRate, self.MaxPlayRate)
     end
@@ -165,13 +188,60 @@ end
 
 ---@private [Ground] 
 function IkunAnimInst:TurnInPlaceCheck()
-    if (UE.UKismetMathLibrary.Abs(self.AimAngle.X) > self.TurnCheckMinAngle) and (self.AimYawRate > self.AimYawRateLimit) then
+    if (math.abs(self.AimAngle.X) > self.TurnCheckMinAngle) then -- and (self.AimYawRate < self.AimYawRateLimit) then
         self.ElapsedDelayTime = self.ElapsedDelayTime + self.DeltaTimeX
-        if self.ElapsedDelayTime > UE.UKismetMathLibrary.MapRangeClamped(UE.UKismetMathLibrary.Abs(self.AimAngle.X), self.TurnCheckMinAngle, 180, self.MinAngleDelay, self.MaxAngleDelay) then
-            -- TODO TurnInPlace(self, TarRot, PlayRateScale, Start, Override)
+        -- log.warn('zys ', format(self.ElapsedDelayTime), format(math.abs(self.AimAngle.X)), Remap(math.abs(self.AimAngle.X), self.TurnCheckMinAngle, 180, self.MinAngleDelay, self.MaxAngleDelay))
+        if self.ElapsedDelayTime > Remap(math.abs(self.AimAngle.X), self.TurnCheckMinAngle, 180, self.MinAngleDelay, self.MaxAngleDelay) then
+            self:TurnInPlace(UE.FRotator(0, self.AimRot.Yaw, 0), 1, 0, false)
         end
     else
         self.ElapsedDelayTime = 0
+    end
+end
+
+---@private [Ground] 
+function IkunAnimInst:TurnInPlace(TarRot, PlayRateScale, Start, Override)
+    local TurnAngle = UE.UKismetMathLibrary.NormalizedDeltaRotator(TarRot, self.Chr:K2_GetActorRotation()).Yaw
+    log.warn('zys turn angle : ', format(TurnAngle), ', tar:', format(TarRot.Yaw), ', cur:', format(self.Chr:K2_GetActorRotation().Yaw))
+    local TarTurnAsset = nil
+    if math.abs(TurnAngle) < 130 then -- 小于则为90, 大于则为180
+        if TurnAngle < 0 then -- 左
+            if self.Stance == EStance.Stand then
+                TarTurnAsset = self.N_TurnIP_L90
+            elseif self.Stance == EStance.Crouch then
+                TarTurnAsset = self.CLF_TurnIP_L90
+            end
+        else
+            if self.Stance == EStance.Stand then
+                TarTurnAsset = self.N_TurnIP_R90
+            elseif self.Stance == EStance.Crouch then
+                TarTurnAsset = self.CLF_TurnIP_R90
+            end
+        end
+    else
+        if TurnAngle < 0 then
+            if self.Stance == EStance.Stand then
+                TarTurnAsset = self.N_TurnIP_L180
+            elseif self.Stance == EStance.Crouch then
+                TarTurnAsset = self.CLF_TurnIP_L180
+            end
+        else
+            if self.Stance == EStance.Stand then
+                TarTurnAsset = self.N_TurnIP_R180
+            elseif self.Stance == EStance.Crouch then
+                TarTurnAsset = self.CLF_TurnIP_R180
+            end
+        end
+    end
+    if Override or not self:IsPlayingSlotAnimation(TarTurnAsset.Animation, TarTurnAsset.SlotName) then
+        log.warn('play mtg', TarTurnAsset.AnimatedAngle)
+        self:PlaySlotAnimationAsDynamicMontage(TarTurnAsset.Animation, "DefaultSlot"--[[TarTurnAsset.SlotName]], 0.2, 0.2, TarTurnAsset.PlayRate * PlayRateScale, 1, 0, Start)
+        if TarTurnAsset.ScaleTurnAngle then
+            self.RotScale = (TurnAngle /--[[真实TurnAngle(如70/80)比资源要求的TurnAngle(如90)]] TarTurnAsset.AnimatedAngle) * --[[按真实角度对于资源要求角度的完成率重新修正一次旋转缩放]]
+                (TarTurnAsset.PlayRate * PlayRateScale)
+        else
+            self.RotScale = TarTurnAsset.PlayRate * PlayRateScale
+        end
     end
 end
 

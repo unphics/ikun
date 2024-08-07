@@ -1,10 +1,4 @@
---
--- DESCRIPTION
---
--- @COMPANY **
--- @AUTHOR **
--- @DATE ${date} ${time}
---
+
 
 local EGait = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/Gait.Gait')
 local EMoveDir = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/MoveDir.MoveDir')
@@ -55,6 +49,7 @@ function AnimComp:GetEssentialVal()
     local HasMoveInput = self.HasMoveInput -- 是否有移动输入
     local Speed = self.Speed -- 
     local MoveInputAmount = self.MoveInputAmount -- 移动输入量
+    -- log.warn('aim rot', self:GetOwner():GetControlRotation())
     local AimRot = self:GetOwner():GetControlRotation() -- 旋转控制量
     local AimYawRate = self.AimYawRate -- 转向率
     return Vel, Acc, MoveInput, IsMove, HasMoveInput, Speed, MoveInputAmount, AimRot, AimYawRate
@@ -204,7 +199,7 @@ function AnimComp:UpdateGroundRot()
         end
         local RotAmount = self:GetAnimCurveVal('RotationAmount')
         if UE.UKismetMathLibrary.Abs(RotAmount) > 0 then
-            self:GetOwner():K2_AddActorWorldRotation(UE.FRotator(0, RotAmount * 30 * UE.UGameplayStatics.GetWorldDeltaSeconds(self), 0), false, UE.FHitResult(), false)
+            self:GetOwner():K2_AddActorWorldRotation(UE.FRotator(0, RotAmount * 65 * UE.UGameplayStatics.GetWorldDeltaSeconds(self), 0), false, UE.FHitResult(), false)
             self.TarRot = self:GetOwner():K2_GetActorRotation()
         end
     end
@@ -299,7 +294,7 @@ end
 
 function AnimComp:GetAnimCurveVal(CurveName)
     if UE.UKismetSystemLibrary.IsValid(self.MainAnimInst) then
-        self.MainAnimInst:GetCurveValue(CurveName)
+        return self.MainAnimInst:GetCurveValue(CurveName)
     else
         return 0
     end
