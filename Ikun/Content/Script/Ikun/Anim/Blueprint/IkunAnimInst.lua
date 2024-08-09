@@ -202,7 +202,7 @@ end
 ---@private [Ground] 
 function IkunAnimInst:TurnInPlace(TarRot, PlayRateScale, Start, Override)
     local TurnAngle = UE.UKismetMathLibrary.NormalizedDeltaRotator(TarRot, self.Chr:K2_GetActorRotation()).Yaw
-    log.warn('zys turn angle : ', format(TurnAngle), ', tar:', format(TarRot.Yaw), ', cur:', format(self.Chr:K2_GetActorRotation().Yaw))
+    log.log('anim inst', 'turn angle : ', format(TurnAngle), ', tar:', format(TarRot.Yaw), ', cur:', format(self.Chr:K2_GetActorRotation().Yaw))
     local TarTurnAsset = nil
     if math.abs(TurnAngle) < 130 then -- 小于则为90, 大于则为180
         if TurnAngle < 0 then -- 左
@@ -234,7 +234,7 @@ function IkunAnimInst:TurnInPlace(TarRot, PlayRateScale, Start, Override)
         end
     end
     if Override or not self:IsPlayingSlotAnimation(TarTurnAsset.Animation, TarTurnAsset.SlotName) then
-        log.warn('play mtg', TarTurnAsset.AnimatedAngle)
+        log.log('anim inst', 'play mtg', TarTurnAsset.AnimatedAngle)
         self:PlaySlotAnimationAsDynamicMontage(TarTurnAsset.Animation, "DefaultSlot"--[[TarTurnAsset.SlotName]], 0.2, 0.2, TarTurnAsset.PlayRate * PlayRateScale, 1, 0, Start)
         if TarTurnAsset.ScaleTurnAngle then
             self.RotScale = (TurnAngle /--[[真实TurnAngle(如70/80)比资源要求的TurnAngle(如90)]] TarTurnAsset.AnimatedAngle) * --[[按真实角度对于资源要求角度的完成率重新修正一次旋转缩放]]

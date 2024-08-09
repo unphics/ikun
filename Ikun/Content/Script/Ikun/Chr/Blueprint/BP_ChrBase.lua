@@ -34,7 +34,6 @@ end
 -- function BP_ChrBase:ReceiveActorEndOverlap(OtherActor)
 -- end
 
-
 ---@public 返回chr的motion数据
 function BP_ChrBase:BPIGetEssentialVal()
     return self.AnimComp:GetEssentialVal()

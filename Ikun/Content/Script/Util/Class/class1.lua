@@ -32,7 +32,7 @@ end
 
 local function create_class(class_name, structure, super_class)
     if (classes[class_name]) then
-        log.error("class \"" .. class_name .. "\" already exists.")
+        log.log("class error : class \"" .. class_name .. "\" already exists.")
     end
     local new_class = structure
     new_class.__name = class_name
@@ -53,7 +53,7 @@ local function interface(interface_name)
     setmetatable(new_interface, {
         __call = function (self, ...)
             if interfaces[interface_name] then
-                log.error("interface \"" .. interface_name "\" already exist.")
+                log.error("class error : interface \"" .. interface_name "\" already exist.")
             end
             interfaces[interface_name] = new_interface
             return new_interface
@@ -64,7 +64,7 @@ local function interface(interface_name)
             local super_interface = interfaces[super_interface_name]
             local new_inst = tb_impl(sub_interface, super_interface)
             if interfaces[interface_name] then
-                log.error("interface \"" .. interface_name "\" already exist.")
+                log.error("class error : interface \"" .. interface_name "\" already exist.")
             end
             interfaces[interface_name] = new_inst
             return new_inst
@@ -89,11 +89,11 @@ local function class(class_name)
                 local class_created = create_class(class_name, subclass)
                 for _, v in pairs(interfaces_names) do
                     if not interfaces[v] then
-                        log.error("interface \"" .. v .. "\" not found")
+                        log.error("class error : interface \"" .. v .. "\" not found")
                     end
                     for _, method in pairs(interfaces[v]) do
                         if not subclass[method] then
-                            log.error("interface \"" .. v "\" not implemented, method \"" .. method .. "\" not found")
+                            log.error("class error : interface \"" .. v "\" not implemented, method \"" .. method .. "\" not found")
                         end
                     end
                 end
@@ -110,11 +110,11 @@ local function class(class_name)
             if classes[class_name] then
                 return classes[class_name][key]
             end
-            log.error("class \"" .. class_name .. "\" not found")
+            log.error("class error : class \"" .. class_name .. "\" not found")
         end,
         __call = function(self, ...)
             if classes[class_name] then
-                log.error("class \"" .. class_name .. "\" already exist")
+                log.log("class error : class \"" .. class_name .. "\" already exist")
             end
             local new_inst = create_class(class_name, ...)
             return new_inst
@@ -127,7 +127,7 @@ local function new(class_name)
     return function(...)
         local classe = classes[class_name]
         if not classe then
-            log.error("class \"" .. class_name .. "\" not found")
+            log.error("class error : class \"" .. class_name .. "\" not found")
         end
         local super = classe.super
         local new_obj = tb_copy(classe, super)
@@ -141,7 +141,7 @@ end
 local function derivedfrom(instance, class_name)
     local class = classes[class_name]
     if not class then
-        log.error("class \"" .. class_name .. "\" not found")
+        log.error("class error : class \"" .. class_name .. "\" not found")
     end
     if instance and class_name == instance.base_class_name then
         return true
@@ -152,7 +152,7 @@ end
 local function instanceof(instance, class_name)
     local classe = classes[class_name]
     if not classe then
-        log.error("class \"" .. class_name .. "\" not found")
+        log.error("class error : class \"" .. class_name .. "\" not found")
     end
     if instance.__name == class_name then
         return true

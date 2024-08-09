@@ -34,6 +34,10 @@ function M:OnEndAbility(WasCancelled)
     self.Overridden.OnEndAbility(self, WasCancelled)
 end
 
+function M:OnAbilityEnd(WasCancelled)
+    self.Overridden.OnAbilityEnd(self, WasCancelled)
+end
+
 function M:OnCompleted(EventTag, EventData)
     self:GASuccess()
 end
