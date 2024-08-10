@@ -7,6 +7,7 @@ local EStance = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/Stance.Stance')
 local EViewModel = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/ViewModel.ViewModel')
 
 ---@class BP_ChrBase: BP_ChrBase_C
+---@field FightComp BP_FightComp
 local BP_ChrBase = UnLua.Class()
 
 -- function BP_ChrBase:Initialize(Initializer)
