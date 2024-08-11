@@ -33,8 +33,8 @@ end
 -- function BP_Chr_Katana:ReceiveEndPlay()
 -- end
 
--- function BP_Chr_Katana:ReceiveTick(DeltaSeconds)
--- end
+function BP_Chr_Katana:ReceiveTick(DeltaSeconds)
+end
 
 -- function BP_Chr_Katana:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
 -- end

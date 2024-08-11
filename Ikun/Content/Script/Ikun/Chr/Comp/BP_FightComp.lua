@@ -101,7 +101,7 @@ ReclockPromise = function(self, Key, Time)
     end
 end
 
-function BP_FightComp:CheckFight()
+BP_FightComp.CheckFight = function(self)
     if gas_util.asc_has_tag_by_name(self:GetOwner(), 'Chr.State.InFight') then
         ReclockPromise(self, 'InFight')
         return true
