@@ -31,7 +31,7 @@ function M:Construct()
 end
 
 function M:Tick(MyGeometry, InDeltaTime)
-    local Chr = UE4.UGameplayStatics.GetPlayerCharacter(world_util.GameWorld, 0)
+    local Chr = UE.UGameplayStatics.GetPlayerCharacter(world_util.GameWorld, 0)
     local AnimInst = Chr.Mesh:GetAnimInstance()
     local text = ''
     local function fmt(key, value)

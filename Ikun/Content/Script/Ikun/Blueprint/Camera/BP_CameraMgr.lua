@@ -6,7 +6,7 @@
 -- @DATE ${date} ${time}
 --
 
----@type BP_CameraMgr_C
+---@class BP_CameraMgr
 local M = UnLua.Class()
 
 -- function M:Initialize(Initializer)
@@ -22,8 +22,8 @@ end
 function M:ReceiveEndPlay()
 end
 
--- function M:ReceiveTick(DeltaSeconds)
--- end
+function M:ReceiveTick(DeltaSeconds)
+end
 
 -- function M:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
 -- end

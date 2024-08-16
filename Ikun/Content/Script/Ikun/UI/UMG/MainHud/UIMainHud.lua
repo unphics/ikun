@@ -41,6 +41,15 @@ function M:SwitchGameMasterShow()
     end
 end
 
+---`private` 3D场景
+function M:Switch3dUIShow()
+    ---@type BP_CameraMgr
+    local RoleShowComp = UE.UGameplayStatics.GetPlayerController(world_util.GameWorld, 0).BP_RoleShowComp
+    if RoleShowComp and RoleShowComp:IsValid() then
+        RoleShowComp:DoSwitchLevel()
+    end
+end
+
 ---@private
 function M:InitEnhancedInput()
     ---@type UEnhancedInputLocalPlayerSubsystem
@@ -54,10 +63,17 @@ function M:InitEnhancedInput()
 end
 
 local EnhancedInput = require("UnLua.EnhancedInput")
+-- P-Keys
 EnhancedInput.BindAction(M, '/Game/Ikun/UI/Input/IA_GameMaster.IA_GameMaster', 'Started', 
     function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         local MainHud = SourceObj
         MainHud:SwitchGameMasterShow()
+    end)
+-- L-Keys
+EnhancedInput.BindAction(M, '/Game/Ikun/Blueprint/Input/IA/IA_3d.IA_3d', 'Started', 
+    function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        local MainHud = SourceObj
+        MainHud:Switch3dUIShow()
     end)
 
 return M

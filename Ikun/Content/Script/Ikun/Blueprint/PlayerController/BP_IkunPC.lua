@@ -1,6 +1,5 @@
 
 local BP_ChrBase = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/BP_ChrBase.BP_ChrBase_C')
-local EnhancedInput = require("UnLua.EnhancedInput")
 
 ---@class BP_IkunPC: BP_IkunPC_C
 ---@field OwnerChr BP_ChrBase
@@ -84,6 +83,7 @@ function BP_IkunPC:InitCamera()
     Camera:K2_AttachToActor(self, nil, UE.EAttachmentRule.SnapToTarget, UE.EAttachmentRule.SnapToTarget, UE.EAttachmentRule.SnapToTarget, true)
 end
 
+local EnhancedInput = require("UnLua.EnhancedInput")
 EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move', 'Triggered', 
     function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         local PC = SourceObj
@@ -137,28 +137,3 @@ EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Sprint.IA_
 
 
 return BP_IkunPC
-
---[[
-    UE.UEnhancedInputLibrary.Conv_InputActionValueToBool
-    UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis1D
-    UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D
-    UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis3D
-]]
-
---[[
-local EnhancedInput = require("UnLua.EnhancedInput")
-
-EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Test.IA_Test', 'Triggered', 
-    function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-        log.warn('不知道为啥数值总是不对', ActionValue) -- UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D(ActionValue)
-    end)
-EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move', 'Triggered', 
-    function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-        log.warn('move input 好像数值挺对的', ActionValue.X, ActionValue.Y) -- UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D(ActionValue)
-    end)
-EnhancedInput.BindAction(BP_IkunPC, '/Game/Ikun/Blueprint/Input/IA/IA_Look.IA_Look', 'Triggered', 
-    function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-        log.warn('look input', ActionValue.X, ActionValue.Y) -- UE.UEnhancedInputLibrary.Conv_InputActionValueToAxis2D(ActionValue)
-    end)
-]]
-
