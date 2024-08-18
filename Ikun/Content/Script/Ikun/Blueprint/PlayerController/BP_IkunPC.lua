@@ -21,7 +21,7 @@ function BP_IkunPC:ReceiveBeginPlay()
         net_util.b_svr = false
         world_util.GameWorld = self
         self:InitEnhancedInput()
-        self:InitCamera()
+        -- self:InitCamera()
     end
 end
 

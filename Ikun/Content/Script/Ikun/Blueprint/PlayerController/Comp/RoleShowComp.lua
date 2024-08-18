@@ -46,40 +46,42 @@ function RoleShowComp:DoSwitchLevel()
     log.error("DoSwitchLevel 111")
     
     if self.LevelStatus == LevelStatusDef.Closed then
-        async_util.delay(self, 0.5, function()
-            self.LevelStatus = LevelStatusDef.Opening
-            local EntryLevelName = 'LevelToLoad'
+        -- async_util.delay(self, 0.2, function()
+        -- end)
+        self.LevelStatus = LevelStatusDef.Opening
+        local EntryLevelName = 'RoleShowLevel'
 
-            local PlayerChr = UE.UGameplayStatics.GetPlayerCharacter(self, 0)
-            local Loc = PlayerChr:K2_GetActorLocation()
-            Loc.Z = math.max(Loc.Z + 100000, 0) -- zys mark 没懂, 回来再看看
-            local Rot = UE.FRotator(0, UE.UGameplayStatics.GetPlayerCameraManager(self, 0).Yaw, 0)
-            
-            if self.StreamLevel then
-                self.StreamLevel:SetShouldBeVisible(true)
-            else -- 第一次创建场景
-                local bSucceed = false -- todo 这玩意有问题, 回头再看看为啥
-                local level = UE.ULevelStreamingDynamic.LoadLevelInstance(self, EntryLevelName, Loc, Rot, bSucceed)
-                if level then
-                    self.StreamLevel = level
-                    self.StreamLevel.OnLevelShown:Add(self, function()
-                        -- on entry level show
-                        log.error("step : 场景加载完成")
-                        self.LevelStatus = LevelStatusDef.Opened
-                        if self.LevelVision then
-                            self.LevelVision:PlaySeq()
-                        end
-                    end)
-                    self.StreamLevel.OnLevelHidden:Add(self, function()
-                        self.LevelStatus = LevelStatusDef.Closed
-                    end)
-                end
-                RenderTargetTest(self)
+        local PlayerChr = UE.UGameplayStatics.GetPlayerCharacter(self, 0)
+        local Loc = PlayerChr:K2_GetActorLocation()
+        Loc.Z = math.max(Loc.Z + 100000, 0) -- zys mark 没懂, 回来再看看
+        local Rot = UE.FRotator(0, UE.UGameplayStatics.GetPlayerCameraManager(self, 0).Yaw, 0)
+        
+        if self.StreamLevel then
+            self.StreamLevel:SetShouldBeVisible(true)
+        else -- 第一次创建场景
+            local bSucceed = false -- todo 这玩意有问题, 回头再看看为啥
+            local level = UE.ULevelStreamingDynamic.LoadLevelInstance(self, EntryLevelName, Loc, Rot, bSucceed)
+            if level then
+                self.StreamLevel = level
+                self.StreamLevel.OnLevelShown:Add(self, function()
+                    -- on entry level show
+                    log.error("step : 场景加载完成")
+                    self.LevelStatus = LevelStatusDef.Opened
+                    if self.LevelVision then
+                        self.LevelVision:PlaySeq()
+                    end
+                end)
+                self.StreamLevel.OnLevelHidden:Add(self, function()
+                    self.LevelStatus = LevelStatusDef.Closed
+                end)
             end
-        end)
+            RenderTargetTest(self)
+        end
     elseif self.LevelStatus == LevelStatusDef.Opened then
         log.error('step : 隐藏场景')
         self.StreamLevel:SetShouldBeVisible(false)
+        local BlendFunc = 0
+        UE.UGameplayStatics.GetPlayerController(self, 0):SetViewTargetWithBlend(UE.UGameplayStatics.GetPlayerCharacter(self, 0), 0, BlendFunc, 0, false)
     end
 end
 
@@ -100,10 +102,10 @@ RenderTargetTest = function(self)
     local SpawnParams = UE.FSpawnParamters()
     SpawnParams.CollisionHandling = UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn
     SpawnParams.Instigator = self:Cast(UE.APawn)
-    local SpawnClass = UE.UClass.Load('/Game/Ikun/Actor/RoleShow/BP_LevelVision.BP_LevelVision_C')
+    local SpawnClass = UE.UClass.Load('/Game/Ikun/Maps/RoleShow/BP_LevelVision.BP_LevelVision_C')
     local Transform = self:GetOwner():GetTransform()
     local AlwaysSpawn = UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn
-    self.LevelVision = self:GetWorld():SpawnActor(SpawnClass, Transform, AlwaysSpawn, self, self, "")
+    self.LevelVision = self:GetOwner():GetWorld():SpawnActor(SpawnClass, Transform, AlwaysSpawn, self, self, "")
 end
 
 return RoleShowComp
