@@ -31,7 +31,7 @@ void CreateDefaultParamCollection()
     {
         CollectionCreated = true;
 
-#include "DefaultParamCollection.inl"
+//#include "DefaultParamCollection.inl"
     }
 }
 
