@@ -79,6 +79,7 @@ function AnimComp:SetEssentialVal(DeltaSeconds)
         -- TODO 没懂
         self.LastVelRot = UE.UKismetMathLibrary.MakeRotFromX(self:GetOwner():GetVelocity())
     end
+    log.warn("加速度", self:GetOwner().CharacterMovement:GetCurrentAcceleration())
     -- 移动输入量=当前加速度/最大加速度 判断角色是否有移动输入
     self.MoveInputAmount = UE.UKismetMathLibrary.VSize(self:GetOwner().CharacterMovement:GetCurrentAcceleration()) / self:GetOwner().CharacterMovement:GetMaxAcceleration()
     -- 角色有移动输入量则认为有移动输入
