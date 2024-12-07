@@ -52,7 +52,7 @@ BP_ChrBase.MoveForwardBack = function(self, Fwd, Val)
     local Rot = self:GetControlRotation()
     local YawRot = UE.FRotator(0, Rot.Yaw, 0)
     local Forward = YawRot:GetForwardVector()
-    self:AddMovementInput(Forward, Val)
+    self:AddMovementInput(Forward, Val, false)
 end
 
 ---@public [Input] 左右移动输入
@@ -63,7 +63,7 @@ BP_ChrBase.MoveRightLeft = function(self, Fwd, Val)
     local Rot = self:GetControlRotation()
     local YawRot = UE.FRotator(0, Rot.Yaw, 0)
     local Right = YawRot:GetRightVector()
-    self:AddMovementInput(Right, Val)
+    self:AddMovementInput(Right, Val, false)
 end
 
 ---@public [Input] 跳跃
@@ -75,9 +75,9 @@ end
 ---@public [Input] 蹲伏
 BP_ChrBase.ChrCrouch = function(self)
     if not self.CharacterMovement:IsCrouching() then
-        self:Crouch()
+        self:Crouch(true)
     else
-        self:UnCrouch()
+        self:UnCrouch(true)
     end
 end
 

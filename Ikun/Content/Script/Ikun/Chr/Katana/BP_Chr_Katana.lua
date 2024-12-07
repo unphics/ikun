@@ -26,7 +26,7 @@ function BP_Chr_Katana:ReceiveBeginPlay()
 
     if self:HasAuthority() then
         local ability_normal = UE.UClass.Load('/Game/Ikun/Chr/Katana/Skill/Skill_01_Attack_01/GA_Katana_Skill_01.GA_Katana_Skill_01_C')
-        self.handle = self.ASC:K2_GiveAbility(ability_normal)
+        self.handle = self.ASC:K2_GiveAbility(ability_normal, 0, 0)
     end
 end
 

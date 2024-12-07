@@ -79,7 +79,6 @@ function AnimComp:SetEssentialVal(DeltaSeconds)
         -- TODO 没懂
         self.LastVelRot = UE.UKismetMathLibrary.MakeRotFromX(self:GetOwner():GetVelocity())
     end
-    log.warn("加速度", self:GetOwner().CharacterMovement:GetCurrentAcceleration())
     -- 移动输入量=当前加速度/最大加速度 判断角色是否有移动输入
     self.MoveInputAmount = UE.UKismetMathLibrary.VSize(self:GetOwner().CharacterMovement:GetCurrentAcceleration()) / self:GetOwner().CharacterMovement:GetMaxAcceleration()
     -- 角色有移动输入量则认为有移动输入
@@ -253,7 +252,7 @@ end
 function AnimComp:LimitRot(InAimYawMin, InAimYawMax, InterpSpeed)
     -- 比较鼠标旋转和当前人物旋转
     local RotDelta = UE.UKismetMathLibrary.NormalizedDeltaRotator(self:GetOwner():GetControlRotation(), self:GetOwner():K2_GetActorRotation())
-    if not UE.UKismetMathLibrary.InRange_FloatFloat(RotDelta.Yaw, InAimYawMin, InAimYawMax) then
+    if not UE.UKismetMathLibrary.InRange_FloatFloat(RotDelta.Yaw, InAimYawMin, InAimYawMax, true, true) then
         -- 旋转角度: 向右转就用Max这个, 向左转就用Min这个, 让他一直转到要求的控制旋转的边界
         local Yaw = RotDelta.Yaw > 0 and (self:GetOwner():GetControlRotation().Yaw + InAimYawMax) or (self:GetOwner():GetControlRotation().Yaw + InAimYawMin)
         self:SmoothChrRot(UE.FRotator(0, Yaw, 0) , 0, InterpSpeed)

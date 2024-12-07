@@ -35,9 +35,9 @@ end
 ---@return boolean
 local function AngleInRange(Angle, MinAngle, MaxAngle, Buffer, InCreaseBuf)
     if InCreaseBuf then
-        return UE.UKismetMathLibrary.InRange_FloatFloat(Angle, MinAngle - Buffer, MaxAngle + Buffer)
+        return UE.UKismetMathLibrary.InRange_FloatFloat(Angle, MinAngle - Buffer, MaxAngle + Buffer, true, true)
     else
-        return UE.UKismetMathLibrary.InRange_FloatFloat(Angle, MinAngle + Buffer, MaxAngle - Buffer)
+        return UE.UKismetMathLibrary.InRange_FloatFloat(Angle, MinAngle + Buffer, MaxAngle - Buffer, true, true)
     end
 end
 
