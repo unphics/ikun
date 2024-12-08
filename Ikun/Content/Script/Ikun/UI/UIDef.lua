@@ -35,7 +35,7 @@ UIInfo.GameMaster = {
 UIInfo.AnimDebug = {
     ClassPath = '/Game/Ikun/UI/UMG/AnimDebug/UIAnimDebug.UIAnimDebug',
     Layer = Layer.TopLayer,
-    DefaultOpen = true,
+    DefaultOpen = false,
     ReleaseMouse = false,
 }
 
