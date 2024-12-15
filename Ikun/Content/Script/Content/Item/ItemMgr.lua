@@ -1,6 +1,6 @@
---[[
-    @brief 物品管理器
-]]
+---
+---@brief 物件管理器
+---
 
 class.class"ItemMgr"{
     

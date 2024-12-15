@@ -1,13 +1,20 @@
+---
+---@brief 纯逻辑模块的基类
+---
 
 local class = require("Util.Class.class1")
 
-class.class "MdBase" {
+---@class MdBase
+local MdBase = class.class "MdBase" {
     IsMd = true,
-    ctor = function(self)
-        self.MdName = "MdBase"
-    end,
-    Init = function()
-    end,
-    Tick = function(DeltaTime)
-    end,
+    MdName = 'MdBase',
+    ctor = function() end,
+    Init = function() end,
+    Tick = function(DeltaTime) end,
 }
+function MdBase:ctor()
+end
+function MdBase:Init()
+end
+function MdBase:Tick(DeltaTime)
+end

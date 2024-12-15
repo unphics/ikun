@@ -1,15 +1,21 @@
---[[
-    @brief 地域管理
-]]
+---
+---@brief 自然区划 区域管理器
+---
+
 require("Content.Area.Cosmos")
 
-class.class "AreaMgr" : extends "MdBase" {
+---@class AreaMgr: MdBase
+local AreaMgr = class.class "AreaMgr" : extends "MdBase" {
+--[[public]]
+    ctor = function() end,
+    GetStar = function() end,
+--[[private]]
     Cosmos = nil,
-    ctor = function(self)
-        self.Cosmos = class.new"Cosmos"()
-    end,
-    GetStar = function(self)
-        -- TODO
-        return self.Cosmos.tbStar[1]
-    end
 }
+function AreaMgr:ctor()
+    self.Cosmos = class.new"Cosmos"()
+end
+function AreaMgr:GetStar()
+    ---@todo 现在只有一个星球
+    return self.Cosmos.tbStar[1]
+end

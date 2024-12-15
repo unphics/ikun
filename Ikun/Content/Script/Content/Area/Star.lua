@@ -1,6 +1,6 @@
---[[
-    @brief 星球
-]]
+---
+---@brief 星球
+---
 
 require("Content.District.DistrictMgr")
 

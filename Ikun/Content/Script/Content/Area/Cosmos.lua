@@ -1,25 +1,28 @@
---[[
-    @brief 宇宙
-]]
+---
+---@brief 宇宙
+---
+
 require("Content/Area/Star")
 local CosmosCfg = require("Content/Area/Config")
 
-class.class "Cosmos" : extends "MdBase" {
+local Cosmos = class.class "Cosmos" : extends "MdBase" {
+--[[public]]
+    ctor = function() end,
+    Init = function() end,
+    Reincarnate = function() end, -- 玩家随机投胎
+--[[private]]
+    InitAllStar = function() end, -- 初始化所有星球
     tbStar = {},
-    ctor = function(self)
-        self:InitAllStar()
-    end,
-    Init = function(self)
-    end,
-    ---@private 初始化所有星球
-    InitAllStar = function(self)
-        for i, cfg in ipairs(CosmosCfg.Star) do
-            local star = class.new "Star" (cfg.Name)
-            table.insert(self.tbStar, star)
-        end
-    end,
-    ---@public 玩家随机投胎
-    Reincarnate = function(self)
-        local random = math.random(1, #self.tbStar)
-    end
 }
+function Cosmos:ctor()
+    self:InitAllStar()
+end
+function Cosmos:InitAllStar()
+    for i, cfg in ipairs(CosmosCfg.Star) do
+        local star = class.new "Star" (cfg.Name)
+        table.insert(self.tbStar, star)
+    end
+end
+function Cosmos:Reincarnate()
+    local random = math.random(1, #self.tbStar)
+end
