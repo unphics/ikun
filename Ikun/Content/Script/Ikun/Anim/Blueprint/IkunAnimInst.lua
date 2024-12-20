@@ -57,7 +57,6 @@ end
 
 ---@override [Tick]
 function IkunAnimInst:BlueprintUpdateAnimation(DeltaTimeX)
-    self:Test()
     self.DeltaTimeX = DeltaTimeX
     if DeltaTimeX ~= 0 then
         if not UE.UKismetSystemLibrary.IsValid(self.Chr) then
@@ -120,7 +119,9 @@ function IkunAnimInst:UpdateAimVal()
         self.SpineRot.Yaw = self.AimAngle.X / 4
     elseif self.RotMode == ERotMode.VelDir then
         if self.HasMoveInput then
-            self.InputYawOffsetTime = UE.UKismetMathLibrary.FInterpTo(self.InputYawOffsetTime, Remap(UE.UKismetMathLibrary.NormalizedDeltaRotator(UE.UKismetMathLibrary.Conv_VectorToRotator(self.MoveInput), self.Chr:K2_GetActorRotation()), -180, 180, 0, 1), self.DeltaTimeX, self.CfgInputYawOffsetInterpSpeed)
+            local a = UE.UKismetMathLibrary.Conv_VectorToRotator(self.MoveInput)
+            local b = UE.UKismetMathLibrary.NormalizedDeltaRotator(a, self.Chr:K2_GetActorRotation())
+            self.InputYawOffsetTime = UE.UKismetMathLibrary.FInterpTo(self.InputYawOffsetTime, Remap(b.Yaw, -180, 180, 0, 1), self.DeltaTimeX, self.CfgInputYawOffsetInterpSpeed)
         end
     end
     self.LeftYawTime = Remap(math.abs(self.SmoothAimAngle.X), 0, 180, 0.5, 0)
