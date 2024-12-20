@@ -1,4 +1,4 @@
-require("Util.Debug.Log")
+
 log.log("全局class0使用")
 --- # 深拷贝
 ---@param res table

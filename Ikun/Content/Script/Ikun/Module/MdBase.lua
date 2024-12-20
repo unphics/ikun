@@ -2,8 +2,6 @@
 ---@brief 纯逻辑模块的基类
 ---
 
-local class = require("Util.Class.class1")
-
 ---@class MdBase
 local MdBase = class.class "MdBase" {
     IsMd = true,

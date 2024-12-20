@@ -3,5 +3,5 @@
 ---
 
 class.class"Plate" {
-    ctor = function(self)end,
+    ctor = function()end,
 }

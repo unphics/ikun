@@ -2,12 +2,12 @@
 ---@brief 村庄
 ---
 
-local SettlementDef = require('Content/District/Settlements/SettlemengDef')
+local SettlementType = require('Content/District/Settlements/SettlemengType')
 
 ---@class Village: Settlement
 local Village = class.class "Village" : extends "Settlement" {
     ctor = function(Name) end
 }
 function Village:ctor(Name)
-    self.super.ctor(self, Name, SettlementDef.Village)
+    class.Settlement.ctor(self, Name, SettlementType.Village)
 end

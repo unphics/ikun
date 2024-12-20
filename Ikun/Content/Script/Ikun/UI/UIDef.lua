@@ -1,7 +1,8 @@
 
 local UIInfo = {}
 
----@class UIWnd
+---@class UIInfo
+---@field UIName string
 ---@field Path string
 ---@field Layer Layer
 ---@field DefaultOpen boolean
@@ -16,14 +17,14 @@ local Layer = {
     TipsLayer = 'TipsLayer',
 }
 
----@type UIWnd
+---@type UIInfo
 UIInfo.MainHud = {
     ClassPath = '/Game/Ikun/UI/UMG/MainHud/UIMainHud.UIMainHud',
     Layer = Layer.HudLayer,
     DefaultOpen = true,
 }
 
----@type UIWnd
+---@type UIInfo
 UIInfo.GameMaster = {
     ClassPath = '/Game/Ikun/UI/UMG/GameMaster/UIGameMaster.UIGameMaster',
     Layer = Layer.TopLayer,
@@ -31,7 +32,7 @@ UIInfo.GameMaster = {
     ReleaseMouse = true,
 }
 
----@type UIWnd
+---@type UIInfo
 UIInfo.AnimDebug = {
     ClassPath = '/Game/Ikun/UI/UMG/AnimDebug/UIAnimDebug.UIAnimDebug',
     Layer = Layer.TopLayer,

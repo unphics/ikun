@@ -3,27 +3,44 @@ class.class "base" {
     x = 10,
     z = 1,
     ctor = function(self)
-        log.warn("zys base ctor", self.x)
+        self.tb = {}
+        log.warn("zys class base ctor", self.x)
     end,
     test = function(self)
-        log.warn("zys base test")
+        log.warn("zys class base test")
     end,
     base_fn = function(self)
-        log.warn("zys base fn")
-    end
+        log.warn("zys class base fn")
+    end,
+    tb = {}
 }
 
 class.class "derive" : extends "base" {
     y = 20,
     z = 2,
     ctor = function (self)
-        self.super.ctor(self)
-        log.warn("zys derive ctor", self.x)
+        self.super.ctor(self.super)
+        self.tb = {}
+        log.warn("zys class derive ctor", self.x)
     end,
     test = function(self)
-        log.warn("zys derive test")
+        log.warn("zys class derive test")
     end,
 }
 
--- local main = class.new "derive" ()
--- main:test()
+class.class 'grand' : extends 'derive' {
+    x = 3,
+    ctor = function(self)
+        self.super.ctor(self.super)
+        self.tb = {}
+        log.warn("zys class derive ctor", self.x)
+    end,
+    test = function(self)
+        self.super.test(self.super)
+        local obj = class.new'derive' ()
+        table.insert(self.tb, obj)
+    end,
+}
+
+local main = class.new "grand" ()
+main:test()

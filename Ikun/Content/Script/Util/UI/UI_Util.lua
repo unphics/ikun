@@ -1,4 +1,5 @@
-ui_util = {}
+---@class ui_util
+local ui_util = {}
 
 ui_util.uidef = require("Ikun.UI.UIDef")
 ui_util.uimgr = nil

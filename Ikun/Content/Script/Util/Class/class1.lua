@@ -1,4 +1,4 @@
-require("Util.Debug.Log")
+
 log.log("全局class1使用")
 
 local classes = {}

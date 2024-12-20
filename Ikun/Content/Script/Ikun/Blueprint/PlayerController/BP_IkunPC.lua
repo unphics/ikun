@@ -17,13 +17,21 @@ function BP_IkunPC:ReceiveBeginPlay()
     if self:HasAuthority() then
         log.log("GamePlay PlayerController ReceiveBeginPlay Server")
         world_util.GameWorld = self
-        net_util.b_svr = true
     else
         log.log("GamePlay PlayerController ReceiveBeginPlay Client")
-        net_util.b_svr = false
         world_util.GameWorld = self
+    end
+
+    if net_util.is_client() then
         self:InitEnhancedInput()
-        -- self:InitCamera()
+    end
+
+    if net_util.is_client() then
+        self:InitCamera()
+    end
+
+    if net_util.is_client() then
+        async_util.delay(self, 2, self.HideOwnerChrTopMark, self)
     end
 end
 
@@ -79,7 +87,7 @@ function BP_IkunPC:InitCamera()
     local SpawnParams = UE.FSpawnParamters()
     SpawnParams.CollisionHandling = UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn
     SpawnParams.Instigator = self:Cast(UE.APawn)
-    local CameraClass = UE.UClass.Load('/Game/Ikun/Blueprint/Camera/BP_Camera.BP_Camera_C')
+    local CameraClass = UE.UClass.Load('/Game/Ikun/Blueprint/Camera/BP_CameraMgr.BP_CameraMgr_C')
     local Transform = self:GetTransform()
     local AlwaysSpawn = UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn
     local Camera = self:GetWorld():SpawnActor(CameraClass, Transform, AlwaysSpawn, self, self, "")
@@ -87,6 +95,14 @@ function BP_IkunPC:InitCamera()
     Camera:K2_AttachToActor(self, nil, UE.EAttachmentRule.SnapToTarget, UE.EAttachmentRule.SnapToTarget, UE.EAttachmentRule.SnapToTarget, true)
 end
 
+---@protected 隐藏玩家自己客户端的TopMark
+function BP_IkunPC:HideOwnerChrTopMark()
+    if obj_util.is_valid(self.OwnerChr) then
+        self.OwnerChr.TopMark:SetVisibility(false)
+    else
+        log.error('[BP_IkunPC]:HideOwnerChrTopMark Player OwnerChr Is Invalid !!!')
+    end
+end
 
 InputBind.Bind(BP_IkunPC)
 

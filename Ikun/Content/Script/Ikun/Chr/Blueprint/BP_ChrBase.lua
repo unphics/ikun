@@ -8,6 +8,7 @@ local EViewModel = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/ViewModel.Vie
 
 ---@class BP_ChrBase: BP_ChrBase_C
 ---@field FightComp BP_FightComp
+---@field Role Role
 local BP_ChrBase = UnLua.Class()
 
 -- function BP_ChrBase:Initialize(Initializer)
@@ -17,6 +18,12 @@ local BP_ChrBase = UnLua.Class()
 -- end
 
 function BP_ChrBase:ReceiveBeginPlay()
+    async_util.timer(self,  function()
+        self.MsgBusComp:TriggerEvent('ChrInitData')
+    end, 1, false)
+    async_util.timer(self, function()
+        self.MsgBusComp:TriggerEvent('ChrInitDisplay')
+    end, 2, false)
 end
 
 -- function BP_ChrBase:ReceiveEndPlay()

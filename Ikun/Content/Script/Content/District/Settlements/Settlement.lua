@@ -4,7 +4,8 @@
 
 ---@class Settlement
 ---@field Actor AActor 此聚集地的Avatar
----@field SettlementType SettlementDef
+---@field SettlementType SettlementType
+---@field Name string
 local Settlement = class.class "Settlement" {
 --[[public]]
     ctor = function(Name, SettlementType) end,

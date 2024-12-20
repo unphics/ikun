@@ -1,5 +1,3 @@
-local MdMgr = require('Ikun.Module.MdMgr')
-local class = require("Util.Class.class1")
 
 ---@type BP_IkunGameModeBase_C
 local M = UnLua.Class()
@@ -20,7 +18,8 @@ end
 -- end
 
 function M:ReceiveTick(DeltaSeconds)
-    _G.MdMgr:Tick(DeltaSeconds)
+
+    MdMgr:Tick(DeltaSeconds)
 end
 
 -- function M:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)

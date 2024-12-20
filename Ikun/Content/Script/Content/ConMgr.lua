@@ -7,16 +7,24 @@ require("Content.Area.AreaMgr")
 
 local ConMgr = class.class "ConMgr" : extends "MdBase" {
     MdName = 'ConMgr',
-    tbCon = {
-        WillMgr = class.new "WillMgr"(),
-        AreaMgr = class.new "AreaMgr"(),
-    },
+    tbCon = nil,
     Init = function(self) end,
     Tick = function(DeltaTime) end
 }
+function ConMgr:ctor()
+    self.tbCon = {
+        WillMgr = class.new "WillMgr"(),
+        AreaMgr = class.new "AreaMgr"(),
+    }
+end
 function ConMgr:Init()
-    self.super.Init(self)
+    class.MdBase.Init(self)
     for k, v in pairs(self.tbCon) do
         v:Init()
+    end
+end
+function ConMgr:Tick(DeltaTime)
+    for k, v in pairs(self.tbCon) do
+        v:Tick(DeltaTime)
     end
 end

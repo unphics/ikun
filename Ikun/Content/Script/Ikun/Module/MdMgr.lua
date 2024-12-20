@@ -7,21 +7,23 @@
 
 local MdBase = require("Ikun.Module.MdBase")
 local ConMgr = require("Content.ConMgr")
-local class = require("Util.Class.class1")
 
 ---@class MdMgr
 local MdMgr = class.class "MdMgr" : extends "MdBase" {
+--[[public]]
+    ctor = function()end,
+    Init = function()end,
+    Tick = function(DeltaTime)end,
     MdName = "MdMgr",
-    tbMd = {
-        ConMgr = class.new"ConMgr"()
-    },
-    ctor = function(self) end,
-    Init = function(self) end,
-    Tick = function(self, DeltaTime) end,
+    tbMd = nil,
 }
 ---@private [override]
 function MdMgr:Init()
-    self.super.Init(self)
+    class.MdBase.Init(self)
+    self.tbMd = {
+        ConMgr = class.new"ConMgr"()
+    }
+
     for _, Md in pairs(self.tbMd) do
         Md:Init()
     end
