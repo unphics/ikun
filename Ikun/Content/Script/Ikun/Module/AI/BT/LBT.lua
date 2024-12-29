@@ -213,7 +213,6 @@ require('Ikun/Module/AI/BT/Task/LTask_Wait')
 
 require('Ikun/Module/AI/BT/Decorator/LDecorator')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_RoleCond')
-require('Ikun/Module/AI/BT/Task/LTask_NavMove')
 require('Ikun/Module/AI/BT/Task/LTask_AiMoveBase')
 
 ---@class LBT Lua行为树
