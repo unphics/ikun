@@ -11,8 +11,8 @@ local M = UnLua.Class()
 -- end
 
 function M:ReceiveBeginPlay()
-    self:GetOwner().MsgBusComp:RegEvent('ChrInitData', self, function() self:OnChrInitData() end)
-    self:GetOwner().MsgBusComp:RegEvent('ChrInitDisplay', self, function() self:ChrInitDisplay() end)
+    self:GetOwner().MsgBusComp:RegEvent('ChrInitData', self, self.OnChrInitData)
+    self:GetOwner().MsgBusComp:RegEvent('ChrInitDisplay', self, self.ChrInitDisplay)
 end
 
 -- function M:ReceiveEndPlay()

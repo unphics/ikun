@@ -10,6 +10,7 @@ local BTDef = require('Ikun/Module/AI/BT/BTDef')
 ---@field DisplayName string
 ---@field RoleInstId number
 ---@field RoleConfigId number
+---@field RoleConfig RoleConfig
 ---@field Dead boolean
 ---@field Avatar BP_ChrBase
 ---@field BelongKingdom number
@@ -24,6 +25,7 @@ local Role = class.class 'Role' : extends 'MdBase' {
     DisplayName = nil,
     RoleInstId = nil,
     RoleConfigId = nil,
+    RoleConfig = nil,
     Dead = false,
     Avatar = nil,
     BelongKingdom = nil,
@@ -45,6 +47,7 @@ function Role:InitByAvatar(Avatar, Id, bNpc)
     self.RoleConfigId = Id
     self.DisplayName = Config.DisplayName
     self.BelongKingdom = Config.BelongKingdom
+    self.RoleConfig = Config
     self.bNpc = bNpc
 
     local DistrictMgr = MdMgr.tbMd.ConMgr.tbCon.AreaMgr:GetStar().DistrictMgr ---@type DistrictMgr

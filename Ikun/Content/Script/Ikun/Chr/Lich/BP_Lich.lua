@@ -6,7 +6,7 @@
 -- @DATE ${date} ${time}
 --
 
----@type BP_Lich_C
+---@class BP_Lich: BP_Lich_C
 local M = UnLua.Class('/Ikun/Chr/Blueprint/BP_ChrBase')
 
 -- function M:Initialize(Initializer)
@@ -29,7 +29,8 @@ function M:ReceiveBeginPlay()
 
     local GA_Attack_Right_Class = UE.UClass.Load('/Game/Ikun/Chr/Lich/Skill/GA/Attack/GA_Attack_Right.GA_Attack_Right_C')
     self.GAAttackRightHandle = self.ASC:K2_GiveAbility(GA_Attack_Right_Class, 1, 1)
-    self.a = 1
+
+    self.MsgBusComp:RegEvent("ChrInitDisplay", self, self.InitLichColor)
 end
 
 -- function M:ReceiveEndPlay()
@@ -37,7 +38,6 @@ end
 
 function M:ReceiveTick(DeltaSeconds)
     self.Overridden.ReceiveTick(self, DeltaSeconds)
-    self.a = self.a + 1
     -- self:LBT_Test(DeltaSeconds)
 end
 
@@ -49,6 +49,39 @@ end
 
 -- function M:ReceiveActorEndOverlap(OtherActor)
 -- end
+
+function M:InitLichColor()
+    if net_util.is_client(self) then
+        return
+    end
+    log.dev('init lich color', UE.UKismetSystemLibrary.IsServer(self))
+    local RoleConfig = self.NpcComp.Role.RoleConfig ---@type RoleConfig
+    if not RoleConfig then
+        return
+    end
+    if RoleConfig.Color > 0 then
+        local Color = UE.FLinearColor(1, 0, 0, 1)
+        self:SetLichColor(Color)
+    end
+end
+
+---@param Color FLinearColor
+function M:SetLichColor_RPC(Color)
+    local MeshSrcMat = self.Mesh:GetMaterials():Get(1) ---@type UMaterialInterface
+    local DynMatInst = self.Mesh:CreateDynamicMaterialInstance(0, MeshSrcMat) ---@type UMaterialInstanceDynamic
+    DynMatInst:SetVectorParameterValue('Emissive Color', Color)
+
+    self.PointLight:SetLightColor(Color, true)
+
+    local ParticleSrcMat = self.ParticleSystem:GetMaterial(0)
+    local ParticleDynMatInst = self.ParticleSystem:CreateDynamicMaterialInstance(0, ParticleSrcMat)
+    ParticleDynMatInst:SetVectorParameterValue('Smpke_COlor', Color)
+
+    local FXSrcMat = self.Smoke_FX:GetMaterial(0)
+    local FXDynMatInst = self.Smoke_FX:CreateDynamicMaterialInstance(0, FXSrcMat)
+    FXDynMatInst:SetVectorParameterValue('Smpke_COlor', Color)
+end
+
 
 function M:LBT_Test(DeltaSeconds)
     if net_util.is_server(self) then
