@@ -12,14 +12,21 @@ RoleConfig[1] = {
 RoleConfig[2] = {
     DisplayName = '阿克巴鲁斯',
     BelongKingdom = 2,
-    InitBT = nil,
+    InitBT = 1,
     Color = -1,
 }
 
 RoleConfig[3] = {
     DisplayName = '阿巴克',
     BelongKingdom = 3,
-    InitBT = nil,
+    InitBT = 1,
+    Color = 1,
+}
+
+RoleConfig[4] = {
+    DisplayName = '鲁鲁修',
+    BelongKingdom = 3,
+    InitBT = 1,
     Color = 1,
 }
 

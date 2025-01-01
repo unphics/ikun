@@ -16,6 +16,7 @@ local BTDef = require('Ikun/Module/AI/BT/BTDef')
 ---@field BelongKingdom number
 ---@field bNpc boolean
 ---@field BT LBT
+---@field BB BB
 local Role = class.class 'Role' : extends 'MdBase' {
 --[[public]]
     ctor = function()end,
@@ -36,9 +37,14 @@ local Role = class.class 'Role' : extends 'MdBase' {
 function Role:ctor()
     self.Dead = false
     self.bNpc = false
-    self.BB = { ---@class BB
+    ---@class BB
+    ---@field Target Role
+    ---@field MoveTarget FVector | AActor
+    local BB = {
         Target = nil,
+        MoveTarget = nil,
     }
+    self.BB = BB
 end
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
 function Role:InitByAvatar(Avatar, Id, bNpc)
@@ -66,15 +72,39 @@ function Role:GetDisplayName()
     return self.DisplayName
 end
 function Role:StartBT()
-    if self.RoleConfigId ~= 2 then
+    if self.RoleConfigId ~= 4 then
         return
     end
-    self.BT = BTDef[1](self.Avatar)
+    self.BT = BTDef[self.RoleConfig.InitBT](self.Avatar)
     if not self.BT then
         log.error('Role:StartBT: Failed to Init BT, DisplayName = ', self.DisplayName)
     end
 end
-
+---@param OtherRole Role
+function Role:IsFirendlyForce(OtherRole)
+    if OtherRole.BelongKingdom ~= self.BelongKingdom then
+        return false
+    end
+    return true
+end
+---@param OtherRole Role
+function Role:IsEnemy(OtherRole)
+    if OtherRole.BelongKingdom ~= self.BelongKingdom then
+        return true
+    end
+    return false
+end
+---@param OtherRole
+---@return boolean
+function Role:AddEnemyChecked(OtherRole)
+    if self:IsEnemy(OtherRole) then
+        log.dev('Role:AddEnemyChecked; self =', self.RoleConfig.DisplayName, '; enemy =', OtherRole.RoleConfig.DisplayName)
+        self.BB.Target = OtherRole
+    end
+end
 function Role:HasTarget()
     return self.BB.Target and true or false
+end
+function Role:GetTarget()
+    return self.BB.Target
 end

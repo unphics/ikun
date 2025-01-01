@@ -214,9 +214,8 @@ function LTask_AiMoveBase:GetAccectableRadius()
 end
 ---@return AActor | FVector
 function LTask_AiMoveBase:GetNavTarget()
-    -- return self.Chr.NpcComp.Role.BB.MoveTarget
-    ---@todo
-    return UE.UGameplayStatics.GetPlayerPawn(self.Chr, 0):K2_GetActorLocation()
+    return self.Chr:GetRole().BB.MoveTarget
+    -- return UE.UGameplayStatics.GetPlayerPawn(self.Chr, 0)
 end
 -- 通知其他模块
 function LTask_AiMoveBase:OnMoveStucked()

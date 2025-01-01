@@ -46,10 +46,36 @@ end
 ---@public 查找范围内所有Actor
 ---@param Loc FVector
 ---@param Range number
----@param FnFilter function<(Actor)>
-actor_util.find_actors_in_range = function(World, Loc, Range, FnFilter)
+---@return UE.TArray<UE.AActor>
+actor_util.find_actors_in_range = function(Actor, Loc, Range)
     ---@todo
-    -- UE.UKismetSystemLibrary.SphereTraceMulti(World,)
+    local ResultHits = UE.TArray(UE.FHitResult)
+    local Ignore = UE.TArray(UE.AActor)
+    Ignore:Add(Actor)
+    -- local TraceChannel = UE.ETraceTypeQuery.TraceTypeQuery8
+    -- local TraceChannel = UE.ECollisionChannel.ECC_Visibility
+    -- UE.UKismetSystemLibrary.SphereTraceMulti(Actor,Loc, Loc, Range,
+    -- TraceChannel, false, Ignore, 0,
+    --     ResultHits, true, UE.FLinearColor(1, 0, 0, 1))
+
+    local ObjectTypes = UE.TArray(UE.EObjectTypeQuery)
+    -- ObjectTypes:Add(UE.UClass.Load('/Game/Ikun/Chr/Lich/Blueprint/BP_Lich.BP_Lich_C'))
+    ObjectTypes:Add(UE.EObjectTypeQuery.Pawn)
+    ObjectTypes:Add(UE.EObjectTypeQuery.CharacterMesh)
+    UE.UKismetSystemLibrary.SphereTraceMultiForObjects(Actor,Loc, Loc, Range,
+    ObjectTypes, false, Ignore, 0,
+        ResultHits, true, UE.FLinearColor(1, 0, 0, 1))
+        
+    local OutHits = UE.TArray(UE.AActor) ---@type TArray
+    for i = 1, ResultHits:Length() do
+        local Result = ResultHits:Get(i) ---@type FHitResult
+        if Result.HitObjectHandle.ReferenceObject.GetOwner and
+            Result.HitObjectHandle.ReferenceObject:GetOwner().IsA and
+            Result.HitObjectHandle.ReferenceObject:GetOwner():IsA(UE.AActor) then
+            OutHits:AddUnique(Result.HitObjectHandle.ReferenceObject:GetOwner())
+        end
+    end
+    return OutHits
 end
 
 return actor_util

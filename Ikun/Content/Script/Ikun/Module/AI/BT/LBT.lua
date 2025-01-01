@@ -210,10 +210,15 @@ end
 
 require('Ikun/Module/AI/BT/Task/LTask')
 require('Ikun/Module/AI/BT/Task/LTask_Wait')
+require('Ikun/Module/AI/BT/Task/LTask_AiMoveBase')
+require('Ikun/Module/AI/BT/Task/LTask_RandNavTarget')
+require('Ikun/Module/AI/BT/Task/LTask_RotateSmooth')
 
 require('Ikun/Module/AI/BT/Decorator/LDecorator')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_RoleCond')
-require('Ikun/Module/AI/BT/Task/LTask_AiMoveBase')
+
+require('Ikun/Module/AI/BT/Service/LService')
+require('Ikun/Module/AI/BT/Service/LService_Alert')
 
 ---@class LBT Lua行为树
 ---@field Ctlr AAIController
@@ -231,6 +236,7 @@ local LBT = class.class 'LBT' {
     AddSequence = function()end,
     AddTask = function()end,
     AddDecorator = function()end,
+    AddService = function()end,
     InitNode = function(Node)end,
 --[[private]]
     AddBack = function()end,
@@ -306,6 +312,20 @@ end
 -- 添加到最后一个可挂接Child的Node上, 然后装饰器变成最后一个可挂接Child的Node
 function LBT:AddDecorator(Name, ...)
     local Node = class.new (Name) (Name, ...)
+    self:InitNode(Node)
+
+    if self.CurNodeCanChild.bComposite then    
+        self.CurNodeCanChild:AddChild(Node)
+    else
+        self.CurNodeCanChild:SetChild(Node)
+    end
+
+    self.CurNodeCanChild = Node
+    return self
+end
+---@param TickInterval number
+function LBT:AddService(Name, TickInterval, ...)
+    local Node = class.new (Name) (Name, TickInterval, ...)
     self:InitNode(Node)
 
     if self.CurNodeCanChild.bComposite then    

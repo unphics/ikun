@@ -54,7 +54,6 @@ function M:InitLichColor()
     if net_util.is_client(self) then
         return
     end
-    log.dev('init lich color', UE.UKismetSystemLibrary.IsServer(self))
     local RoleConfig = self.NpcComp.Role.RoleConfig ---@type RoleConfig
     if not RoleConfig then
         return

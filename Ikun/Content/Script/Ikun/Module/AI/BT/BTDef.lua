@@ -7,8 +7,11 @@ M[1] = function(Avatar)
         :AddSelector()
             :AddDecorator('LDecorator_RoleCond', 'HasTarget')
             :AddTask('LTask_Wait', 5)
+            :AddService('LService_Alert', 1, 1000)
             :AddSequence()
                 :AddTask('LTask_Wait', 2)
+                :AddTask('LTask_RandNavTarget', 500, 2000)
+                :AddTask('LTask_RotateSmooth', 1, -1)
                 :AddTask('LTask_AiMoveBase', 200, 160, 3, UE.FVector(200, 200, 200))
     return LBT
 end
