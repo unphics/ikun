@@ -1,0 +1,29 @@
+---
+---@brief switch role current behaviour tree
+---
+
+---@class LTask_SwitchBT: LTask
+---@field NewBTKey string
+local LTask_SwitchBT = class.class 'LTask_SwitchBT' : extends 'LTask' {
+    ctor = function()end,
+    OnInit = function()end,
+    OnUpdate = function()end,
+}
+function LTask_SwitchBT:ctor(DisplayName, NewBTKey)
+    class.LTask.ctor(self, DisplayName)
+
+    self.NewBTKey = NewBTKey
+end
+function LTask_SwitchBT:OnInit()
+    class.LTask.OnInit(self)
+end
+function LTask_SwitchBT:OnUpdate(DeltaTime)
+    if self.Chr and self.Chr:GetRole() then
+        local OldBT = self.Chr:GetRole().BT.Desc
+        log.log('LTask_SwitchBT', OldBT, self.NewBTKey, self.Chr:PrintRoleInfo())
+        self.Chr:GetRole():SwitchNewBT(self.NewBTKey)
+        self:DoTerminate(true)
+        return
+    end
+    self:DoTerminate(false)
+end
