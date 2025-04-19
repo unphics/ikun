@@ -22,7 +22,7 @@ RoleConfig[2] = {
     DisplayName = '阿克巴鲁斯',
     Desc = '常见的',
     BelongKingdomCfgId = 2,
-    InitBT = 'JungleMonsters_Burn_1',
+    InitBT = 'Team_MakeTeam_1',
     Color = -1,
     FightCareerAssign = {FightCareerDef.MaleeDPS, FightCareerDef.RangedDPS},
 }

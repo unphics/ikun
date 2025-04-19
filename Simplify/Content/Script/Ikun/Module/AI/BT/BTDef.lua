@@ -17,7 +17,7 @@ M['Team_MakeTeam_1'] = function(Avatar)
             :AddTask('LTask_SwitchBT')
             :AddTask("LTask_Wait", 3)
             :AddTask('LTask_MakeTeam')
-            :AddTask('LTask_SwitchBT', 'Team_Peace_1')
+            :AddTask('LTask_SwitchBT', 'Team_Patrol_Together_1')
     return LBT
 end
 
@@ -32,7 +32,7 @@ M['Team_Patrol_Together_1'] = function(Avatar)
             :AddService('LService_Alert', 0.3, 1500)
             :AddSequence()
                 :AddTask('LTask_Wait', 1, 0.5)
-                :AddTask('LTask')
+                :AddTask('LTask_TeamNavTarget')
                 --[[
                     选一个地方
                     转身

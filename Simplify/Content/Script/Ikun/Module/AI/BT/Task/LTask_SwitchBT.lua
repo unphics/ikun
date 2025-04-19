@@ -1,5 +1,7 @@
 ---
----@brief switch role current behaviour tree
+---@brief 将当前行为树切换为其他行为树执行
+---@author zys
+---@data Sat Apr 19 2025 06:04:16 GMT+0800 (中国标准时间)
 ---
 
 ---@class LTask_SwitchBT: LTask

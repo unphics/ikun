@@ -8,7 +8,7 @@
 ---
 
 require('Ikun/Module/AI/BT/NodeCore')
-require('Ikun/Module/AI/BT/CustomNodeDef')
+require('Ikun/Module/AI/BT/NodeDef')
 require('Ikun/Module/AI/BT/Blackboard')
 
 ---@class LBT Lua行为树
