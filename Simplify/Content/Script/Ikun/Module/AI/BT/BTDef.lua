@@ -14,10 +14,11 @@ M['Team_MakeTeam_1'] = function(Avatar)
     local LBT = class.new 'LBT' (nil, Avatar, 'Team_MakeTeam_1') ---@type LBT
     LBT:CreateRoot()
         :AddSequence()
-            :AddTask('LTask_SwitchBT')
-            :AddTask("LTask_Wait", 3)
+            :AddTask("LTask_Wait", 2)
             :AddTask('LTask_MakeTeam')
+            :AddTask('LTask_Wait', 1)
             :AddTask('LTask_SwitchBT', 'Team_Patrol_Together_1')
+            :AddTask('LTask_Wait', 5)
     return LBT
 end
 
@@ -113,3 +114,24 @@ M['Stand'] = function(Avatar)
 end
 
 return M
+
+--[[
+
+local function NewBT(Name, CreateFn)
+    M[Name] = function(Avatar)
+        local LBT = class.new 'LBT' (nil, Avatar, Name) ---@type LBT
+        CreateFn(LBT)
+        return LBT
+    end
+end
+-- 团队组队行为树1
+NewBT('Team_MakeTeam_1', function(BT)
+    BT:CreateRoot()
+        :AddSequence()
+            :AddTask('LTask_SwitchBT')
+            :AddTask("LTask_Wait", 3)
+            :AddTask('LTask_MakeTeam')
+            :AddTask('LTask_SwitchBT', 'Team_Patrol_Together_1')
+end)
+
+]]

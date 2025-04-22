@@ -1,5 +1,6 @@
 
 local FightCareerDef = require('Content/Role/FightCareerDef')
+local BTType = require('Ikun.Module/AI/BT/BTType')
 
 local RoleConfig = {}
 
@@ -9,6 +10,7 @@ end
 
 ---@class RoleConfig
 ---@field FightCareerAssign FightCareerDef[]
+---@field BTCfg table<BTType, string>
 RoleConfig[1] = {
     DisplayName = '鸽鸽',
     BelongKingdomCfgId = 1,
@@ -16,8 +18,10 @@ RoleConfig[1] = {
     Color = -1,
     SpecialClass = nil,
     FightCareerAssign = {FightCareerDef.MaleeDPS},
+    BTCfg = {},
 }
 
+---@type RoleConfig
 RoleConfig[2] = {
     DisplayName = '阿克巴鲁斯',
     Desc = '常见的',
@@ -25,7 +29,10 @@ RoleConfig[2] = {
     InitBT = 'Team_MakeTeam_1',
     Color = -1,
     FightCareerAssign = {FightCareerDef.MaleeDPS, FightCareerDef.RangedDPS},
+    BTCfg = {},
 }
+RoleConfig[2].BTCfg[BTType.Init] = 'Team_MakeTeam_1'
+RoleConfig[2].BTCfg[BTType.Patrol] = ''
 
 RoleConfig[3] = {
     DisplayName = '阿巴克',
