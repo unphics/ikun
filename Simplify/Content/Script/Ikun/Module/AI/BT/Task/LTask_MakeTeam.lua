@@ -26,11 +26,11 @@ function LTask_MakeTeam:OnInit()
 
     -- 查找1000码以内的复合条件的单位, 再遍历查找从而进行递归查找出所有互相距离1000码以内的复合条件的单位
     OwnerRole.Team = class.new 'TeamClass'()
-    OwnerRole.Team:AddMem(self.Chr:GetRole())
+    OwnerRole.Team.Member:AddMember(self.Chr:GetRole())
     self:FindNearbyRecurse(self.Chr, OwnerRole.Team)
     OwnerRole.Team:FinishMake()
     
-    log.dev('zys dev recurse range find result: ', self.Chr:GetRole().Team:PrintMem())
+    log.dev('zys dev recurse range find result: \n', self.Chr:GetRole().Team.Member:PrintMember())
 end
 function LTask_MakeTeam:OnUpdate(DeltaTime)
     self:DoTerminate(true)
@@ -48,7 +48,7 @@ function LTask_MakeTeam:FindNearbyRecurse(RangeActor, Out_JoinTeam)
         if self:CheckCanJoinTeam(Actor) then
             Actor:GetRole().Team = Out_JoinTeam
             self:FindNearbyRecurse(Actor, Out_JoinTeam)
-            Out_JoinTeam:AddMem(Actor:GetRole())
+            Out_JoinTeam.Member:AddMember(Actor:GetRole())
         end
     end
 end

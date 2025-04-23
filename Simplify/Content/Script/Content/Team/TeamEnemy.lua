@@ -41,12 +41,12 @@ end
 ---@param EnemyTeam TeamClass
 function TeamEnemyClass:EncounterEnemy(EnemyTeam)
     ---@step 如该TeamLeader已添加, 则该Team已添加
-    local EnemyLeaer = EnemyTeam:GetLeader()
+    local EnemyLeaer = EnemyTeam.Member:GetLeader()
     if self.EnemyRoleMap[EnemyLeaer.RoleInstId] then
         return
     end
     ---@step 存储敌军所有角色
-    for i, Role in ipairs(EnemyTeam:GetAllMember()) do
+    for i, Role in ipairs(EnemyTeam.Member:GetAllMember()) do
         self:TryAddNewEnemyRole(Role)
     end 
 end

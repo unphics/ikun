@@ -8,40 +8,34 @@
 
 local InfluenceMapClass = require('Content/Team/InfluenceMap')
 local TeamEnemyClass = require('Content/Team/TeamEnemy')
+local TeamMemberClass = require('Content/Team/TeamMember')
 
 ---@class TeamClass : MdBase
----@field Member RoleClass[] 团队成员
----@field TeamLeader RoleClass 团队领导者
+---@field Member TeamMemberClass * 团队成员
+---@field TeamEnemy TeamEnemyClass *
 ---@field DecisionInterval number 决策间隔
 ---@field DecisionTimeCount number 决策间隔计时
 ---@field bFight boolean
 ---@field BattlePosition table[]
----@field TeamEnemy  TeamEnemyClass
 local TeamClass = class.class 'TeamClass': extends 'MdBase' {
 --[[public]]
     ctor = function()end,
     Init = function()end,
     Tick = function()end,
-    AddMem = function()end,
     FinishMake = function()end,
-    GetAllMember = function()end,
-    GetLeader = function()end,
-    PrintMem = function()end,
     IsInfight = function()end,
+    Member = nil,
+    TeamEnemy = nil,
 --[[private]]
-    ElectLeader = function()end,
     UpdateDecisionInterval = function()end,
     InitAllocBattlePosition = function()end,
-    Member = nil,
-    TeamLeader = nil,
     DecisionInterval = nil,
     DecisionTimeCount = nil,
     bFight = nil,
     BattlePosition = nil,
-    TeamEnemy = nil
 }
 function TeamClass:ctor()
-    self.Member = {}
+    self.Member = class.new 'TeamMemberClass' (self)
     self.DecisionInterval = 10 -- default
     self.DecisionTimeCount = self.DecisionInterval + 0.1
     self.bFight = false
@@ -58,31 +52,9 @@ function TeamClass:Tick(DeltaTime)
         end
     end
 end
----@public 添加成员
----@param Role RoleClass
-function TeamClass:AddMem(Role)
-    table.insert(self.Member, Role)
-end
 ---@public 团队构建完毕, 开始工作
 function TeamClass:FinishMake()
-    self:ElectLeader()
-end
----@public 获取所有成员
-function TeamClass:GetAllMember()
-    return table_util.shallow_copy(self.Member)
-end
----@public 获取领导者
----@return RoleClass
-function TeamClass:GetLeader()
-    return self.TeamLeader
-end
----@public 打印出所有成员的信息
-function TeamClass:PrintMem()
-    local str = 'Team Leader ='.. self.TeamLeader.Avatar:PrintRoleInfo() ..' :\n'
-    for _, Role in ipairs(self.Member) do
-        str = str .. '\t\t\t' .. Role.Avatar:PrintRoleInfo() .. '\n'
-    end
-    return str
+    self.Member:ElectLeader()
 end
 ---@public 入战
 ---@todo 这个入战的调用需要更多条件, 比如先让Role或者Leader判断
@@ -90,13 +62,6 @@ function TeamClass:FallInFight(Enemy)
     self.bFight = true
     self:InitAllocBattlePosition()
     self.TeamEnemy:EncounterEnemy(Enemy)
-end
----@private 选举领导者
----@desc 很多团队属性需要按照Leader的属性来做影响系数, 可能以后有多重职业, 现在只有一个Leader
----@todo 以后Team中可以有多种职业
-function TeamClass:ElectLeader()
-    local TeamLeader = self.Member[1]
-    self.TeamLeader = TeamLeader
 end
 ---@private 更新决策间隔(每隔多长时间进行一次决策)
 ---@todo 此项后面根据策划设定
@@ -162,7 +127,7 @@ end
 local a = true
 function TeamClass:MakeInfluenceMap()
     if a then
-        local InfluenceMap = class.new 'InfluenceMapClass' (self.TeamLeader.Avatar:K2_GetActorLocation(), 400, 10) ---@type InfluenceMap
+        local InfluenceMap = class.new 'InfluenceMapClass' (self.Member:GetLeader().Avatar:K2_GetActorLocation(), 400, 10) ---@type InfluenceMap
         InfluenceMap:AddRoles(self.Member)
         a = false
     end
