@@ -14,9 +14,9 @@ local TeamMemberClass = class.class 'TeamMemberClass' {
     ctor = function()end,
     AddMember = function()end,
     GetAllMember = function()end,
-    PrintMember = function()end,
     ElectLeader = function()end,
     GetLeader = function()end,
+    PrintMember = function()end,
 --[[private]]
     tbMember = nil,
     OwnerTeam = nil,
