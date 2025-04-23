@@ -26,9 +26,12 @@ function LTask_MakeTeam:OnInit()
 
     -- 查找1000码以内的复合条件的单位, 再遍历查找从而进行递归查找出所有互相距离1000码以内的复合条件的单位
     OwnerRole.Team = class.new 'TeamClass'()
+    if not OwnerRole.Team then
+        return log.error('Team 构造失败')
+    end
     OwnerRole.Team.Member:AddMember(self.Chr:GetRole())
     self:FindNearbyRecurse(self.Chr, OwnerRole.Team)
-    OwnerRole.Team:FinishMake()
+    OwnerRole.Team:Init()
     
     log.dev('zys dev recurse range find result: \n', self.Chr:GetRole().Team.Member:PrintMember())
 end

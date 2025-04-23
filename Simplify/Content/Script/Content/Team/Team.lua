@@ -22,7 +22,6 @@ local TeamClass = class.class 'TeamClass': extends 'MdBase' {
     ctor = function()end,
     Init = function()end,
     Tick = function()end,
-    FinishMake = function()end,
     IsInfight = function()end,
     Member = nil,
     TeamEnemy = nil,
@@ -42,6 +41,7 @@ function TeamClass:ctor()
     self.TeamEnemy = class.new 'TeamEnemyClass' (self)
 end
 function TeamClass:Init()
+    self.Member:ElectLeader()
 end
 function TeamClass:Tick(DeltaTime)
     if self.bFight then
@@ -51,10 +51,6 @@ function TeamClass:Tick(DeltaTime)
             self:MakeDynaDecision()
         end
     end
-end
----@public 团队构建完毕, 开始工作
-function TeamClass:FinishMake()
-    self.Member:ElectLeader()
 end
 ---@public 入战
 ---@todo 这个入战的调用需要更多条件, 比如先让Role或者Leader判断
