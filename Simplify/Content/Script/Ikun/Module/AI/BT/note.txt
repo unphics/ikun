@@ -19,7 +19,6 @@ Team
             3. 先分配一次战场位置(模糊可接受), 然后分配战斗目标, 然后自主移动
         OnTick():
             if 对面死完了 then self:NewState(Patrol) end
-            
     mMove:
         tbMoveInfo{nRID,bArrived}
         GetMoveTarget(): 如果没有tbMoveInfo就算一个(mBehavior:CalcMoveTarget), 有就直接取

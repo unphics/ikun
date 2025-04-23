@@ -53,7 +53,11 @@ function LBT:ctor(Ctlr, Chr, Desc)
     self.Blackboard = class.new 'BlackboardClass' ()
 end
 ---@private 对于新创建的节点, 初始化一些基本数据
-function LBT:InitNode(Node)
+function LBT:InitNode(Node, Name)
+    if not Node then
+        error('创建行为树Node失败', Name)
+        return
+    end
     Node.Ctlr = self.Ctlr
     Node.Chr = self.Chr
     Node.Blackboard = self.Blackboard
@@ -105,7 +109,7 @@ function LBT:AddTask(TaskName, ...)
     end
     
     local Node = class.new (TaskName) (TaskName, ...)
-    self:InitNode(Node)
+    self:InitNode(Node, TaskName)
 
     if self.CurNodeCanChild.bComposite then    
         self.CurNodeCanChild:AddChild(Node)
@@ -124,7 +128,7 @@ function LBT:AddDecorator(Name, ...)
     end
 
     local Node = class.new (Name) (Name, ...)
-    self:InitNode(Node)
+    self:InitNode(Node, Name)
 
     if self.CurNodeCanChild.bComposite then    
         self.CurNodeCanChild:AddChild(Node)
@@ -143,7 +147,7 @@ function LBT:AddService(Name, TickInterval, ...)
     end
 
     local Node = class.new (Name) (Name, TickInterval, ...)
-    self:InitNode(Node)
+    self:InitNode(Node, Name)
 
     if self.CurNodeCanChild.bComposite then    
         self.CurNodeCanChild:AddChild(Node)

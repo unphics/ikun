@@ -17,8 +17,7 @@ M['Team_MakeTeam_1'] = function(Avatar)
             :AddTask("LTask_Wait", 2)
             :AddTask('LTask_MakeTeam')
             :AddTask('LTask_Wait', 1)
-            :AddTask('LTask_SwitchBT', 'Team_Patrol_Together_1')
-            :AddTask('LTask_Wait', 5)
+            :AddTask('LTask_TeamWaitSwitchBT')
     return LBT
 end
 

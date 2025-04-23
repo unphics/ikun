@@ -21,11 +21,14 @@ function LTask_SwitchBT:OnInit()
 end
 function LTask_SwitchBT:OnUpdate(DeltaTime)
     if self.Chr and self.Chr:GetRole() then
-        local OldBT = self.Chr:GetRole().BT.Desc
-        log.log('LTask_SwitchBT', OldBT, self.NewBTKey, self.Chr:PrintRoleInfo())
-        self.Chr:GetRole():SwitchNewBT(self.NewBTKey)
+        self:DoSwitchBT()
         self:DoTerminate(true)
         return
     end
     self:DoTerminate(false)
+end
+function LTask_SwitchBT:DoSwitchBT()
+    local OldBT = self.Chr:GetRole().BT.Desc
+    log.log('LTask_SwitchBT', OldBT, self.NewBTKey, self.Chr:PrintRoleInfo())
+    self.Chr:GetRole():SwitchNewBT(self.NewBTKey)
 end
