@@ -6,13 +6,16 @@
 ---        记录敌人成员情况, 根据敌人情况(当前战场职业,实时信息)分配集火目标和阻挡目标
 ---
 
-local InfluenceMapClass = require('Content/Team/InfluenceMap')
-local TeamEnemyClass = require('Content/Team/TeamEnemy')
-local TeamMemberClass = require('Content/Team/TeamMember')
+require('Content/Team/InfluenceMap')
+require('Content/Team/TeamEnemy')
+require('Content/Team/TeamMember')
+
+require('Content.Team/TeamOperate/TO_Patrol')
 
 ---@class TeamClass : MdBase
 ---@field Member TeamMemberClass * 团队成员
 ---@field TeamEnemy TeamEnemyClass *
+---@field CurTO TeamOperateBaseClass *
 ---@field DecisionInterval number 决策间隔
 ---@field DecisionTimeCount number 决策间隔计时
 ---@field bFight boolean
@@ -25,6 +28,7 @@ local TeamClass = class.class 'TeamClass': extends 'MdBase' {
     IsInfight = function()end,
     Member = nil,
     TeamEnemy = nil,
+    CurTO = nil,
 --[[private]]
     UpdateDecisionInterval = function()end,
     InitAllocBattlePosition = function()end,
@@ -42,6 +46,7 @@ function TeamClass:ctor()
 end
 function TeamClass:Init()
     self.Member:ElectLeader()
+    self:NextState(class.new 'TO_Patrol' (self))
 end
 function TeamClass:Tick(DeltaTime)
     if self.bFight then
@@ -52,6 +57,12 @@ function TeamClass:Tick(DeltaTime)
         end
     end
 end
+---@public
+---@param TO TeamOperateBaseClass
+function TeamClass:NextState(TO)
+    self.CurTO = TO
+    self.CurTO:Init()
+end
 ---@public 入战
 ---@todo 这个入战的调用需要更多条件, 比如先让Role或者Leader判断
 function TeamClass:FallInFight(Enemy)
@@ -59,11 +70,16 @@ function TeamClass:FallInFight(Enemy)
     self:InitAllocBattlePosition()
     self.TeamEnemy:EncounterEnemy(Enemy)
 end
----@private 更新决策间隔(每隔多长时间进行一次决策)
----@todo 此项后面根据策划设定
-function TeamClass:UpdateDecisionInterval()
-    self.DecisionInterval = 2
+---@public 在战斗中
+---@return boolean
+function TeamClass:IsInfight()
+    return self.bFight
 end
+
+--------------------------------------------------------------------------
+---------------------------------- 开发中 ---------------------------------
+--------------------------------------------------------------------------
+
 ---@private 入战后初始化分配战场位置
 function TeamClass:InitAllocBattlePosition()
     local BattlePosition = {
@@ -91,16 +107,6 @@ function TeamClass:InitAllocBattlePosition()
 
     self.BattlePosition = BattlePosition
 end
----@public 在战斗中
----@return boolean
-function TeamClass:IsInfight()
-    return self.bFight
-end
-
---------------------------------------------------------------------------
----------------------------------- 开发中 ---------------------------------
---------------------------------------------------------------------------
-
 ---@private 战斗中动态调整战场位置
 function TeamClass:DynaAjustBattlePosition()
 

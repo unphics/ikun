@@ -32,7 +32,7 @@ M['Team_Patrol_Together_1'] = function(Avatar)
             :AddService('LService_Alert', 0.3, 1500)
             :AddSequence()
                 :AddTask('LTask_Wait', 1, 0.5)
-                :AddTask('LTask_TeamNavTarget')
+                -- :AddTask('LTask_TeamNavTarget')
                 --[[
                     选一个地方
                     转身

@@ -1,0 +1,28 @@
+
+---
+---@brief 巡逻运营
+---@author zys
+---@data Thu Apr 24 2025 00:12:44 GMT+0800 (中国标准时间)
+---
+
+local RoleConfig = require('Content/Role/Config/RoleConfig')
+local BTType = require('Ikun.Module.AI.BT.BTType')
+
+---@class TO_Patrol : TeamOperateBaseClass
+---@field OwnerTeam TeamClass
+local TO_Patrol = class.class 'TO_Patrol' : extends 'TeamOperateBaseClass' {
+--[[public]]
+    ctor = function()end,
+}
+function TO_Patrol:ctor(Team)
+    self.OwnerTeam = Team
+end
+function TO_Patrol:Init()
+    local AllMember = self.OwnerTeam.Member:GetAllMember()
+    for _, role in ipairs(AllMember) do
+        ---@type RoleClass
+        local Role = role
+        local NewBTKey = RoleConfig[Role.RoleConfigId].BTCfg[BTType.Patrol]
+        Role.BT.Blackboard:SetBBValue('TeamNewBTKey', NewBTKey)        
+    end
+end
