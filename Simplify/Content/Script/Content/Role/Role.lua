@@ -58,7 +58,7 @@ function RoleClass:ctor()
     self.FightTarget = class.new'FightTargetClass'(self)
 end
 function RoleClass:Tick(DeltaTime)
-    if self.Team and self.Team.Member:GetLeader() == self then
+    if self.Team and self.Team.TeamMember:GetLeader() == self then
         self.Team:Tick(DeltaTime)
     end
     if self.BT then

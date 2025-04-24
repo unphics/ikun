@@ -29,11 +29,11 @@ function LTask_MakeTeam:OnInit()
     if not OwnerRole.Team then
         return log.error('Team 构造失败')
     end
-    OwnerRole.Team.Member:AddMember(self.Chr:GetRole())
+    OwnerRole.Team.TeamMember:AddMember(self.Chr:GetRole())
     self:FindNearbyRecurse(self.Chr, OwnerRole.Team)
     OwnerRole.Team:Init()
     
-    log.dev('zys dev recurse range find result: \n', self.Chr:GetRole().Team.Member:PrintMember())
+    log.dev('zys dev recurse range find result: \n', self.Chr:GetRole().Team.TeamMember:PrintMember())
 end
 function LTask_MakeTeam:OnUpdate(DeltaTime)
     self:DoTerminate(true)
@@ -51,7 +51,7 @@ function LTask_MakeTeam:FindNearbyRecurse(RangeActor, Out_JoinTeam)
         if self:CheckCanJoinTeam(Actor) then
             Actor:GetRole().Team = Out_JoinTeam
             self:FindNearbyRecurse(Actor, Out_JoinTeam)
-            Out_JoinTeam.Member:AddMember(Actor:GetRole())
+            Out_JoinTeam.TeamMember:AddMember(Actor:GetRole())
         end
     end
 end

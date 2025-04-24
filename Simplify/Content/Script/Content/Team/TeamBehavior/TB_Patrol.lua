@@ -18,7 +18,7 @@ function TB_Patrol:ctor(Team)
     self.OwnerTeam = Team
 end
 function TB_Patrol:Init()
-    local AllMember = self.OwnerTeam.Member:GetAllMember()
+    local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, role in ipairs(AllMember) do
         ---@type RoleClass
         local Role = role

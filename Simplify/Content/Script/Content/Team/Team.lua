@@ -9,13 +9,15 @@
 require('Content/Team/InfluenceMap')
 require('Content/Team/TeamEnemy')
 require('Content/Team/TeamMember')
+require('Content.Team/TeamMove')
 
 require('Content.Team/TeamBehavior/TB_Patrol')
 
 ---@class TeamClass : MdBase
----@field Member TeamMemberClass * 团队成员
+---@field TeamMember TeamMemberClass * 团队成员
 ---@field TeamEnemy TeamEnemyClass * 团队敌人
 ---@field CurTB TeamBehaviorBaseClass * 团队行为
+---@field TeamMove TeamMoveClass * 团队移动
 ---@field DecisionInterval number 决策间隔
 ---@field DecisionTimeCount number 决策间隔计时
 ---@field bFight boolean
@@ -26,9 +28,10 @@ local TeamClass = class.class 'TeamClass': extends 'MdBase' {
     Init = function()end,
     Tick = function()end,
     IsInfight = function()end,
-    Member = nil,
+    TeamMember = nil,
     TeamEnemy = nil,
     CurTB = nil,
+    TeamMove = nil,
 --[[private]]
     UpdateDecisionInterval = function()end,
     InitAllocBattlePosition = function()end,
@@ -38,14 +41,15 @@ local TeamClass = class.class 'TeamClass': extends 'MdBase' {
     BattlePosition = nil,
 }
 function TeamClass:ctor()
-    self.Member = class.new 'TeamMemberClass' (self)
+    self.TeamMember = class.new 'TeamMemberClass' (self)
     self.DecisionInterval = 10 -- default
     self.DecisionTimeCount = self.DecisionInterval + 0.1
     self.bFight = false
     self.TeamEnemy = class.new 'TeamEnemyClass' (self)
+    self.TeamMove = class.new 'TeamMoveClass'(self)
 end
 function TeamClass:Init()
-    self.Member:ElectLeader()
+    self.TeamMember:ElectLeader()
     self:NextState(class.new 'TB_Patrol' (self))
 end
 function TeamClass:Tick(DeltaTime)
@@ -129,8 +133,8 @@ end
 local a = true
 function TeamClass:MakeInfluenceMap()
     if a then
-        local InfluenceMap = class.new 'InfluenceMapClass' (self.Member:GetLeader().Avatar:K2_GetActorLocation(), 400, 10) ---@type InfluenceMap
-        InfluenceMap:AddRoles(self.Member)
+        local InfluenceMap = class.new 'InfluenceMapClass' (self.TeamMember:GetLeader().Avatar:K2_GetActorLocation(), 400, 10) ---@type InfluenceMap
+        InfluenceMap:AddRoles(self.TeamMember:GetAllMember())
         a = false
     end
 end
