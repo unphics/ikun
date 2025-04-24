@@ -15,7 +15,7 @@ require('Content.Team/TeamBehavior/TB_Patrol')
 ---@class TeamClass : MdBase
 ---@field Member TeamMemberClass * 团队成员
 ---@field TeamEnemy TeamEnemyClass * 团队敌人
----@field CurTO TeamBehaviorBaseClass * 团队运营
+---@field CurTB TeamBehaviorBaseClass * 团队行为
 ---@field DecisionInterval number 决策间隔
 ---@field DecisionTimeCount number 决策间隔计时
 ---@field bFight boolean
@@ -28,7 +28,7 @@ local TeamClass = class.class 'TeamClass': extends 'MdBase' {
     IsInfight = function()end,
     Member = nil,
     TeamEnemy = nil,
-    CurTO = nil,
+    CurTB = nil,
 --[[private]]
     UpdateDecisionInterval = function()end,
     InitAllocBattlePosition = function()end,
@@ -60,8 +60,8 @@ end
 ---@public
 ---@param TO TeamBehaviorBaseClass
 function TeamClass:NextState(TO)
-    self.CurTO = TO
-    self.CurTO:Init()
+    self.CurTB = TO
+    self.CurTB:Init()
 end
 ---@public 入战
 ---@todo 这个入战的调用需要更多条件, 比如先让Role或者Leader判断
