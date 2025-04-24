@@ -8,16 +8,16 @@
 local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTType = require('Ikun.Module.AI.BT.BTType')
 
----@class TO_Patrol : TeamOperateBaseClass
+---@class TB_Patrol : TeamBehaviorBaseClass
 ---@field OwnerTeam TeamClass
-local TO_Patrol = class.class 'TO_Patrol' : extends 'TeamOperateBaseClass' {
+local TB_Patrol = class.class 'TB_Patrol' : extends 'TeamBehaviorBaseClass' {
 --[[public]]
     ctor = function()end,
 }
-function TO_Patrol:ctor(Team)
+function TB_Patrol:ctor(Team)
     self.OwnerTeam = Team
 end
-function TO_Patrol:Init()
+function TB_Patrol:Init()
     local AllMember = self.OwnerTeam.Member:GetAllMember()
     for _, role in ipairs(AllMember) do
         ---@type RoleClass

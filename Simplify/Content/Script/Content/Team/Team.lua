@@ -10,12 +10,12 @@ require('Content/Team/InfluenceMap')
 require('Content/Team/TeamEnemy')
 require('Content/Team/TeamMember')
 
-require('Content.Team/TeamOperate/TO_Patrol')
+require('Content.Team/TeamBehavior/TB_Patrol')
 
 ---@class TeamClass : MdBase
 ---@field Member TeamMemberClass * 团队成员
----@field TeamEnemy TeamEnemyClass *
----@field CurTO TeamOperateBaseClass *
+---@field TeamEnemy TeamEnemyClass * 团队敌人
+---@field CurTO TeamBehaviorBaseClass * 团队运营
 ---@field DecisionInterval number 决策间隔
 ---@field DecisionTimeCount number 决策间隔计时
 ---@field bFight boolean
@@ -46,7 +46,7 @@ function TeamClass:ctor()
 end
 function TeamClass:Init()
     self.Member:ElectLeader()
-    self:NextState(class.new 'TO_Patrol' (self))
+    self:NextState(class.new 'TB_Patrol' (self))
 end
 function TeamClass:Tick(DeltaTime)
     if self.bFight then
@@ -58,7 +58,7 @@ function TeamClass:Tick(DeltaTime)
     end
 end
 ---@public
----@param TO TeamOperateBaseClass
+---@param TO TeamBehaviorBaseClass
 function TeamClass:NextState(TO)
     self.CurTO = TO
     self.CurTO:Init()
