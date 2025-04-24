@@ -9,10 +9,10 @@
 ---      3.可视化寻路路径(DrawDebug)
 ---
 
----@class NavPathData
+---@class NavMoveData
 ---@field tbNavPoint FVector[]
 ---@field CurSegIdx number
-local NavPathData = class.class 'NavPathData' {
+local NavMoveData = class.class 'NavMoveData' {
 --[[public]]
     ctor = function()end,
     GetPathData = function()end,
@@ -24,10 +24,10 @@ local NavPathData = class.class 'NavPathData' {
     tbNavPoint = nil,
     CurSegIdx = nil,
 }
-function NavPathData:ctor()
+function NavMoveData:ctor()
 end
 ---@public 清除数据, 初始化数据
-function NavPathData:Clear()
+function NavMoveData:Clear()
     self.tbNavPoint = {}
     self.CurSegIdx = 2
 end
@@ -37,44 +37,44 @@ end
 ---@param End FVector
 ---@param First FVector@opt 当真实起始点不在寻路范围内而又可接受时, 加入寻路数据并作为一个寻路起始点
 ---@return boolean
-function NavPathData:GenPathData(Chr, Start, End, First)
-    local UENavPathData = UE.UNavigationSystemV1.FindPathToLocationSynchronously(Chr, Start,
+function NavMoveData:GenPathData(Chr, Start, End, First)
+    local UENavMoveData = UE.UNavigationSystemV1.FindPathToLocationSynchronously(Chr, Start,
         End, Chr, nil)
-    if UENavPathData.PathPoints:Length() < 2 then
+    if UENavMoveData.PathPoints:Length() < 2 then
         return false
     end
     self:Clear()
     if First then
         table.insert(self.tbNavPoint, First)
     end
-    for i = 1, UENavPathData.PathPoints:Length() do
-        local Point = UENavPathData.PathPoints:Get(i)
+    for i = 1, UENavMoveData.PathPoints:Length() do
+        local Point = UENavMoveData.PathPoints:Get(i)
         table.insert(self.tbNavPoint, Point)
     end
     return self:IsValid()
 end
 ---@public 数据有效
 ---@return boolean
-function NavPathData:IsValid()
+function NavMoveData:IsValid()
     return self.tbNavPoint[self.CurSegIdx] ~= nil
 end
 ---@public
 ---@return boolean
-function NavPathData:IsFinish()
+function NavMoveData:IsFinish()
     return self.CurSegIdx > #self.tbNavPoint
 end
 ---@public 获取当前段的寻路目标: CurSegEndLoc
-function NavPathData:GetCurSegEnd()
+function NavMoveData:GetCurSegEnd()
     return self.tbNavPoint[self.CurSegIdx]
 end
 ---@public 推进到下一段
-function NavPathData:AdvanceSeg()
+function NavMoveData:AdvanceSeg()
     self.CurSegIdx = self.CurSegIdx + 1
 end
 ---@public [Tool] 计算Chr到当前段目标点的2d方向; 注意:未Normalized
 ---@param Chr ACharacter
 ---@return FVector
-function NavPathData:CalcChr2CurSegEndDir2D(Chr)
+function NavMoveData:CalcChr2CurSegEndDir2D(Chr)
     local SelfChrAgentLoc = Chr:GetNavAgentLocation()
     local CurSegEndLoc = self:GetCurSegEnd()
     local ToCurSegEndDir = CurSegEndLoc - SelfChrAgentLoc
@@ -85,9 +85,9 @@ end
 ---@param Point FVector | AActor
 ---@param QueryEvent FVector@[opt]
 ---@return boolean, FVector
-function NavPathData.ProjectPointToNavMesh(World, Point, QueryEvent)
+function NavMoveData.ProjectPointToNavMesh(World, Point, QueryEvent)
     if not World then
-        return log.error('NavPathData:ProjectPointToNavMesh(): Attemp to index a nil world')
+        return log.error('NavMoveData:ProjectPointToNavMesh(): Attemp to index a nil world')
     end
     local ProjectedPoint = UE.FVector(0, 0, 0)
     QueryEvent = QueryEvent or UE.FVector(0, 0, 0)
@@ -99,5 +99,17 @@ function NavPathData.ProjectPointToNavMesh(World, Point, QueryEvent)
         ProjectedPoint, nil, nil, QueryEvent)
     return bSuccess, ProjectedPoint
 end
+---@public [StaticFn]
+---@param OriginLoc FVector
+---@return FVector | nil
+function NavMoveData.RandomNavPointInRadius(World, OriginLoc, Radius)
+    local RandLoc = UE.FVector(0, 0, 0)
+    local bSuccess = UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(World, OriginLoc, RandLoc, Radius, nil, nil)
+    if bSuccess then
+        return RandLoc
+    else
+        return nil
+    end
+end
 
-return NavPathData
+return NavMoveData

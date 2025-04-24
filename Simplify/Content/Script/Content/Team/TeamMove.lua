@@ -5,14 +5,65 @@
 ---@data Sat Apr 19 2025 06:20:04 GMT+0800 (中国标准时间)
 ---
 
+---@class TeamMoveTarget
+---@field MoveTarget FVector
+---@field bArrived boolean
+
 ---@class TeamMoveClass
 ---@field OwnerTeam TeamClass
+---@field mapMemberMoveTarget table<number, TeamMoveTarget>
 local TeamMoveClass = class.class 'TeamMoveClass' {
+--[[public]]
     ctor = function()end,
+    GetMoveTarget = function()end,
+    OnArrived = function()end,
+    SetMemberMoveTarget = function()end,
+--[[private]]
+    OnAllMemberArrived = function()end,
+    OwnerTeam = nil,
+    mapMemberMoveTarget = nil,
 }
 function TeamMoveClass:ctor(Team)
     self.OwnerTeam = Team
+
+end
+function TeamMoveClass:OnArrived(Role)
+    if not Role or not self.mapMemberMoveTarget then
+        return log.error('TeamMoveClass:OnArrived() 自身状态错误')
+    end
+
+    self.mapMemberMoveTarget[Role.RoleInstId].bArrived = true
+
+    for _, ele in pairs(self.mapMemberMoveTarget) do
+        local MoveTarget = ele ---@type TeamMoveTarget
+        if not MoveTarget.bArrived then
+            return
+        end
+    end
+    self:OnAllMemberArrived()
+end
+function TeamMoveClass:OnAllMemberArrived()
+    self.mapMemberMoveTarget = nil
 end
 ---@public
-function TeamMoveClass:GetMoveTarget()
+function TeamMoveClass:GetMoveTarget(Role)
+    if not self.mapMemberMoveTarget then
+        if not self.OwnerTeam.CurTB.CalcAllMemberMoveTarget then
+            log.error('TeamMoveClass:GetMoveTarget() TeamBehavior类型错误')
+        else
+            self.mapMemberMoveTarget = {}
+            self.OwnerTeam.CurTB:CalcAllMemberMoveTarget()
+        end
+    end
+    return self.mapMemberMoveTarget[Role.RoleInstId].MoveTarget
 end
+---@public
+---@param MoveTarget FVector
+function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget)
+    ---@type TeamMoveTarget
+    local tb = {MoveTarget = MoveTarget, bArrived = false}
+    self.mapMemberMoveTarget[Role.RoleInstId] = tb
+    return tb
+end
+
+return TeamMoveClass

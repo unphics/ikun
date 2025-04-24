@@ -17,6 +17,7 @@ require('Ikun/Module/AI/BT/Task/LTask_RoleDoFn')
 
 require('Ikun/Module/AI/BT/Task/LTask_MakeTeam')
 require('Ikun/Module/AI/BT/Task/LTask_TeamWaitSwitchBT')
+require('Ikun/Module/AI/BT/Task/LTask_TeamGetMoveTarget')
 
 require('Ikun/Module/AI/BT/Decorator/LDecorator')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_RoleCondition')
