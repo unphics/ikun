@@ -8,16 +8,12 @@
 local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTType = require('Ikun.Module.AI.BT.BTType')
 
----@class TB_Patrol : TeamBehaviorBaseClass
+---@class TB_Patrol : TeamBehaviorBase
 ---@field OwnerTeam TeamClass
-local TB_Patrol = class.class 'TB_Patrol' : extends 'TeamBehaviorBaseClass' {
+local TB_Patrol = class.class 'TB_Patrol' : extends 'TeamBehaviorBase' {
 --[[public]]
-    ctor = function()end,
     CalcAllMemberMoveTarget = function()end,
 }
-function TB_Patrol:ctor(Team)
-    self.OwnerTeam = Team
-end
 function TB_Patrol:Init()
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, role in ipairs(AllMember) do
@@ -39,6 +35,13 @@ function TB_Patrol:CalcAllMemberMoveTarget()
             self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc)
         end
     end
+end
+---@param EnemyTeam TeamClass
+function TB_Patrol:OnEncounterEnemy(EnemyTeam)
+    self.OwnerTeam.bFight = true
+
+    self.OwnerTeam:NextState(class.new'TB_Fight'(self))
+    self.OwnerTeam.CurTB:OnEncounterEnemy(EnemyTeam)
 end
 
 return TB_Patrol

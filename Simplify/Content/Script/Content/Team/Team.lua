@@ -13,11 +13,12 @@ require('Content.Team/TeamMove')
 require('Content/Team/TeamFence')
 
 require('Content.Team/TeamBehavior/TB_Patrol')
+require('Content/Team/TeamBehavior/TB_Fight')
 
 ---@class TeamClass : MdBase
 ---@field TeamMember TeamMemberClass * 团队成员
 ---@field TeamEnemy TeamEnemyClass * 团队敌人
----@field CurTB TeamBehaviorBaseClass * 团队行为
+---@field CurTB TeamBehaviorBase * 团队行为
 ---@field TeamMove TeamMoveClass * 团队移动
 ---@field TeamFence TeamFenceClass * 栅栏
 ---@field DecisionInterval number 决策间隔
@@ -66,7 +67,7 @@ function TeamClass:Tick(DeltaTime)
     end
 end
 ---@public
----@param TO TeamBehaviorBaseClass
+---@param TO TeamBehaviorBase
 function TeamClass:NextState(TO)
     self.CurTB = TO
     self.CurTB:Init()
@@ -76,8 +77,8 @@ end
 function TeamClass:Encounter(Enemy)
     if true then
         self.bFight = true
+        self.CurTB:OnEncounterEnemy(Enemy)
         -- self:InitAllocBattlePosition()
-        self.TeamEnemy:OnEncounterEnemy(Enemy)
     end
 end
 ---@public 在战斗中

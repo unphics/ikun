@@ -33,6 +33,7 @@ RoleConfig[2] = {
 }
 RoleConfig[2].BTCfg[BTType.Init] = 'Team_MakeTeam_1'
 RoleConfig[2].BTCfg[BTType.Patrol] = 'Team_Patrol_Together_1'
+RoleConfig[2].BTCfg[BTType.Fight] = 'Team_Fight_1'
 
 RoleConfig[3] = {
     DisplayName = '阿巴克',

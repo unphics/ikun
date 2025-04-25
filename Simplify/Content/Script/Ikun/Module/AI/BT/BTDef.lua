@@ -8,7 +8,6 @@
 local M = {}
 
 ---@brief 团队组队行为树1
----@version 0.1.0 组队
 ---@return LBT
 M['Team_MakeTeam_1'] = function(Avatar)
     local LBT = class.new 'LBT' (nil, Avatar, 'Team_MakeTeam_1') ---@type LBT
@@ -21,8 +20,7 @@ M['Team_MakeTeam_1'] = function(Avatar)
     return LBT
 end
 
----@brief 团队一起巡逻行为树1
----@version 0.1.0 一起随机找点巡逻
+---@brief 团队协同巡逻行为树1
 M['Team_Patrol_Together_1'] = function(Avatar)
     local LBT = class.new 'LBT'(nil, Avatar, 'Team_Patrol_Together_1') ---@type LBT
     LBT:CreateRoot()
@@ -36,6 +34,15 @@ M['Team_Patrol_Together_1'] = function(Avatar)
                 :AddTask('LTask_Wait', 0.2)
                 :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
                 :AddTask('LTask_TeamWaitFence')
+    return LBT
+end
+
+---@brief 团队战斗行为树1
+M['Team_Fight_1'] = function(Avatar)
+    local LBT = class.new 'LBT'(nil, Avatar, 'Team_Fight_1') ---@type LBT
+    LBT:CreateRoot()
+        :AddSelector()
+            :AddTask('LTask_Wait', 2)
     return LBT
 end
 
