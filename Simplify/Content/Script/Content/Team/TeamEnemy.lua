@@ -39,7 +39,7 @@ function TeamEnemyClass:ResetTeamEnemyData()
 end
 ---@public 遭遇敌军; 第一次遭遇时, 根据敌军情况第一次评估敌军信息
 ---@param EnemyTeam TeamClass
-function TeamEnemyClass:EncounterEnemy(EnemyTeam)
+function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
     ---@step 如该TeamLeader已添加, 则该Team已添加
     local EnemyLeaer = EnemyTeam.TeamMember:GetLeader()
     if self.EnemyRoleMap[EnemyLeaer.RoleInstId] then

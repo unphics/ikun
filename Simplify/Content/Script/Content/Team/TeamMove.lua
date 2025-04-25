@@ -34,15 +34,21 @@ function TeamMoveClass:OnArrived(Role)
 
     self.mapMemberMoveTarget[Role.RoleInstId].bArrived = true
 
+    if self:IsAllMemberArrived() then
+        self:OnAllMemberArrived()
+    end
+end
+function TeamMoveClass:IsAllMemberArrived()
     for _, ele in pairs(self.mapMemberMoveTarget) do
         local MoveTarget = ele ---@type TeamMoveTarget
         if not MoveTarget.bArrived then
-            return
+            return false
         end
     end
-    self:OnAllMemberArrived()
+    return true
 end
 function TeamMoveClass:OnAllMemberArrived()
+    log.dev('TeamMoveClass:OnAllMemberArrived() 一个团队移动完成')
     self.mapMemberMoveTarget = nil
 end
 ---@public
@@ -55,7 +61,11 @@ function TeamMoveClass:GetMoveTarget(Role)
             self.OwnerTeam.CurTB:CalcAllMemberMoveTarget()
         end
     end
-    return self.mapMemberMoveTarget[Role.RoleInstId].MoveTarget
+    local MoveTarget = self.mapMemberMoveTarget[Role.RoleInstId].MoveTarget
+    if not MoveTarget then
+        log.error('TeamMoveClass:GetMoveTarget() 未分配MoveTarget')
+    end
+    return MoveTarget
 end
 ---@public
 ---@param MoveTarget FVector

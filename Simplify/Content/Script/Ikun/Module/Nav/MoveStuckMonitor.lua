@@ -27,10 +27,10 @@ function MoveStuckMonitor:TickCheck(DeltaTime, SelfChrAgentLoc)
     if UE.UKismetMathLibrary.EqualEqual_VectorVector(self.MoveStuckLoc, SelfChrAgentLoc, 10) then
         if self.CurStuckTime > self.MaxStuckTime then
             return true
-        else
-            self.CurStuckTime = 0
-            self.MoveStuckLoc = SelfChrAgentLoc
         end
+    else
+        self.CurStuckTime = 0
+        self.MoveStuckLoc = SelfChrAgentLoc
     end
     return false
 end

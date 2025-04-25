@@ -27,12 +27,15 @@ M['Team_Patrol_Together_1'] = function(Avatar)
     local LBT = class.new 'LBT'(nil, Avatar, 'Team_Patrol_Together_1') ---@type LBT
     LBT:CreateRoot()
         :AddSelector()
-            :AddDecorator('LDecorator_TeamCondition', 'IsInfight')
-            :AddTask('LTask_SwitchBT', '') ---@todo 瞬间让团队所有人跳去战斗
-            :AddService('LService_Alert', 0.3, 1500)
+            :AddService('LService_TeamAlert', 0.3, 1500)
+            :AddService('LService_NeedSwitchBT', 0.3, 1500)
             :AddSequence()
                 :AddTask('LTask_Wait', 1)
                 :AddTask('LTask_TeamGetMoveTarget')
+                :AddTask('LTask_RotateSmooth')
+                :AddTask('LTask_Wait', 0.2)
+                :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
+                :AddTask('LTask_TeamWaitFence')
     return LBT
 end
 

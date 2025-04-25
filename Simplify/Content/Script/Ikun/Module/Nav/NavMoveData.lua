@@ -101,15 +101,11 @@ function NavMoveData.ProjectPointToNavMesh(World, Point, QueryEvent)
 end
 ---@public [StaticFn]
 ---@param OriginLoc FVector
----@return FVector | nil
+---@return boolean, FVector
 function NavMoveData.RandomNavPointInRadius(World, OriginLoc, Radius)
     local RandLoc = UE.FVector(0, 0, 0)
     local bSuccess = UE.UNavigationSystemV1.K2_GetRandomReachablePointInRadius(World, OriginLoc, RandLoc, Radius, nil, nil)
-    if bSuccess then
-        return RandLoc
-    else
-        return nil
-    end
+    return bSuccess, RandLoc
 end
 
 return NavMoveData

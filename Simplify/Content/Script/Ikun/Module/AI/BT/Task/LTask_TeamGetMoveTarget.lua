@@ -21,8 +21,15 @@ function LTask_TeamGetMoveTarget:OnInit()
     end
     local MoveTarget = Team.TeamMove:GetMoveTarget(self.Chr:GetRole())
     self.Blackboard:SetBBValue('MoveTarget', MoveTarget)
+    self:DrawTargetLoc(MoveTarget)
 end
 function LTask_TeamGetMoveTarget:OnUpdate(DeltaTime)
     self:DoTerminate(true)
+end
+function LTask_TeamGetMoveTarget:DrawTargetLoc(MoveTarget)
+    local Color = UE.FLinearColor(1, 0, 0)
+    local Duration = 2
+    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, MoveTarget, 40, 12, Color, Duration, 2)
+    UE.UKismetSystemLibrary.DrawDebugLine(self.Chr, self.Chr:K2_GetActorLocation(), MoveTarget, Color, Duration, 2)
 end
 return LTask_TeamGetMoveTarget

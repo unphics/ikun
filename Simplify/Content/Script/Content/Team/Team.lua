@@ -10,6 +10,7 @@ require('Content/Team/InfluenceMap')
 require('Content/Team/TeamEnemy')
 require('Content/Team/TeamMember')
 require('Content.Team/TeamMove')
+require('Content/Team/TeamFence')
 
 require('Content.Team/TeamBehavior/TB_Patrol')
 
@@ -18,6 +19,7 @@ require('Content.Team/TeamBehavior/TB_Patrol')
 ---@field TeamEnemy TeamEnemyClass * 团队敌人
 ---@field CurTB TeamBehaviorBaseClass * 团队行为
 ---@field TeamMove TeamMoveClass * 团队移动
+---@field TeamFence TeamFenceClass * 栅栏
 ---@field DecisionInterval number 决策间隔
 ---@field DecisionTimeCount number 决策间隔计时
 ---@field bFight boolean
@@ -28,6 +30,7 @@ local TeamClass = class.class 'TeamClass': extends 'MdBase' {
     Init = function()end,
     Tick = function()end,
     IsInfight = function()end,
+    Encounter = function()end,
     TeamMember = nil,
     TeamEnemy = nil,
     CurTB = nil,
@@ -47,6 +50,7 @@ function TeamClass:ctor()
     self.bFight = false
     self.TeamEnemy = class.new 'TeamEnemyClass' (self)
     self.TeamMove = class.new 'TeamMoveClass'(self)
+    self.TeamFence = class.new 'TeamFenceClass'(self)
 end
 function TeamClass:Init()
     self.TeamMember:ElectLeader()
@@ -67,12 +71,14 @@ function TeamClass:NextState(TO)
     self.CurTB = TO
     self.CurTB:Init()
 end
----@public 入战
----@todo 这个入战的调用需要更多条件, 比如先让Role或者Leader判断
-function TeamClass:FallInFight(Enemy)
-    self.bFight = true
-    self:InitAllocBattlePosition()
-    self.TeamEnemy:EncounterEnemy(Enemy)
+---@public
+---@param Enemy TeamClass
+function TeamClass:Encounter(Enemy)
+    if true then
+        self.bFight = true
+        -- self:InitAllocBattlePosition()
+        self.TeamEnemy:OnEncounterEnemy(Enemy)
+    end
 end
 ---@public 在战斗中
 ---@return boolean

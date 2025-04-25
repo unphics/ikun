@@ -24,18 +24,18 @@ function TB_Patrol:Init()
         ---@type RoleClass
         local Role = role
         local NewBTKey = RoleConfig[Role.RoleConfigId].BTCfg[BTType.Patrol]
-        Role.BT.Blackboard:SetBBValue('TeamNewBTKey', NewBTKey)        
+        Role.BT.Blackboard:SetBBValue('BBNewBTKey', NewBTKey)        
     end
 end
 function TB_Patrol:CalcAllMemberMoveTarget()
     local Leader = self.OwnerTeam.TeamMember:GetLeader()
     local Loc = Leader.Avatar:GetNavAgentLocation()
-    local TeamMoveTargetLoc = class.NavMoveData.RandomNavPointInRadius(Leader.Avatar, Loc, 2000)
+    local bTeamSuccess, TeamMoveTargetLoc = class.NavMoveData.RandomNavPointInRadius(Leader.Avatar, Loc, 3000)
     for _, Role in ipairs(self.OwnerTeam.TeamMember.tbMember) do
         if Role == Leader then
             self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, TeamMoveTargetLoc)
         else
-            local ResultLoc = class.NavMoveData.RandomNavPointInRadius(Leader.Avatar, TeamMoveTargetLoc, 200)
+            local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Leader.Avatar, TeamMoveTargetLoc, 500)
             self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc)
         end
     end
