@@ -12,7 +12,8 @@ require('Content/Team/TeamMember')
 require('Content.Team/TeamMove')
 require('Content/Team/TeamFence')
 
-require('Content.Team/TeamBehavior/TB_Patrol')
+require('Content/Team/TeamBehavior/TeamBehaviorBase')
+require('Content/Team/TeamBehavior/TB_Patrol')
 require('Content/Team/TeamBehavior/TB_Fight')
 
 ---@class TeamClass : MdBase

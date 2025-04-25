@@ -18,6 +18,7 @@ end
 function LService_TeamAlert:OnUpdate(DeltaTime)
     class.LService.OnUpdate(self, DeltaTime)
 
+    local bDrawed = false
     if obj_util.is_valid(self.Chr) and self.Chr:GetRole() then
         local Hits = actor_util.find_actors_in_range(self.Chr,self.Chr:K2_GetActorLocation(),
             self.StaticRange, self:MakeFindRangeActorsFilterFn())
@@ -27,6 +28,10 @@ function LService_TeamAlert:OnUpdate(DeltaTime)
                 ---@todo last 该写Team添加敌人了
                 if self.Chr:GetRole():IsEnemy(Hit:GetRole()) then
                     self.Chr:GetRole().Team:Encounter(Hit:GetRole().Team)
+                    if not bDrawed then
+                        self:DrawRange()
+                        bDrawed = true
+                    end
                 end
                 -- log.log('hit actor : ', obj_util.dispname(Hit) , Hit:IsA(UE.ACharacter))
                 self:DoTerminate(true)
@@ -49,4 +54,10 @@ function LService_TeamAlert:MakeFindRangeActorsFilterFn()
         return true
     end
     return FilterEnemy
+end
+---@private [Debug]
+function LService_TeamAlert:DrawRange()
+    local Color = UE.FLinearColor(1, 1, 0)
+    local Duration = 2
+    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, self.Chr:K2_GetActorLocation(), self.StaticRange, 12, Color, Duration, 4)
 end

@@ -72,6 +72,9 @@ local function class(class_name)
         extends = function(self, super_class_name)
             return function(subclass)
                 local super_class = classes[super_class_name]
+                if not super_class then
+                    log.error('class error : invalid super_class_name : ' .. super_class_name)
+                end
                 local class_created = create_class(class_name, subclass, super_class)
                 return class_created
             end

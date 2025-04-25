@@ -47,10 +47,14 @@ RoleConfig[3] = {
 RoleConfig[4] = {
     DisplayName = '鲁鲁修',
     BelongKingdomCfgId = 3,
-    InitBT = 'JungleMonsters_Burn_1',
+    InitBT = 'Team_MakeTeam_1',
     Color = 1,
     FightCareerAssign = {FightCareerDef.MaleeDPS, FightCareerDef.RangedDPS},
+    BTCfg = {},
 }
+RoleConfig[4].BTCfg[BTType.Init] = 'Team_MakeTeam_1'
+RoleConfig[4].BTCfg[BTType.Patrol] = 'Team_Patrol_Together_1'
+RoleConfig[4].BTCfg[BTType.Fight] = 'Team_Fight_1'
 
 RoleConfig[5] = {
     DisplayName = '阿卡拉',

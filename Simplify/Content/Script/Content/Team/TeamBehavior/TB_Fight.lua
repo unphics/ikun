@@ -11,7 +11,6 @@ local BTType = require('Ikun.Module.AI.BT.BTType')
 ---@class TB_Fight : TeamBehaviorBase
 local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 --[[public]]
-    ctor = function()end,
     OnEncounterEnemy = function()end,
 }
 function TB_Fight:OnEncounterEnemy(EnemyTeam)

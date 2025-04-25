@@ -14,7 +14,7 @@ local TeamBehaviorBase = class.class 'TeamBehaviorBase' : extends 'MdBase' {
     OwnerTeam = nil,
 }
 function TeamBehaviorBase:ctor(Team)
-    self.OwnerTeam = Team    
+    self.OwnerTeam = Team
 end
 ---@public
 ---@param EnemyTeam TeamClass
