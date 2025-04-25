@@ -13,6 +13,8 @@ local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 --[[public]]
     OnEncounterEnemy = function()end,
 }
+---@public
+---@param EnemyTeam TeamClass
 function TB_Fight:OnEncounterEnemy(EnemyTeam)
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, ele in ipairs(AllMember) do
@@ -23,4 +25,14 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     end
 
     self.OwnerTeam.TeamEnemy:OnEncounterEnemy(EnemyTeam)
+
+    ---@step 己方职业分化
+    ---@step 初步给出站位(根据方向, 防御性站位)
+    ---@step 延迟一下
+    ---@step 分析敌方职业分化
+    ---@step 打或跑(暂时默认打)
+    
+    ---@step 给出进一步站位(进攻性)
+    ---@step 后排给出集火目标, 前排给出对线目标
 end
+
