@@ -3,6 +3,7 @@
 ---@author zys
 ---@data Thu Apr 10 2025 22:56:22 GMT+0800 (中国标准时间)
 ---@desc 
+---@todo FightCareer后面放在Blackboard中逐渐放弃FightCareerClass
 ---
 
 local FightCareerDef = require('Content/Role/FightCareerDef')

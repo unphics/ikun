@@ -5,9 +5,6 @@
 ---@desc 确定一个中心点构造一个范围内的影响力图,
 ---
 
-local fn = nil
-local var = nil
-
 ---@class InfluenceItem
 ---@field Index number
 ---@field X number
@@ -34,13 +31,22 @@ end
 ---@field CalcFns function<InfluenceItem,RoleClass,InfluenceMapClass>[]
 local InfluenceMapClass = class.class 'InfluenceMapClass' {
 --[[public]]
-    ctor = fn,
+    ctor = function()end,
+    AddCalcRoleCount = function()end,
+    AddCustomCalc = function()end,
+    AddRole = function()end,
+    AddRoles = function()end,
+    FindItemByXY = function()end,
+    FindTheMostItemByFn = function()end,
 --[[private]]
-    CenterV3 = var,
-    ItemGridSize = var,
-    HalfGridCount = var,
-    InfluenceItems = var,
-    CalcFns = var,
+    InitGridItems = function()end,
+    CheckPosInMapRange = function()end,
+    DrawDebugSphere = function()end,
+    CenterV3 = nil,
+    ItemGridSize = nil,
+    HalfGridCount = nil,
+    InfluenceItems = nil,
+    CalcFns = nil,
 }
 function InfluenceMapClass:ctor(Center, ItemGridSize, HalfGridCount)
     if not Center or not ItemGridSize or not HalfGridCount then
@@ -76,7 +82,7 @@ function InfluenceMapClass:InitGridItems()
         table.insert(self.InfluenceItems, Item)
     end
 end
----@public [Calc]
+---@public [Calc] 添加人头数算子
 function InfluenceMapClass:AddCalcRoleCount()
     ---@param InfluenceItem InfluenceItem
     ---@param Role RoleClass
@@ -87,13 +93,13 @@ function InfluenceMapClass:AddCalcRoleCount()
     end
     return self:AddCustomCalc(fn)
 end
----@public [Calc]
+---@public [Calc] 添加自定义算子
 ---@param fnCalc function<InfluenceItem,RoleClass,InfluenceMapClass>
 function InfluenceMapClass:AddCustomCalc(fnCalc)
     table.insert(self.CalcFns, fnCalc)
     return self
 end
----@public [Add]
+---@public [Add] 添加一个角色
 ---@param Role RoleClass
 function InfluenceMapClass:AddRole(Role)
     if not Role or not Role.Avatar then
@@ -117,14 +123,14 @@ function InfluenceMapClass:CheckPosInMapRange(X, Y)
     local bY = math.abs(self.CenterV3.Y - Y) < HalfSize
     return bX and bY
 end
----@public [Add]
+---@public [Add] 添加一群角色
 ---@param Roles RoleClass[]
 function InfluenceMapClass:AddRoles(Roles)
     for _, R in ipairs(Roles) do
         self:AddRole(R)
     end
 end
----@public [Find]
+---@public [Find] 根据位置查找Item
 ---@param LocX number
 ---@param LocY number
 function InfluenceMapClass:FindItemByXY(LocX, LocY)
@@ -137,7 +143,7 @@ function InfluenceMapClass:FindItemByXY(LocX, LocY)
     local InfluenceItem = self.InfluenceItems[InfluenceItemIndex]
     return InfluenceItem
 end
----@public [Find]
+---@public [Find] 查找最符合条件的Item
 ---@param Fn function(InfluenceItem):number
 function InfluenceMapClass:FindTheMostItemByFn(Fn)
     

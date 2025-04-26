@@ -36,3 +36,8 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     ---@step 后排给出集火目标, 前排给出对线目标
 end
 
+---@private 分配战斗职业
+function TB_Fight:AssignFightCareer()
+    -- 首先对于只能担任固定职业的角色则固定分配
+    -- 对于可以灵活分配职业的角色则后排比前排稍多
+end

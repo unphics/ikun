@@ -16,4 +16,5 @@ local FightCareerDef = {
     Summoner        = 8, -- 召唤师
 }
 
+
 return FightCareerDef
