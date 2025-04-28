@@ -42,5 +42,23 @@ end
 function TB_Fight:AssignFightCareer()
     -- 首先对于只能担任固定职业的角色则固定分配
     -- 对于可以灵活分配职业的角色则后排比前排稍多
-    local 
+    ---@todo 暂时只有Lich一只怪, 暂定固定写法
+    local ArrFrontline = {}
+    local ArrBackline = {}
+    do
+        -- local ShouldFrontline = function()
+        --     return (#ArrFrontline / #ArrBackline) < (1 / 3)
+        -- end
+        -- local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
+        -- for _, ele in ipairs(AllMember) do
+        --     local Role = ele ---@type RoleClass
+        --     if ShouldFrontline() then
+        --         table.insert(ArrFrontline, Role)
+        --     else
+        --         table.insert(ArrBackline, Role)
+        --     end
+        -- end
+    end
+    local ArrSingleCareer, ArrMultiCarrer = self.OwnerTeam.TeamMember:GetAllMember_CareerCount()
+    
 end

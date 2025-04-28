@@ -98,24 +98,24 @@ function TeamClass:InitAllocBattlePosition()
         Frontline = {}, -- 前排
         Backline = {}, -- 后排
     }
-    local AllMem = {}
+    local AllMember = {}
     for _, m in ipairs(self.Member) do
-        table.insert(AllMem, m)
+        table.insert(AllMember, m)
     end
     ---@todo 这里先简单分一下前排后排
-    local BacklineCount = math.floor(#AllMem / 2 + 0.5)
+    local BacklineCount = math.floor(#AllMember / 2 + 0.5)
     local i = 1
-    while AllMem[i] do
+    while AllMember[i] do
         if not (i > BacklineCount) then
-            local m = AllMem[i]
+            local m = AllMember[i]
             table.insert(BattlePosition.Backline, m)
-            table.remove(AllMem)
+            table.remove(AllMember)
             BacklineCount = BacklineCount - 1
         else
             i = i + 1
         end
     end
-    BattlePosition.Frontline = AllMem
+    BattlePosition.Frontline = AllMember
 
     self.BattlePosition = BattlePosition
 end
