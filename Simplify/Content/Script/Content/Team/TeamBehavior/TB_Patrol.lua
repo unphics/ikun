@@ -13,6 +13,7 @@ local BTType = require('Ikun.Module.AI.BT.BTType')
 local TB_Patrol = class.class 'TB_Patrol' : extends 'TeamBehaviorBase' {
 --[[public]]
     CalcAllMemberMoveTarget = function()end,
+    OnEncounterEnemy = function()end,
 }
 function TB_Patrol:Init()
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
@@ -36,6 +37,7 @@ function TB_Patrol:CalcAllMemberMoveTarget()
         end
     end
 end
+---@override 当巡逻中遭遇敌人时则转入战斗模式
 ---@param EnemyTeam TeamClass
 function TB_Patrol:OnEncounterEnemy(EnemyTeam)
     self.OwnerTeam.bFight = true

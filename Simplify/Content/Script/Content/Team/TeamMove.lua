@@ -38,6 +38,7 @@ function TeamMoveClass:OnArrived(Role)
         self:OnAllMemberArrived()
     end
 end
+---@public 是否所有成员都抵达了阶段性的移动目标
 function TeamMoveClass:IsAllMemberArrived()
     for _, ele in pairs(self.mapMemberMoveTarget) do
         local MoveTarget = ele ---@type TeamMoveTarget
@@ -51,7 +52,7 @@ function TeamMoveClass:OnAllMemberArrived()
     log.dev('TeamMoveClass:OnAllMemberArrived() 一个团队移动完成')
     self.mapMemberMoveTarget = nil
 end
----@public
+---@public 成员调用, 领取移动目标; 若无移动目标则让TB立即计算
 function TeamMoveClass:GetMoveTarget(Role)
     if not self.mapMemberMoveTarget then
         if not self.OwnerTeam.CurTB.CalcAllMemberMoveTarget then
@@ -67,7 +68,7 @@ function TeamMoveClass:GetMoveTarget(Role)
     end
     return MoveTarget
 end
----@public
+---@public Team保存留给成员的移动目标
 ---@param MoveTarget FVector
 function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget)
     ---@type TeamMoveTarget

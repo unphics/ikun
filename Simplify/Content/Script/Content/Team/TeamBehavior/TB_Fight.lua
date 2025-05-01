@@ -93,6 +93,7 @@ function TB_Fight:AsgnFightPos()
         ::asgn::
         table.insert(Army[FightPos], Role)
     end
+    
 end
 
 --[[
