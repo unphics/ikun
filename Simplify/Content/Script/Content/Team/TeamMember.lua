@@ -4,6 +4,8 @@
 ---@data Wed Apr 23 2025 22:30:53 GMT+0800 (中国标准时间)
 ---
 
+local RoleConfig = require('Content/Role/Config/RoleConfig')
+
 ---@class TeamMemberClass
 ---@field OwnerTeam TeamClass
 ---@field tbMember RoleClass[]
@@ -17,6 +19,7 @@ local TeamMemberClass = class.class 'TeamMemberClass' {
     ElectLeader = function() end,
     GetLeader = function() end,
     PrintMember = function() end,
+    GetAllMember_CareerCount = function()end,
     --[[private]]
     tbMember = nil,
     mapMemberId = nil,
@@ -68,5 +71,24 @@ function TeamMemberClass:PrintMember()
         str = str .. '\t\t\t' .. Role.Avatar:PrintRoleInfo() .. '\n'
     end
     return str
+end
+---@public 根据战斗职业数量分表获取所有成员
+---@return RoleClass[], RoleClass[]
+function TeamMemberClass:GetAllMember_CareerCount()
+    local ArrSingleCareer = {}
+    local ArrMultiCarrer = {}
+    for _, ele in ipairs(self.tbMember) do
+        local Role = ele ---@type RoleClass
+        local FightCareerAssign = RoleConfig[Role.RoleConfigId].FightCareerAssign
+        if not FightCareerAssign or #FightCareerAssign == 0 then
+            log.error('TeamMemberClass:GetAllMember_CareerCount() 发现不存在战斗职业的角色', Role.RoleConfigId)
+        end
+        if #FightCareerAssign == 1 then
+            table.insert(ArrSingleCareer, Role)
+        else
+            table.insert(ArrMultiCarrer, Role)
+        end
+    end
+    return ArrSingleCareer, ArrMultiCarrer
 end
 return TeamMemberClass

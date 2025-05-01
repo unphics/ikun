@@ -42,23 +42,32 @@ end
 function TB_Fight:AssignFightCareer()
     -- 首先对于只能担任固定职业的角色则固定分配
     -- 对于可以灵活分配职业的角色则后排比前排稍多
-    ---@todo 暂时只有Lich一只怪, 暂定固定写法
-    local ArrFrontline = {}
-    local ArrBackline = {}
-    do
-        -- local ShouldFrontline = function()
-        --     return (#ArrFrontline / #ArrBackline) < (1 / 3)
-        -- end
-        -- local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
-        -- for _, ele in ipairs(AllMember) do
-        --     local Role = ele ---@type RoleClass
-        --     if ShouldFrontline() then
-        --         table.insert(ArrFrontline, Role)
-        --     else
-        --         table.insert(ArrBackline, Role)
-        --     end
-        -- end
+    ---@todo 暂时只有Lich一只怪, 暂定固定一些写法
+    local Army = {}
+    for enum, _ in pairs(FightPositionDef) do
+        Army[enum] = {}
     end
-    local ArrSingleCareer, ArrMultiCarrer = self.OwnerTeam.TeamMember:GetAllMember_CareerCount()
+    local AssignRate = {} -- 默认的最佳配比
+    AssignRate[FightPositionDef.Frontline] = 1
+    AssignRate[FightPositionDef.Backline] = 2
+
+    local IsArmyNeedCareer = function(Army, ECareerDef)
+        
+    end
     
+    local ArrSingleCareer, ArrMultiCarrer = self.OwnerTeam.TeamMember:GetAllMember_CareerCount()
+    ---@todo 优先处理只能承担单一职业的角色
+    ---@todo 只能承担单一战斗职业的略过
+    ---@todo 根据默认的最佳配比初步分配角色
+    for _, ele in ipairs(ArrMultiCarrer) do
+        local Role = ele ---@type RoleClass
+        local tbFightCareerAssign = RoleConfig[Role.RoleConfigId].FightCareerAssign
+        
+        local HpRatio = 1 ---@todo cur_hp / max_hp
+        local bForceBackline = HpRatio < 0.2
+        ---@step (if 有得跑 or 有牧师)血量极少, 强制后排
+        ---@step 血量较少, 优先后排
+        ---@step 根据这场战斗的战场位置评估分配率决定
+        
+    end
 end
