@@ -72,7 +72,7 @@ function TeamMemberClass:PrintMember()
     end
     return str
 end
----@public 根据战斗职业数量分表获取所有成员
+---@public [Pure] 根据战斗职业数量分表获取所有成员
 ---@return RoleClass[], RoleClass[]
 function TeamMemberClass:GetAllMember_CareerCount()
     local ArrSingleCareer = {}
@@ -90,5 +90,20 @@ function TeamMemberClass:GetAllMember_CareerCount()
         end
     end
     return ArrSingleCareer, ArrMultiCarrer
+end
+---@public [Pure] 计算每个职业的最大人员数量
+function TeamMemberClass:CalcMaxCountEachCareer()
+    local TotalCareer = {}
+    for _, ele in ipairs(self.tbMember) do
+        local Role = ele ---@type RoleClass
+        local FightCareerAssign = RoleConfig[Role.RoleConfigId].FightCareerAssign
+        for _, Career in ipairs(FightCareerAssign) do
+            if not TotalCareer[Career] then
+                TotalCareer[Career] = 0
+            end
+            TotalCareer[Career] = TotalCareer[Career] + 1
+        end
+    end
+    return TotalCareer
 end
 return TeamMemberClass
