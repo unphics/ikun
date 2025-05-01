@@ -8,7 +8,6 @@
 
 local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTDef = require('Ikun/Module/AI/BT/BTDef')
-local FightCareerClass = require('Content/Role/FightCareer')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
 
@@ -19,7 +18,6 @@ local FightTargetClass = require('Content/Role/FightTarget')
 ---@field Avatar BP_ChrBase * 角色在游戏场景中的AvatarActor
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
----@field FightCareer FightCareerClass * 战斗职业
 ---@field BelongKingdomLua Kingdom * 所属国家
 ---@field FightTarget FightTargetClass * 战斗目标
 ---@field Dead boolean 已经死亡
@@ -39,7 +37,6 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     GetBelongKingdom = function()end,
     RoleInstId = nil,
     Team = nil,
-    FightCareer = nil,
     FightTarget = nil,
 --[[private]]
     StartBT = function()end,
@@ -54,7 +51,6 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
 function RoleClass:ctor()
     self.Dead = false
     self.bNpc = false
-    self.FightCareer = class.new'FightCareerClass'(self)
     self.FightTarget = class.new'FightTargetClass'(self)
 end
 function RoleClass:Tick(DeltaTime)
@@ -73,7 +69,6 @@ function RoleClass:InitByAvatar(Avatar, Id, bNpc)
     self.RoleConfigId = Id
     self.DisplayName = Config.DisplayName
     self.bNpc = bNpc
-    self.FightCareer:Init(Config.FightCareerAssign)
 
     local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
     self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(Config.BelongKingdomCfgId) ---@type Kingdom

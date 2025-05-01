@@ -57,9 +57,9 @@ function M:RefreshBillboardShowText()
     self:Multicast_SetText(str)
 end
 ---@public [Debug]
-function M:UpdateFightCareer()
+function M:UpdateFightPos()
     local Role = self:GetOwner():GetRole() ---@type RoleClass
-    -- self.BillboardContent.FightCareer = Role.FightCareer
+    -- self.BillboardContent.FightPos = Role.FightPos
 end
 
 return M

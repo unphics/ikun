@@ -74,36 +74,36 @@ function TeamMemberClass:PrintMember()
 end
 ---@public [Pure] 根据战斗职业数量分表获取所有成员
 ---@return RoleClass[], RoleClass[]
-function TeamMemberClass:GetAllMember_CareerCount()
-    local ArrSingleCareer = {}
-    local ArrMultiCarrer = {}
+function TeamMemberClass:GetAllMember_PosCount()
+    local ArrSingle = {}
+    local ArrMulti = {}
     for _, ele in ipairs(self.tbMember) do
         local Role = ele ---@type RoleClass
-        local FightCareerAssign = RoleConfig[Role.RoleConfigId].FightCareerAssign
-        if not FightCareerAssign or #FightCareerAssign == 0 then
-            log.error('TeamMemberClass:GetAllMember_CareerCount() 发现不存在战斗职业的角色', Role.RoleConfigId)
+        local tbFPAssign = RoleConfig[Role.RoleConfigId].FightPosAssign
+        if not tbFPAssign or #tbFPAssign == 0 then
+            log.error('TeamMemberClass:GetAllMember_CareerCount() 发现不承担战场位置的角色', Role.RoleConfigId)
         end
-        if #FightCareerAssign == 1 then
-            table.insert(ArrSingleCareer, Role)
+        if #tbFPAssign == 1 then
+            table.insert(ArrSingle, Role)
         else
-            table.insert(ArrMultiCarrer, Role)
+            table.insert(ArrMulti, Role)
         end
     end
-    return ArrSingleCareer, ArrMultiCarrer
+    return ArrSingle, ArrMulti
 end
 ---@public [Pure] 计算每个职业的最大人员数量
-function TeamMemberClass:CalcMaxCountEachCareer()
-    local TotalCareer = {}
+function TeamMemberClass:CalcMaxCountPerPos()
+    local MaxCountPerPos = {}
     for _, ele in ipairs(self.tbMember) do
         local Role = ele ---@type RoleClass
-        local FightCareerAssign = RoleConfig[Role.RoleConfigId].FightCareerAssign
-        for _, Career in ipairs(FightCareerAssign) do
-            if not TotalCareer[Career] then
-                TotalCareer[Career] = 0
+        local tbFightPos = RoleConfig[Role.RoleConfigId].FightPosAssign
+        for _, pos in ipairs(tbFightPos) do
+            if not MaxCountPerPos[pos] then
+                MaxCountPerPos[pos] = 0
             end
-            TotalCareer[Career] = TotalCareer[Career] + 1
+            MaxCountPerPos[pos] = MaxCountPerPos[pos] + 1
         end
     end
-    return TotalCareer
+    return MaxCountPerPos
 end
 return TeamMemberClass
