@@ -27,6 +27,9 @@ function LTask_TeamGetMoveTarget:OnUpdate(DeltaTime)
     self:DoTerminate(true)
 end
 function LTask_TeamGetMoveTarget:DrawTargetLoc(MoveTarget)
+    if not MoveTarget then
+        return
+    end
     local Color = UE.FLinearColor(1, 0, 0)
     local Duration = 2
     UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, MoveTarget, 40, 12, Color, Duration, 2)

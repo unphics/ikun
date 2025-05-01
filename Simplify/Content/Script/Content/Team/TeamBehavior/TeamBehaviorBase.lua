@@ -19,6 +19,16 @@ end
 ---@public
 ---@param EnemyTeam TeamClass
 function TeamBehaviorBase:OnEncounterEnemy(EnemyTeam)
-    
 end
 
+function TeamBehaviorBase:CalcAllMemberMoveTarget()
+    for _, role in ipairs(self.OwnerTeam.TeamMember.tbMember) do
+        self:CalcMemberMoveTarget(role)
+    end
+end
+
+---@public
+---@param Role RoleClass
+function TeamBehaviorBase:CalcMemberMoveTarget(Role)
+    return self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, Role.Avatar:K2_GetActorLocation())
+end

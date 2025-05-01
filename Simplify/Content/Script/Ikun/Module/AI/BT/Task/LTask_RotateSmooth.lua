@@ -31,6 +31,10 @@ function LTask_RotateSmooth:OnInit()
 
     self.InitRot = self.Chr:K2_GetActorRotation() ---@type FRotator
     local TargetLoc = self:GetRotateTarget()
+    if not TargetLoc then
+        self:DoTerminate(false)
+        return
+    end
     local AgentLoc = self.Chr:K2_GetActorLocation() -- self.Chr:GetNavAgentLocation()
     local DirLoc = TargetLoc - AgentLoc
     

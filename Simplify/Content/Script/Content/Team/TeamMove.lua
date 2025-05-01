@@ -27,8 +27,9 @@ function TeamMoveClass:ctor(Team)
     self.OwnerTeam = Team
 
 end
+---@public Role抵达后调用
 function TeamMoveClass:OnArrived(Role)
-    if not Role or not self.mapMemberMoveTarget then
+    if not Role or not self.mapMemberMoveTarget or not self.mapMemberMoveTarget[Role.RoleInstId] then
         return log.error('TeamMoveClass:OnArrived() 自身状态错误')
     end
 
@@ -48,6 +49,7 @@ function TeamMoveClass:IsAllMemberArrived()
     end
     return true
 end
+---@private 当所有人寻路完成后
 function TeamMoveClass:OnAllMemberArrived()
     log.dev('TeamMoveClass:OnAllMemberArrived() 一个团队移动完成')
     self.mapMemberMoveTarget = nil
@@ -62,19 +64,25 @@ function TeamMoveClass:GetMoveTarget(Role)
             self.OwnerTeam.CurTB:CalcAllMemberMoveTarget()
         end
     end
-    local MoveTarget = self.mapMemberMoveTarget[Role.RoleInstId].MoveTarget
-    if not MoveTarget then
-        log.error('TeamMoveClass:GetMoveTarget() 未分配MoveTarget')
+    local MoveTargetData = self.mapMemberMoveTarget[Role.RoleInstId]
+    if not MoveTargetData then
+        self.OwnerTeam.CurTB:CalcMemberMoveTarget(Role)
     end
-    return MoveTarget
+    if not MoveTargetData or not MoveTargetData.MoveTarget then
+        log.error('TeamMoveClass:GetMoveTarget() 未分配MoveTarget')
+        return
+    end
+    return MoveTargetData.MoveTarget
 end
 ---@public Team保存留给成员的移动目标
 ---@param MoveTarget FVector
 function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget)
+    if not self.mapMemberMoveTarget then
+        self.mapMemberMoveTarget = {}
+    end
     ---@type TeamMoveTarget
     local tb = {MoveTarget = MoveTarget, bArrived = false}
     self.mapMemberMoveTarget[Role.RoleInstId] = tb
     return tb
 end
-
 return TeamMoveClass

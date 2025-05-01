@@ -41,8 +41,12 @@ end
 M['Team_Fight_1'] = function(Avatar)
     local LBT = class.new 'LBT'(nil, Avatar, 'Team_Fight_1') ---@type LBT
     LBT:CreateRoot()
-        :AddSelector()
+        :AddSequence()
             :AddTask('LTask_Wait', 2)
+            :AddTask('LTask_TeamGetMoveTarget')
+            :AddTask('LTask_RotateSmooth')
+            :AddTask('LTask_Wait', 0.2)
+            :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
     return LBT
 end
 

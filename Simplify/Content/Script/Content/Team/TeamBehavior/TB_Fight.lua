@@ -33,7 +33,7 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     ---@step 站位分化
     local Army = self:AsgnFightPos()
     ---@step 初步给出站位(根据方向, 防御性站位)
-    self:DefensivePos()
+    self:DefensivePos(Army)
     
     ---@step 延迟一下
     ---@step 分析敌方角色
@@ -97,9 +97,22 @@ function TB_Fight:AsgnFightPos()
     end
     return Army
 end
-function TB_Fight:DefensivePos()
-    
+function TB_Fight:DefensivePos(Army)
+    local OwnerLoc = self.OwnerTeam.TeamMember:GetLeader().Avatar:K2_GetActorLocation()
+    local EnemyLoc = self.OwnerTeam.TeamEnemy.tbEnemyRolePerception[1].Role.Avatar:K2_GetActorLocation()
+    if UE.UKismetMathLibrary.Vector_Distance(OwnerLoc, EnemyLoc) < 1000 then
+        log.dev('距离过近')
+    end
+    local Dir = (EnemyLoc - OwnerLoc)
+    Dir:Normalize()
+    local FrontlineTarget = OwnerLoc + Dir * 500
+    for _, ele in ipairs(Army[FightPosDef.Frontline]) do
+        local Role = ele ---@type RoleClass
+        local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 200)
+        self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc)
+    end
 end
+
 
 --[[
 to ChatGPT:
