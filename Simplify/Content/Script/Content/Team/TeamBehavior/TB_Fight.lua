@@ -31,8 +31,10 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     self.OwnerTeam.TeamEnemy:OnEncounterEnemy(EnemyTeam)
 
     ---@step 站位分化
-    self:AsgnFightPos()
+    local Army = self:AsgnFightPos()
     ---@step 初步给出站位(根据方向, 防御性站位)
+    self:DefensivePos()
+    
     ---@step 延迟一下
     ---@step 分析敌方角色
     ---@step 打或跑(暂时默认打)
@@ -93,6 +95,9 @@ function TB_Fight:AsgnFightPos()
         ::asgn::
         table.insert(Army[FightPos], Role)
     end
+    return Army
+end
+function TB_Fight:DefensivePos()
     
 end
 
