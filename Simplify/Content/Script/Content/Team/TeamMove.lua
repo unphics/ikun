@@ -76,12 +76,13 @@ function TeamMoveClass:GetMoveTarget(Role)
 end
 ---@public Team保存留给成员的移动目标
 ---@param MoveTarget FVector
-function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget)
+---@param bForceMove boolean 强制移动
+function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget, bForceMove)
     if not self.mapMemberMoveTarget then
         self.mapMemberMoveTarget = {}
     end
     ---@type TeamMoveTarget
-    local tb = {MoveTarget = MoveTarget, bArrived = false}
+    local tb = {MoveTarget = MoveTarget, bArrived = false, bForceMove = bForceMove}
     self.mapMemberMoveTarget[Role.RoleInstId] = tb
     return tb
 end

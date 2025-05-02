@@ -109,7 +109,7 @@ function TB_Fight:DefensivePos(Army)
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 200)
-        self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc)
+        self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc, true)
     end
 end
 
