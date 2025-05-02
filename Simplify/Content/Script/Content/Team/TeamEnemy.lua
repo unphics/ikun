@@ -12,14 +12,17 @@
 ---@field Confidence number 可信度
 ---@field Investigation number 侦查值(侦查程度)
 ---@field Visibility boolean 可见?
+---@field TargetBy RoleClass|nil
 
 ---@class TeamEnemyClass
 ---@field tbEnemyRolePerception TeamEnemyPerception[]
 ---@field EnemyRoleMap table<number, TeamEnemyPerception>
 ---@field OwnerTeam TeamClass
+---@field FireTarget RoleClass 集火目标
 local TeamEnemyClass = class.class 'TeamEnemyClass' {
 ---[[public]]
     cotr = function()end,
+    FireTarget = nil,
 ---[[private]]
     tbEnemyRolePerception = nil,
     EnemyRoleMap = nil,
@@ -64,9 +67,21 @@ function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
         Visibility = true, ---@todo 隐身/遮挡/埋伏等藏起来的角色不可见
         Investigation = 1,
         Confidence = 1,
+        TargetBy = nil,
     }
     self.EnemyRoleMap[EnemyRole.RoleInstId] = RolePerception
     table.insert(self.tbEnemyRolePerception, RolePerception)
+end
+---@public 根据远近排序(第一个最近)
+function TeamEnemyClass:SortEnemyByDist()
+    local OwnerLoc = self.OwnerTeam.TeamMember:GetLeader().Avatar:K2_GetActorLocation()
+    table.sort(self.tbEnemyRolePerception, function(a, b)
+        a.LastSeenLoc = a.Role.Avatar:K2_GetActorLocation()
+        b.LastSeenLoc = b.Role.Avatar:K2_GetActorLocation()
+        local Dist_A = UE.UKismetMathLibrary.Vector_Distance(a.LastSeenLoc, OwnerLoc)
+        local Dist_B = UE.UKismetMathLibrary.Vector_Distance(b.LastSeenLoc, OwnerLoc)
+        return Dist_A < Dist_B
+    end)
 end
 
 return TeamEnemyClass

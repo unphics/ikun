@@ -41,8 +41,8 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     
     ---@step 给出进一步站位(进攻性)
     ---@step 后排给出集火目标, 前排给出对线目标
-    async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 2, function()
-        self:AsgnTarget()
+    async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 3, function()
+        self:AsgnTarget(Army)
     end)
 end
 
@@ -116,8 +116,20 @@ function TB_Fight:DefensivePos(Army)
     end
 end
 
-function TB_Fight:AsgnTarget()
-    
+function TB_Fight:AsgnTarget(Army)
+    log.dev('TB_Fight:AsgnTarget() 找目标喽！！！')
+    local Enemy = self.OwnerTeam.TeamEnemy
+    Enemy:SortEnemyByDist()
+    -- local avatar = Enemy.tbEnemyRolePerception[1].Role.Avatar
+    -- UE.UKismetSystemLibrary.DrawDebugSphere(avatar, avatar:K2_GetActorLocation(), 100, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
+    for i, ele in ipairs(Army[FightPosDef.Frontline]) do
+        local Role = ele ---@type RoleClass
+        if not Enemy.tbEnemyRolePerception[i] then
+            break
+        end
+        Role.BT.Blackboard:SetBBValue('FightTarget', Enemy.tbEnemyRolePerception[i].Role)
+    end
+    Enemy.FireTarget = Enemy.tbEnemyRolePerception[1].Role
 end
 
 --[[

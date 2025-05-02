@@ -24,7 +24,7 @@ RoleConfig[1] = {
 ---@type RoleConfig
 RoleConfig[2] = {
     DisplayName = '阿克巴鲁斯',
-    Desc = '常见的',
+    Desc = '常见的; 法师, 战士',
     BelongKingdomCfgId = 2,
     InitBT = 'Team_MakeTeam_1',
     Color = -1,
@@ -37,7 +37,7 @@ RoleConfig[2].BTCfg[BTType.Fight] = 'Team_Fight_1'
 
 RoleConfig[3] = {
     DisplayName = '阿巴克',
-    Desc = '见人就砍',
+    Desc = '见人就砍; 法师, 战士',
     SpecialClass = 'R_Lich_3',
     BelongKingdomCfgId = 3,
     InitBT = 'JungleMonsters_Burn_1',
@@ -46,6 +46,7 @@ RoleConfig[3] = {
 
 RoleConfig[4] = {
     DisplayName = '鲁鲁修',
+    Desc = '法师, 战士',
     BelongKingdomCfgId = 3,
     InitBT = 'Team_MakeTeam_1',
     Color = 1,
