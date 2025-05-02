@@ -41,6 +41,9 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     
     ---@step 给出进一步站位(进攻性)
     ---@step 后排给出集火目标, 前排给出对线目标
+    async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 2, function()
+        self:AsgnTarget()
+    end)
 end
 
 local DftFPAsgnRate = {} -- 默认的最佳战场位置配比(default fight position assign rate)
@@ -113,6 +116,9 @@ function TB_Fight:DefensivePos(Army)
     end
 end
 
+function TB_Fight:AsgnTarget()
+    
+end
 
 --[[
 to ChatGPT:
