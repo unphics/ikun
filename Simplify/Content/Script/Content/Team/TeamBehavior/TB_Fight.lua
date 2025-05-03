@@ -20,6 +20,7 @@ local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 ---@public
 ---@param EnemyTeam TeamClass
 function TB_Fight:OnEncounterEnemy(EnemyTeam)
+    log.dev('qqqq')
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, ele in ipairs(AllMember) do
         ---@type RoleClass
@@ -111,13 +112,13 @@ function TB_Fight:DefensivePos(Army)
     local FrontlineTarget = OwnerLoc + Dir * 500
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
-        local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 200)
+        local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 150)
         self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc, true)
     end
 end
 
 function TB_Fight:AsgnTarget(Army)
-    log.dev('TB_Fight:AsgnTarget() 找目标喽！！！')
+    -- log.dev('TB_Fight:AsgnTarget() 找目标喽！！！')
     local Enemy = self.OwnerTeam.TeamEnemy
     Enemy:SortEnemyByDist()
     -- local avatar = Enemy.tbEnemyRolePerception[1].Role.Avatar
@@ -130,6 +131,14 @@ function TB_Fight:AsgnTarget(Army)
         Role.BT.Blackboard:SetBBValue('FightTarget', Enemy.tbEnemyRolePerception[i].Role)
     end
     Enemy.FireTarget = Enemy.tbEnemyRolePerception[1].Role
+
+    for i, ele in ipairs(Army[FightPosDef.Backline]) do
+        local Role = ele ---@type RoleClass
+        if not Enemy.tbEnemyRolePerception[i] then
+            break
+        end
+        Role.BT.Blackboard:SetBBValue('FightTarget', Enemy.tbEnemyRolePerception[1].Role)
+    end
 end
 
 --[[

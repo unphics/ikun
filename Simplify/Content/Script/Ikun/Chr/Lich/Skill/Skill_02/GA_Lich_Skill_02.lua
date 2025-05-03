@@ -52,7 +52,7 @@ function M:OnEventReceived(EventTag, EventData)
     if EventTag.TagName ~= UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Hit.01').TagName then
         return
     end
-    local Target = SelfActor:GetRole():GetTarget()
+    local Target = SelfActor:GetRole().BT.Blackboard:GetBBValue('FightTarget')
     if not Target then
         return
     end

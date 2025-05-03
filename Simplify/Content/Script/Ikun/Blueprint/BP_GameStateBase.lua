@@ -41,7 +41,9 @@ function M:InitUIModule()
     -- end
     local UIMgrClass = UE.UClass.Load('/Game/Ikun/UI/UMG/GameUIMgr.GameUIMgr_C')
     local UIMgr = UE.UWidgetBlueprintLibrary.Create(self, UIMgrClass, UE.UGameplayStatics.GetPlayerController(self, 0))
-    UIMgr:AddToViewport(0)
+    if UIMgr then
+        UIMgr:AddToViewport(0)
+    end
 end
 
 return M

@@ -1,13 +1,13 @@
 ---
----@brief 简单的平滑转身
+---@brief 转身瞄准
 ---@author zys
----@data Sun Jan 26 2025 20:13:53 GMT+0800 (中国标准时间)
+---@data Sat May 03 2025 19:07:52 GMT+0800 (中国标准时间)
 ---
 
----@class LTask_RotateSmooth: LTask
+---@class LTask_AimTarget: LTask
 ---@field ConstRotSpeed number
 ---@field ConstFillInThreshold number
-local LTask_RotateSmooth = class.class 'LTask_RotateSmooth' : extends 'LTask' {
+local LTask_AimTarget = class.class 'LTask_AimTarget' : extends 'LTask' {
 --[[public]]
     ctor = function()end,
 --[[private]]
@@ -17,12 +17,12 @@ local LTask_RotateSmooth = class.class 'LTask_RotateSmooth' : extends 'LTask' {
 }
 ---@param RotSpeed number 转身速度, 单位是角度
 ---@param ConstFillInThreshold number 进入转身的门槛
-function LTask_RotateSmooth:ctor(DisplayName, RotSpeed, FillInThreshold)
+function LTask_AimTarget:ctor(DisplayName, RotSpeed, FillInThreshold)
     class.LTask.ctor(self, DisplayName)
     self.ConstRotSpeed = RotSpeed or 300
     self.ConstFillInThreshold = FillInThreshold or 10
 end
-function LTask_RotateSmooth:OnInit()
+function LTask_AimTarget:OnInit()
     class.LTask.OnInit(self)
 
     self.TimeCount = 0
@@ -30,7 +30,7 @@ function LTask_RotateSmooth:OnInit()
     self.DeltaRot = nil
 
     self.InitRot = self.Chr:K2_GetActorRotation() ---@type FRotator
-    local TargetLoc = self:GetRotTargetLoc()
+    local TargetLoc = self:GetAimTargetLoc()
     if not TargetLoc then
         self:DoTerminate(false)
         return
@@ -46,7 +46,7 @@ function LTask_RotateSmooth:OnInit()
         self:DoTerminate(true)
     end
 end
-function LTask_RotateSmooth:OnUpdate(DeltaTime)
+function LTask_AimTarget:OnUpdate(DeltaTime)
     if not self.TargetRot then
         self:DoTerminate(false)
         return
@@ -58,7 +58,7 @@ function LTask_RotateSmooth:OnUpdate(DeltaTime)
     -- self.TimeCount = self.TimeCount + DeltaTime
     local Yaw = (self.DeltaRot.Yaw > 0 and self.ConstRotSpeed or -self.ConstRotSpeed) * DeltaTime
     if not obj_util.is_valid(self.Chr) then
-        log.error('LTask_RotateSmooth:OnUpdate Failed to index Chr !', obj_util.get_obj_name(self.Chr))
+        log.error('LTask_AimTarget:OnUpdate Failed to index Chr !', obj_util.get_obj_name(self.Chr))
     end
     self.Chr:K2_AddActorLocalRotation(UE.FRotator(0, Yaw, 0), true, nil, true)
     local CurRot = self.Chr:K2_GetActorRotation()
@@ -69,17 +69,11 @@ function LTask_RotateSmooth:OnUpdate(DeltaTime)
 end
 ---@private [no sad effect]
 ---@return AActor | FVector
-function LTask_RotateSmooth:GetRotTargetLoc()
-    local MoveTarget = self.Blackboard:GetBBValue('MoveTarget')
-    if not MoveTarget then
-        log.error('LTask_RotateSmooth:OnInit Failed to index MoveTarget !')
+function LTask_AimTarget:GetAimTargetLoc()
+    local AimTarget = self.Blackboard:GetBBValue('FightTarget')
+    if not AimTarget then
+        log.error('LTask_AimTarget:AimTarget() not AimTarget')
         return
     end
-    if class.instanceof(MoveTarget, class.RoleClass) then
-        MoveTarget = MoveTarget.Avatar:K2_GetActorLocation()
-    end
-    if not MoveTarget then
-        log.error('LTask_RotateSmooth:OnInit Failed to index valid MoveTarget !')
-    end
-    return MoveTarget
+    return AimTarget.Avatar:K2_GetActorLocation()
 end

@@ -47,6 +47,9 @@ M['Team_Fight_1'] = function(Avatar)
             :AddTask('LTask_RotateSmooth')
             :AddTask('LTask_Wait', 0.2)
             :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
+            :AddTask('LTask_SelectAbility')
+            :AddTask('LTask_AimTarget')
+            :AddTask('LTask_ActiveAbility')
     return LBT
 end
 

@@ -20,6 +20,7 @@ require('Ikun/Module/AI/BT/Task/LTask_TeamWaitSwitchBT')
 require('Ikun/Module/AI/BT/Task/LTask_TeamGetMoveTarget')
 require('Ikun/Module/AI/BT/Task/LTask_TeamMove')
 require('Ikun/Module/AI/BT/Task/LTask_TeamWaitFence')
+require('Ikun/Module/AI/BT/Task/LTask_AimTarget')
 
 require('Ikun/Module/AI/BT/Decorator/LDecorator')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_RoleCondition')

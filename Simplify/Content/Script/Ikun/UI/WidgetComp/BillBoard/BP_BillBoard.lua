@@ -31,6 +31,9 @@ end
 ---@private Billboard永远面向玩家
 function M:Face2Player()
     local PlayerPawn = UE.UGameplayStatics.GetPlayerPawn(self:GetOwner(), 0) ---@type APawn
+    if not PlayerPawn then
+        return
+    end
     local Rot = UE.UKismetMathLibrary.FindLookAtRotation(self:GetOwner():K2_GetActorLocation(), PlayerPawn:K2_GetActorLocation())
     Rot.Roll = 0
     Rot.Pitch = 0

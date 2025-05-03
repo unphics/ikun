@@ -19,10 +19,12 @@
 ---@field EnemyRoleMap table<number, TeamEnemyPerception>
 ---@field OwnerTeam TeamClass
 ---@field FireTarget RoleClass 集火目标
+---@field tbEnemyTeam table<TeamClass>
 local TeamEnemyClass = class.class 'TeamEnemyClass' {
 ---[[public]]
     cotr = function()end,
     FireTarget = nil,
+    tbEnemyTeam = nil,
 ---[[private]]
     tbEnemyRolePerception = nil,
     EnemyRoleMap = nil,

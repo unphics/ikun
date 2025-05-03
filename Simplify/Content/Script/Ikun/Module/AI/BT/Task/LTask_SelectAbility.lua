@@ -32,7 +32,7 @@ function LTask_SelectAbility:OnUpdate(DeltaTime)
     end
 end
 function LTask_SelectAbility:SelectAbilityRandom()
-    local CurEnemyTarget = self.Blackboard:GetBBValue('Target').Avatar ---@type AActor
+    local CurEnemyTarget = self.Blackboard:GetBBValue('FightTarget').Avatar ---@type AActor
     if not CurEnemyTarget then
         log.error('LTask_SelectAbility:SelectAbilityRandom() Failed to index valid enemy target !')
         return 
@@ -50,7 +50,7 @@ function LTask_SelectAbility:SelectAbilityRandom()
         -- 友方团队相关 团队过滤 及其 权重计算(团队组成/人数/健康度/斩首率/阵位)
         -- 敌方团队相关 团队过滤 及其 权重计算
     end
-    local i = 1
+    local i = 2
     self.SelectResult = {Handle = AllHandle[i], Ability = AllActiveAbility[i]} ---@todo 这个选择结果考虑暴露更多信息
     -- log.dev('LTask_SelectAbility:SelectAbilityRandom()', self.SelectResult.Handle.Handle, self.SelectResult.Handle.Ability)
 end
