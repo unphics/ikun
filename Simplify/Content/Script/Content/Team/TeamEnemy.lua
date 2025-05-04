@@ -23,9 +23,15 @@
 local TeamEnemyClass = class.class 'TeamEnemyClass' {
 ---[[public]]
     cotr = function()end,
+    ResetTeamEnemyData = function()end,
+    OnEncounterEnemy = function()end,
+    TryAddNewEnemyRole = function()end,
+    SortEnemyByDist = function()end,
+    GetAllEnemy = function()end,
     FireTarget = nil,
     tbEnemyTeam = nil,
 ---[[private]]
+    TryAddNewEnemyRole = function()end,
     tbEnemyRolePerception = nil,
     EnemyRoleMap = nil,
     OwnerTeam = nil,
@@ -84,6 +90,14 @@ function TeamEnemyClass:SortEnemyByDist()
         local Dist_B = UE.UKismetMathLibrary.Vector_Distance(b.LastSeenLoc, OwnerLoc)
         return Dist_A < Dist_B
     end)
+end
+---@public 获取所有敌人
+function TeamEnemyClass:GetAllEnemy()
+    local All = {}
+    for i, ele in ipairs(self.tbEnemyRolePerception) do
+        table.insert(All, ele.Role)
+    end
+    return All
 end
 
 return TeamEnemyClass

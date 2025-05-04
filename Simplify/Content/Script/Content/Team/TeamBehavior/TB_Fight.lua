@@ -20,7 +20,6 @@ local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 ---@public
 ---@param EnemyTeam TeamClass
 function TB_Fight:OnEncounterEnemy(EnemyTeam)
-    log.dev('qqqq')
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, ele in ipairs(AllMember) do
         ---@type RoleClass
@@ -102,8 +101,9 @@ function TB_Fight:AsgnFightPos()
     return Army
 end
 function TB_Fight:DefensivePos(Army)
-    local OwnerLoc = self.OwnerTeam.TeamMember:GetLeader().Avatar:K2_GetActorLocation()
-    local EnemyLoc = self.OwnerTeam.TeamEnemy.tbEnemyRolePerception[1].Role.Avatar:K2_GetActorLocation()
+    log.dev('TB_Fight:DefensivePos 看看算的对不对')
+    local OwnerLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamMember:GetAllMember())
+    local EnemyLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamEnemy:GetAllEnemy())
     if UE.UKismetMathLibrary.Vector_Distance(OwnerLoc, EnemyLoc) < 1000 then
         log.dev('距离过近')
     end
@@ -140,12 +140,3 @@ function TB_Fight:AsgnTarget(Army)
         Role.BT.Blackboard:SetBBValue('FightTarget', Enemy.tbEnemyRolePerception[1].Role)
     end
 end
-
---[[
-to ChatGPT:
-现在我考虑在战斗位置和战斗职业（法师战士等）和战场位置（前排后排等）两个定义中废除一个，因为我在写分配逻辑中有这样存在：
-角色配置了可承担的职业，根据职业计算出可承担的位置，根据Team此时的位置的人的情况确定是否在此位置，然后得出了位置再反向
-计算出职业，但是问题来了，有的职业可以对应很多位置，比如战斗法师可以前排也可以后排也可以承担游走等位置，所以多对多的情
-况下及其混乱而且无法硕源，所以我现在考虑只给角色配置可承担的战斗位置，然后战斗职业作为人物描述写在desc_text_content中，
-体现在该角色策划配置的技能都是某职业的技能，将一个业务逻辑问题转换为一个策划工种的配置问题
-]]

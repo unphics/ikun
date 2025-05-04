@@ -88,8 +88,8 @@ function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget, bForceMove)
 end
 
 ---@public [Calc] 鲁棒中心估计(质心+离群排除)
-function TeamMoveClass:CalcTeamMemberCenter()
-    local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
+function TeamMoveClass:CalcTeamMemberCenter(ArrRole)
+    local AllMember = ArrRole -- self.OwnerTeam.TeamMember:GetAllMember()
     if #AllMember == 0 then
         return
     end
@@ -115,9 +115,22 @@ function TeamMoveClass:CalcTeamMemberCenter()
     end
     local AvgDist = TotalDist / #AllMember
     ---@step 3.排除离群点(距离超过平均值2倍的)
-    local Kept = {}
+    local Kept = {} -- 排除离群点后的Role[]
     for i, role in ipairs(AllMember) do
-        
+        if Distances[i] <= AvgDist * 2 then
+            table.insert(Kept, role)
+        end
     end
+    ---@step 4.对剩下的点重新计算中心
+    local KeptLen = #Kept
+    if KeptLen == 0 then
+        return CenterLoc -- 全部被提出就返回初始中心
+    end
+    local KSumLoc = UE.FVector()
+    for _, role in ipairs(Kept) do
+        KSumLoc = KSumLoc + role.Avatar:K2_GetActorLocation()
+    end
+    local KAvg = UE.UKismetMathLibrary.Divide_VectorInt(KSumLoc, KeptLen)
+    return KAvg
 end
 return TeamMoveClass
