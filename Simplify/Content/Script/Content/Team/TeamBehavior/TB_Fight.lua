@@ -20,6 +20,10 @@ local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 ---@public
 ---@param EnemyTeam TeamClass
 function TB_Fight:OnEncounterEnemy(EnemyTeam)
+    if not self.OwnerTeam.TeamEnemy:OnEncounterEnemy(EnemyTeam) then
+        return
+    end
+
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, ele in ipairs(AllMember) do
         ---@type RoleClass
@@ -27,8 +31,6 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
         local NewBTKey = RoleConfig[Role.RoleConfigId].BTCfg[BTType.Fight]
         Role.BT.Blackboard:SetBBValue('BBNewBTKey', NewBTKey)        
     end
-
-    self.OwnerTeam.TeamEnemy:OnEncounterEnemy(EnemyTeam)
 
     ---@step 站位分化
     local Army = self:AsgnFightPos()

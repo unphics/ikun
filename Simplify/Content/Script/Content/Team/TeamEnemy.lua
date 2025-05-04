@@ -15,11 +15,10 @@
 ---@field TargetBy RoleClass|nil
 
 ---@class TeamEnemyClass
----@field tbEnemyRolePerception TeamEnemyPerception[]
----@field EnemyRoleMap table<number, TeamEnemyPerception>
+---@field tbEnemyRolePerception TeamEnemyPerception[] 紧凑排列的数组表, 用于遍历
+---@field refEnemyRole table<number, TeamEnemyPerception> HashMap的Role表,用于查找
 ---@field OwnerTeam TeamClass
 ---@field FireTarget RoleClass 集火目标
----@field tbEnemyTeam table<TeamClass>
 local TeamEnemyClass = class.class 'TeamEnemyClass' {
 ---[[public]]
     cotr = function()end,
@@ -29,11 +28,10 @@ local TeamEnemyClass = class.class 'TeamEnemyClass' {
     SortEnemyByDist = function()end,
     GetAllEnemy = function()end,
     FireTarget = nil,
-    tbEnemyTeam = nil,
 ---[[private]]
     TryAddNewEnemyRole = function()end,
     tbEnemyRolePerception = nil,
-    EnemyRoleMap = nil,
+    refEnemyRole = nil,
     OwnerTeam = nil,
 } 
 function TeamEnemyClass:ctor(OwnerTeam)
@@ -45,26 +43,28 @@ function TeamEnemyClass:ctor(OwnerTeam)
 end
 ---@public 重置敌人
 function TeamEnemyClass:ResetTeamEnemyData()
-    self.EnemyRoleMap = {}
+    self.refEnemyRole = {}
     self.tbEnemyRolePerception = {}
 end
 ---@public 遭遇敌军; 第一次遭遇时, 根据敌军情况第一次评估敌军信息
 ---@param EnemyTeam TeamClass
+---@return boolean 是否是遭遇(是否第一次)
 function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
     ---@step 如该TeamLeader已添加, 则该Team已添加
     local EnemyLeaer = EnemyTeam.TeamMember:GetLeader()
-    if self.EnemyRoleMap[EnemyLeaer.RoleInstId] then
-        return
+    if self.refEnemyRole[EnemyLeaer.RoleInstId] then
+        return false
     end
     ---@step 存储敌军所有角色
     for i, Role in ipairs(EnemyTeam.TeamMember:GetAllMember()) do
         self:TryAddNewEnemyRole(Role)
-    end 
+    end
+    return true
 end
 ---@private 尝试添加一个敌人角色
 ---@param EnemyRole RoleClass
 function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
-    if self.EnemyRoleMap[EnemyRole.RoleInstId] then
+    if self.refEnemyRole[EnemyRole.RoleInstId] then
         return
     end
     ---@type TeamEnemyPerception
@@ -77,7 +77,7 @@ function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
         Confidence = 1,
         TargetBy = nil,
     }
-    self.EnemyRoleMap[EnemyRole.RoleInstId] = RolePerception
+    self.refEnemyRole[EnemyRole.RoleInstId] = RolePerception
     table.insert(self.tbEnemyRolePerception, RolePerception)
 end
 ---@public 根据远近排序(第一个最近)

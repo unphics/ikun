@@ -7,6 +7,7 @@
 ---@todo 1.增加一个平滑函数, 把锐角的转折点平滑处理以优化表现
 ---      2.SegIdx外部管理, 如共享寻路数据
 ---      3.可视化寻路路径(DrawDebug)
+---      4.动态避障
 ---
 
 ---@class NavMoveData
@@ -81,10 +82,10 @@ function NavMoveData:CalcChr2CurSegEndDir2D(Chr)
     ToCurSegEndDir.Z = 0
     return ToCurSegEndDir
 end
----@public [StaticFn]
+---@public [StaticFn] 投射目标点到NavMesh上
 ---@param Point FVector | AActor
 ---@param QueryEvent FVector@[opt]
----@return boolean, FVector
+---@return boolean | nil, FVector
 function NavMoveData.ProjectPointToNavMesh(World, Point, QueryEvent)
     if not World then
         return log.error('NavMoveData:ProjectPointToNavMesh(): Attemp to index a nil world')
@@ -99,7 +100,7 @@ function NavMoveData.ProjectPointToNavMesh(World, Point, QueryEvent)
         ProjectedPoint, nil, nil, QueryEvent)
     return bSuccess, ProjectedPoint
 end
----@public [StaticFn]
+---@public [StaticFn] 范围内获取一个随机可达点
 ---@param OriginLoc FVector
 ---@return boolean, FVector
 function NavMoveData.RandomNavPointInRadius(World, OriginLoc, Radius)
