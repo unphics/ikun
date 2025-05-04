@@ -1,6 +1,13 @@
+
+---
+---@brief UE的世界或关卡相关的工具方法
+---@author zys
+---@data Sun May 04 2025 14:16:47 GMT+0800 (中国标准时间)
+---
+
 ---@class world_util
 ---@field GameWorld UWorld WorldContextObject
-world_util = {}
+local world_util = {}
 
 world_util.GameWorld = nil
 

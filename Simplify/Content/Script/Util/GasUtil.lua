@@ -1,3 +1,10 @@
+
+---
+---@brief GameplayAbilitySystem的工具方法
+---@author zys
+---@data Sun May 04 2025 14:20:00 GMT+0800 (中国标准时间)
+---
+
 local gas_util = {}
 
 local function find_active(ikun_chr, tag_container)

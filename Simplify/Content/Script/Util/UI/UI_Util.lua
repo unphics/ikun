@@ -1,3 +1,10 @@
+
+---
+---@brief UI开发中的业务层的常用工具方法
+---@author zys
+---@data Sun May 04 2025 14:22:37 GMT+0800 (中国标准时间)
+---
+
 ---@class ui_util
 ---@field uidef UIDef
 local ui_util = {}

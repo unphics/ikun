@@ -2,6 +2,7 @@
 ---@brief SharedPreCompiled Header
 ---@author zys
 ---@data Sat Apr 05 2025 14:07:07 GMT+0800 (中国标准时间)
+---@notice 此文件的修改必须征得本人同意(全局变量增加要慎重)!!!
 ---
 
 

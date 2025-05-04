@@ -1,3 +1,10 @@
+
+---
+---@brief 植入UECmd的Lua调试转发
+---@author zys
+---@data Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
+---
+
 log.error("DebugUtil Loaded")
 
 local M = {}

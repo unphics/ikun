@@ -1,3 +1,10 @@
+
+---
+---@brief 基于UE的一些异步工具方法
+---@author zys
+---@data Sun May 04 2025 14:21:36 GMT+0800 (中国标准时间)
+---
+
 ---@class async_util
 local async_util = {}
 

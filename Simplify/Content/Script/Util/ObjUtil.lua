@@ -1,3 +1,10 @@
+
+---
+---@brief UE的UObject相关的工具方法
+---@author zys
+---@data Sun May 04 2025 14:17:18 GMT+0800 (中国标准时间)
+---
+
 local obj_util = {}
 
 ---@public 创建一个有Lua对象的UObject
