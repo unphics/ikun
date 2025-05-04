@@ -106,4 +106,5 @@ function TeamMemberClass:CalcMaxCountPerPos()
     end
     return MaxCountPerPos
 end
+---@public
 return TeamMemberClass
