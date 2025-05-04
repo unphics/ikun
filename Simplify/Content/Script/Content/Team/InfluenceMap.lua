@@ -25,8 +25,8 @@ end
 
 ---@class InfluenceMapClass
 ---@field CenterV3 FVector 中心点
----@field ItemGridSize number 每个正方形格子的边长
----@field HalfGridCount number 从大正方形Map中心点到边有多少格
+---@field ItemGridSize number 每个正方形格子的边长 -> 50
+---@field HalfGridCount number 从大正方形Map中心点到边有多少格 -> 100
 ---@field InfluenceItems InfluenceItem[] 图
 ---@field CalcFns function<InfluenceItem,RoleClass,InfluenceMapClass>[]
 local InfluenceMapClass = class.class 'InfluenceMapClass' {
@@ -77,7 +77,7 @@ function InfluenceMapClass:InitGridItems()
         local Col = (i - 1) % (self.HalfGridCount * 2)
         local ItemCenterX = FirstItemCenterX - (self.ItemGridSize * Row)
         local ItemCenterY = FirstItemCenterY + (self.ItemGridSize * Col)
-        self:DrawDebugSphere({ItemCenterX, ItemCenterY})
+        -- self:DrawDebugSphere({ItemCenterX, ItemCenterY})
         local Item = MakeInfluenceItem(i, ItemCenterX, ItemCenterY, Row, Col)
         table.insert(self.InfluenceItems, Item)
     end
@@ -111,7 +111,7 @@ function InfluenceMapClass:AddRole(Role)
         return log.error('InfluenceMapClass:AddRole(): 不在范围内')
     end
     local InfluenceItem = self:FindItemByXY(Loc.X, Loc.Y)
-    self:DrawDebugSphere({InfluenceItem.X, InfluenceItem.Y}, {0, 1, 0})
+    -- self:DrawDebugSphere({InfluenceItem.X, InfluenceItem.Y}, {0, 1, 0})
     for _, Fn in ipairs(self.CalcFns) do
         Fn(InfluenceItem, Role)
     end
@@ -150,7 +150,6 @@ function InfluenceMapClass:FindTheMostItemByFn(Fn)
 end
 ---@private [Debug]
 function InfluenceMapClass:DrawDebugSphere(Pos, Color)
-    do return end
     Color = Color or {1, 0, 0}
     UE.UKismetSystemLibrary.DrawDebugSphere(world_util.GameWorld, UE.FVector(Pos[1], Pos[2], 100),
         self.ItemGridSize / 2, 8, UE.FLinearColor(Color[1], Color[2], Color[3]), 5, 2)

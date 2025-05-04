@@ -23,6 +23,7 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     if not self.OwnerTeam.TeamEnemy:OnEncounterEnemy(EnemyTeam) then
         return
     end
+    self:MakeInfluenceMap()
 
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, ele in ipairs(AllMember) do
@@ -54,8 +55,6 @@ DftFPAsgnRate[FightPosDef.Backline] = 2
 
 ---@private 分配战场位置
 function TB_Fight:AsgnFightPos()
-    ---@todo 暂时只有Lich一只怪, 暂定固定一些写法
-
     local tbMaxFPCount = self.OwnerTeam.TeamMember:CalcMaxCountPerPos()
     local tbFPAsgnRate = {} -- 此时团队的职业比率
     local nSumFPRate = 0
@@ -140,5 +139,16 @@ function TB_Fight:AsgnTarget(Army)
             break
         end
         Role.BT.Blackboard:SetBBValue('FightTarget', Enemy.tbEnemyRolePerception[1].Role)
+    end
+end
+---@todo 影响力图, 还在测试
+local a = true
+function TB_Fight:MakeInfluenceMap()
+    if a then
+        log.dev('影响力图')
+        local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
+    local InfluenceMap = class.new 'InfluenceMapClass' (self.OwnerTeam.TeamMove:CalcTeamMemberCenter(AllMember), 50, 100) ---@type InfluenceMap
+        InfluenceMap:AddRoles(AllMember)
+        a = false
     end
 end

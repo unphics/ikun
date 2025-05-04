@@ -25,7 +25,6 @@ require('Content/Team/TeamBehavior/TB_Fight')
 ---@field DecisionInterval number 决策间隔
 ---@field DecisionTimeCount number 决策间隔计时
 ---@field bFight boolean
----@field BattlePosition table[]
 local TeamClass = class.class 'TeamClass': extends 'MdBase' {
 --[[public]]
     ctor = function()end,
@@ -39,11 +38,9 @@ local TeamClass = class.class 'TeamClass': extends 'MdBase' {
     TeamMove = nil,
 --[[private]]
     UpdateDecisionInterval = function()end,
-    InitAllocBattlePosition = function()end,
     DecisionInterval = nil,
     DecisionTimeCount = nil,
     bFight = nil,
-    BattlePosition = nil,
 }
 function TeamClass:ctor()
     self.TeamMember = class.new 'TeamMemberClass' (self)
@@ -59,13 +56,12 @@ function TeamClass:Init()
     self:NextState(class.new 'TB_Patrol' (self))
 end
 function TeamClass:Tick(DeltaTime)
-    if self.bFight then
-        self.DecisionTimeCount = self.DecisionTimeCount + DeltaTime
-        if self.DecisionTimeCount > self.DecisionInterval then
-            self.DecisionTimeCount = self.DecisionTimeCount - self.DecisionInterval
-            self:MakeDynaDecision()
-        end
-    end
+    -- if self.bFight then
+    --     self.DecisionTimeCount = self.DecisionTimeCount + DeltaTime
+    --     if self.DecisionTimeCount > self.DecisionInterval then
+    --         self.DecisionTimeCount = self.DecisionTimeCount - self.DecisionInterval
+    --     end
+    -- end
 end
 ---@public
 ---@param TO TeamBehaviorBase
@@ -79,72 +75,12 @@ function TeamClass:Encounter(Enemy)
     if true then
         self.bFight = true
         self.CurTB:OnEncounterEnemy(Enemy)
-        -- self:InitAllocBattlePosition()
     end
 end
 ---@public 在战斗中
 ---@return boolean
 function TeamClass:IsInfight()
     return self.bFight
-end
-
---------------------------------------------------------------------------
----------------------------------- 开发中 ---------------------------------
---------------------------------------------------------------------------
-
----@private 入战后初始化分配战场位置
-function TeamClass:InitAllocBattlePosition()
-    local BattlePosition = {
-        Frontline = {}, -- 前排
-        Backline = {}, -- 后排
-    }
-    local AllMember = {}
-    for _, m in ipairs(self.Member) do
-        table.insert(AllMember, m)
-    end
-    ---@todo 这里先简单分一下前排后排
-    local BacklineCount = math.floor(#AllMember / 2 + 0.5)
-    local i = 1
-    while AllMember[i] do
-        if not (i > BacklineCount) then
-            local m = AllMember[i]
-            table.insert(BattlePosition.Backline, m)
-            table.remove(AllMember)
-            BacklineCount = BacklineCount - 1
-        else
-            i = i + 1
-        end
-    end
-    BattlePosition.Frontline = AllMember
-
-    self.BattlePosition = BattlePosition
-end
----@private 战斗中动态调整战场位置
-function TeamClass:DynaAjustBattlePosition()
-
-end
----@private 战斗中动态调整成员位置
-function TeamClass:DynaAjustMemberLoc()
-    
-end
----@private 战斗中的动态决策
-function TeamClass:MakeDynaDecision()
-    self:MakeInfluenceMap()
-    ---@step 动态调配各个战场位置的人员
-    ---@step 找出对方
-    ---@step 动态调整各个战场位置人员的位置Location
-    ---@step 更改集火目标
-    self:DynaAjustBattlePosition()
-    self:DynaAjustMemberLoc()
-end
----@todo 影响力图, 还在测试
-local a = true
-function TeamClass:MakeInfluenceMap()
-    if a then
-        local InfluenceMap = class.new 'InfluenceMapClass' (self.TeamMember:GetLeader().Avatar:K2_GetActorLocation(), 400, 10) ---@type InfluenceMap
-        InfluenceMap:AddRoles(self.TeamMember:GetAllMember())
-        a = false
-    end
 end
 
 return TeamClass

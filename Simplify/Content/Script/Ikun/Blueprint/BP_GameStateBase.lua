@@ -16,6 +16,34 @@ local M = UnLua.Class()
 function M:ReceiveBeginPlay()
     world_util.GameWorld = self
     self:InitUIModule()
+
+    -- 56.8ms
+    -- async_util.delay(self, 2, function()
+    --     log.dev('qqqqqqqqqqqqqq')
+    --     local n = 10000
+    --     local tb = {}
+    --     for i = 1, n do
+    --         table.insert(tb, self)
+    --     end
+    --     for _, gs in ipairs(tb) do
+    --         obj_util.dispname(gs)
+    --     end
+    --     log.dev('eeeeeeeeeeeeee')
+    -- end)
+    
+    -- 57.1
+    -- async_util.delay(self, 2, function()
+    --     log.dev('qqqqqqqqqqqqqq')
+    --     local n = 10000
+    --     local arr = UE.TArray(UE.AActor)
+    --     for i = 1, n do
+    --         arr:Add(self)
+    --     end
+    --     for i = 1, arr:Length() do
+    --         obj_util.dispname(arr:Get(i))
+    --     end
+    --     log.dev('eeeeeeeeeeeeee')
+    -- end)
 end
 
 -- function M:ReceiveEndPlay()

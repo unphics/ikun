@@ -15,6 +15,7 @@ local M = UnLua.Class()
 --end
 
 function M:Construct()
+    ui_util.release_mouse(self)
     local bSvr = net_util.is_server()
     self.TxtLocalHost:SetText(bSvr and 'LocalHost=Server' or 'LocalHost=Client')
 end
