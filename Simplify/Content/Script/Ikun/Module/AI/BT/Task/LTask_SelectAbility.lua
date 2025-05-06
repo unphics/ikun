@@ -1,8 +1,11 @@
+
 ---
 ---@brief SelectAbility
 ---@author zys
 ---@data Thu Jan 09 2025 12:26:53 GMT+0800 (中国标准时间)
 ---
+
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_SelectAbility: LTask
 local LTask_SelectAbility = class.class 'LTask_SelectAbility' : extends 'LTask' {
@@ -24,15 +27,15 @@ function LTask_SelectAbility:OnInit()
 end
 function LTask_SelectAbility:OnUpdate(DeltaTime)
     if self.SelectResult then
-        self.Blackboard:SetBBValue('SelectAbility', self.SelectResult)
-        self.Blackboard:SetBBValue('MoveTarget', self.Blackboard:GetBBValue('Target'))
+        self.Blackboard:SetBBValue(BBKeyDef.SelectAbility, self.SelectResult)
+        self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, self.Blackboard:GetBBValue(BBKeyDef.FightTarget))
         self:DoTerminate(true)
     else
         self:DoTerminate(false)
     end
 end
 function LTask_SelectAbility:SelectAbilityRandom()
-    local CurEnemyTarget = self.Blackboard:GetBBValue('FightTarget').Avatar ---@type AActor
+    local CurEnemyTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget).Avatar ---@type AActor
     if not CurEnemyTarget then
         log.error('LTask_SelectAbility:SelectAbilityRandom() Failed to index valid enemy target !')
         return 

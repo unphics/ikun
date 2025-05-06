@@ -1,3 +1,4 @@
+
 ---
 ---@brief Lich一技能, 远程
 ---@author zys
@@ -5,6 +6,7 @@
 ---
 
 -- local lua = require('Ikun/Blueprint/GAS/GA_IkunBase')
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class GA_Lich_Skill_02: GA_IkunBase
 local M = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
@@ -52,7 +54,7 @@ function M:OnEventReceived(EventTag, EventData)
     if EventTag.TagName ~= UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Hit.01').TagName then
         return
     end
-    local Target = SelfActor:GetRole().BT.Blackboard:GetBBValue('FightTarget')
+    local Target = SelfActor:GetRole().BT.Blackboard:GetBBValue(BBKeyDef.FightTarget)
     if not Target then
         return
     end

@@ -8,12 +8,14 @@
 local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTType = require('Ikun.Module.AI.BT.BTType')
 local FightPosDef = require 'Content/Role/FightPosDef'
+local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
 
 ---@class TB_Fight : TeamBehaviorBase
 ---
 local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 --[[public]]
     OnEncounterEnemy = function()end,
+    Tick = function()end,
 --[[private]]
     AsgnFightPos = function()end,
 }
@@ -30,7 +32,7 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
         ---@type RoleClass
         local Role = ele
         local NewBTKey = RoleConfig[Role.RoleConfigId].BTCfg[BTType.Fight]
-        Role.BT.Blackboard:SetBBValue('BBNewBTKey', NewBTKey)        
+        Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
 
     ---@step 站位分化
@@ -47,6 +49,8 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 3, function()
         self:AsgnTarget(Army)
     end)
+end
+function TB_Fight:Tick(DeltaTime)
 end
 
 local DftFPAsgnRate = {} -- 默认的最佳战场位置配比(default fight position assign rate)
@@ -129,7 +133,7 @@ function TB_Fight:AsgnTarget(Army)
         if not Enemy.tbEnemyRolePerception[i] then
             break
         end
-        Role.BT.Blackboard:SetBBValue('FightTarget', Enemy.tbEnemyRolePerception[i].Role)
+        Role.BT.Blackboard:SetBBValue(BBKeyDef.FightTarget, Enemy.tbEnemyRolePerception[i].Role)
     end
     Enemy.FireTarget = Enemy.tbEnemyRolePerception[1].Role
 
@@ -138,12 +142,14 @@ function TB_Fight:AsgnTarget(Army)
         if not Enemy.tbEnemyRolePerception[i] then
             break
         end
-        Role.BT.Blackboard:SetBBValue('FightTarget', Enemy.tbEnemyRolePerception[1].Role)
+        Role.BT.Blackboard:SetBBValue(BBKeyDef.FightTarget, Enemy.tbEnemyRolePerception[1].Role)
     end
 end
----@todo 影响力图, 还在测试
-local a = true
 function TB_Fight:MakeInfluenceMap()
+    if a then
+        return
+    end
+    a = true
     if a then
         log.dev('影响力图')
         local AllMember = self.OwnerTeam.TeamMember:GetAllMember()

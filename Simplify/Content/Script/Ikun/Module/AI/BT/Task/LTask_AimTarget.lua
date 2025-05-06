@@ -1,8 +1,11 @@
+
 ---
 ---@brief 转身瞄准
 ---@author zys
 ---@data Sat May 03 2025 19:07:52 GMT+0800 (中国标准时间)
 ---
+
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_AimTarget: LTask
 ---@field ConstRotSpeed number
@@ -70,7 +73,7 @@ end
 ---@private [no sad effect]
 ---@return AActor | FVector
 function LTask_AimTarget:GetAimTargetLoc()
-    local AimTarget = self.Blackboard:GetBBValue('FightTarget')
+    local AimTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
     if not AimTarget then
         log.error('LTask_AimTarget:AimTarget() not AimTarget')
         return

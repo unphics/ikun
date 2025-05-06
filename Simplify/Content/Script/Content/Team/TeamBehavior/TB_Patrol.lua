@@ -7,6 +7,7 @@
 
 local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTType = require('Ikun.Module.AI.BT.BTType')
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class TB_Patrol : TeamBehaviorBase
 ---@field OwnerTeam TeamClass
@@ -21,7 +22,7 @@ function TB_Patrol:Init()
         ---@type RoleClass
         local Role = role
         local NewBTKey = RoleConfig[Role.RoleConfigId].BTCfg[BTType.Patrol]
-        Role.BT.Blackboard:SetBBValue('BBNewBTKey', NewBTKey)        
+        Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
 end
 function TB_Patrol:CalcAllMemberMoveTarget()

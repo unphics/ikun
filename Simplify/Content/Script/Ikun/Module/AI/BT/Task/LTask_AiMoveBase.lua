@@ -10,6 +10,7 @@
 
 local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
 local MoveStuckMonitor = require('Ikun/Module/Nav/MoveStuckMonitor')
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_AiMoveBase: LTask
 ---@field NavTarget AActor | FVector
@@ -182,7 +183,7 @@ end
 ---@private [no sad effect] 获取寻路目标, 黑板中的目标可能是一个地点Loc也可能是一个Actor
 ---@return AActor | FVector | nil
 function LTask_AiMoveBase:GetNavTarget()
-    local BB_MoveTarget = self.Blackboard:GetBBValue('MoveTarget')
+    local BB_MoveTarget = self.Blackboard:GetBBValue(BBKeyDef.MoveTarget)
     if not BB_MoveTarget then
         return log.error('LTask_AiMoveBase:GetNavTarget(): No MoveTarget')
     end

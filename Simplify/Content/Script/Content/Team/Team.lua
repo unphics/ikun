@@ -56,12 +56,13 @@ function TeamClass:Init()
     self:NextState(class.new 'TB_Patrol' (self))
 end
 function TeamClass:Tick(DeltaTime)
-    -- if self.bFight then
-    --     self.DecisionTimeCount = self.DecisionTimeCount + DeltaTime
-    --     if self.DecisionTimeCount > self.DecisionInterval then
-    --         self.DecisionTimeCount = self.DecisionTimeCount - self.DecisionInterval
-    --     end
-    -- end
+    self.DecisionTimeCount = self.DecisionTimeCount + DeltaTime
+    if self.DecisionTimeCount > self.DecisionInterval then
+        self.DecisionTimeCount = self.DecisionTimeCount - self.DecisionInterval
+        if self.CurTB and self.CurTB.Tick then
+            self.CurTB:Tick(DeltaTime)
+        end
+    end
 end
 ---@public
 ---@param TO TeamBehaviorBase

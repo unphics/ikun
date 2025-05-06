@@ -6,6 +6,7 @@
 ---
 
 local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_TeamWaitSwitchBT : LTask
 ---@field CurTime number
@@ -26,7 +27,7 @@ function LTask_TeamWaitSwitchBT:OnInit()
 end
 function LTask_TeamWaitSwitchBT:OnUpdate(DeltaTime)
     self.CurTime = self.CurTime + DeltaTime
-    local NewBTKey = self.Blackboard:GetBBValue('BBNewBTKey')
+    local NewBTKey = self.Blackboard:GetBBValue(BBKeyDef.BBNewBTKey)
     if NewBTKey then
         self:DoSwitchBT(NewBTKey)
         self:DoTerminate(true)
@@ -36,7 +37,7 @@ function LTask_TeamWaitSwitchBT:DoSwitchBT(NewBTKey)
     local OldBT = self.Chr:GetRole().BT.Desc
     log.log('LTask_SwitchBT', OldBT, NewBTKey, self.Chr:PrintRoleInfo())
     self.Chr:GetRole():SwitchNewBT(NewBTKey)
-    self.Blackboard:SetBBValue('BBNewBTKey', nil)
+    self.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, nil)
 end
 function LTask_TeamWaitSwitchBT:PrintNode(nDeep)
     local Text = ''

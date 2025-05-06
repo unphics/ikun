@@ -1,8 +1,11 @@
+
 ---
 ---@brief 简单的平滑转身
 ---@author zys
 ---@data Sun Jan 26 2025 20:13:53 GMT+0800 (中国标准时间)
 ---
+
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_RotateSmooth: LTask
 ---@field ConstRotSpeed number
@@ -70,7 +73,7 @@ end
 ---@private [no sad effect]
 ---@return AActor | FVector
 function LTask_RotateSmooth:GetRotTargetLoc()
-    local MoveTarget = self.Blackboard:GetBBValue('MoveTarget')
+    local MoveTarget = self.Blackboard:GetBBValue(BBKeyDef.MoveTarget)
     if not MoveTarget then
         log.error('LTask_RotateSmooth:OnInit Failed to index MoveTarget !')
         return

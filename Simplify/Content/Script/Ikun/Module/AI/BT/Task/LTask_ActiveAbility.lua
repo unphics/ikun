@@ -1,7 +1,10 @@
+
 ---
 ---@brief ActiveAbility
 ---@data Mon Jan 13 2025 15:53:06 GMT+0800 (中国标准时间)
 ---
+
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_ActiveAbility: LTask
 local LTask_ActiveAbility = class.class 'LTask_ActiveAbility' : extends 'LTask' {
@@ -19,7 +22,7 @@ function LTask_ActiveAbility:OnInit()
 
     self.CurTime = 0
 
-    local SelectAbility = self.Blackboard:GetBBValue('SelectAbility')
+    local SelectAbility = self.Blackboard:GetBBValue(BBKeyDef.SelectAbility)
 
     local Ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(self.Chr.ASC, SelectAbility.Handle) ---@type GA_IkunBase
     ---@todo
