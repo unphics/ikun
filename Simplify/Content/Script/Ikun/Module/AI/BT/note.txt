@@ -51,7 +51,7 @@ BT_Fight:
         Rotate
         AIMove
         Rotate
-        ActiveABility
+        ActiveAbility
         Wait
         NeedSwitchBT
 
