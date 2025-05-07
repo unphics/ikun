@@ -41,7 +41,7 @@ end
 ---@override 当巡逻中遭遇敌人时则转入战斗模式
 ---@param EnemyTeam TeamClass
 function TB_Patrol:OnEncounterEnemy(EnemyTeam)
-    self.OwnerTeam.bFight = true
+    -- self.OwnerTeam.bFight = true
 
     self.OwnerTeam:NextState(class.new'TB_Fight'(self.OwnerTeam))
     self.OwnerTeam.CurTB:OnEncounterEnemy(EnemyTeam)

@@ -37,6 +37,6 @@ function Cosmos:Reincarnate()
 end
 
 function Cosmos:GetStar()
-    ---@todo 现在只有一个星球
+    --- 现在只有一个星球
     return self.tbStar[1]
 end

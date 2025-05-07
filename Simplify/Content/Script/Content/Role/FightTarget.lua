@@ -3,7 +3,6 @@
 ---@brief 保存战斗目标及处理角色的战斗目标相关业务
 ---@author zys
 ---@data Tue Apr 15 2025 23:23:00 GMT+0800 (中国标准时间)
----@todo Target后面放在Blackboard和Team中，逐渐放弃FightTargetClass
 ---
 
 ---@class FightTargetClass

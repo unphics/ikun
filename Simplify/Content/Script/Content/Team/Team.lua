@@ -74,7 +74,6 @@ end
 ---@param Enemy TeamClass
 function TeamClass:Encounter(Enemy)
     if true then
-        self.bFight = true
         self.CurTB:OnEncounterEnemy(Enemy)
     end
 end

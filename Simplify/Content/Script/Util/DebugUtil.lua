@@ -9,6 +9,8 @@ log.error("DebugUtil Loaded")
 
 local M = {}
 
+M.debug_bt = true
+
 M.qqq = function()
     log.error("zys: qqq")
 end

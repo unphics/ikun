@@ -12,13 +12,17 @@ local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
 local DftFPAsgnRate = require('Content/Team/Config/DftFPAsgnRate')
 
 ---@class TB_Fight : TeamBehaviorBase
----
+---@field Army table
 local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 --[[public]]
     OnEncounterEnemy = function()end,
     Tick = function()end,
 --[[private]]
+    AllMemberBTSwitchFight = function()end,
+    DefensivePos = function()end,
     AsgnFightPos = function()end,
+    AsgnTarget = function()end,
+    Army = nil,
 }
 ---@public
 ---@param EnemyTeam TeamClass
@@ -26,8 +30,26 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     if not self.OwnerTeam.TeamEnemy:OnEncounterEnemy(EnemyTeam) then
         return
     end
-    self:MakeInfluenceMap()
 
+    if not self.OwnerTeam.bFight then
+        self.OwnerTeam.bFight = true
+        self:AllMemberBTSwitchFight()
+        self.Army = self:AsgnFightPos() -- 分化
+        self:DefensivePos(self.Army) -- 防御性站位
+    end
+    -- 延迟一下
+    async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 3, function()
+        -- 分析敌方
+        -- 打或跑(暂时默认打)
+        
+        -- 给出进一步站位(进攻性)
+        -- 后排给出集火目标, 前排给出对线目标
+        self:AsgnTarget(self.Army)
+    end)
+end
+
+---@private 和平入战时所有人切换到战斗树
+function TB_Fight:AllMemberBTSwitchFight()
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, ele in ipairs(AllMember) do
         ---@type RoleClass
@@ -35,21 +57,6 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
         local NewBTKey = RoleConfig[Role.RoleConfigId].BTCfg[BTType.Fight]
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
-
-    ---@step 站位分化
-    local Army = self:AsgnFightPos()
-    ---@step 初步给出站位(根据方向, 防御性站位)
-    self:DefensivePos(Army)
-    
-    ---@step 延迟一下
-    ---@step 分析敌方角色
-    ---@step 打或跑(暂时默认打)
-    
-    ---@step 给出进一步站位(进攻性)
-    ---@step 后排给出集火目标, 前排给出对线目标
-    async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 3, function()
-        self:AsgnTarget(Army)
-    end)
 end
 
 ---@private 分配战场位置

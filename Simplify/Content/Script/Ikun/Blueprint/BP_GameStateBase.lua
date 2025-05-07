@@ -63,7 +63,6 @@ end
 
 ---@private [Client] [UIMgr]
 function M:InitUIModule()
-    ---@todo zys 服务端要不要界面
     -- if net_util.is_server(self) then
     --     return
     -- end

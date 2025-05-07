@@ -59,7 +59,9 @@ function RoleClass:Tick(DeltaTime)
     end
     if self.BT then
         self.BT:Tick(DeltaTime)
-        -- self.Avatar.RoleComp:LogBT2UI(self.BT:PrintBT())
+        if debug_util.debug_bt then
+            self.Avatar.RoleComp:LogBT2UI(self.BT:PrintBT())
+        end
     end
 end
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
