@@ -9,6 +9,7 @@ local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTType = require('Ikun.Module.AI.BT.BTType')
 local FightPosDef = require 'Content/Role/FightPosDef'
 local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
+local DftFPAsgnRate = require('Content/Team/Config/DftFPAsgnRate')
 
 ---@class TB_Fight : TeamBehaviorBase
 ---
@@ -50,12 +51,6 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
         self:AsgnTarget(Army)
     end)
 end
-function TB_Fight:Tick(DeltaTime)
-end
-
-local DftFPAsgnRate = {} -- 默认的最佳战场位置配比(default fight position assign rate)
-DftFPAsgnRate[FightPosDef.Frontline] = 1
-DftFPAsgnRate[FightPosDef.Backline] = 2
 
 ---@private 分配战场位置
 function TB_Fight:AsgnFightPos()
