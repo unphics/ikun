@@ -59,7 +59,7 @@ function TB_Fight:AllMemberBTSwitchFight()
     end
 end
 
----@private 分配战场位置
+---@private [Pure] 分配战场位置
 function TB_Fight:AsgnFightPos()
     local tbMaxFPCount = self.OwnerTeam.TeamMember:CalcMaxCountPerPos()
     local tbFPAsgnRate = {} -- 此时团队的职业比率
@@ -107,6 +107,7 @@ function TB_Fight:AsgnFightPos()
     end
     return Army
 end
+---@private [Pure]
 function TB_Fight:DefensivePos(Army)
     log.dev('TB_Fight:DefensivePos 看看算的对不对')
     local OwnerLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamMember:GetAllMember())
@@ -124,6 +125,7 @@ function TB_Fight:DefensivePos(Army)
     end
 end
 
+---@private [Pure]
 function TB_Fight:AsgnTarget(Army)
     -- log.dev('TB_Fight:AsgnTarget() 找目标喽！！！')
     local Enemy = self.OwnerTeam.TeamEnemy
@@ -147,6 +149,7 @@ function TB_Fight:AsgnTarget(Army)
         Role.BT.Blackboard:SetBBValue(BBKeyDef.FightTarget, Enemy.tbEnemyRolePerception[1].Role)
     end
 end
+
 function TB_Fight:MakeInfluenceMap()
     if a then
         return

@@ -7,10 +7,13 @@
 
 ---@class BBKeyDef
 local Key = {
-    BBNewBTKey = 'BBNewBTKey',          -- 角色新行为树的Key
-    FightTarget = 'FightTarget',        -- 角色战斗目标
-    MoveTarget = 'MoveTarget',          -- 角色的移动目标
-    SelectAbility = 'SelectAbility',    -- 选择的准备使用的技能
+    BBNewBTKey = 'BBNewBTKey',              -- 角色新行为树的Key
+    FightTarget = 'FightTarget',            -- 角色战斗目标
+    MoveTarget = 'MoveTarget',              -- 角色的移动目标
+    SelectAbility = 'SelectAbility',        -- 选择的准备使用的技能
+
+    FightPosLoc = 'FightPosLoc',            -- 战斗位置坐标
+    UrgentMoveTarget = 'UrgentMoveTarget',  -- 紧急移动的目标
 }
 
 return Key
