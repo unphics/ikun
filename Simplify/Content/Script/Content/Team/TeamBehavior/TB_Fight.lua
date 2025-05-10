@@ -24,28 +24,42 @@ local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
     AsgnTarget = function()end,
     Army = nil,
 }
----@public
+function TB_Fight:ctor(OwnerTeam)
+    self.OwnerTeam = OwnerTeam
+    self.Army = {} -- 多个战场位置组成的军队
+end
+---@public 刚刚入战, 刚刚遭遇一队敌人时单次调用
 ---@param EnemyTeam TeamClass
 function TB_Fight:OnEncounterEnemy(EnemyTeam)
     if not self.OwnerTeam.TeamEnemy:OnEncounterEnemy(EnemyTeam) then
         return
     end
-
     if not self.OwnerTeam.bFight then
         self.OwnerTeam.bFight = true
+        ---@step 1, 所有人切换到战斗树
         self:AllMemberBTSwitchFight()
-        self.Army = self:AsgnFightPos() -- 分化
+        ---@step 2, 己方单位分配战斗位置
+        self.Army = self:AsgnFightPos()
+        ---@step 3, 给出防御性站位
         self:DefensivePos(self.Army) -- 防御性站位
     end
     -- 延迟一下
     async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 3, function()
-        -- 分析敌方
-        -- 打或跑(暂时默认打)
+        ---@step 4, 分析敌方
+        ---@step 5, 打或跑(暂时默认打),此项后面再写
         
-        -- 给出进一步站位(进攻性)
-        -- 后排给出集火目标, 前排给出对线目标
+        ---@step 6, 给出进一步站位(进攻性)
+        ---@step 7, 后排给出集火目标, 前排给出对线目标
         self:AsgnTarget(self.Army)
     end)
+end
+
+---@private 动态调整
+function TB_Fight:Tick(DeltaTime)
+    ---@step 1, 分析敌方
+    ---@step 2, 判断撤退, 此项后面再写
+    ---@step 3, 调整站位
+    ---@step 4, 调整集火目标, 优先最近的敌人
 end
 
 ---@private 和平入战时所有人切换到战斗树
