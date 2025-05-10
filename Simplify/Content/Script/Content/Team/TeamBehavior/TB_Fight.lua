@@ -1,4 +1,3 @@
-
 ---
 ---@brief 战斗行为
 ---@author zys
@@ -40,8 +39,21 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
         self:AllMemberBTSwitchFight()
         ---@step 2, 己方单位分配战斗位置
         self.Army = self:AsgnFightPos()
-        ---@step 3, 给出防御性站位
-        self:DefensivePos(self.Army) -- 防御性站位
+        
+        local backlineCount = #self.Army[FightPosDef.Backline]
+        local frontlineCount = #self.Army[FightPosDef.Frontline]
+        local rate = backlineCount / (backlineCount + frontlineCount)
+        local threshold = 0.3 -- 后排数量阈值，超过这个值则前排保护后排
+
+        ---@step 3, 给出防御性站位或进攻性站位
+        if rate > threshold then
+            -- 保护后排
+            self:DefensivePos(self.Army)
+        else
+            -- 突击敌方后排 (需要实现 OffensivePos)
+            self:OffensivePos(self.Army)
+            -- self:DefensivePos(self.Army) -- 暂时使用 DefensivePos 代替
+        end
     end
     -- 延迟一下
     async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 3, function()
@@ -58,6 +70,21 @@ end
 function TB_Fight:Tick(DeltaTime)
     ---@step 1, 分析敌方
     ---@step 2, 判断撤退, 此项后面再写
+    -- local frontline = self.Army[FightPosDef.Frontline]
+    -- if frontline then
+    --     for _, role in ipairs(frontline) do
+    --         ---@type RoleClass
+    --         local Role = role
+    --         local hpRate = Role.Avatar:GetCurrentHealth() / Role.Avatar:GetMaxHealth()
+    --         local threshold = 0.3 -- 血量阈值
+    --         if hpRate < threshold then
+    --             log.dev(string.format('前排单位 %s 血量过低，准备后撤', Role.Avatar:GetName()))
+    --             local safeLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamMember:GetAllMember()) - (self.OwnerTeam.TeamEnemy:CalcTeamMemberCenter(self.OwnerTeam.TeamEnemy:GetAllEnemy()) - self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamMember:GetAllMember())):GetSafeNormal() * 500
+    --             self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, safeLoc, true)
+    --             ---@todo (if 有得跑 or 有牧师)血量极少, 强制后排
+    --         end
+    --     end
+    -- end
     ---@step 3, 调整站位
     ---@step 4, 调整集火目标, 优先最近的敌人
 end
@@ -135,6 +162,21 @@ function TB_Fight:DefensivePos(Army)
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 150)
+        self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc, true)
+    end
+end
+
+---@private [Pure] 进攻性站位，计算前排突击敌方后排的位置
+function TB_Fight:OffensivePos(Army)
+    log.dev('TB_Fight:OffensivePos 进攻站位')
+    local OwnerLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamMember:GetAllMember())
+    local EnemyLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamEnemy:GetAllEnemy())
+    local Dir = (OwnerLoc - EnemyLoc)
+    Dir:Normalize()
+    local BacklineTarget = EnemyLoc + Dir * 500 -- 敌方后排的大致位置
+    for _, ele in ipairs(Army[FightPosDef.Frontline]) do
+        local Role = ele ---@type RoleClass
+        local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, BacklineTarget, 150)
         self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc, true)
     end
 end
