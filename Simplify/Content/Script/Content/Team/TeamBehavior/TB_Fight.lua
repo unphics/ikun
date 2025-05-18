@@ -12,51 +12,31 @@ local DftFPAsgnRate = require('Content/Team/Config/DftFPAsgnRate')
 
 ---@class TB_Fight : TeamBehaviorBase
 ---@field Army table
+---@field DirectiveMoveCoord table<number, FVector> 指令性运动坐标(移动坐标, 分配三要素-1)
+---@field DynaSuppressTarget table<number, RoleClass> 动态抑制目标(攻击目标, 分配三要素-2)
+---@field TacticManeuverZone table<number, FVector> 战术机动区(活动范围, 分配三要素-1)
 local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 --[[public]]
     OnEncounterEnemy = function()end,
     Tick = function()end,
 --[[private]]
     AllMemberBTSwitchFight = function()end,
+    CombatFeasibilityResolution = function()end,
+    TacticalResolution = function()end,
     DefensivePos = function()end,
     AsgnFightPos = function()end,
     AsgnTarget = function()end,
     Army = nil,
+    DirectiveMoveCoord = nil,
+    DynaSuppressTarget = nil,
+    TacticManeuverZone = nil,
 }
 function TB_Fight:ctor(OwnerTeam)
     self.OwnerTeam = OwnerTeam
     self.Army = {} -- 多个战场位置组成的军队
-end
----@public 刚刚入战, 刚刚遭遇一队敌人时单次调用
----@param EnemyTeam TeamClass
-function TB_Fight:OnEncounterEnemy(EnemyTeam)
-    if not self.OwnerTeam.TeamEnemy:OnEncounterEnemy(EnemyTeam) then
-        return
-    end
-    if not self.OwnerTeam.bFight then
-        self.OwnerTeam.bFight = true
-        self:AllMemberBTSwitchFight()
-        self.Army = self:AsgnFightPos()
-        
-        local backlineCount = #self.Army[FightPosDef.Backline]
-        local frontlineCount = #self.Army[FightPosDef.Frontline]
-        local rate = backlineCount / (backlineCount + frontlineCount)
-        local threshold = 0.3 -- 后排数量阈值，超过这个值则前排保护后排
-
-        if rate > threshold then
-            self:DefensivePos(self.Army)
-        else
-            self:DefensivePos(self.Army)
-            -- self:OffensivePos(self.Army)
-            ---@todo
-            -- self:SturnPos(self.Army)
-        end
-    end
-    -- 延迟一下
-    self:AsgnTarget(self.Army)
-    async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 2, function()
-        self:AsgnTarget(self.Army)
-    end)
+    self.DirectiveMoveCoord = {}
+    self.DynaSuppressTarget = {}
+    self.TacticManeuverZone = {}
 end
 
 ---@private 动态调整
@@ -78,6 +58,26 @@ function TB_Fight:Tick(DeltaTime)
     -- end
 end
 
+---@public [TryInit] 刚刚入战, 刚刚遭遇一队敌人时单次调用
+---@param EnemyTeam TeamClass
+function TB_Fight:OnEncounterEnemy(EnemyTeam)
+    if not self.OwnerTeam.TeamEnemy:OnEncounterEnemy(EnemyTeam) then
+        return
+    end
+    if self.OwnerTeam.bFight then
+        return
+    end
+    -- 阶段一, 无情报
+    self:AllMemberBTSwitchFight()
+    self.Army = self:AsgnFightPos()
+    self:DefensivePos(self.Army)
+    self:AsgnTarget(self.Army)
+    -- 阶段二, 有情报
+    async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 2, function()
+        self:AsgnTarget(self.Army)
+    end)
+end
+
 ---@private 和平入战时所有人切换到战斗树
 function TB_Fight:AllMemberBTSwitchFight()
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
@@ -86,6 +86,23 @@ function TB_Fight:AllMemberBTSwitchFight()
         local Role = ele
         local NewBTKey = RoleConfig[Role.RoleConfigId].BTCfg[BTType.Fight]
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
+    end
+end
+
+---@private [Pure] 作战可行性决议; 打或跑
+function TB_Fight:CombatFeasibilityResolution(Army)
+    return true
+end
+
+---@private [Pure] 战术决议
+function TB_Fight:TacticalResolution(Army)
+    local backlineCount = #Army[FightPosDef.Backline]
+    local frontlineCount = #Army[FightPosDef.Frontline]
+    local rate = backlineCount / (backlineCount + frontlineCount)
+    local threshold = 0.3 -- 后排数量阈值，超过这个值则前排保护后排
+
+    if rate > threshold then
+    else
     end
 end
 
@@ -128,18 +145,17 @@ function TB_Fight:AsgnFightPos()
         for _, FP in ipairs(tbFP) do
             if IsArmyNeedFP(Army, FP, tbFPAsgnRate[FP] / nSumFPRate) then
                 FightPos = FP
-                goto asgn 
+                goto do_asgn
             end
         end
         FightPos = tbFP[1]
-        ::asgn::
+        ::do_asgn::
         table.insert(Army[FightPos], Role)
     end
     return Army
 end
----@private [Pure]
+---@private [Pure] 防御姿态
 function TB_Fight:DefensivePos(Army)
-    log.dev('TB_Fight:DefensivePos 看看算的对不对')
     local OwnerLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamMember:GetAllMember())
     local EnemyLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamEnemy:GetAllEnemy())
     if UE.UKismetMathLibrary.Vector_Distance(OwnerLoc, EnemyLoc) < 1000 then
@@ -151,13 +167,36 @@ function TB_Fight:DefensivePos(Army)
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 150)
-        self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc, true)
-        -- draw_util.draw_dir_sphere(OwnerLoc, ResultLoc, draw_util.blue)
-        -- Role.BT.Blackboard:SetBBValue(BBKeyDef.FightPosLoc, ResultLoc)
+        
+        self.DirectiveMoveCoord[Role.RoleInstId] = ResultLoc
     end
 end
 
----@private [Pure] 进攻性站位，计算前排突击敌方后排的位置
+---@private [Pure] 分配战斗目标
+function TB_Fight:AsgnTarget(Army)
+    local Enemy = self.OwnerTeam.TeamEnemy
+    Enemy:SortEnemyByDist()
+    -- local avatar = Enemy.tbEnemyRolePerception[1].Role.Avatar
+    -- UE.UKismetSystemLibrary.DrawDebugSphere(avatar, avatar:K2_GetActorLocation(), 100, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
+    for i, ele in ipairs(Army[FightPosDef.Frontline]) do
+        local Role = ele ---@type RoleClass
+        if not Enemy.tbEnemyRolePerception[i] then
+            break
+        end
+        self.DynaSuppressTarget[Role.RoleInstId] = Enemy.tbEnemyRolePerception[i].Role
+    end
+    Enemy.FireTarget = Enemy.tbEnemyRolePerception[1].Role
+
+    for i, ele in ipairs(Army[FightPosDef.Backline]) do
+        local Role = ele ---@type RoleClass
+        if not Enemy.tbEnemyRolePerception[i] then
+            break
+        end
+        self.DynaSuppressTarget[Role.RoleInstId] = Enemy.tbEnemyRolePerception[1].Role
+    end
+end
+
+---@deprecated [Pure] 进攻性站位，计算前排突击敌方后排的位置
 function TB_Fight:OffensivePos(Army)
     log.dev('TB_Fight:OffensivePos 进攻站位')
     local OwnerLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamMember:GetAllMember())
@@ -172,33 +211,7 @@ function TB_Fight:OffensivePos(Army)
     end
 end
 
----@private [Pure]
-function TB_Fight:AsgnTarget(Army)
-    -- log.dev('TB_Fight:AsgnTarget() 找目标喽！！！')
-    local Enemy = self.OwnerTeam.TeamEnemy
-    Enemy:SortEnemyByDist()
-    -- local avatar = Enemy.tbEnemyRolePerception[1].Role.Avatar
-    -- UE.UKismetSystemLibrary.DrawDebugSphere(avatar, avatar:K2_GetActorLocation(), 100, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
-    for i, ele in ipairs(Army[FightPosDef.Frontline]) do
-        local Role = ele ---@type RoleClass
-        
-        Role.BT.Blackboard:SetBBValue(BBKeyDef.FightTarget, Enemy.tbEnemyRolePerception[1].Role)
-        if not Enemy.tbEnemyRolePerception[i] then
-            break
-        end
-        Role.BT.Blackboard:SetBBValue(BBKeyDef.FightTarget, Enemy.tbEnemyRolePerception[i].Role)
-    end
-    Enemy.FireTarget = Enemy.tbEnemyRolePerception[1].Role
-
-    for i, ele in ipairs(Army[FightPosDef.Backline]) do
-        local Role = ele ---@type RoleClass
-        if not Enemy.tbEnemyRolePerception[i] then
-            break
-        end
-        Role.BT.Blackboard:SetBBValue(BBKeyDef.FightTarget, Enemy.tbEnemyRolePerception[1].Role)
-    end
-end
-
+---@deprecated
 function TB_Fight:MakeInfluenceMap()
     if a then
         return
