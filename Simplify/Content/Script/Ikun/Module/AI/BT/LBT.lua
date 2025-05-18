@@ -55,7 +55,7 @@ end
 ---@private 对于新创建的节点, 初始化一些基本数据
 function LBT:InitNode(Node, Name)
     if not Node then
-        error('创建行为树Node失败', Name)
+        error('创建行为树Node失败 - ' .. Name)
         return
     end
     Node.Ctlr = self.Ctlr

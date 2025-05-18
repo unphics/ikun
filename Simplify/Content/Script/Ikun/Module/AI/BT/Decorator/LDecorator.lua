@@ -36,8 +36,10 @@ function LDecorator:DoUpdate(DeltaTime)
         else
             return ELStatus.Failure
         end
+    elseif Status == ELStatus.Running then
+        return ELStatus.Running
     else
-        return Status
+        return ELStatus.Success
     end
 end
 -- 装饰器瞬间出结果, 失败则整体失败, 成功则保持成功直到子节点成功或失败

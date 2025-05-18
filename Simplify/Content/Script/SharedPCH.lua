@@ -24,6 +24,7 @@ async_util = require("Util.AsyncUtil")
 math_util = require('Util/MathUtil')
 ui_util = require("Util.UI.UI_Util")
 dev_util = require('Util.DevUtil')
+draw_util = require('Util/DrawUtil')
 
 require('Ikun.Module.MdMgr')
 require('Content/Role/Role')

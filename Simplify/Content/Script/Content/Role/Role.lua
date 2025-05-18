@@ -161,4 +161,16 @@ function RoleClass:GetBelongKingdom()
     return self.BelongKingdomLua
 end
 
+function RoleClass:No()
+    return false
+end
+function RoleClass:Yes()
+    return true
+end
+
+---@public [LBTCondition]
+function RoleClass:HasTeamMoveTarget()
+    return self.Team.TeamMove.mapMemberMoveTarget and self.Team.TeamMove.mapMemberMoveTarget[self.RoleInstId] or nil
+end
+
 require('Content/Role/Impl/RoleDef')

@@ -20,7 +20,7 @@
         Selector
             Decorator没有紧急移动坐标
                 如有则移动
-            Sequence周期性战斗行为
+            Sequence周期性自主战斗行为
                 Decorator有战术位置且距离战术位置太远
                     移动
                 检测或获取当前目标

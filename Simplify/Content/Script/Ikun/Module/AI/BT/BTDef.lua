@@ -41,15 +41,43 @@ end
 M['Team_Fight_1'] = function(Avatar)
     local LBT = class.new 'LBT'(nil, Avatar, 'Team_Fight_1') ---@type LBT
     LBT:CreateRoot()
-        :AddSequence()
-            :AddTask('LTask_Wait', 2)
-            :AddTask('LTask_TeamGetMoveTarget')
-            :AddTask('LTask_RotateSmooth')
-            :AddTask('LTask_Wait', 0.2)
-            :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
-            :AddTask('LTask_SelectAbility')
-            :AddTask('LTask_AimTarget')
-            :AddTask('LTask_ActiveAbility')
+        :AddSelector()
+            -- 团队控制强制指挥(紧急掩护, 紧急位移等)
+            -- 战斗单位自主行为
+            :AddSequence()
+                :AddTask('LTask_Wait', 3)
+                -- :AddDecorator('LDecorator_RoleCondition', 'HasTeamMoveTarget')
+                -- :AddSequence()
+                --     :AddTask('LTask_TeamGetMoveTarget')
+                --     :AddTask('LTask_RotateSmooth')
+                --     :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
+                -- :Up()
+                -- -- 战术位置
+                -- :AddDecorator('LDecorator_DutyTraticPos')
+                -- :AddSequence()
+                --     :AddTask('LTask_RotateSmooth')
+                --     :AddTask('LTask_Wait', 0.2)
+                --     :AddTask('LTask_AiMoveBase', 50, 160, 3, UE.FVector(200, 200, 200))
+                -- :Up()
+                -- -- :AddTask('LTask_TeamGetMoveTarget')
+                -- -- :AddTask('LTask_RotateSmooth')
+                -- -- :AddTask('LTask_Wait', 0.2)
+                -- -- :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
+                -- -- 目标
+                -- -- 选择技能
+                -- :AddTask('LTask_SelectAbility')
+                -- -- 调整施法位置
+                -- :AddDecorator('LDecorator_Repos4Ability')
+                -- :AddSequence()
+                --     :AddTask('LTask_RotateSmooth')
+                --     :AddTask('LTask_Wait', 0.2)
+                --     :AddTask('LTask_AiMoveBase', 200, 160, 3, UE.FVector(200, 200, 200))
+                -- :Up()
+                -- -- 瞄准
+                -- :AddTask('LTask_AimTarget')
+                -- -- 施法
+                -- :AddTask('LTask_ActiveAbility')
+                -- 检测需要切树
     return LBT
 end
 

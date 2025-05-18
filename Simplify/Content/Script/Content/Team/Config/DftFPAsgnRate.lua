@@ -10,6 +10,7 @@ local FightPosDef = require 'Content/Role/FightPosDef'
 ---@class DftFPAsgnRate
 local DftFPAsgnRate = {}
 
+---@desc 后排比前排多一点, 方便集火
 DftFPAsgnRate[FightPosDef.Frontline] = 1
 DftFPAsgnRate[FightPosDef.Backline] = 2
 

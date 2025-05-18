@@ -35,9 +35,7 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
     end
     if not self.OwnerTeam.bFight then
         self.OwnerTeam.bFight = true
-        ---@step 1, 所有人切换到战斗树
         self:AllMemberBTSwitchFight()
-        ---@step 2, 己方单位分配战斗位置
         self.Army = self:AsgnFightPos()
         
         local backlineCount = #self.Army[FightPosDef.Backline]
@@ -45,31 +43,24 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
         local rate = backlineCount / (backlineCount + frontlineCount)
         local threshold = 0.3 -- 后排数量阈值，超过这个值则前排保护后排
 
-        ---@step 3, 给出防御性站位或进攻性站位
         if rate > threshold then
-            -- 保护后排
             self:DefensivePos(self.Army)
         else
-            -- 突击敌方后排 (需要实现 OffensivePos)
-            self:OffensivePos(self.Army)
-            -- self:DefensivePos(self.Army) -- 暂时使用 DefensivePos 代替
+            self:DefensivePos(self.Army)
+            -- self:OffensivePos(self.Army)
+            ---@todo
+            -- self:SturnPos(self.Army)
         end
     end
     -- 延迟一下
-    async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 3, function()
-        ---@step 4, 分析敌方
-        ---@step 5, 打或跑(暂时默认打),此项后面再写
-        
-        ---@step 6, 给出进一步站位(进攻性)
-        ---@step 7, 后排给出集火目标, 前排给出对线目标
+    self:AsgnTarget(self.Army)
+    async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 2, function()
         self:AsgnTarget(self.Army)
     end)
 end
 
 ---@private 动态调整
 function TB_Fight:Tick(DeltaTime)
-    ---@step 1, 分析敌方
-    ---@step 2, 判断撤退, 此项后面再写
     -- local frontline = self.Army[FightPosDef.Frontline]
     -- if frontline then
     --     for _, role in ipairs(frontline) do
@@ -85,8 +76,6 @@ function TB_Fight:Tick(DeltaTime)
     --         end
     --     end
     -- end
-    ---@step 3, 调整站位
-    ---@step 4, 调整集火目标, 优先最近的敌人
 end
 
 ---@private 和平入战时所有人切换到战斗树
@@ -158,11 +147,13 @@ function TB_Fight:DefensivePos(Army)
     end
     local Dir = (EnemyLoc - OwnerLoc)
     Dir:Normalize()
-    local FrontlineTarget = OwnerLoc + Dir * 500
+    local FrontlineTarget = OwnerLoc + (Dir * 500)
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 150)
         self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc, true)
+        -- draw_util.draw_dir_sphere(OwnerLoc, ResultLoc, draw_util.blue)
+        -- Role.BT.Blackboard:SetBBValue(BBKeyDef.FightPosLoc, ResultLoc)
     end
 end
 
@@ -190,6 +181,8 @@ function TB_Fight:AsgnTarget(Army)
     -- UE.UKismetSystemLibrary.DrawDebugSphere(avatar, avatar:K2_GetActorLocation(), 100, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
     for i, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
+        
+        Role.BT.Blackboard:SetBBValue(BBKeyDef.FightTarget, Enemy.tbEnemyRolePerception[1].Role)
         if not Enemy.tbEnemyRolePerception[i] then
             break
         end
