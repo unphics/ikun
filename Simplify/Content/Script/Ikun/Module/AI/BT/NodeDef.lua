@@ -32,7 +32,7 @@ require('Ikun/Module/AI/BT/Decorator/BB/LDecorator_BBCondition')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_RoleCondition')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_TeamCondition')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_DutyTraticPos')
-require('Ikun/Module/AI/BT/Decorator/LDecorator_Repos4Ability')
+require('Ikun/Module/AI/BT/Decorator/LDecorator_NeedRepos4Ability')
 
 require('Ikun/Module/AI/BT/Service/LService_Alert')
 require('Ikun/Module/AI/BT/Service/LService_NeedSwitchBT')

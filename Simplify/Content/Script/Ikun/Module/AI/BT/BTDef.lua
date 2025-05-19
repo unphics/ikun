@@ -55,12 +55,17 @@ M['Team_Fight_1'] = function(Avatar)
                 :AddSequence()
                     :AddTask('LTask_RotateSmooth')
                     :AddTask('LTask_Wait', 0.2)
-                    :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
-                :Up()
+                    :AddTask('LTask_AiMoveBase', 200, 160, 3, UE.FVector(200, 200, 200))
+                    :Up()
                 :AddTask('LTask_GetTBInfo2BB', 'DynaSuppressTarget', BBKeyDef.FightTarget)
-                -- :AddDecorator('LDecorator_BBCondition', BBKeyDef.FightTarget)
-                -- :AddSequence()
-
+                :AddDecorator('LDecorator_BBCondition', BBKeyDef.FightTarget)
+                :AddSequence()
+                    :AddTask('LTask_Wait', 0.5)
+                    :AddDecorator('LDecorator_NeedRepos4Ability')
+                    :AddSequence()
+                        :AddTask('LTask_RotateSmooth')
+                        :AddTask('LTask_Wait', 0.2)
+                        :AddTask('LTask_AiMoveBase', 200, 160, 3, UE.FVector(200, 200, 200))
     return LBT
 end
 

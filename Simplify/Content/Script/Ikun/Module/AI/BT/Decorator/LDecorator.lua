@@ -38,6 +38,7 @@ end
 ---@todo
 function LDecorator:Negate()
     self.bNegate = true
+    return self.LBT
 end
 function LDecorator:DoUpdate(DeltaTime)
     local Status = self:OnUpdate(DeltaTime)

@@ -5,6 +5,8 @@
 ---@data Sun May 18 2025 15:12:41 GMT+0800 (中国标准时间)
 ---
 
+local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
+
 ---@class LDecorator_BBCondition: LDecorator
 ---@field CondBBKeyName string
 local LDecorator_BBCondition = class.class 'LDecorator_BBCondition' : extends 'LDecorator' {
@@ -24,4 +26,15 @@ function LDecorator_BBCondition:Judge()
         return false
     end
     return true
+end
+function LDecorator_BBCondition:PrintNode(nDeep)
+    local Text = ''
+    if nDeep > 0 then
+        for i = 1, nDeep do
+            Text = Text .. '        '
+        end
+    end
+    Text = Text .. string.format('Decorator : %s [%s] : %s\n',self.DisplayName, self.CondBBKeyName, ELStatus.PrintLStatus(self.LastStatus))
+    Text = Text .. self.Child:PrintNode(nDeep)
+    return Text
 end
