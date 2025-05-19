@@ -37,7 +37,7 @@ end
 ---@param actor_1 AActor
 ---@param actor_2 AActor | FVector
 ---@return boolean
-actor_util.is_no_obstacles_between = function(actor_1, actor_2)
+actor_util.is_no_obstacles_between = function(actor_1, actor_2,  allow_fn)
     local world = actor_1:GetWorld()
     local StartLoc = actor_1:K2_GetActorLocation()
     local EndLoc = actor_2.IsA and actor_2:K2_GetActorLocation() or actor_2
@@ -48,10 +48,21 @@ actor_util.is_no_obstacles_between = function(actor_1, actor_2)
     local DebugLineType = UE.EDrawDebugTrace.None -- Persistent None
     UE.UKismetSystemLibrary.LineTraceMulti(world, StartLoc, EndLoc, ETraceTypeQuery, bComplex, ActorsToIgnore,
         DebugLineType, HitResults, true, UE.FLinearColor(), UE.FLinearColor(), 1)
-    if HitResults:Length() == 0 then
-        return true
-    else
+    local tb = {}
+    for i = 1, HitResults:Length() do
+        local Actor = HitResults:Get(i).HitObjectHandle.Actor
+        if allow_fn then
+            if allow_fn(Actor) then
+                table.insert(tb, Actor)
+            end
+        else
+            table.insert(tb, Actor)
+        end
+    end
+    if #tb > 0 then
         return false
+    else
+        return true
     end
 end
 

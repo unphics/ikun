@@ -14,6 +14,7 @@ tb.draw_sphere = function(pos)
         loc = pos:K2_GetActorLocation()
     else
         world = world_util.GameWorld
+        loc = pos
     end
     UE.UKismetSystemLibrary.DrawDebugSphere(world, loc, 100, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
 end

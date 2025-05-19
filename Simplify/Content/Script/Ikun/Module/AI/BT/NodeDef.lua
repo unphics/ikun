@@ -27,6 +27,8 @@ require('Ikun/Module/AI/BT/Task/LTask_TeamGetMoveTarget')
 require('Ikun/Module/AI/BT/Task/LTask_TeamMove')
 require('Ikun/Module/AI/BT/Task/LTask_TeamWaitFence')
 require('Ikun/Module/AI/BT/Task/LTask_AimTarget')
+require('Ikun/Module/AI/BT/Task/LTask_FindLoc4Ability')
+
 
 require('Ikun/Module/AI/BT/Decorator/BB/LDecorator_BBCondition')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_RoleCondition')
