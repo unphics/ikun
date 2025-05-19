@@ -61,6 +61,7 @@ function LBT:InitNode(Node, Name)
     Node.Ctlr = self.Ctlr
     Node.Chr = self.Chr
     Node.Blackboard = self.Blackboard
+    Node.LBT = LBT
 end
 function LBT:CreateRoot()
     self.Root = class.new'LSelector'('Root')

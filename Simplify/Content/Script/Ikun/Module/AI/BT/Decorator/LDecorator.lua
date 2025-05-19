@@ -4,6 +4,7 @@ local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
 ---@class LDecorator: LNode 装饰器
 ---@field Child LNode
 ---@field Result boolean
+---@field bNegate boolean 取反
 local LDecorator = class.class 'LDecorator': extends 'LNode' {
 --[[public]]
     ctor = function()end,
@@ -11,21 +12,32 @@ local LDecorator = class.class 'LDecorator': extends 'LNode' {
     DoUpdate = function()end,
     OnUpdate = function(DeltaTime)end,
     Judge = function()end,
+    Negate = function()end,
 --[[private]]
     Child = nil,
     Result = nil,
+    bNegate = nil,
 }
 function LDecorator:ctor(DisplayName)
     class.LNode.ctor(self, DisplayName)
+    self.bNegate = false
 end
 function LDecorator:SetChild(Node)
     self.Child = Node
 end
 function LDecorator:OnInit()
-    self.Result = self:Judge()
+    if self.bNegate then
+        self.Result = not self:Judge()
+    else
+        self.Result = self:Judge()
+    end
 end
 function LDecorator:Judge()
     return false
+end
+---@todo
+function LDecorator:Negate()
+    self.bNegate = true
 end
 function LDecorator:DoUpdate(DeltaTime)
     local Status = self:OnUpdate(DeltaTime)

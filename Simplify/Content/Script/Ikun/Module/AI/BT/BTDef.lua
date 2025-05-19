@@ -1,9 +1,12 @@
+
 ---
 ---@brief Ikun中用到的所有行为树的定义
 ---@author zys
 ---@data Sun Jan 19 2025 20:20:36 GMT+0800 (中国标准时间)
 ---@desc 包含很多通用行为树和角色专用行为树
 ---
+
+local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
 
 local M = {}
 
@@ -46,7 +49,18 @@ M['Team_Fight_1'] = function(Avatar)
             -- 战斗单位自主行为
             :AddSequence()
                 :AddTask('LTask_Wait', 1)
-                :AddTask('LTask_')
+                :AddTask('LTask_ClearBBValue', BBKeyDef.MoveTarget, BBKeyDef.FightTarget)
+                :AddTask('LTask_GetTBInfo2BB', 'DirectiveMoveCoord', BBKeyDef.MoveTarget)
+                :AddDecorator('LDecorator_BBCondition', BBKeyDef.MoveTarget)
+                :AddSequence()
+                    :AddTask('LTask_RotateSmooth')
+                    :AddTask('LTask_Wait', 0.2)
+                    :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
+                :Up()
+                :AddTask('LTask_GetTBInfo2BB', 'DynaSuppressTarget', BBKeyDef.FightTarget)
+                -- :AddDecorator('LDecorator_BBCondition', BBKeyDef.FightTarget)
+                -- :AddSequence()
+
     return LBT
 end
 

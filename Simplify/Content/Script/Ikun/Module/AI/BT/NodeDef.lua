@@ -6,6 +6,9 @@
 ---
 
 require('Ikun/Module/AI/BT/Task/LTask')
+require('Ikun/Module/AI/BT/Decorator/LDecorator')
+require('Ikun/Module/AI/BT/Service/LService')
+
 require('Ikun/Module/AI/BT/Task/LTask_Wait')
 require('Ikun/Module/AI/BT/Task/LTask_AiMoveBase')
 require('Ikun/Module/AI/BT/Task/LTask_RandNavTarget')
@@ -15,6 +18,9 @@ require('Ikun/Module/AI/BT/Task/LTask_SelectAbility')
 require('Ikun/Module/AI/BT/Task/LTask_ActiveAbility')
 require('Ikun/Module/AI/BT/Task/LTask_RoleDoFn')
 
+require('Ikun/Module/AI/BT/Task/BB/LTask_GetTBInfo2BB')
+require('Ikun/Module/AI/BT/Task/BB/LTask_ClearBBValue')
+
 require('Ikun/Module/AI/BT/Task/LTask_MakeTeam')
 require('Ikun/Module/AI/BT/Task/LTask_TeamWaitSwitchBT')
 require('Ikun/Module/AI/BT/Task/LTask_TeamGetMoveTarget')
@@ -22,14 +28,12 @@ require('Ikun/Module/AI/BT/Task/LTask_TeamMove')
 require('Ikun/Module/AI/BT/Task/LTask_TeamWaitFence')
 require('Ikun/Module/AI/BT/Task/LTask_AimTarget')
 
-require('Ikun/Module/AI/BT/Decorator/LDecorator')
+require('Ikun/Module/AI/BT/Decorator/BB/LDecorator_BBCondition')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_RoleCondition')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_TeamCondition')
-require('Ikun/Module/AI/BT/Decorator/LDecorator_BBCondition')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_DutyTraticPos')
 require('Ikun/Module/AI/BT/Decorator/LDecorator_Repos4Ability')
 
-require('Ikun/Module/AI/BT/Service/LService')
 require('Ikun/Module/AI/BT/Service/LService_Alert')
 require('Ikun/Module/AI/BT/Service/LService_NeedSwitchBT')
 require('Ikun/Module/AI/BT/Service/LService_TeamAlert')
