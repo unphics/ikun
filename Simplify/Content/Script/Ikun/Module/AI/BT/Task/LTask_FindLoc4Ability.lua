@@ -48,8 +48,8 @@ function LTask_FindLoc4Ability:Calc()
             local newDir = rot:RotateVector(BaseDir)
             local newPos = TargetLoc + newDir * Radius
             draw_util.draw_dir_sphere(OwnerChr, newPos)
-            if actor_util.is_no_obstacles_between(TargetChr, newPos, self:MakeFilterFn()) then
-                draw_util.draw_dir_sphere(TargetChr, newPos, draw_util.green)
+            if actor_util.is_no_obstacles_between(newPos, TargetLoc, self:MakeFilterFn()) then
+                draw_util.draw_dir_sphere(newPos, TargetLoc, draw_util.green)
                 return newPos
             end
             Dir = Dir * -1
@@ -78,8 +78,10 @@ function LTask_FindLoc4Ability:MakeFilterFn()
         end
         local owner = self.Chr:GetRole()
         if owner:IsFirend(role) then
+            log.dev('line trace =================== firend', owner, owner:GetDisplayName(), role:GetDisplayName())
             return true
         end
+        log.dev('line trace =================== enemy', owner, owner:GetDisplayName(), role:GetDisplayName())
         return false
     end
     return FilterEnemy

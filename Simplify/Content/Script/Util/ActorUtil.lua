@@ -34,13 +34,13 @@ actor_util.get_nearby_ikun_chr = function(find_actor)
 end
 
 ---@public 两个Actor之间没有障碍物(可投射判断)
----@param actor_1 AActor
----@param actor_2 AActor | FVector
+---@param pos1 FVector | AActor
+---@param pos2 FVector | AActor
 ---@return boolean
-actor_util.is_no_obstacles_between = function(actor_1, actor_2,  allow_fn)
-    local world = actor_1:GetWorld()
-    local StartLoc = actor_1:K2_GetActorLocation()
-    local EndLoc = actor_2.IsA and actor_2:K2_GetActorLocation() or actor_2
+actor_util.is_no_obstacles_between = function(pos1, pos2,  allow_fn)
+    local world = world_util.GameWorld
+    local StartLoc = pos1.IsA and pos1:K2_GetActorLocation() or pos1
+    local EndLoc = pos2.IsA and pos2:K2_GetActorLocation() or pos2
     local ETraceTypeQuery = UE.ETraceTypeQuery.Visibility
     local bComplex = false
     local ActorsToIgnore = UE.TArray(UE.AActor)
