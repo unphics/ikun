@@ -48,10 +48,15 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     BT = nil,
     bNpc = nil,
 }
+local a = nil
 function RoleClass:ctor()
     self.Dead = false
     self.bNpc = false
     self.FightTarget = class.new'FightTargetClass'(self)
+    if not a then
+        a = self
+        self.debug_bt = true
+    end
 end
 function RoleClass:Tick(DeltaTime)
     if self.Team and self.Team.TeamMember:GetLeader() == self then
@@ -59,7 +64,7 @@ function RoleClass:Tick(DeltaTime)
     end
     if self.BT then
         self.BT:Tick(DeltaTime)
-        if debug_util.debug_bt then
+        if debug_util.debug_bt and self == a then
             self.Avatar.RoleComp:LogBT2UI(self.BT:PrintBT())
         end
     end

@@ -19,7 +19,7 @@ function LDecorator_NeedRepos4Ability:Judge()
     if not FightTargetActor then
         return false
     end
-    local bNoObs = actor_util.is_no_obstacles_between(self.Chr, FightTargetActor)
+    local bNoObs = actor_util.is_no_obstacles_between(self.Chr, FightTargetActor, self:MakeFilterFn())
     if bNoObs then
         return false
     end
@@ -34,4 +34,23 @@ function LDecorator_NeedRepos4Ability:GetTargetActor()
     if FightTarget.IsA then
         return FightTarget
     end
+end
+function LDecorator_NeedRepos4Ability:MakeFilterFn()
+    local FilterEnemy = function(HitActor)
+        if not HitActor.GetRole then
+            return true
+        end
+        local role = HitActor:GetRole()
+        if not role then
+            return true
+        end
+        local owner = self.Chr:GetRole()
+        if owner:IsFirend(role) then
+            -- log.dev('line trace =================== firend', owner, owner:GetDisplayName(), role:GetDisplayName())
+            return true
+        end
+        -- log.dev('line trace =================== enemy', owner, owner:GetDisplayName(), role:GetDisplayName())
+        return false
+    end
+    return FilterEnemy
 end

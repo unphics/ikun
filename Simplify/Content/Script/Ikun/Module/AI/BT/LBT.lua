@@ -19,6 +19,7 @@ require('Ikun/Module/AI/BT/Blackboard')
 ---@field Root LNode 行为树的根节点
 ---@field CurModiCompStack LComposite[] 当前在修改的组合节点; 开发中使用
 ---@field CurNodeCanChild LNode 当前可有Child的节点; 开发中使用
+---@field CurRunningTaskName string 当前在跑的Task的Name
 local LBT = class.class 'LBT' {
 --[[public]]
     ctor = function(Ctlr, Chr)end,
@@ -42,6 +43,7 @@ local LBT = class.class 'LBT' {
     Blackboard = nil,
     CurModiCompStack = nil,
     CurNodeCanChild = nil,
+    CurRunningTaskName = nil,
 }
 ---@param Ctlr AAIController
 ---@param Chr ACharacter

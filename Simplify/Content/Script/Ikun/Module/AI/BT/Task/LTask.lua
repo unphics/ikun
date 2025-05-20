@@ -12,6 +12,7 @@ end
 function LTask:DoUpdate(DeltaTime)
     if self:IsRunning() then
         self:OnUpdate(DeltaTime)
+        self.LBT.CurRunningTaskName = self.DisplayName
     end
     return self:GetStatus()
 end
