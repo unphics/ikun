@@ -17,16 +17,23 @@ end
 local a = false
 function LTask_FindLoc4Ability:OnInit()
     class.LTask.OnInit(self)
-    if a then
-        return
-    end
-    a = true
-    self:Calc()
+    local Loc =  self:FindReposLocWithCircle()
+    self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, Loc)
 end
 function LTask_FindLoc4Ability:OnUpdate(DeltaTime)
     self:DoTerminate(true)
 end
-function LTask_FindLoc4Ability:Calc()
+function LTask_FindLoc4Ability:GetTargetActor()
+    local FightTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
+    if class.instanceof(FightTarget, class.RoleClass) then
+        return FightTarget.Avatar
+    end
+    if FightTarget.IsA then
+        return FightTarget
+    end
+end
+---@private [Circle]
+function LTask_FindLoc4Ability:FindReposLocWithCircle()
     local MaxAngle = 60
     local StepAngle = 5
     local OwnerChr = self.Chr
@@ -57,16 +64,7 @@ function LTask_FindLoc4Ability:Calc()
         CurAngle = CurAngle + StepAngle
     end
 end
-function LTask_FindLoc4Ability:GetTargetActor()
-    local FightTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
-    if class.instanceof(FightTarget, class.RoleClass) then
-        return FightTarget.Avatar
-    end
-    if FightTarget.IsA then
-        return FightTarget
-    end
-end
-
+---@private [Circle]
 function LTask_FindLoc4Ability:MakeFilterFn()
     local FilterEnemy = function(HitActor)
         if not HitActor.GetRole then
@@ -78,10 +76,10 @@ function LTask_FindLoc4Ability:MakeFilterFn()
         end
         local owner = self.Chr:GetRole()
         if owner:IsFirend(role) then
-            log.dev('line trace =================== firend', owner, owner:GetDisplayName(), role:GetDisplayName())
+            -- log.dev('line trace =================== firend', owner, owner:GetDisplayName(), role:GetDisplayName())
             return true
         end
-        log.dev('line trace =================== enemy', owner, owner:GetDisplayName(), role:GetDisplayName())
+        -- log.dev('line trace =================== enemy', owner, owner:GetDisplayName(), role:GetDisplayName())
         return false
     end
     return FilterEnemy
