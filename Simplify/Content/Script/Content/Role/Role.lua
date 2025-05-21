@@ -83,6 +83,9 @@ function RoleClass:InitByAvatar(Avatar, Id, bNpc)
 
     self:StartBT()
 end
+function RoleClass:IsDead()
+    return self.Dead
+end
 function RoleClass:GetDisplayName()
     return self.DisplayName
 end

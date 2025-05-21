@@ -15,7 +15,7 @@
 ---@field TargetBy RoleClass|nil
 
 ---@class TeamEnemyClass
----@field tbEnemyRolePerception TeamEnemyPerception[] 紧凑排列的数组表, 用于遍历
+---@field tbEnemyRolePerception TeamEnemyPerception[] 紧凑排列的数组表, 用于遍历; Perception:感知
 ---@field refEnemyRole table<number, TeamEnemyPerception> HashMap的Role表,用于查找
 ---@field OwnerTeam TeamClass
 ---@field FireTarget RoleClass 集火目标
@@ -98,6 +98,20 @@ function TeamEnemyClass:GetAllEnemy()
         table.insert(All, ele.Role)
     end
     return All
+end
+---@public
+---@param Role RoleClass
+function TeamEnemyClass:RemoveRole(Role)
+    local Index = 1
+    while Index <= #self.tbEnemyRolePerception do
+        local CheckRole = self.tbEnemyRolePerception[Index] ---@type RoleClass
+        if CheckRole.RoleInstId == Role.RoleInstId then
+            log.dev('TeamEnemyClass:RemoveRole() : ', CheckRole.DisplayName, Role.DisplayName)
+            table.remove(self.tbEnemyRolePerception, Index)
+            break
+        end
+        Index = Index + 1
+    end
 end
 
 return TeamEnemyClass

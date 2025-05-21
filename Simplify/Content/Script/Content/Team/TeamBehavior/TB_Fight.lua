@@ -196,6 +196,17 @@ function TB_Fight:AsgnTarget(Army)
     end
 end
 
+function TB_Fight:ReadDynaSuppressTarget(RoleInstId)
+    local Role = self.DynaSuppressTarget[RoleInstId]
+    if Role:IsDead() then
+        log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role.RoleInstId, Role.DisplayName)
+        self.OwnerTeam.TeamEnemy:RemoveRole(Role)
+        self:AsgnTarget(self.Army)
+        Role = self.DynaSuppressTarget[RoleInstId]
+    end
+    return Role
+end
+
 ---@deprecated [Pure] 进攻性站位，计算前排突击敌方后排的位置
 function TB_Fight:OffensivePos(Army)
     log.dev('TB_Fight:OffensivePos 进攻站位')

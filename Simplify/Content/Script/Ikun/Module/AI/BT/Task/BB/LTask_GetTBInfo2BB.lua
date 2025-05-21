@@ -27,11 +27,17 @@ function LTask_GetTBInfo2BB:OnInit()
     if not Role or not Role.Team then
         return log.error('LTask_GetTBInfo2BB:OnInit() 该Role没有Team')
     end
-    local Table = Role.Team.CurTB[self.ConstTableName]
-    if not Table then
-        return log.error('LTask_GetTBInfo2BB:OnInit() 该TeamBehavior没有ConstTableName成员')
+    local read_fn = Role.Team.CurTB['Read' .. self.ConstTableName]
+    if read_fn then
+        local Role = read_fn(Role.Team.CurTB, Role.RoleInstId)
+        self.Blackboard:SetBBValue(self.ConstBBKey, Role)
+    else
+        local Table = Role.Team.CurTB[self.ConstTableName]
+        if not Table then
+            return log.error('LTask_GetTBInfo2BB:OnInit() 该TeamBehavior没有ConstTableName成员')
+        end
+        self.Blackboard:SetBBValue(self.ConstBBKey, Table[Role.RoleInstId])
     end
-    self.Blackboard:SetBBValue(self.ConstBBKey, Table[Role.RoleInstId])
 end
 function LTask_GetTBInfo2BB:OnUpdate(DeltaTime)
     self:DoTerminate(true)
