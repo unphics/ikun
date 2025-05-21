@@ -134,4 +134,27 @@ actor_util.spawn_always = function(World, Class, Transform)
     end
     return Actor
 end
+
+---@public
+---@param OwnerChr BP_ChrBase
+actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
+    local function filter(HitActor)
+        if not HitActor.GetRole then
+            return true
+        end
+        local HitRole = HitActor:GetRole()
+        if not HitRole then
+            return
+        end
+        local Owner = OwnerChr:GetRole()
+        if Owner:IsFirend(HitRole) then
+            -- log.dev('line trace =================== firend', owner, owner:GetDisplayName(), role:GetDisplayName())
+            return true
+        end
+        -- log.dev('line trace =================== enemy', owner, owner:GetDisplayName(), role:GetDisplayName())
+        return false
+    end
+    return filter
+end
+
 return actor_util

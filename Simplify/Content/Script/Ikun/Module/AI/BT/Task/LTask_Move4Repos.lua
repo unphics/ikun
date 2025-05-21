@@ -22,28 +22,9 @@ function LTask_Move4Repos:OnUpdate(DeltaTime)
     self.TestIntervalCurTimeCount = self.TestIntervalCurTimeCount + DeltaTime
     if self.TestIntervalCurTimeCount > self.ConstTestInterval then
         self.TestIntervalCurTimeCount = self.TestIntervalCurTimeCount - self.ConstTestInterval
-        if actor_util.is_no_obstacles_between(self.FightTarget.Avatar, self.Chr, self:MakeFilterFn()) then
+        if actor_util.is_no_obstacles_between(self.FightTarget.Avatar, self.Chr, actor_util.filter_is_firend_4_obstacles(self.Chr)) then
             self:DoTerminate(true)
         end
     end
     class.LTask_AiMoveBase.OnUpdate(self, DeltaTime)
-end
-function LTask_Move4Repos:MakeFilterFn()
-    local FilterEnemy = function(HitActor)
-        if not HitActor.GetRole then
-            return true
-        end
-        local role = HitActor:GetRole()
-        if not role then
-            return true
-        end
-        local owner = self.Chr:GetRole()
-        if owner:IsFirend(role) then
-            -- log.dev('line trace =================== firend', owner, owner:GetDisplayName(), role:GetDisplayName())
-            return true
-        end
-        -- log.dev('line trace =================== enemy', owner, owner:GetDisplayName(), role:GetDisplayName())
-        return false
-    end
-    return FilterEnemy
 end

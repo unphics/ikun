@@ -55,7 +55,7 @@ function LTask_FindLoc4Ability:FindReposLocWithCircle()
             local newDir = rot:RotateVector(BaseDir)
             local newPos = TargetLoc + newDir * Radius
             draw_util.draw_dir_sphere(OwnerChr, newPos)
-            if actor_util.is_no_obstacles_between(newPos, TargetLoc, self:MakeFilterFn()) then
+            if actor_util.is_no_obstacles_between(newPos, TargetLoc, actor_util.filter_is_firend_4_obstacles(self.Chr)) then
                 draw_util.draw_dir_sphere(newPos, TargetLoc, draw_util.green)
                 return newPos
             end
@@ -63,24 +63,4 @@ function LTask_FindLoc4Ability:FindReposLocWithCircle()
         end
         CurAngle = CurAngle + StepAngle
     end
-end
----@private [Circle]
-function LTask_FindLoc4Ability:MakeFilterFn()
-    local FilterEnemy = function(HitActor)
-        if not HitActor.GetRole then
-            return true
-        end
-        local role = HitActor:GetRole()
-        if not role then
-            return true
-        end
-        local owner = self.Chr:GetRole()
-        if owner:IsFirend(role) then
-            -- log.dev('line trace =================== firend', owner, owner:GetDisplayName(), role:GetDisplayName())
-            return true
-        end
-        -- log.dev('line trace =================== enemy', owner, owner:GetDisplayName(), role:GetDisplayName())
-        return false
-    end
-    return FilterEnemy
 end
