@@ -62,7 +62,7 @@ end
 ---@param Avatar BP_ChrBase
 ---@param TriggerCB functon<AActor, FTransform>
 function M:InitBallByAbility(Ability, Avatar, TriggerCB)
-    log.dev('M:InitBallByAbility', Ability, self)
+    -- log.dev('M:InitBallByAbility', Ability, self)
     self.Ability = Ability
     self.Avatar = Avatar
     self.TriggerCB = TriggerCB

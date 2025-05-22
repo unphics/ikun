@@ -56,10 +56,10 @@ function M:OnTick()
     if not net_util.is_server() then
         return
     end
-    local Role = self:GetOwner():GetRole() ---@type RoleClass
-    if Role and Role.debug_bt then
-        self.BillboardContent.debug_bt = 'DebugBT_DebugBT'
-    end
+    -- local Role = self:GetOwner():GetRole() ---@type RoleClass
+    -- if Role and Role.RoleInstId == debug_util.debugrole then
+    --     self.BillboardContent.debug_bt = 'DebugBT_DebugBT'
+    -- end
 end
 
 ---@private [Debug]

@@ -168,7 +168,10 @@ function LBT:PrintBT()
         PrintText = PrintText .. 'InValid Chr !!!'
         return PrintText
     end
-    PrintText = PrintText .. 'DisplayName: ' .. obj_util.dispname(self.Chr) .. '\n'
+    local strName = 'Name: ' .. obj_util.dispname(self.Chr)
+    local Role = self.Chr:GetRole() ---@type RoleClass
+    local strId = ', Id : ' .. Role.RoleInstId
+    PrintText = PrintText .. strName .. strId .. '\n'
     PrintText = PrintText .. 'BT: ' .. self.Desc .. '\n'
     PrintText = PrintText .. self.Root:PrintNode(0)
     return PrintText

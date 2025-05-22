@@ -40,23 +40,8 @@ function TB_Fight:ctor(OwnerTeam)
 end
 
 ---@private 动态调整
-function TB_Fight:Tick(DeltaTime)
-    -- local frontline = self.Army[FightPosDef.Frontline]
-    -- if frontline then
-    --     for _, role in ipairs(frontline) do
-    --         ---@type RoleClass
-    --         local Role = role
-    --         local hpRate = Role.Avatar:GetCurrentHealth() / Role.Avatar:GetMaxHealth()
-    --         local threshold = 0.3 -- 血量阈值
-    --         if hpRate < threshold then
-    --             log.dev(string.format('前排单位 %s 血量过低，准备后撤', Role.Avatar:GetName()))
-    --             local safeLoc = self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamMember:GetAllMember()) - (self.OwnerTeam.TeamEnemy:CalcTeamMemberCenter(self.OwnerTeam.TeamEnemy:GetAllEnemy()) - self.OwnerTeam.TeamMove:CalcTeamMemberCenter(self.OwnerTeam.TeamMember:GetAllMember())):GetSafeNormal() * 500
-    --             self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, safeLoc, true)
-    --             ---@todo (if 有得跑 or 有牧师)血量极少, 强制后排
-    --         end
-    --     end
-    -- end
-end
+-- function TB_Fight:Tick(DeltaTime)
+-- end
 
 ---@public [TryInit] 刚刚入战, 刚刚遭遇一队敌人时单次调用
 ---@param EnemyTeam TeamClass

@@ -6,6 +6,7 @@
 ---
 
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
+local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
 
 ---@class LTask_FindLoc4Ability : LTask
 local LTask_FindLoc4Ability = class.class 'LTask_FindLoc4Ability' : extends 'LTask' {
@@ -14,11 +15,12 @@ local LTask_FindLoc4Ability = class.class 'LTask_FindLoc4Ability' : extends 'LTa
 function LTask_FindLoc4Ability:ctor(DisplayName)
     class.LTask.ctor(self, DisplayName)
 end
-local a = false
+
 function LTask_FindLoc4Ability:OnInit()
     class.LTask.OnInit(self)
     local Loc =  self:FindReposLocWithCircle()
-    self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, Loc)
+    local To = NavMoveData.RandomNavPointInRadius(self.Chr, Loc, 150)
+    self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, To)
 end
 function LTask_FindLoc4Ability:OnUpdate(DeltaTime)
     self:DoTerminate(true)

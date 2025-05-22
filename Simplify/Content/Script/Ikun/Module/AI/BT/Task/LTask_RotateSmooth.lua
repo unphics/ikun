@@ -39,7 +39,13 @@ function LTask_RotateSmooth:OnInit()
         return
     end
     local AgentLoc = self.Chr:K2_GetActorLocation() -- self.Chr:GetNavAgentLocation()
+    TargetLoc.Z = 0
+    AgentLoc.Z = 0
     local DirLoc = TargetLoc - AgentLoc
+
+    if UE.UKismetMathLibrary.Vector_Distance(AgentLoc, TargetLoc) < 20 then
+        self:DoTerminate(true)
+    end
     
     self.TargetRot = UE.UKismetMathLibrary.Conv_VectorToRotator(DirLoc)
     ---@note 左转是负, 右转是正
@@ -48,6 +54,7 @@ function LTask_RotateSmooth:OnInit()
     if math.abs(self.DeltaRot.Yaw) < self.ConstFillInThreshold then
         self:DoTerminate(true)
     end
+    draw_util.draw_dir_sphere(AgentLoc, TargetLoc, debug_util.RotateColor)
 end
 function LTask_RotateSmooth:OnUpdate(DeltaTime)
     if not self.TargetRot then
