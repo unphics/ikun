@@ -27,6 +27,7 @@ local TeamEnemyClass = class.class 'TeamEnemyClass' {
     TryAddNewEnemyRole = function()end,
     SortEnemyByDist = function()end,
     GetAllEnemy = function()end,
+    RemoveRole = function()end,
     FireTarget = nil,
 ---[[private]]
     TryAddNewEnemyRole = function()end,
@@ -99,7 +100,7 @@ function TeamEnemyClass:GetAllEnemy()
     end
     return All
 end
----@public
+---@public 移除一个角色
 ---@param Role RoleClass
 function TeamEnemyClass:RemoveRole(Role)
     local Index = 1
@@ -111,6 +112,18 @@ function TeamEnemyClass:RemoveRole(Role)
             break
         end
         Index = Index + 1
+    end
+end
+---@public
+function TeamEnemyClass:CheckEnemyDead()
+    local Index = 1
+    while Index <= #self.tbEnemyRolePerception do
+        local Info = self.tbEnemyRolePerception[Index] ---@type TeamEnemyPerception
+        if Info.Role:IsDead() then
+            table.remove(self.tbEnemyRolePerception, Index)
+        else
+            Index = Index + 1
+        end
     end
 end
 

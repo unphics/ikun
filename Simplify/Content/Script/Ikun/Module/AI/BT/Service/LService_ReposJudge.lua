@@ -13,6 +13,9 @@ function LService_ReposJudge:OnUpdate(DeltaTime)
     if not self.FightTarget then
         self.FightTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
     end
+    if self.FightTarget:IsDead() then
+        return
+    end
     if actor_util.is_no_obstacles_between(self.FightTarget.Avatar, self.Chr, actor_util.filter_is_firend_4_obstacles(self.Chr)) then
         self:DoTerminate(true)
     end

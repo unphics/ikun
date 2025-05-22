@@ -47,7 +47,7 @@ function M:OnRoleNameUpdate(RoleName)
     -- self:Multicast_SetText(RoleName .. '\n' .. self:GetOwner():GetRole().RoleInstId)
 
     -- debug
-    self.BillboardContent.RoleName = RoleName
+    -- self.BillboardContent.RoleName = RoleName
     self.BillboardContent.RoleInstId = self:GetOwner():GetRole().RoleInstId
     self:RefreshBillboardShowText()
 end

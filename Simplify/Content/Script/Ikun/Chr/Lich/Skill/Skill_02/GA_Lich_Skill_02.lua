@@ -14,6 +14,8 @@ local M = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
 function M:OnActivateAbility()
     self.Super.OnActivateAbility(self)
 
+    self.AvatarLua = self:GetAvatarActorFromActorInfo()
+
     ---@type UATPlayMtgAndWaitEvent
     local AT = UE.UATPlayMtgAndWaitEvent.PlayMtgAndWaitEvent(self, 'task name', 
         self.Mtg, UE.FGameplayTagContainer(),  1.0 , '', false, 1.0)
