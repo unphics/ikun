@@ -5,6 +5,7 @@ local tb = {}
 tb.red = UE.FLinearColor(1, 0, 0)
 tb.green = UE.FLinearColor(0, 1, 0)
 tb.blue = UE.FLinearColor(0, 0, 1)
+tb.white = UE.FLinearColor(1, 1, 1)
 
 tb.draw_sphere = function(pos)
     local world = nil

@@ -22,7 +22,7 @@ function LTask_Move4Repos:OnUpdate(DeltaTime)
     self.TestIntervalCurTimeCount = self.TestIntervalCurTimeCount + DeltaTime
     if self.TestIntervalCurTimeCount > self.ConstTestInterval then
         self.TestIntervalCurTimeCount = self.TestIntervalCurTimeCount - self.ConstTestInterval
-        if actor_util.is_no_obstacles_between(self.FightTarget.Avatar, self.Chr, actor_util.filter_is_firend_4_obstacles(self.Chr)) then
+        if not actor_util.has_obstacles(self.FightTarget.Avatar, self.Chr, actor_util.filter_is_firend_4_obstacles(self.Chr)) then
             self:DoTerminate(true)
         end
     end

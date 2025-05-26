@@ -33,11 +33,11 @@ actor_util.get_nearby_ikun_chr = function(find_actor)
     return NearbyActor, NearbyDistance
 end
 
----@public 两个Actor之间没有障碍物(可投射判断)
+---@public 两个Actor之间有障碍物(可投射判断)
 ---@param pos1 FVector | AActor
 ---@param pos2 FVector | AActor
 ---@return boolean
-actor_util.is_no_obstacles_between = function(pos1, pos2,  allow_fn)
+actor_util.has_obstacles = function(pos1, pos2,  allow_fn, fn)
     local world = world_util.GameWorld
     local StartLoc = pos1.IsA and pos1:K2_GetActorLocation() or pos1
     local EndLoc = pos2.IsA and pos2:K2_GetActorLocation() or pos2
@@ -46,23 +46,30 @@ actor_util.is_no_obstacles_between = function(pos1, pos2,  allow_fn)
     local ActorsToIgnore = UE.TArray(UE.AActor)
     local HitResults = UE.TArray(UE.FHitResult())
     local DebugLineType = UE.EDrawDebugTrace.None -- Persistent None
+    -- local Dir = EndLoc - StartLoc
+    -- Dir:Normalize()
+    -- Dir = Dir * -300
+    -- StartLoc = StartLoc + Dir
     UE.UKismetSystemLibrary.LineTraceMulti(world, StartLoc, EndLoc, ETraceTypeQuery, bComplex, ActorsToIgnore,
         DebugLineType, HitResults, true, UE.FLinearColor(), UE.FLinearColor(), 1)
     local tb = {}
     for i = 1, HitResults:Length() do
         local Actor = HitResults:Get(i).HitObjectHandle.Actor
         if allow_fn then
-            if allow_fn(Actor) then
+            if not allow_fn(Actor) then
                 table.insert(tb, Actor)
             end
         else
             table.insert(tb, Actor)
         end
     end
+    if fn then
+        fn(tb)
+    end
     if #tb > 0 then
-        return false
-    else
         return true
+    else
+        return false
     end
 end
 
@@ -138,6 +145,7 @@ end
 ---@public
 ---@param OwnerChr BP_ChrBase
 actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
+    local OwnerRole = OwnerChr:GetRole()
     local function filter(HitActor)
         if not HitActor.GetRole then
             return true
@@ -146,8 +154,7 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
         if not HitRole then
             return
         end
-        local Owner = OwnerChr:GetRole()
-        if Owner:IsFirend(HitRole) then
+        if OwnerRole:IsFirend(HitRole) then
             -- log.dev('line trace =================== firend', owner, owner:GetDisplayName(), role:GetDisplayName())
             return true
         end

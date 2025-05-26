@@ -22,6 +22,7 @@ end
 
 ---@public
 ---@param Chr BP_ChrBase | RoleClass | number
+---@return boolean
 debug_util.IsChrDebug = function(Chr)
     if type(Chr) == "number" then
         return Chr == debug_util.debugrole
