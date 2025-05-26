@@ -19,8 +19,10 @@ end
 function LTask_FindLoc4Ability:OnInit()
     class.LTask.OnInit(self)
     local Loc =  self:FindReposLocWithCircle()
-    local To = NavMoveData.RandomNavPointInRadius(self.Chr, Loc, 150)
-    self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, To)
+    local bSuccess, To = NavMoveData.RandomNavPointInRadius(self.Chr, Loc, 150)
+    if bSuccess then
+        self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, To)
+    end
 end
 function LTask_FindLoc4Ability:OnUpdate(DeltaTime)
     self:DoTerminate(true)

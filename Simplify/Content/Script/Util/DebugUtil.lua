@@ -8,16 +8,31 @@
 log.error("DebugUtil Loaded")
 
 ---@class debug_util
-local M = {}
+local debug_util = {}
 
-M.debug_bt = 1
-M.debugrole = 10102001
+debug_util.debug_bt = 1
+debug_util.debugrole = 10102001
 
-M.RotateColor = UE.FLinearColor(0, 1, 0)
-M.MoveColor = UE.FLinearColor(1, 1, 0)
+debug_util.RotateColor = UE.FLinearColor(0, 1, 0)
+debug_util.MoveColor = UE.FLinearColor(1, 1, 0)
 
-M.qqq = function(a, b)
+debug_util.qqq = function(a, b)
     log.error("zys: qqq", a, b)
+end
+
+---@public
+---@param Chr BP_ChrBase | RoleClass | number
+debug_util.IsChrDebug = function(Chr)
+    if type(Chr) == "number" then
+        return Chr == debug_util.debugrole
+    end
+    if Chr.IsA and Chr.GetRole then
+        return Chr:GetRole().RoleInstId == debug_util.debugrole
+    end
+    if class.instanceof(Chr, class.RoleClass) then
+        return Chr.RoleInstId == debug_util.debugrole
+    end
+    return false
 end
 
 local function parse_args(cmd_str)
@@ -34,7 +49,7 @@ UECmd = function(Cmd)
     if Cmd then
         local args = parse_args(Cmd)
         local field_name = table.remove(args, 1)
-        local field = M[field_name]
+        local field = debug_util[field_name]
         if field and type(field) == 'function' then
             xpcall(function()
                 field(table.unpack(args))
@@ -43,7 +58,7 @@ UECmd = function(Cmd)
             end)
         elseif field and (type(field) == 'string' or type(field) == "number" or type(field) == "boolean") then
             local value = table.remove(args, 1)
-            M[field_name] = tonumber(value) or value
+            debug_util[field_name] = tonumber(value) or value
             log.error('LuaCmd: Set debug field [' .. field_name .. '] : ' ..  value)
         else
             log.error("DebugUtil找不到这个函数:" .. Cmd)
@@ -53,4 +68,4 @@ UECmd = function(Cmd)
     return false;
 end
 
-return M
+return debug_util
