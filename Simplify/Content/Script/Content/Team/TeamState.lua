@@ -14,7 +14,7 @@ local TeamStateClass = class.class 'TeamStateClass' {
 function TeamStateClass:ctor(Team)
     self.OwnerTeam = Team    
 end
-function TeamStateClass:NextState()
+function TeamStateClass:NextTeamState()
 end
 
 return TeamStateClass

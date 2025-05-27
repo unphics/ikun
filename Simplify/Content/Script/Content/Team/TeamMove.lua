@@ -18,6 +18,8 @@ local TeamMoveClass = class.class 'TeamMoveClass' {
     GetMoveTarget = function()end,
     OnArrived = function()end,
     SetMemberMoveTarget = function()end,
+    CalcTeamMemberCenter = function()end,
+    IsAllMemberArrived = function()end,
 --[[private]]
     OnAllMemberArrived = function()end,
     OwnerTeam = nil,

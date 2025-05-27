@@ -15,11 +15,13 @@ local TeamMemberClass = class.class 'TeamMemberClass' {
     --[[public]]
     ctor = function() end,
     AddMember = function() end,
+    RemoveMember = function()end,
     GetAllMember = function() end,
     ElectLeader = function() end,
     GetLeader = function() end,
     PrintMember = function() end,
-    GetAllMember_CareerCount = function()end,
+    GetAllMember_PosCount = function()end,
+    CalcMaxCountPerPos = function()end,
     --[[private]]
     tbMember = nil,
     mapMemberId = nil,
@@ -85,7 +87,7 @@ function TeamMemberClass:GetAllMember_PosCount()
         local Role = ele ---@type RoleClass
         local tbFPAssign = RoleConfig[Role.RoleConfigId].FightPosAssign
         if not tbFPAssign or #tbFPAssign == 0 then
-            log.error('TeamMemberClass:GetAllMember_CareerCount() 发现不承担战场位置的角色', Role.RoleConfigId)
+            log.error('TeamMemberClass:GetAllMember_PosCount() 发现不承担战场位置的角色', Role.RoleConfigId)
         end
         if #tbFPAssign == 1 then
             table.insert(ArrSingle, Role)

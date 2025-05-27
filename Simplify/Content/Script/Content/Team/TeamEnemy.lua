@@ -24,10 +24,10 @@ local TeamEnemyClass = class.class 'TeamEnemyClass' {
     cotr = function()end,
     ResetTeamEnemyData = function()end,
     OnEncounterEnemy = function()end,
-    TryAddNewEnemyRole = function()end,
     SortEnemyByDist = function()end,
     GetAllEnemy = function()end,
-    RemoveRole = function()end,
+    RemoveEnemyRole = function()end,
+    CheckEnemyDead = function()end,
     FireTarget = nil,
 ---[[private]]
     TryAddNewEnemyRole = function()end,
@@ -102,12 +102,12 @@ function TeamEnemyClass:GetAllEnemy()
 end
 ---@public 移除一个角色
 ---@param Role RoleClass
-function TeamEnemyClass:RemoveRole(Role)
+function TeamEnemyClass:RemoveEnemyRole(Role)
     local Index = 1
     while Index <= #self.tbEnemyRolePerception do
         local CheckRole = self.tbEnemyRolePerception[Index] ---@type RoleClass
         if CheckRole.RoleInstId == Role.RoleInstId then
-            log.dev('TeamEnemyClass:RemoveRole() : ', CheckRole.DisplayName, Role.DisplayName)
+            log.dev('TeamEnemyClass:RemoveEnemyRole() : ', CheckRole.DisplayName, Role.DisplayName)
             table.remove(self.tbEnemyRolePerception, Index)
             break
         end

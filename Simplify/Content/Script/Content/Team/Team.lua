@@ -30,8 +30,9 @@ local TeamClass = class.class 'TeamClass': extends 'MdBase' {
     ctor = function()end,
     Init = function()end,
     Tick = function()end,
-    IsInfight = function()end,
     Encounter = function()end,
+    NextTeamState = function()end,
+    IsInfight = function()end,
     TeamMember = nil,
     TeamEnemy = nil,
     CurTB = nil,
@@ -53,7 +54,7 @@ function TeamClass:ctor()
 end
 function TeamClass:Init()
     self.TeamMember:ElectLeader()
-    self:NextState(class.new 'TB_Patrol' (self))
+    self:NextTeamState(class.new 'TB_Patrol' (self))
 end
 function TeamClass:Tick(DeltaTime)
     self.DecisionTimeCount = self.DecisionTimeCount + DeltaTime
@@ -66,7 +67,7 @@ function TeamClass:Tick(DeltaTime)
 end
 ---@public
 ---@param TO TeamBehaviorBase
-function TeamClass:NextState(TO)
+function TeamClass:NextTeamState(TO)
     self.CurTB = TO
     self.CurTB:Init()
 end

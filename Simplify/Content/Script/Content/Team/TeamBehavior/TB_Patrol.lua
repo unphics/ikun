@@ -43,7 +43,7 @@ end
 function TB_Patrol:OnEncounterEnemy(EnemyTeam)
     -- self.OwnerTeam.bFight = true
 
-    self.OwnerTeam:NextState(class.new'TB_Fight'(self.OwnerTeam))
+    self.OwnerTeam:NextTeamState(class.new'TB_Fight'(self.OwnerTeam))
     self.OwnerTeam.CurTB:OnEncounterEnemy(EnemyTeam)
 end
 
