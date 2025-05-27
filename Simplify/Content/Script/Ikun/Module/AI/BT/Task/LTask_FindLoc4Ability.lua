@@ -7,6 +7,7 @@
 
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
+local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
 
 ---@class LTask_FindLoc4Ability : LTask
 local LTask_FindLoc4Ability = class.class 'LTask_FindLoc4Ability' : extends 'LTask' {
@@ -18,7 +19,7 @@ end
 
 function LTask_FindLoc4Ability:OnInit()
     class.LTask.OnInit(self)
-    local Loc =  self:FindReposLocWithCircle()
+    local Loc =  self:FindReposLoc_Circle()
     local bSuccess, To = NavMoveData.RandomNavPointInRadius(self.Chr, Loc, 150)
     if bSuccess then
         self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, To)
@@ -37,7 +38,7 @@ function LTask_FindLoc4Ability:GetTargetActor()
     end
 end
 ---@private [Circle]
-function LTask_FindLoc4Ability:FindReposLocWithCircle()
+function LTask_FindLoc4Ability:FindReposLoc_Circle()
     local MaxAngle = 60
     local StepAngle = 5
     local OwnerChr = self.Chr
@@ -71,4 +72,21 @@ function LTask_FindLoc4Ability:FindReposLocWithCircle()
         end
         CurAngle = CurAngle + StepAngle
     end
+end
+function LTask_FindLoc4Ability:FindReposLoc_TwoSideRound()
+    local OwnerLoc = self.Chr:GetNavAgentLocation()
+    local Radius = 300
+    local TargetLoc = self:GetTargetActor():GetNavAgentLocation()
+    local Owner2Target = TargetLoc - OwnerLoc
+    local Dir = UE.FVector(Owner2Target)
+    Dir:Normalize()
+    Dir = Dir * Radius * -1
+    local Rot1 = UE.FRotator(0, 90, 0)
+    local Rot2 = UE.FRotator(0, -90, 0)
+    local Dir1 = Rot1:RotateVector(Dir)
+    local Dir2 = Rot2:RotateVector(Dir)
+    local Center1 = OwnerLoc + Dir + Dir1
+    local Center2 = OwnerLoc + Dir + Dir2
+    local Point = (math.random() > 0.5) and Center1 or Center2
+    local bSuccess, ProjectPoint = NavMoveData.ProjectPointToNavMesh(self.Chr, Point, UE.FVector(200, 200, 200))
 end
