@@ -20,12 +20,12 @@ local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
     OnEncounterEnemy = function()end,
     Tick = function()end,
 --[[private]]
-    AllMemberBTSwitchFight = function()end,
+    AllMemberSwitchFightBT = function()end,
     CombatFeasibilityResolution = function()end,
     TacticalResolution = function()end,
     DefensivePos = function()end,
     AsgnFightPos = function()end,
-    AsgnTarget = function()end,
+    AsgnFightTarget = function()end,
     Army = nil,
     DirectiveMoveCoord = nil,
     DynaSuppressTarget = nil,
@@ -53,18 +53,18 @@ function TB_Fight:OnEncounterEnemy(EnemyTeam)
         return
     end
     -- 阶段一, 无情报
-    self:AllMemberBTSwitchFight()
+    self:AllMemberSwitchFightBT()
     self.Army = self:AsgnFightPos()
     self:DefensivePos(self.Army)
-    self:AsgnTarget(self.Army)
+    self:AsgnFightTarget(self.Army)
     -- 阶段二, 有情报
     async_util.delay(self.OwnerTeam.TeamMember:GetLeader().Avatar, 2, function()
-        self:AsgnTarget(self.Army)
+        self:AsgnFightTarget(self.Army)
     end)
 end
 
 ---@private 和平入战时所有人切换到战斗树
-function TB_Fight:AllMemberBTSwitchFight()
+function TB_Fight:AllMemberSwitchFightBT()
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, ele in ipairs(AllMember) do
         ---@type RoleClass
@@ -79,12 +79,12 @@ function TB_Fight:CombatFeasibilityResolution(Army)
     return true
 end
 
----@private [Pure] 战术决议
+---@private [Static] 战术决议
 function TB_Fight:TacticalResolution(Army)
     local backlineCount = #Army[FightPosDef.Backline]
     local frontlineCount = #Army[FightPosDef.Frontline]
     local rate = backlineCount / (backlineCount + frontlineCount)
-    local threshold = 0.3 -- 后排数量阈值，超过这个值则前排保护后排
+    local threshold = 0.3 -- 后排数量阈值，超过这个值则前排保守
 
     if rate > threshold then
     else
@@ -157,8 +157,8 @@ function TB_Fight:DefensivePos(Army)
     end
 end
 
----@private [Pure] 分配战斗目标
-function TB_Fight:AsgnTarget(Army)
+---@private [Pure] 分配目标
+function TB_Fight:AsgnFightTarget(Army)
     local Enemy = self.OwnerTeam.TeamEnemy
     Enemy:SortEnemyByDist()
     -- local avatar = Enemy.tbEnemyRolePerception[1].Role.Avatar
@@ -187,7 +187,7 @@ function TB_Fight:ReadDynaSuppressTarget(RoleInstId)
         log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role.RoleInstId, Role.DisplayName)
         -- self.OwnerTeam.TeamEnemy:RemoveEnemyRole(Role)
         self.OwnerTeam.TeamEnemy:CheckEnemyDead()
-        self:AsgnTarget(self.Army)
+        self:AsgnFightTarget(self.Army)
         Role = self.DynaSuppressTarget[RoleInstId]
     end
     return Role
