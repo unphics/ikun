@@ -28,7 +28,7 @@ RoleConfig[2] = {
     BelongKingdomCfgId = 2,
     InitBT = 'Team_MakeTeam_1',
     Color = -1,
-    FightPosAssign = {FightPosDef.Frontline, FightPosDef.Backline},
+    FightPosAssign = {FightPosDef.Backline, FightPosDef.Frontline},
     BTCfg = {},
 }
 RoleConfig[2].BTCfg[BTType.Init] = 'Team_MakeTeam_1'
@@ -50,7 +50,7 @@ RoleConfig[4] = {
     BelongKingdomCfgId = 3,
     InitBT = 'Team_MakeTeam_1',
     Color = 1,
-    FightPosAssign = {FightPosDef.Frontline, FightPosDef.Backline},
+    FightPosAssign = {FightPosDef.Backline, FightPosDef.Frontline},
     BTCfg = {},
 }
 RoleConfig[4].BTCfg[BTType.Init] = 'Team_MakeTeam_1'

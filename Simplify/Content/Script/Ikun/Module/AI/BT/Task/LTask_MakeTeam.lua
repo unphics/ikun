@@ -63,6 +63,9 @@ function LTask_MakeTeam:CheckCanJoinTeam(Actor)
         return false
     end
     local OwnerRole = self.Chr:GetRole()
+    if Actor.RoleComp.bCustomStartBT then
+        return false
+    end
     if OwnerRole:IsEnemy(Actor:GetRole()) then
         return false
     end

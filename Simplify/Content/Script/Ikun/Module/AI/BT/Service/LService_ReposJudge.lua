@@ -20,6 +20,9 @@ function LService_ReposJudge:OnUpdate(DeltaTime)
     if self.FightTarget:IsDead() then
         return
     end
+    if debug_util.IsChrDebug(self.Chr) then
+        log.dev('LService_ReposJudge')
+    end
     if not actor_util.has_obstacles(self.FightTarget.Avatar, self.Chr, actor_util.filter_is_firend_4_obstacles(self.Chr), function(tb)
             -- log.dev('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq', #tb)
             local owner = self.Chr:GetRole()

@@ -96,6 +96,9 @@ function RoleClass:StartBT()
 end
 function RoleClass:SwitchNewBT(NewBTKey)
     log.log('RoleDisplayName = '..tostring(self.DisplayName)..', switch new bt: '..tostring(NewBTKey))
+    if self.Avatar.RoleComp.bCustomStartBT then
+        return
+    end
     local BTClass = BTDef[NewBTKey]
     if not BTClass then
         log.error('Failed to index BTClass, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self.DisplayName))

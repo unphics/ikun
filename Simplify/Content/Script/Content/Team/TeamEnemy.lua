@@ -48,17 +48,27 @@ function TeamEnemyClass:ResetTeamEnemyData()
     self.tbEnemyRolePerception = {}
 end
 ---@public 遭遇敌军; 第一次遭遇时, 根据敌军情况第一次评估敌军信息
----@param EnemyTeam TeamClass
+---@param EnemyTeam TeamClass | RoleClass
 ---@return boolean 是否是遭遇(是否第一次)
 function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
-    ---@step 如该TeamLeader已添加, 则该Team已添加
-    local EnemyLeaer = EnemyTeam.TeamMember:GetLeader()
-    if self.refEnemyRole[EnemyLeaer.RoleInstId] then
+    if not EnemyTeam then
         return false
     end
-    ---@step 存储敌军所有角色
-    for i, Role in ipairs(EnemyTeam.TeamMember:GetAllMember()) do
-        self:TryAddNewEnemyRole(Role)
+    if class.instanceof(EnemyTeam, class.TeamClass) then
+        ---@step 如该TeamLeader已添加, 则该Team已添加
+        local EnemyLeaer = EnemyTeam.TeamMember:GetLeader()
+        if self.refEnemyRole[EnemyLeaer.RoleInstId] then
+            return false
+        end
+        ---@step 存储敌军所有角色
+        for i, Role in ipairs(EnemyTeam.TeamMember:GetAllMember()) do
+            self:TryAddNewEnemyRole(Role)
+        end
+    else
+        if self.refEnemyRole[EnemyTeam] then
+            return false
+        end
+        self:TryAddNewEnemyRole(EnemyTeam)
     end
     return true
 end
