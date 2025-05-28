@@ -88,7 +88,10 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
     local HalfSzie = UE.FVector()
     HalfSzie.X = width / 2
     HalfSzie.Z = 80
-    local DrawDebugType = UE.EDrawDebugTrace.ForDuration
+    local DrawDebugType = UE.EDrawDebugTrace.None
+    if debug_util.IsChrDebug(pos1) then
+        DrawDebugType = UE.EDrawDebugTrace.ForDuration
+    end
     local TraceColor = UE.FLinearColor(1, 0, 0)
     local HitColor = UE.FLinearColor(0, 1, 0)
     local DrawTime = 2

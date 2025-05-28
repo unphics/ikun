@@ -27,7 +27,7 @@ debug_util.IsChrDebug = function(Chr)
     if type(Chr) == "number" then
         return Chr == debug_util.debugrole
     end
-    if Chr.IsA and Chr.GetRole then
+    if Chr.GetRole then
         return Chr:GetRole().RoleInstId == debug_util.debugrole
     end
     if class.instanceof(Chr, class.RoleClass) then

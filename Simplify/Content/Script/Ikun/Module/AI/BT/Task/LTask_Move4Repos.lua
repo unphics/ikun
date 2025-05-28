@@ -13,8 +13,8 @@ local LTask_Move4Repos = class.class 'LTask_Move4Repos' : extends 'LTask_AiMoveB
 }
 function LTask_Move4Repos:OnInit()
     class.LTask_AiMoveBase.OnInit(self)
-    self.ConstTestInterval = 0.5
-    self.TestIntervalCurTimeCount = 0.5
+    self.ConstTestInterval = 1
+    self.TestIntervalCurTimeCount = 0
 
     self.FightTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
 end
