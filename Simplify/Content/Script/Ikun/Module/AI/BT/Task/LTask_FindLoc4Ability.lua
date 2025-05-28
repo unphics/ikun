@@ -19,7 +19,7 @@ end
 
 function LTask_FindLoc4Ability:OnInit()
     class.LTask.OnInit(self)
-    local Loc =  self:FindReposLoc_Circle()
+    local Loc = self:FindReposLoc_TwoSideRound() -- self:FindReposLoc_Circle()
     local bSuccess, To = NavMoveData.RandomNavPointInRadius(self.Chr, Loc, 150)
     if bSuccess then
         self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, To)
@@ -89,4 +89,5 @@ function LTask_FindLoc4Ability:FindReposLoc_TwoSideRound()
     local Center2 = OwnerLoc + Dir + Dir2
     local Point = (math.random() > 0.5) and Center1 or Center2
     local bSuccess, ProjectPoint = NavMoveData.ProjectPointToNavMesh(self.Chr, Point, UE.FVector(200, 200, 200))
+    return ProjectPoint
 end
