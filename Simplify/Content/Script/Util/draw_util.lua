@@ -1,13 +1,13 @@
 
----@class DrawUtil
-local tb = {}
+---@class draw_util
+local draw_util = {}
 
-tb.red = UE.FLinearColor(1, 0, 0)
-tb.green = UE.FLinearColor(0, 1, 0)
-tb.blue = UE.FLinearColor(0, 0, 1)
-tb.white = UE.FLinearColor(1, 1, 1)
+draw_util.red = UE.FLinearColor(1, 0, 0)
+draw_util.green = UE.FLinearColor(0, 1, 0)
+draw_util.blue = UE.FLinearColor(0, 0, 1)
+draw_util.white = UE.FLinearColor(1, 1, 1)
 
-tb.draw_sphere = function(pos, radius)
+draw_util.draw_sphere = function(pos, radius)
     radius = radius or 100
     local world = nil
     local loc = nil
@@ -21,7 +21,7 @@ tb.draw_sphere = function(pos, radius)
     UE.UKismetSystemLibrary.DrawDebugSphere(world, loc, radius, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
 end
 
-tb.draw_dir_sphere = function(pos1, pos2, color)
+draw_util.draw_dir_sphere = function(pos1, pos2, color)
     local loc1 = pos1.IsA and pos1:K2_GetActorLocation() or pos1
     local loc2 = pos2.IsA and pos2:K2_GetActorLocation() or pos2
     local Color = color or UE.FLinearColor(1, 0, 0)
@@ -30,4 +30,4 @@ tb.draw_dir_sphere = function(pos1, pos2, color)
     UE.UKismetSystemLibrary.DrawDebugLine(world_util.GameWorld, loc1, loc2, Color, Duration, 5)
 end
 
-return tb
+return draw_util
