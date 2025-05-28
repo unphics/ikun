@@ -23,8 +23,10 @@ function LDecorator_NeedRepos4Ability:Judge()
     local hasObs = actor_util.has_obstacles_box(self.Chr, FightTargetActor, 100,
         actor_util.filter_is_firend_4_obstacles(self.Chr))
     if not hasObs then
+        log.dev('++++++++++++++++++++装饰器执行结果: 没阻挡')
         return false
     end
+    log.dev('++++++++++++++++++++装饰器执行结果: 阻挡！！！')
     return true
 end
 ---@private

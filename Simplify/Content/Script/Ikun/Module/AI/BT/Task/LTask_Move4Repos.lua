@@ -13,7 +13,7 @@ local LTask_Move4Repos = class.class 'LTask_Move4Repos' : extends 'LTask_AiMoveB
 }
 function LTask_Move4Repos:OnInit()
     class.LTask_AiMoveBase.OnInit(self)
-    self.ConstTestInterval = 1
+    self.ConstTestInterval = 0.3
     self.TestIntervalCurTimeCount = 0
 
     self.FightTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
@@ -22,7 +22,9 @@ function LTask_Move4Repos:OnUpdate(DeltaTime)
     self.TestIntervalCurTimeCount = self.TestIntervalCurTimeCount + DeltaTime
     if self.TestIntervalCurTimeCount > self.ConstTestInterval then
         self.TestIntervalCurTimeCount = self.TestIntervalCurTimeCount - self.ConstTestInterval
-        if not actor_util.has_obstacles(self.FightTarget.Avatar, self.Chr, actor_util.filter_is_firend_4_obstacles(self.Chr)) then
+        local hasObs = actor_util.has_obstacles_box(self.Chr, self.FightTarget.Avatar, 100,
+        actor_util.filter_is_firend_4_obstacles(self.Chr))
+        if not hasObs then
             self:DoTerminate(true)
         end
     end

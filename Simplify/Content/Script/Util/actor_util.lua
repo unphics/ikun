@@ -200,7 +200,7 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
         end
         local HitRole = HitActor:GetRole()
         if not HitRole then
-            return
+            return false
         end
         if OwnerRole.RoleInstId == HitRole.RoleInstId then
             return false

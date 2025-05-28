@@ -127,7 +127,7 @@ function TB_Fight:AsgnFightPos()
         ---@todo (if 有得跑 or 有牧师)血量极少, 强制后排
         ---@todo 血量较少, 优先后排
         ---@step 根据这场战斗的战场位置评估分配率决定
-        if false then
+        if true then
             for _, FP in ipairs(tbFP) do
                 if IsArmyNeedFP(Army, FP, tbFPAsgnRate[FP] / nSumFPRate) then
                     FightPos = FP
