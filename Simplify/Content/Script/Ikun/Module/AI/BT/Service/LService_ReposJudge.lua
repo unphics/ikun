@@ -10,10 +10,10 @@ function LService_ReposJudge:OnInit()
     self.CurTickCount = self.StaticTickInterval
 end
 function LService_ReposJudge:OnUpdate(DeltaTime)
-    if not debug_util.IsChrDebug(self.Chr) then
-        self:DoTerminate(true)
-        return
-    end
+    -- if not debug_util.IsChrDebug(self.Chr) then
+    --     self:DoTerminate(true)
+    --     return
+    -- end
     if not self.FightTarget then
         self.FightTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
     end

@@ -19,7 +19,9 @@ function LDecorator_NeedRepos4Ability:Judge()
     if not FightTargetActor then
         return false
     end
-    local hasObs = actor_util.has_obstacles(self.Chr, FightTargetActor, actor_util.filter_is_firend_4_obstacles(self.Chr))
+    draw_util.draw_dir_sphere(self.Chr, FightTargetActor, draw_util.white)
+    local hasObs = actor_util.has_obstacles_box(self.Chr, FightTargetActor, 100,
+        actor_util.filter_is_firend_4_obstacles(self.Chr))
     if not hasObs then
         return false
     end

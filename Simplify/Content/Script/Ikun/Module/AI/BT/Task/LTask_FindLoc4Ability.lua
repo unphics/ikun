@@ -20,9 +20,11 @@ end
 function LTask_FindLoc4Ability:OnInit()
     class.LTask.OnInit(self)
     local Loc = self:FindReposLoc_TwoSideRound() -- self:FindReposLoc_Circle()
-    local bSuccess, To = NavMoveData.RandomNavPointInRadius(self.Chr, Loc, 150)
-    if bSuccess then
-        self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, To)
+    -- local bSuccess, To = NavMoveData.RandomNavPointInRadius(self.Chr, Loc, 150)
+    if Loc then
+        self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, Loc)
+    else
+        log.dev('LTask_FindLoc4Ability:OnInit() 没有移动点')
     end
 end
 function LTask_FindLoc4Ability:OnUpdate(DeltaTime)
@@ -77,17 +79,18 @@ function LTask_FindLoc4Ability:FindReposLoc_TwoSideRound()
     local OwnerLoc = self.Chr:GetNavAgentLocation()
     local Radius = 300
     local TargetLoc = self:GetTargetActor():GetNavAgentLocation()
-    local Owner2Target = TargetLoc - OwnerLoc
-    local Dir = UE.FVector(Owner2Target)
+    local Owner2Target = OwnerLoc - TargetLoc
+    local Dir = Owner2Target -- UE.FVector(Owner2Target)
     Dir:Normalize()
-    Dir = Dir * Radius * -1
+    Dir = Dir * Radius
     local Rot1 = UE.FRotator(0, 90, 0)
     local Rot2 = UE.FRotator(0, -90, 0)
     local Dir1 = Rot1:RotateVector(Dir)
     local Dir2 = Rot2:RotateVector(Dir)
-    local Center1 = OwnerLoc + Dir + Dir1
-    local Center2 = OwnerLoc + Dir + Dir2
+    local Center1 = OwnerLoc + (Dir + Dir1)
+    local Center2 = OwnerLoc + (Dir + Dir2)
     local Point = (math.random() > 0.5) and Center1 or Center2
-    local bSuccess, ProjectPoint = NavMoveData.ProjectPointToNavMesh(self.Chr, Point, UE.FVector(200, 200, 200))
+    draw_util.draw_sphere(Point, Radius)
+    local bSuccess, ProjectPoint = NavMoveData.ProjectPointToNavMesh(self.Chr, Point, UE.FVector(300, 300, 300))
     return ProjectPoint
 end

@@ -5,7 +5,7 @@
 ---@data Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
 ---
 
-log.error("DebugUtil Loaded")
+log.error("debug_util Loaded")
 
 ---@class debug_util
 local debug_util = {}
@@ -62,7 +62,7 @@ UECmd = function(Cmd)
             debug_util[field_name] = tonumber(value) or value
             log.error('LuaCmd: Set debug field [' .. field_name .. '] : ' ..  value)
         else
-            log.error("DebugUtil找不到这个函数:" .. Cmd)
+            log.error("debug_util找不到这个函数:" .. Cmd)
         end
         return true;
     end;

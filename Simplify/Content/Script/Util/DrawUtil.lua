@@ -7,7 +7,8 @@ tb.green = UE.FLinearColor(0, 1, 0)
 tb.blue = UE.FLinearColor(0, 0, 1)
 tb.white = UE.FLinearColor(1, 1, 1)
 
-tb.draw_sphere = function(pos)
+tb.draw_sphere = function(pos, radius)
+    radius = radius or 100
     local world = nil
     local loc = nil
     if pos.IsA then
@@ -17,7 +18,7 @@ tb.draw_sphere = function(pos)
         world = world_util.GameWorld
         loc = pos
     end
-    UE.UKismetSystemLibrary.DrawDebugSphere(world, loc, 100, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
+    UE.UKismetSystemLibrary.DrawDebugSphere(world, loc, radius, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
 end
 
 tb.draw_dir_sphere = function(pos1, pos2, color)

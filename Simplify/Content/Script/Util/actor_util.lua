@@ -55,8 +55,12 @@ actor_util.has_obstacles = function(pos1, pos2,  allow_fn, fn)
     local tb = {}
     for i = 1, HitResults:Length() do
         local Actor = HitResults:Get(i).HitObjectHandle.Actor
+        local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
+        if role then
+            log.dev('actor_util.has_obstacles ::::: ', role.RoleInstId, role.DisplayName)
+        end
         if allow_fn then
-            if not allow_fn(Actor) then
+            if allow_fn(Actor) then
                 table.insert(tb, Actor)
             end
         else
@@ -67,6 +71,47 @@ actor_util.has_obstacles = function(pos1, pos2,  allow_fn, fn)
         fn(tb)
     end
     if #tb > 0 then
+        return true
+    else
+        return false
+    end
+end
+
+actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
+    local StartLoc = pos1.IsA and pos1:K2_GetActorLocation() or pos1
+    local EndLoc = pos2.IsA and pos2:K2_GetActorLocation() or pos2
+    local TraceOrientation = UE.FRotator()
+    local TraceChannel = UE.ETraceTypeQuery.Visibility
+    local bComplex = false
+    local ActorsToIgnore = UE.TArray(UE.AActor)
+    local HitResults = UE.TArray(UE.FHitResult())
+    local HalfSzie = UE.FVector()
+    HalfSzie.X = width / 2
+    HalfSzie.Z = 80
+    local DrawDebugType = UE.EDrawDebugTrace.ForDuration
+    local TraceColor = UE.FLinearColor(1, 0, 0)
+    local HitColor = UE.FLinearColor(0, 1, 0)
+    local DrawTime = 2
+    UE.UKismetSystemLibrary.BoxTraceMulti(world_util.GameWorld, StartLoc, EndLoc, HalfSzie,
+        TraceOrientation, TraceChannel, bComplex, ActorsToIgnore, DrawDebugType, HitResults,
+        true, TraceColor, HitColor, DrawTime)
+    local Results = {}
+    for i = 1, HitResults:Length() do
+        local Actor = HitResults:Get(i).HitObjectHandle.Actor
+        local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
+        if role then
+            log.dev('actor_util.has_obstacles ::::: ', role.RoleInstId, role.DisplayName)
+        end
+        if allow_fn then
+            if allow_fn(Actor) then
+                table.insert(Results, Actor)
+            end
+        else
+            table.insert(Results, Actor)
+        end
+    end
+    log.dev('actor_util..........', #Results)
+    if #Results > 0 then
         return true
     else
         return false
@@ -154,11 +199,14 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
         if not HitRole then
             return
         end
+        if OwnerRole.RoleInstId == HitRole.RoleInstId then
+            return false
+        end
         if OwnerRole:IsFirend(HitRole) then
-            -- log.dev('line trace =================== firend', owner, owner:GetDisplayName(), role:GetDisplayName())
+            log.dev('line trace =================== firend', OwnerRole, OwnerRole:GetDisplayName(), HitRole:GetDisplayName())
             return true
         end
-        -- log.dev('line trace =================== enemy', owner, owner:GetDisplayName(), role:GetDisplayName())
+        log.dev('line trace =================== enemy', OwnerRole, OwnerRole:GetDisplayName(), HitRole:GetDisplayName())
         return false
     end
     return filter
