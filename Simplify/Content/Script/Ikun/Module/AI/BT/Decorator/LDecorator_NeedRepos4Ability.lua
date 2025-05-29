@@ -23,10 +23,10 @@ function LDecorator_NeedRepos4Ability:Judge()
     local hasObs = actor_util.has_obstacles_box(self.Chr, FightTargetActor, nil,
         actor_util.filter_is_firend_4_obstacles(self.Chr))
     if not hasObs then
-        log.dev(log.key.repos..log.roleid(self.Chr)..'LDecorator_NeedRepos4Ability : 没阻挡！')
+        log.log(log.key.repos..log.roleid(self.Chr)..'LDecorator_NeedRepos4Ability : 没阻挡！')
         return false
     end
-    log.dev(log.key.repos..log.roleid(self.Chr)..'LDecorator_NeedRepos4Ability : 阻挡！！！')
+    log.log(log.key.repos..log.roleid(self.Chr)..'LDecorator_NeedRepos4Ability : 阻挡！！！')
     return true
 end
 ---@private

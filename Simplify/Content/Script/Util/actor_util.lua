@@ -114,7 +114,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
             goto continue
         end
         if role then
-            log.dev(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor '..role.RoleInstId ..','..role.DisplayName)
+            log.log(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor '..role.RoleInstId ..','..role.DisplayName)
         end
         if allow_fn then
             if allow_fn(Actor) then
@@ -125,7 +125,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         end
         ::continue::
     end
-    log.dev(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor Count = '..#Results)
+    log.log(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor Count = '..#Results)
     if #Results > 0 then
         return true
     else
@@ -149,10 +149,10 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
             return false
         end
         if OwnerRole:IsFirend(HitRole) then
-            log.dev(log.key.repos..log.roleid(OwnerRole)..'filter firend = [firend] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
+            log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [firend] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
             return true
         end
-        log.dev(log.key.repos..log.roleid(OwnerRole)..'filter firend = [enemy] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
+        log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [enemy] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
         return false
     end
     return filter
