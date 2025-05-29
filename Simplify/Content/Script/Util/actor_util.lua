@@ -9,28 +9,20 @@ local actor_util = {}
 
 local IkunChrClass = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/BP_ChrBase.BP_ChrBase_C')
 
----@public 查找最近的ikun_chr
-actor_util.get_nearby_ikun_chr = function(find_actor)
-    local Actors = UE.TArray(IkunChrClass)
-    UE.UGameplayStatics.GetAllActorsOfClass(find_actor, IkunChrClass, Actors)
-    local NearbyActor = nil
-    local NearbyDistance = nil
-    if Actors:Length() > 1 then
-        for i = 1, Actors:Length() do
-            local Actor = Actors:Get(i)
-            if UE.UKismetMathLibrary.NotEqual_ObjectObject(find_actor, Actor) then
-                local Distance = Actor:GetDistanceTo(find_actor)
-                if not NearbyDistance then
-                    NearbyDistance = Distance
-                    NearbyActor = Actor
-                end
-                if Distance < NearbyDistance then
-                    NearbyActor = Actor
-                end
-            end
-        end
+---@region ring.0
+
+---@public
+---@param World UWorld | AActor
+---@param Transform FTransform
+actor_util.spawn_always = function(World, Class, Transform)
+    if not World then return end
+    local WorldCtx = World
+    if WorldCtx.GetWorld then
+        WorldCtx = WorldCtx:GetWorld()
     end
-    return NearbyActor, NearbyDistance
+    local Actor = WorldCtx:GetWorld():SpawnActor(Class, Transform, UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn)
+    if not Actor then log.error('Failed to spawn in actor_util.spawn_always', debug.traceback()) end
+    return Actor
 end
 
 ---@public 两个Actor之间有障碍物(可投射判断)
@@ -77,9 +69,11 @@ actor_util.has_obstacles = function(pos1, pos2,  allow_fn, fn)
     end
 end
 
+---@public 两个位置之间有障碍物(长方体判断)
 actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
     local StartLoc = pos1.IsA and pos1:K2_GetActorLocation() or pos1
     local EndLoc = pos2.IsA and pos2:K2_GetActorLocation() or pos2
+    width = width or 30
     local TraceOrientation = UE.FRotator()
     local TraceChannel = UE.ETraceTypeQuery.Visibility
     local bComplex = false
@@ -101,9 +95,19 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
     local Results = {}
     for i = 1, HitResults:Length() do
         local Actor = HitResults:Get(i).HitObjectHandle.Actor
+        if not Actor or not obj_util.is_valid(Actor) then
+            goto continue
+        end
         local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
         if role then
             log.dev('actor_util.has_obstacles ::::: ', role.RoleInstId, role.DisplayName)
+        end
+        local ActLoc = Actor:K2_GetActorLocation()
+        local Movement = Actor:GetMovementComponent()
+        local ActorRadius = Movement.NavAgentProps.AgentRadius
+        local dist2d = math_util.point_to_line_dist_2d(ActLoc.X, ActLoc.Y, StartLoc.X, StartLoc.Y, EndLoc.X, EndLoc.Y)
+        if dist2d > (ActorRadius + width) then
+            goto continue
         end
         if allow_fn then
             if allow_fn(Actor) then
@@ -112,6 +116,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         else
             table.insert(Results, Actor)
         end
+        ::continue::
     end
     log.dev('actor_util..........', #Results)
     if #Results > 0 then
@@ -119,6 +124,57 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
     else
         return false
     end
+end
+
+---@public
+---@param OwnerChr BP_ChrBase
+actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
+    local OwnerRole = OwnerChr:GetRole()
+    local function filter(HitActor)
+        if not HitActor.GetRole then
+            return true
+        end
+        local HitRole = HitActor:GetRole()
+        if not HitRole then
+            return false
+        end
+        if OwnerRole.RoleInstId == HitRole.RoleInstId then
+            return false
+        end
+        if OwnerRole:IsFirend(HitRole) then
+            log.dev('line trace =================== firend', OwnerRole, OwnerRole:GetDisplayName(), HitRole:GetDisplayName())
+            return true
+        end
+        log.dev('line trace =================== enemy', OwnerRole, OwnerRole:GetDisplayName(), HitRole:GetDisplayName())
+        return false
+    end
+    return filter
+end
+
+---@region ring.1
+
+---@public 查找最近的ikun_chr
+actor_util.get_nearby_ikun_chr = function(find_actor)
+    local Actors = UE.TArray(IkunChrClass)
+    UE.UGameplayStatics.GetAllActorsOfClass(find_actor, IkunChrClass, Actors)
+    local NearbyActor = nil
+    local NearbyDistance = nil
+    if Actors:Length() > 1 then
+        for i = 1, Actors:Length() do
+            local Actor = Actors:Get(i)
+            if UE.UKismetMathLibrary.NotEqual_ObjectObject(find_actor, Actor) then
+                local Distance = Actor:GetDistanceTo(find_actor)
+                if not NearbyDistance then
+                    NearbyDistance = Distance
+                    NearbyActor = Actor
+                end
+                if Distance < NearbyDistance then
+                    NearbyActor = Actor
+                end
+            end
+        end
+    end
+    return NearbyActor, NearbyDistance
 end
 
 ---@public 查找范围内所有Actor
@@ -170,49 +226,6 @@ actor_util.find_actors_in_range = function(Actor, Loc, Range, FnFilter)
         end
     end
     return OutHits
-end
-
----@public
----@param World UWorld | AActor
----@param Transform FTransform
-actor_util.spawn_always = function(World, Class, Transform)
-    if not World then
-        return
-    end
-    local WorldCtx = World
-    if WorldCtx.GetWorld then
-        WorldCtx = WorldCtx:GetWorld()
-    end
-    local Actor = WorldCtx:GetWorld():SpawnActor(Class, Transform, UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn)
-    if not Actor then
-        log.error('Failed to spawn in actor_util.spawn_always', debug.traceback())
-    end
-    return Actor
-end
-
----@public
----@param OwnerChr BP_ChrBase
-actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
-    local OwnerRole = OwnerChr:GetRole()
-    local function filter(HitActor)
-        if not HitActor.GetRole then
-            return true
-        end
-        local HitRole = HitActor:GetRole()
-        if not HitRole then
-            return false
-        end
-        if OwnerRole.RoleInstId == HitRole.RoleInstId then
-            return false
-        end
-        if OwnerRole:IsFirend(HitRole) then
-            log.dev('line trace =================== firend', OwnerRole, OwnerRole:GetDisplayName(), HitRole:GetDisplayName())
-            return true
-        end
-        log.dev('line trace =================== enemy', OwnerRole, OwnerRole:GetDisplayName(), HitRole:GetDisplayName())
-        return false
-    end
-    return filter
 end
 
 return actor_util
