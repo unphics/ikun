@@ -87,8 +87,8 @@ function LTask_FindLoc4Ability:FindReposLoc_TwoSideRound()
     local Rot2 = UE.FRotator(0, -90, 0)
     local Dir1 = Rot1:RotateVector(Dir)
     local Dir2 = Rot2:RotateVector(Dir)
-    local Center1 = OwnerLoc + (Dir + Dir1)
-    local Center2 = OwnerLoc + (Dir + Dir2)
+    local Center1 = OwnerLoc + Dir1 -- OwnerLoc + Dir + Dir1
+    local Center2 = OwnerLoc + Dir2 -- OwnerLoc + Dir + Dir2
     local Point = (math.random() > 0.5) and Center1 or Center2
     draw_util.draw_sphere(Point, Radius)
     local bSuccess, ProjectPoint = NavMoveData.ProjectPointToNavMesh(self.Chr, Point, UE.FVector(300, 300, 300))

@@ -93,14 +93,18 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         TraceOrientation, TraceChannel, bComplex, ActorsToIgnore, DrawDebugType, HitResults,
         true, TraceColor, HitColor, DrawTime)
     local Results = {}
+    local owner = log.role(pos1)
+    if owner.RoleInstId == debug_util.debugrole then
+        local a = 1
+    end
     for i = 1, HitResults:Length() do
         local Actor = HitResults:Get(i).HitObjectHandle.Actor
         if not Actor or not obj_util.is_valid(Actor) then
             goto continue
         end
         local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
-        if role then
-            log.dev('actor_util.has_obstacles ::::: ', role.RoleInstId, role.DisplayName)
+        if not Actor.GetMovementComponent then
+            goto continue
         end
         local ActLoc = Actor:K2_GetActorLocation()
         local Movement = Actor:GetMovementComponent()
@@ -108,6 +112,9 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         local dist2d = math_util.point_to_line_dist_2d(ActLoc.X, ActLoc.Y, StartLoc.X, StartLoc.Y, EndLoc.X, EndLoc.Y)
         if dist2d > (ActorRadius + width) then
             goto continue
+        end
+        if role then
+            log.dev(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor '..role.RoleInstId ..','..role.DisplayName)
         end
         if allow_fn then
             if allow_fn(Actor) then
@@ -118,7 +125,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         end
         ::continue::
     end
-    log.dev('actor_util..........', #Results)
+    log.dev(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor Count = '..#Results)
     if #Results > 0 then
         return true
     else
@@ -142,10 +149,10 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
             return false
         end
         if OwnerRole:IsFirend(HitRole) then
-            log.dev('line trace =================== firend', OwnerRole, OwnerRole:GetDisplayName(), HitRole:GetDisplayName())
+            log.dev(log.key.repos..log.roleid(OwnerRole)..'filter firend = [firend] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
             return true
         end
-        log.dev('line trace =================== enemy', OwnerRole, OwnerRole:GetDisplayName(), HitRole:GetDisplayName())
+        log.dev(log.key.repos..log.roleid(OwnerRole)..'filter firend = [enemy] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
         return false
     end
     return filter

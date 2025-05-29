@@ -14,7 +14,7 @@ end
 
 math_util.point_to_line_dist_2d = function(px, py, x1, y1, x2, y2)
     local dx = x2 - x1
-    local dy = x2 - x1
+    local dy = y2 - y1
     local numerator = math.abs(dx * (y1 - py) - (x1 - px) * dy)
     local denominator = math.sqrt(dx * dx + dy * dy)
     return numerator / denominator

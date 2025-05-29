@@ -18,6 +18,7 @@ local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 ---@field StaticMaxStuckTime number 最大阻挡时间
 ---@field StaticMaxDirGap number 最大方向差
 ---@field StaticQueryNavExtent FVector 不知道
+---@field ConstPathRefreshInterval number 路径刷新间隔
 ---@field CachedFinalTargetLoc FVector
 ---@field AccectableRadius number
 ---@field NavMoveData NavMoveData
@@ -27,6 +28,7 @@ local LTask_AiMoveBase = class.class 'LTask_AiMoveBase' : extends 'LTask' {
     GetTargetLoc = function()end,
     GetNavTarget = function()end,
     OnMoveStucked = function()end,
+    ConstPathRefreshInterval = nil,
     StaticQueryNavExtent = nil,
     StaticAcceptRadius = nil,
     StaticMaxStuckTime = nil,
@@ -43,6 +45,9 @@ function LTask_AiMoveBase:ctor(TaskName, AcceptRadius, MaxDirGap, MaxStuckTime, 
     self.StaticMaxDirGap = MaxDirGap
     self.StaticMaxStuckTime = MaxStuckTime
     self.StaticQueryNavExtent = QueryNavExtent
+
+    self.ConstPathRefreshInterval = 0.5
+    self.CurPathRefreshTimeCount = 0
 end
 function LTask_AiMoveBase:OnInit()
     class.LTask.OnInit(self)
@@ -92,6 +97,7 @@ function LTask_AiMoveBase:OnInit()
     end
 end
 function LTask_AiMoveBase:OnUpdate(DeltaTime)
+    self.CurPathRefreshTimeCount = self.CurPathRefreshTimeCount + DeltaTime
     ---@step 判断跑完了最后一个寻路段
     if self.NavMoveData:IsFinish() then
         self:DoTerminate(true)
@@ -101,6 +107,10 @@ function LTask_AiMoveBase:OnUpdate(DeltaTime)
     ---@todo About First Point
 
     ---@todo 判断目标在移动(GenPathData是高消耗操作所以要定时)
+    -- if self.CurPathRefreshTimeCount > self.ConstPathRefreshInterval then
+    --     self.NavMoveData:GenPathData(self.Chr, SelfChrAgentLoc, self.CachedFinalTargetLoc)
+    --     self.CurPathRefreshTimeCount = self.CurPathRefreshTimeCount - self.ConstPathRefreshInterval
+    -- end
 
     ---@step 实时检查是否被阻挡
     if self.MoveStuckMonitor:TickCheck(DeltaTime, SelfChrAgentLoc) then

@@ -19,14 +19,14 @@ function LDecorator_NeedRepos4Ability:Judge()
     if not FightTargetActor then
         return false
     end
-    draw_util.draw_dir_sphere(self.Chr, FightTargetActor, draw_util.white)
+    -- draw_util.draw_dir_sphere(self.Chr, FightTargetActor, draw_util.white)
     local hasObs = actor_util.has_obstacles_box(self.Chr, FightTargetActor, nil,
         actor_util.filter_is_firend_4_obstacles(self.Chr))
     if not hasObs then
-        log.dev('++++++++++++++++++++装饰器执行结果: 没阻挡')
+        log.dev(log.key.repos..log.roleid(self.Chr)..'LDecorator_NeedRepos4Ability : 没阻挡！')
         return false
     end
-    log.dev('++++++++++++++++++++装饰器执行结果: 阻挡！！！')
+    log.dev(log.key.repos..log.roleid(self.Chr)..'LDecorator_NeedRepos4Ability : 阻挡！！！')
     return true
 end
 ---@private
