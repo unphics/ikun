@@ -20,6 +20,13 @@ debug_util.qqq = function(a, b)
     log.error("zys: qqq", a, b)
 end
 
+debug_util.printrole = function(id)
+    local role = MdMgr.RoleMgr:FindRole(id)
+    if role then
+        log.error(role:PrintRole())
+    end
+end
+
 ---@public
 ---@param Chr BP_ChrBase | RoleClass | number
 ---@return boolean

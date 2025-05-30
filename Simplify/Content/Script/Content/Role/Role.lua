@@ -183,4 +183,11 @@ function RoleClass:HasTeamMoveTarget()
     return self.Team.TeamMove.mapMemberMoveTarget and self.Team.TeamMove.mapMemberMoveTarget[self.RoleInstId] or nil
 end
 
+function RoleClass:PrintRole()
+    local str = ''
+    local hp = obj_util.is_valid(self.Avatar) and self.Avatar.AttrSet:GetAttrValueByName("Health")
+    str = str..'{ Id:'..self.RoleInstId..', Dead:'..tostring(self.Dead)..', hp:'..tostring(hp)..' }'
+    return str
+end
+
 require('Content/Role/Impl/RoleDef')
