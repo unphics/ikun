@@ -23,7 +23,7 @@ local LTask_AimTarget = class.class 'LTask_AimTarget' : extends 'LTask' {
 function LTask_AimTarget:ctor(DisplayName, RotSpeed, FillInThreshold)
     class.LTask.ctor(self, DisplayName)
     self.ConstRotSpeed = RotSpeed or 300
-    self.ConstFillInThreshold = FillInThreshold or 3
+    self.ConstFillInThreshold = FillInThreshold or 1
 end
 function LTask_AimTarget:OnInit()
     class.LTask.OnInit(self)

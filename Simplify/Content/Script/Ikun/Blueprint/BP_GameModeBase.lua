@@ -12,7 +12,8 @@ local BP_GameModeBase = UnLua.Class()
 
 function BP_GameModeBase:UserConstructionScript()
     log.log(log.key.ueinit..'BP_GameModeBase:UserConstructionScript()')
-    _G.MdMgr = class.new"MdMgr"()
+    local MdMgr = class.new"MdMgr"() ---@type MdMgr
+    _G.MdMgr = MdMgr
     _G.MdMgr:Init()
 end
 
