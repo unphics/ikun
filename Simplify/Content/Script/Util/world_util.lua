@@ -9,6 +9,6 @@
 ---@field GameWorld UWorld WorldContextObject
 local world_util = {}
 
-world_util.GameWorld = nil
+world_util.World = nil
 
 return world_util

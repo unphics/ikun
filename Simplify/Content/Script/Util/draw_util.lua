@@ -15,7 +15,7 @@ draw_util.draw_sphere = function(pos, radius)
         world = pos
         loc = pos:K2_GetActorLocation()
     else
-        world = world_util.GameWorld
+        world = world_util.World
         loc = pos
     end
     UE.UKismetSystemLibrary.DrawDebugSphere(world, loc, radius, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
@@ -26,8 +26,8 @@ draw_util.draw_dir_sphere = function(pos1, pos2, color)
     local loc2 = pos2.IsA and pos2:K2_GetActorLocation() or pos2
     local Color = color or UE.FLinearColor(1, 0, 0)
     local Duration = 2
-    UE.UKismetSystemLibrary.DrawDebugSphere(world_util.GameWorld, loc2, 40, 12, Color, Duration, 5)
-    UE.UKismetSystemLibrary.DrawDebugLine(world_util.GameWorld, loc1, loc2, Color, Duration, 5)
+    UE.UKismetSystemLibrary.DrawDebugSphere(world_util.World, loc2, 40, 12, Color, Duration, 5)
+    UE.UKismetSystemLibrary.DrawDebugLine(world_util.World, loc1, loc2, Color, Duration, 5)
 end
 
 return draw_util

@@ -60,7 +60,8 @@ function log.role(Chr)
 end
 
 log.key = {
-    repos = '[射手站位调整]'
+    repos = '[射手站位调整]',
+    ueinit = '[UE初始化]',
 }
 
 return log

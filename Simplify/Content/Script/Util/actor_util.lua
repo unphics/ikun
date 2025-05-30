@@ -30,7 +30,7 @@ end
 ---@param pos2 FVector | AActor
 ---@return boolean
 actor_util.has_obstacles = function(pos1, pos2,  allow_fn, fn)
-    local world = world_util.GameWorld
+    local world = world_util.World
     local StartLoc = pos1.IsA and pos1:K2_GetActorLocation() or pos1
     local EndLoc = pos2.IsA and pos2:K2_GetActorLocation() or pos2
     local ETraceTypeQuery = UE.ETraceTypeQuery.Visibility
@@ -89,7 +89,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
     local TraceColor = UE.FLinearColor(1, 0, 0)
     local HitColor = UE.FLinearColor(0, 1, 0)
     local DrawTime = 2
-    UE.UKismetSystemLibrary.BoxTraceMulti(world_util.GameWorld, StartLoc, EndLoc, HalfSzie,
+    UE.UKismetSystemLibrary.BoxTraceMulti(world_util.World, StartLoc, EndLoc, HalfSzie,
         TraceOrientation, TraceChannel, bComplex, ActorsToIgnore, DrawDebugType, HitResults,
         true, TraceColor, HitColor, DrawTime)
     local Results = {}

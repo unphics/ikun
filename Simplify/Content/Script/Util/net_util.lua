@@ -11,14 +11,14 @@ local net_util = {}
 ---@public
 ---@return boolean
 net_util.is_server = function(World)
-    World = World or world_util.GameWorld
+    World = World or world_util.World
     return UE.UKismetSystemLibrary.IsServer(World)
 end
 
 ---@public
 ---@return boolean
 net_util.is_client = function(World)
-    World = World or world_util.GameWorld
+    World = World or world_util.World
     return not UE.UKismetSystemLibrary.IsServer(World)
 end
 
