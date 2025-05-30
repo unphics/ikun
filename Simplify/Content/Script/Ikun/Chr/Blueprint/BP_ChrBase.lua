@@ -49,7 +49,10 @@ end
 ---@public [Server]
 ---@return RoleClass
 function BP_ChrBase:GetRole()
-    return self.RoleComp.Role
+    if obj_util.is_valid(self) then
+        return self.RoleComp.Role
+    end
+    return nil
 end
 
 ---@public [Server]

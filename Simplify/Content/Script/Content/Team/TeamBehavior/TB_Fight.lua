@@ -180,6 +180,13 @@ function TB_Fight:AsgnFightTarget(Army)
     end
 end
 
+function TB_Fight:ReadDirectiveMoveCoord(RoleInstId)
+    local MoveLoc = self.DirectiveMoveCoord[RoleInstId]
+    if MoveLoc then
+        self.DirectiveMoveCoord[RoleInstId] = nil
+        return MoveLoc
+    end
+end
 function TB_Fight:ReadDynaSuppressTarget(RoleInstId)
     local Role = self.DynaSuppressTarget[RoleInstId]
     if Role:IsDead() then

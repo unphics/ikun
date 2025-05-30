@@ -73,7 +73,7 @@ end
 actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
     local StartLoc = pos1.IsA and pos1:K2_GetActorLocation() or pos1
     local EndLoc = pos2.IsA and pos2:K2_GetActorLocation() or pos2
-    width = width or 30
+    width = width or 60
     local TraceOrientation = UE.FRotator()
     local TraceChannel = UE.ETraceTypeQuery.Visibility
     local bComplex = false
@@ -103,18 +103,18 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
             goto continue
         end
         local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
+        if role then
+            log.log(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor '..role.RoleInstId ..','..role.DisplayName)
+        end
         if not Actor.GetMovementComponent then
             goto continue
         end
         local ActLoc = Actor:K2_GetActorLocation()
         local Movement = Actor:GetMovementComponent()
-        local ActorRadius = Movement.NavAgentProps.AgentRadius
+        local ActorRadius = Movement.NavAgentProps.AgentRadius + 30
         local dist2d = math_util.point_to_line_dist_2d(ActLoc.X, ActLoc.Y, StartLoc.X, StartLoc.Y, EndLoc.X, EndLoc.Y)
         if dist2d > (ActorRadius + width) then
             goto continue
-        end
-        if role then
-            log.log(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor '..role.RoleInstId ..','..role.DisplayName)
         end
         if allow_fn then
             if allow_fn(Actor) then

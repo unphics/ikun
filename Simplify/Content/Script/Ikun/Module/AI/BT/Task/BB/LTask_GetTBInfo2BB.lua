@@ -28,7 +28,7 @@ function LTask_GetTBInfo2BB:OnInit()
         return log.error('LTask_GetTBInfo2BB:OnInit() 该Role没有Team')
     end
     local read_fn = Role.Team.CurTB['Read' .. self.ConstTableName]
-    if read_fn then
+    if read_fn then ---@note 如果该表有Read方法, 则优先使用Read方法读取数据
         local Role = read_fn(Role.Team.CurTB, Role.RoleInstId)
         self.Blackboard:SetBBValue(self.ConstBBKey, Role)
     else
