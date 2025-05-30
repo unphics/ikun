@@ -63,10 +63,13 @@ function LTask_AimTarget:OnUpdate(DeltaTime)
     if not obj_util.is_valid(self.Chr) then
         log.error('LTask_AimTarget:OnUpdate Failed to index Chr !', obj_util.get_obj_name(self.Chr))
     end
-    self.Chr:K2_AddActorLocalRotation(UE.FRotator(0, Yaw, 0), true, nil, true)
     local CurRot = self.Chr:K2_GetActorRotation()
     local DeltaRot = UE.UKismetMathLibrary.NormalizedDeltaRotator(self.TargetRot, CurRot)
-    if math.abs(DeltaRot.Yaw) < 5 then
+    Yaw = (math.abs(DeltaRot.Yaw) > math.abs(Yaw)) and Yaw or DeltaRot.Yaw
+    self.Chr:K2_AddActorLocalRotation(UE.FRotator(0, Yaw, 0), true, nil, true)
+    CurRot = self.Chr:K2_GetActorRotation()
+    DeltaRot = UE.UKismetMathLibrary.NormalizedDeltaRotator(self.TargetRot, CurRot)
+    if math.abs(DeltaRot.Yaw) < self.ConstFillInThreshold then
         self:DoTerminate(true)
     end
 end
