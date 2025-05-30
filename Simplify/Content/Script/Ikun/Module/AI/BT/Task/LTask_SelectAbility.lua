@@ -35,11 +35,12 @@ function LTask_SelectAbility:OnUpdate(DeltaTime)
     end
 end
 function LTask_SelectAbility:SelectAbilityRandom()
-    local CurEnemyTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
-    CurEnemyTarget = CurEnemyTarget.Avatar ---@type BP_ChrBase
-    if not CurEnemyTarget or CurEnemyTarget:GetRole():IsDead() then
-        log.error('LTask_SelectAbility:SelectAbilityRandom() Failed to index valid enemy target !')
-        return 
+    local CurEnemyRole = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
+    local CurEnemyTarget = CurEnemyRole.Avatar ---@type BP_ChrBase
+    if not CurEnemyTarget or not obj_util.is_valid(CurEnemyTarget) or CurEnemyTarget:GetRole():IsDead() then
+        CurEnemyRole = self.Chr:GetRole().Team.CurTB:ReadDynaSuppressTarget(CurEnemyRole.RoleInstId)
+        CurEnemyTarget = CurEnemyRole.Avatar
+        -- return log.error('LTask_SelectAbility:SelectAbilityRandom() Failed to index valid enemy target !')
     end
     local AllActiveAbility, AllHandle = gas_util.get_all_active_abilities(self.Chr)
     local Dist = UE.UKismetMathLibrary.Vector_Distance(CurEnemyTarget:K2_GetActorLocation(), self.Chr:K2_GetActorLocation())

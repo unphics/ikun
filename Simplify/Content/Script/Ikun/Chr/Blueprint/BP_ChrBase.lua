@@ -47,12 +47,12 @@ end
 -- end
 
 ---@public [Server]
----@return RoleClass
+---@return RoleClass | nil
 function BP_ChrBase:GetRole()
-    if obj_util.is_valid(self) then
-        return self.RoleComp.Role
+    if not obj_util.is_valid(self) then
+        return log.error('BP_ChrBase:GetRole() Has Released')
     end
-    return nil
+    return self.RoleComp.Role
 end
 
 ---@public [Server]
