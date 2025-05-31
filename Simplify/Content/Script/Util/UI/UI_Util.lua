@@ -1,3 +1,10 @@
+
+---
+---@brief UI开发中的业务层的常用工具方法
+---@author zys
+---@data Sun May 04 2025 14:22:37 GMT+0800 (中国标准时间)
+---
+
 ---@class ui_util
 ---@field uidef UIDef
 local ui_util = {}
@@ -24,13 +31,13 @@ end
 ---@public
 ---@param UserWidget UUserWidget
 ui_util.release_mouse = function(UserWidget)
-    local PC = UE.UGameplayStatics.GetPlayerController(world_util.GameWorld, 0)
+    local PC = UE.UGameplayStatics.GetPlayerController(world_util.World, 0)
     UE.UWidgetBlueprintLibrary.SetInputMode_UIOnlyEx(PC, UserWidget, UE.EMouseLockMode.LockOnCapture, true)
 end
 
 ---@public
 ui_util.unrelease_mouse = function()
-    local PC = UE.UGameplayStatics.GetPlayerController(world_util.GameWorld, 0)
+    local PC = UE.UGameplayStatics.GetPlayerController(world_util.World, 0)
     UE.UWidgetBlueprintLibrary.SetInputMode_GameOnly(PC, true)
 end
 

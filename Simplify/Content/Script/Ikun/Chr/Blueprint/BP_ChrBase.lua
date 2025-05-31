@@ -30,7 +30,6 @@ function BP_ChrBase:ReceiveTick(DeltaSeconds)
     self.Overridden.ReceiveTick(self, DeltaSeconds)
     if not self.Dead and net_util.is_server(self) then
         local HP = self.AttrSet:GetAttrValueByName("Health")
-        -- log.dev('hp', HP, obj_util.dispname(self))
         if math_util.is_zero(HP) then
             self:ChrBeginDeath()
         end
@@ -47,8 +46,11 @@ end
 -- end
 
 ---@public [Server]
----@return RoleClass
+---@return RoleClass | nil
 function BP_ChrBase:GetRole()
+    if not obj_util.is_valid(self) then
+        return log.error('BP_ChrBase:GetRole() Has Released')
+    end
     return self.RoleComp.Role
 end
 

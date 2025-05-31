@@ -1,4 +1,6 @@
 
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
+
 ---@class LTask_RandNavTarget: LTask
 ---@field StaticNearestDist number
 ---@field StaticFarestDist number
@@ -48,7 +50,7 @@ function LTask_RandNavTarget:OnInit()
     end
 end
 function LTask_RandNavTarget:OnUpdate(DeltaTime)
-    self.Blackboard:SetBBValue('MoveTarget', self.ResultLoc)
+    self.Blackboard:SetBBValue(BBKeyDef.MoveTarget, self.ResultLoc)
     if self.ResultLoc then
         self:DrawTargetLoc()
     end

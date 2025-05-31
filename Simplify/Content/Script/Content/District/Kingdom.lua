@@ -77,6 +77,7 @@ function Kingdom:AddKingdomMember(Role)
     if not Role.RoleInstId then
         table.insert(self.tbRoleBornRecord, Role.DisplayName)
         Role.RoleInstId = self.KingdomInstId * 1000 + #self.tbRoleBornRecord
+        MdMgr.RoleMgr:NewRole(Role.RoleInstId, Role)
         log.log('zys AddKingdomMember', Role.DisplayName, self.Name, Role.RoleInstId)
     end
 end

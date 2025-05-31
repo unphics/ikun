@@ -1,3 +1,4 @@
+
 ---
 ---@brief Ikun中用到的所有行为树的定义
 ---@author zys
@@ -5,41 +6,83 @@
 ---@desc 包含很多通用行为树和角色专用行为树
 ---
 
+local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
+
 local M = {}
 
 ---@brief 团队组队行为树1
----@version 0.1.0 组队
 ---@return LBT
 M['Team_MakeTeam_1'] = function(Avatar)
     local LBT = class.new 'LBT' (nil, Avatar, 'Team_MakeTeam_1') ---@type LBT
     LBT:CreateRoot()
         :AddSequence()
-            :AddTask('LTask_SwitchBT')
-            :AddTask("LTask_Wait", 3)
+            :AddTask("LTask_Wait", 2)
             :AddTask('LTask_MakeTeam')
-            :AddTask('LTask_SwitchBT', 'Team_Peace_1')
+            :AddTask('LTask_Wait', 1)
+            :AddTask('LTask_TeamWaitSwitchBT')
     return LBT
 end
 
----@brief 团队一起巡逻行为树1
----@version 0.1.0 一起随机找点巡逻
+---@brief 团队协同巡逻行为树1
 M['Team_Patrol_Together_1'] = function(Avatar)
     local LBT = class.new 'LBT'(nil, Avatar, 'Team_Patrol_Together_1') ---@type LBT
     LBT:CreateRoot()
         :AddSelector()
-            :AddDecorator('LDecorator_TeamCondition', 'IsInfight')
-            :AddTask('LTask_SwitchBT', '') ---@todo 瞬间让团队所有人跳去战斗
-            :AddService('LService_Alert', 0.3, 1500)
+            :AddService('LService_TeamAlert', 0.3, 1500)
+            :AddService('LService_NeedSwitchBT', 0.3, 1500)
+            :AddSequence()
+                :AddTask('LTask_Wait', 1)
+                :AddTask('LTask_TeamGetMoveTarget')
+                :AddTask('LTask_RotateSmooth')
+                :AddTask('LTask_Wait', 0.2)
+                :AddTask('LTask_TeamMove', 200, 160, 3, UE.FVector(200, 200, 200))
+                :AddTask('LTask_TeamWaitFence')
+    return LBT
+end
+
+---@brief 团队战斗行为树1
+M['Team_Fight_1'] = function(Avatar)
+    local LBT = class.new 'LBT'(nil, Avatar, 'Team_Fight_1') ---@type LBT
+    LBT:CreateRoot()
+        :AddSelector()
+            -- 团队控制强制指挥(紧急掩护, 紧急位移等)
+            -- 战斗单位自主行为
             :AddSequence()
                 :AddTask('LTask_Wait', 1, 0.5)
-                :AddTask('LTask')
-                --[[
-                    选一个地方
-                    转身
-                    wait0.1
-                    所有人一起去
-                    等待所有人都到了
-                ]]
+                :AddTask('LTask_ClearBBValue', BBKeyDef.MoveTarget, BBKeyDef.FightTarget)
+                :AddTask('LTask_GetTBInfo2BB', 'DirectiveMoveCoord', BBKeyDef.MoveTarget)
+                :AddDecorator('LDecorator_BBCondition', BBKeyDef.MoveTarget)
+                :AddSequence()
+                    :AddTask('LTask_RotateSmooth')
+                    :AddTask('LTask_Wait', 0.2)
+                    :AddTask('LTask_AiMoveBase', 200, 160, 3, UE.FVector(200, 200, 200))
+                :Up()
+                :AddTask('LTask_GetTBInfo2BB', 'DynaSuppressTarget', BBKeyDef.FightTarget)
+                :AddDecorator('LDecorator_BBCondition', BBKeyDef.FightTarget)
+                :AddSequence()
+                    :AddTask('LTask_Wait', 0.5, 0.5)
+                    :AddTask('LTask_SelectAbility')
+                    -- :AddDecorator('LDecorator_NeedRepos4Ability')
+                    -- :AddSequence()
+                    --     :AddTask('LTask_FindLoc4Ability')
+                    --     :AddTask('LTask_RotateSmooth')
+                    --     :AddTask('LTask_Wait', 0.2)
+                    --     :AddTask('LTask_Move4Repos', 20, 160, 3, UE.FVector(200, 200, 200))
+                    -- :Up()
+                    -- :AddService('LService_ReposJudge', 0.3)
+                    :AddDecorator('LDecorator_NeedRepos4Ability')
+                    :AddSequence()
+                        :AddTask('LTask_ClearBBValue', BBKeyDef.MoveTarget)
+                        :AddTask('LTask_FindLoc4Ability')
+                        :AddTask('LTask_RotateSmooth')
+                        :AddTask('LTask_Wait', 0.2)
+                        :AddTask('LTask_Move4Repos', 20, 160, 3, UE.FVector(200, 200, 200))
+                        -- :AddTask('LTask_AiMoveBase', 200, 160, 3, UE.FVector(200, 200, 200))
+                    :Up()
+                    :AddTask('LTask_AimTarget')
+                    :AddTask('LTask_ActiveAbility')
+                    -- :AddTask('LTask_Wait', 1)
+                    
     return LBT
 end
 
@@ -113,3 +156,24 @@ M['Stand'] = function(Avatar)
 end
 
 return M
+
+--[[
+
+local function NewBT(Name, CreateFn)
+    M[Name] = function(Avatar)
+        local LBT = class.new 'LBT' (nil, Avatar, Name) ---@type LBT
+        CreateFn(LBT)
+        return LBT
+    end
+end
+-- 团队组队行为树1
+NewBT('Team_MakeTeam_1', function(BT)
+    BT:CreateRoot()
+        :AddSequence()
+            :AddTask('LTask_SwitchBT')
+            :AddTask("LTask_Wait", 3)
+            :AddTask('LTask_MakeTeam')
+            :AddTask('LTask_SwitchBT', 'Team_Patrol_Together_1')
+end)
+
+]]

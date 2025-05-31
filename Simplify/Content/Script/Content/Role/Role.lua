@@ -8,7 +8,6 @@
 
 local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTDef = require('Ikun/Module/AI/BT/BTDef')
-local FightCareerClass = require('Content/Role/FightCareer')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
 
@@ -19,7 +18,6 @@ local FightTargetClass = require('Content/Role/FightTarget')
 ---@field Avatar BP_ChrBase * 角色在游戏场景中的AvatarActor
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
----@field FightCareer FightCareerClass * 战斗职业
 ---@field BelongKingdomLua Kingdom * 所属国家
 ---@field FightTarget FightTargetClass * 战斗目标
 ---@field Dead boolean 已经死亡
@@ -39,7 +37,6 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     GetBelongKingdom = function()end,
     RoleInstId = nil,
     Team = nil,
-    FightCareer = nil,
     FightTarget = nil,
 --[[private]]
     StartBT = function()end,
@@ -54,16 +51,21 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
 function RoleClass:ctor()
     self.Dead = false
     self.bNpc = false
-    self.FightCareer = class.new'FightCareerClass'(self)
     self.FightTarget = class.new'FightTargetClass'(self)
 end
 function RoleClass:Tick(DeltaTime)
-    if self.Team and self.Team.TeamLeader == self then
+    if self.Team and self.Team.TeamMember:GetLeader() == self then
         self.Team:Tick(DeltaTime)
     end
     if self.BT then
         self.BT:Tick(DeltaTime)
-        self.Avatar.RoleComp:LogBT2UI(self.BT:PrintBT())
+        if self.RoleInstId == debug_util.debugrole then
+            if debug_util.debug_bt == 1 then
+                self.Avatar.RoleComp:LogBT2UI(self.BT:PrintBT())
+            else
+                self.Avatar.RoleComp:LogBT2UI('')
+            end
+        end
     end
 end
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
@@ -73,13 +75,15 @@ function RoleClass:InitByAvatar(Avatar, Id, bNpc)
     self.RoleConfigId = Id
     self.DisplayName = Config.DisplayName
     self.bNpc = bNpc
-    self.FightCareer:Init(Config.FightCareerAssign)
 
     local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
     self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(Config.BelongKingdomCfgId) ---@type Kingdom
     self.BelongKingdomLua:AddKingdomMember(self)
 
     self:StartBT()
+end
+function RoleClass:IsDead()
+    return self.Dead
 end
 function RoleClass:GetDisplayName()
     return self.DisplayName
@@ -92,6 +96,9 @@ function RoleClass:StartBT()
 end
 function RoleClass:SwitchNewBT(NewBTKey)
     log.log('RoleDisplayName = '..tostring(self.DisplayName)..', switch new bt: '..tostring(NewBTKey))
+    if self.Avatar.RoleComp.bCustomStartBT then
+        return
+    end
     local BTClass = BTDef[NewBTKey]
     if not BTClass then
         log.error('Failed to index BTClass, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self.DisplayName))
@@ -162,6 +169,25 @@ end
 ---@return Kingdom
 function RoleClass:GetBelongKingdom()
     return self.BelongKingdomLua
+end
+
+function RoleClass:No()
+    return false
+end
+function RoleClass:Yes()
+    return true
+end
+
+---@public [LBTCondition]
+function RoleClass:HasTeamMoveTarget()
+    return self.Team.TeamMove.mapMemberMoveTarget and self.Team.TeamMove.mapMemberMoveTarget[self.RoleInstId] or nil
+end
+
+function RoleClass:PrintRole()
+    local str = ''
+    local hp = obj_util.is_valid(self.Avatar) and self.Avatar.AttrSet:GetAttrValueByName("Health")
+    str = str..'{ Id:'..self.RoleInstId..', Dead:'..tostring(self.Dead)..', hp:'..tostring(hp)..' }'
+    return str
 end
 
 require('Content/Role/Impl/RoleDef')

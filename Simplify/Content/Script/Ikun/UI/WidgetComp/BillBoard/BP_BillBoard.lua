@@ -21,6 +21,7 @@ end
 
 function M:ReceiveTick(DeltaSeconds)
     self:Face2Player()
+    self:OnTick()
 end
 
 ---@public [Client] [Server] 直接设置Billboard文本
@@ -28,9 +29,12 @@ function M:Multicast_SetText_RPC(Text)
     self:GetWidget().TxtDebug:SetText(Text)
 end
 
----@private Billboard永远面向玩家
+---@private [Tick] Billboard永远面向玩家
 function M:Face2Player()
     local PlayerPawn = UE.UGameplayStatics.GetPlayerPawn(self:GetOwner(), 0) ---@type APawn
+    if not PlayerPawn then
+        return
+    end
     local Rot = UE.UKismetMathLibrary.FindLookAtRotation(self:GetOwner():K2_GetActorLocation(), PlayerPawn:K2_GetActorLocation())
     Rot.Roll = 0
     Rot.Pitch = 0
@@ -38,14 +42,24 @@ function M:Face2Player()
     self:K2_SetRelativeRotation(Rot, false, UE.FHitResult(), false)
 end
 
----@private 
+---@private [Init]
 function M:OnRoleNameUpdate(RoleName)
     -- self:Multicast_SetText(RoleName .. '\n' .. self:GetOwner():GetRole().RoleInstId)
 
     -- debug
-    self.BillboardContent.RoleName = RoleName
+    -- self.BillboardContent.RoleName = RoleName
     self.BillboardContent.RoleInstId = self:GetOwner():GetRole().RoleInstId
     self:RefreshBillboardShowText()
+end
+---@private [Tick]
+function M:OnTick()
+    if not net_util.is_server() then
+        return
+    end
+    -- local Role = self:GetOwner():GetRole() ---@type RoleClass
+    -- if Role and Role.RoleInstId == debug_util.debugrole then
+    --     self.BillboardContent.debug_bt = 'DebugBT_DebugBT'
+    -- end
 end
 
 ---@private [Debug]
@@ -57,9 +71,9 @@ function M:RefreshBillboardShowText()
     self:Multicast_SetText(str)
 end
 ---@public [Debug]
-function M:UpdateFightCareer()
+function M:UpdateFightPos()
     local Role = self:GetOwner():GetRole() ---@type RoleClass
-    -- self.BillboardContent.FightCareer = Role.FightCareer
+    -- self.BillboardContent.FightPos = Role.FightPos
 end
 
 return M

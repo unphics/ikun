@@ -8,8 +8,9 @@
 ---      4.这个现在只能处理静态点
 ---
 
-local NavPathData = require('Ikun/Module/Nav/NavPathData')
+local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
 local MoveStuckMonitor = require('Ikun/Module/Nav/MoveStuckMonitor')
+local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_AiMoveBase: LTask
 ---@field NavTarget AActor | FVector
@@ -17,22 +18,24 @@ local MoveStuckMonitor = require('Ikun/Module/Nav/MoveStuckMonitor')
 ---@field StaticMaxStuckTime number 最大阻挡时间
 ---@field StaticMaxDirGap number 最大方向差
 ---@field StaticQueryNavExtent FVector 不知道
+---@field ConstPathRefreshInterval number 路径刷新间隔
 ---@field CachedFinalTargetLoc FVector
 ---@field AccectableRadius number
----@field NavPathData NavPathData
+---@field NavMoveData NavMoveData
 ---@field MoveStuckMonitor MoveStuckMonitor
 local LTask_AiMoveBase = class.class 'LTask_AiMoveBase' : extends 'LTask' {
     ctor = function()end,
     GetTargetLoc = function()end,
     GetNavTarget = function()end,
     OnMoveStucked = function()end,
+    ConstPathRefreshInterval = nil,
     StaticQueryNavExtent = nil,
     StaticAcceptRadius = nil,
     StaticMaxStuckTime = nil,
     StaticMaxDirGap = nil,
     CachedFinalTargetLoc = nil,
     AccectableRadius = nil,
-    NavPathData = nil,
+    NavMoveData = nil,
     MoveStuckMonitor = nil,
 }
 function LTask_AiMoveBase:ctor(TaskName, AcceptRadius, MaxDirGap, MaxStuckTime, QueryNavExtent)
@@ -42,13 +45,16 @@ function LTask_AiMoveBase:ctor(TaskName, AcceptRadius, MaxDirGap, MaxStuckTime, 
     self.StaticMaxDirGap = MaxDirGap
     self.StaticMaxStuckTime = MaxStuckTime
     self.StaticQueryNavExtent = QueryNavExtent
+
+    self.ConstPathRefreshInterval = 0.5
+    self.CurPathRefreshTimeCount = 0
 end
 function LTask_AiMoveBase:OnInit()
     class.LTask.OnInit(self)
 
     ---@step 初始化(重置)Task的数据
     self.CachedFinalTargetLoc = nil
-    self.NavPathData = class.new'NavPathData'() ---@type NavPathData
+    self.NavMoveData = class.new'NavMoveData'() ---@type NavMoveData
     
     ---@step 检查寻路目标有效
     local TargetLoc = self:GetTargetLoc()
@@ -69,16 +75,16 @@ function LTask_AiMoveBase:OnInit()
     end
 
     ---@step 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
-    if not self.NavPathData:GenPathData(self.Chr, SelfChrAgentLoc, TargetLoc) then
-        local bTargetReachable = class.NavPathData.ProjectPointToNavMesh(self.Chr, TargetLoc)
+    if not self.NavMoveData:GenPathData(self.Chr, SelfChrAgentLoc, TargetLoc) then
+        local bTargetReachable = class.NavMoveData.ProjectPointToNavMesh(self.Chr, TargetLoc)
         ---@todo 对于复杂行为的Npc,可以尝试从目标身上获取一个可达点
         if bTargetReachable then
-            local bSelfMovable, NearNavPoint = class.NavPathData.ProjectPointToNavMesh(self.Chr, SelfChrAgentLoc, self.StaticQueryNavExtent)
+            local bSelfMovable, NearNavPoint = class.NavMoveData.ProjectPointToNavMesh(self.Chr, SelfChrAgentLoc, self.StaticQueryNavExtent)
             if bSelfMovable then
-                self.NavPathData:GenPathData(self.Chr, NearNavPoint, TargetLoc, SelfChrAgentLoc) ---@todo 待验证此处First
+                self.NavMoveData:GenPathData(self.Chr, NearNavPoint, TargetLoc, SelfChrAgentLoc) ---@todo 待验证此处First
             end
         end
-        if not self.NavPathData:IsValid() then
+        if not self.NavMoveData:IsValid() then
             self:OnMoveStucked()
             return log.error('AiMoveBase: Failed to get valid seg !')
         end
@@ -91,8 +97,9 @@ function LTask_AiMoveBase:OnInit()
     end
 end
 function LTask_AiMoveBase:OnUpdate(DeltaTime)
+    self.CurPathRefreshTimeCount = self.CurPathRefreshTimeCount + DeltaTime
     ---@step 判断跑完了最后一个寻路段
-    if self.NavPathData:IsFinish() then
+    if self.NavMoveData:IsFinish() then
         self:DoTerminate(true)
         return log.log('AiMoveBase: Ai Move Reached !')
     end
@@ -100,6 +107,10 @@ function LTask_AiMoveBase:OnUpdate(DeltaTime)
     ---@todo About First Point
 
     ---@todo 判断目标在移动(GenPathData是高消耗操作所以要定时)
+    -- if self.CurPathRefreshTimeCount > self.ConstPathRefreshInterval then
+    --     self.NavMoveData:GenPathData(self.Chr, SelfChrAgentLoc, self.CachedFinalTargetLoc)
+    --     self.CurPathRefreshTimeCount = self.CurPathRefreshTimeCount - self.ConstPathRefreshInterval
+    -- end
 
     ---@step 实时检查是否被阻挡
     if self.MoveStuckMonitor:TickCheck(DeltaTime, SelfChrAgentLoc) then
@@ -108,20 +119,20 @@ function LTask_AiMoveBase:OnUpdate(DeltaTime)
     end
 
     ---@step 寻路移动
-    local Dir = self.NavPathData:CalcChr2CurSegEndDir2D(self.Chr) ---@type FVector
+    local Dir = self.NavMoveData:CalcChr2CurSegEndDir2D(self.Chr) ---@type FVector
     Dir:Normalize()
     self.Chr:AddMovementInput(Dir, 1, false)
 
     ---@step 抵达当前段目标则走下一段
     if self:HasReachedCurSegEnd(0.1) then
-        self.NavPathData:AdvanceSeg()
+        self.NavMoveData:AdvanceSeg()
     end
 end
 ---@private 已经抵达了当前段的目标
 ---@param RadiusCorr number 半径修正系数
 function LTask_AiMoveBase:HasReachedCurSegEnd(RadiusCorr)
     local SelfChrAgentLoc = self.Chr:GetNavAgentLocation()
-    local CurSegEndLoc = self.NavPathData:GetCurSegEnd()
+    local CurSegEndLoc = self.NavMoveData:GetCurSegEnd()
     local Radius = self.AccectableRadius * RadiusCorr
     local Distance = UE.UKismetMathLibrary.Vector_Distance(SelfChrAgentLoc, CurSegEndLoc)
     if Distance < Radius then
@@ -131,7 +142,7 @@ function LTask_AiMoveBase:HasReachedCurSegEnd(RadiusCorr)
 end
 ---@private [no sad effect] 检查当前段前进方向是否与面朝方向差距过大
 function LTask_AiMoveBase:CheckDirGap()
-    local ToCurSegEndDir = self.NavPathData:CalcChr2CurSegEndDir2D(self.Chr)
+    local ToCurSegEndDir = self.NavMoveData:CalcChr2CurSegEndDir2D(self.Chr)
     local ToCurSegEndRot = UE.UKismetMathLibrary.Conv_VectorToRotator(ToCurSegEndDir)
     local DeltaRot = UE.UKismetMathLibrary.NormalizedDeltaRotator(ToCurSegEndRot, self.Chr:K2_GetActorRotation())
     if math.abs(DeltaRot.Yaw) > self.StaticMaxDirGap then
@@ -159,7 +170,7 @@ function LTask_AiMoveBase:GetTargetLoc()
     end
     ---@step 寻路目标是动态的Actor还是静态的地点分开处理
     if self:GetNavTarget().IsA then
-        local bProjectTarget, FixedLoc = class.NavPathData.ProjectPointToNavMesh(self.Chr, self:GetNavTarget(), self.StaticQueryNavExtent)
+        local bProjectTarget, FixedLoc = class.NavMoveData.ProjectPointToNavMesh(self.Chr, self:GetNavTarget(), self.StaticQueryNavExtent)
         if bProjectTarget then
             return FixedLoc
         else
@@ -169,7 +180,7 @@ function LTask_AiMoveBase:GetTargetLoc()
         if self.CachedFinalTargetLoc then
             return self.CachedFinalTargetLoc
         else
-            local bProjectTarget, FixedLoc = class.NavPathData.ProjectPointToNavMesh(self.Chr, self:GetNavTarget(), self.StaticQueryNavExtent)
+            local bProjectTarget, FixedLoc = class.NavMoveData.ProjectPointToNavMesh(self.Chr, self:GetNavTarget(), self.StaticQueryNavExtent)
             if bProjectTarget then
                 self.CachedFinalTargetLoc = FixedLoc
                 return FixedLoc
@@ -182,7 +193,7 @@ end
 ---@private [no sad effect] 获取寻路目标, 黑板中的目标可能是一个地点Loc也可能是一个Actor
 ---@return AActor | FVector | nil
 function LTask_AiMoveBase:GetNavTarget()
-    local BB_MoveTarget = self.Blackboard:GetBBValue('MoveTarget')
+    local BB_MoveTarget = self.Blackboard:GetBBValue(BBKeyDef.MoveTarget)
     if not BB_MoveTarget then
         return log.error('LTask_AiMoveBase:GetNavTarget(): No MoveTarget')
     end

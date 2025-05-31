@@ -8,7 +8,7 @@
 ---
 
 require('Ikun/Module/AI/BT/NodeCore')
-require('Ikun/Module/AI/BT/CustomNodeDef')
+require('Ikun/Module/AI/BT/NodeDef')
 require('Ikun/Module/AI/BT/Blackboard')
 
 ---@class LBT Lua行为树
@@ -19,6 +19,7 @@ require('Ikun/Module/AI/BT/Blackboard')
 ---@field Root LNode 行为树的根节点
 ---@field CurModiCompStack LComposite[] 当前在修改的组合节点; 开发中使用
 ---@field CurNodeCanChild LNode 当前可有Child的节点; 开发中使用
+---@field CurRunningTaskName string 当前在跑的Task的Name
 local LBT = class.class 'LBT' {
 --[[public]]
     ctor = function(Ctlr, Chr)end,
@@ -42,6 +43,7 @@ local LBT = class.class 'LBT' {
     Blackboard = nil,
     CurModiCompStack = nil,
     CurNodeCanChild = nil,
+    CurRunningTaskName = nil,
 }
 ---@param Ctlr AAIController
 ---@param Chr ACharacter
@@ -53,10 +55,15 @@ function LBT:ctor(Ctlr, Chr, Desc)
     self.Blackboard = class.new 'BlackboardClass' ()
 end
 ---@private 对于新创建的节点, 初始化一些基本数据
-function LBT:InitNode(Node)
+function LBT:InitNode(Node, Name)
+    if not Node then
+        error('创建行为树Node失败 - ' .. Name)
+        return
+    end
     Node.Ctlr = self.Ctlr
     Node.Chr = self.Chr
     Node.Blackboard = self.Blackboard
+    Node.LBT = LBT
 end
 function LBT:CreateRoot()
     self.Root = class.new'LSelector'('Root')
@@ -105,7 +112,7 @@ function LBT:AddTask(TaskName, ...)
     end
     
     local Node = class.new (TaskName) (TaskName, ...)
-    self:InitNode(Node)
+    self:InitNode(Node, TaskName)
 
     if self.CurNodeCanChild.bComposite then    
         self.CurNodeCanChild:AddChild(Node)
@@ -124,7 +131,7 @@ function LBT:AddDecorator(Name, ...)
     end
 
     local Node = class.new (Name) (Name, ...)
-    self:InitNode(Node)
+    self:InitNode(Node, Name)
 
     if self.CurNodeCanChild.bComposite then    
         self.CurNodeCanChild:AddChild(Node)
@@ -143,7 +150,7 @@ function LBT:AddService(Name, TickInterval, ...)
     end
 
     local Node = class.new (Name) (Name, TickInterval, ...)
-    self:InitNode(Node)
+    self:InitNode(Node, Name)
 
     if self.CurNodeCanChild.bComposite then    
         self.CurNodeCanChild:AddChild(Node)
@@ -161,7 +168,10 @@ function LBT:PrintBT()
         PrintText = PrintText .. 'InValid Chr !!!'
         return PrintText
     end
-    PrintText = PrintText .. 'DisplayName: ' .. obj_util.dispname(self.Chr) .. '\n'
+    local strName = 'Name: ' .. obj_util.dispname(self.Chr)
+    local Role = self.Chr:GetRole() ---@type RoleClass
+    local strId = ', Id : ' .. Role.RoleInstId
+    PrintText = PrintText .. strName .. strId .. '\n'
     PrintText = PrintText .. 'BT: ' .. self.Desc .. '\n'
     PrintText = PrintText .. self.Root:PrintNode(0)
     return PrintText

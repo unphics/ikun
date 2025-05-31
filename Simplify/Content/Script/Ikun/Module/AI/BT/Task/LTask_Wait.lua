@@ -12,7 +12,7 @@ local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
 ---@field CurTime number
 local LTask_Wait = class.class 'LTask_Wait' : extends 'LTask' {
     ctor = function()end,
-        ConstWaitTime = nil,
+    ConstWaitTime = nil,
 }
 ---@param WaitTime number
 function LTask_Wait:ctor(TaskName, WaitTime, Random)

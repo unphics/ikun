@@ -33,8 +33,8 @@ function GameUIMgr:ShowUI(UIDef)
         UI:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
     else
         local UIClass = UE.UClass.Load(UIDef) 
-        local PC = UE.UGameplayStatics.GetPlayerController(world_util.GameWorld, 0)
-        UI = UE.UWidgetBlueprintLibrary.Create(world_util.GameWorld, UIClass, PC)
+        local PC = UE.UGameplayStatics.GetPlayerController(world_util.World, 0)
+        UI = UE.UWidgetBlueprintLibrary.Create(world_util.World, UIClass, PC)
         local Slot = self.GameWindow:AddChild(UI) ---@type UCanvasPanelSlot
         UI:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
         UI.bIsFocusable = true

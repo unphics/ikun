@@ -1,0 +1,52 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "ELuaProfiler",
+	"Description": "Easy Lua Profiler",
+	"Category": "Other",
+	"CreatedBy": "HankShu",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": false,
+    "Modules": [
+        {
+            "Name": "ELuaCore",
+            "Type": "Runtime",
+            "LoadingPhase": "PreDefault",
+            "WhitelistPlatforms": [ "Win64", "Mac", "IOS", "Android", "Linux" ],
+			"AdditionalDependencies": [
+				"Lua",
+				"UnLua"
+			]
+        },
+        {
+            "Name": "ELuaMemAnalyzer",
+            "Type": "Runtime",
+            "LoadingPhase": "PreDefault",
+            "WhitelistPlatforms": [ "Win64", "Mac", "IOS", "Android", "Linux" ]
+        },
+        {
+            "Name": "ELuaMonitor",
+            "Type": "Runtime",
+            "LoadingPhase": "PreDefault",
+            "WhitelistPlatforms": [ "Win64", "Mac", "IOS", "Android", "Linux" ]
+        },
+        {
+            "Name": "ELuaProfiler",
+            "Type": "Editor",
+            "LoadingPhase": "Default",
+            "WhitelistPlatforms": [ "Win64", "Mac" ]
+        }
+    ],
+    "Plugins": [
+        {
+            "Name": "UnLua",
+            "Enabled": true
+        }
+    ]
+}

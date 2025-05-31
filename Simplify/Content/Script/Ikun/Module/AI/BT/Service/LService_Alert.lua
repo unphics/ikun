@@ -30,7 +30,7 @@ function LService_Alert:OnUpdate(DeltaTime)
                 if true then -- 这个是Team的
                     ---@todo last 该写Team添加敌人了
                     if self.Chr:GetRole():IsEnemy(Hit:GetRole()) then
-                        self.Chr:GetRole().Team:FallInFight(Hit:GetRole().Team)
+                        self.Chr:GetRole().Team:Encounter(Hit:GetRole().Team)
                     end
                 end
                 -- log.log('hit actor : ', obj_util.dispname(Hit) , Hit:IsA(UE.ACharacter))

@@ -62,6 +62,7 @@ end
 ---@param Avatar BP_ChrBase
 ---@param TriggerCB functon<AActor, FTransform>
 function M:InitBallByAbility(Ability, Avatar, TriggerCB)
+    -- log.dev('M:InitBallByAbility', Ability, self)
     self.Ability = Ability
     self.Avatar = Avatar
     self.TriggerCB = TriggerCB
@@ -100,7 +101,7 @@ end
 
 ---@private
 function M:ReturnResult(OtherActor)
-    local AvatarC = self.Ability:GetAvatarActorFromActorInfo() ---@type BP_ChrBase
+    local AvatarC = self.Ability.AvatarLua ---@type BP_ChrBase -- :GetAvatarActorFromActorInfo() ---@type BP_ChrBase
     if not self.Ability then
         return log.error("Ball: 爆炸时自身状态错误! no self.Ability")
     end
@@ -108,9 +109,9 @@ function M:ReturnResult(OtherActor)
         return log.error("Ball: 爆炸时自身状态错误! invalid self")
     end
     if not obj_util.is_valid(AvatarC) then
-        return log.error("Ball: 爆炸时自身状态错误! invalid SelfAvatar")
+        return log.error("Ball: 爆炸时自身状态错误! invalid SelfAvatar", self.Ability, self)
     end
-    log.log('Ball: 爆炸成功 '..AvatarC:PrintRoleInfo()..self:PrintRhsActor(OtherActor))
+    log.dev('Ball: 爆炸成功 '..AvatarC:PrintRoleInfo()..self:PrintRhsActor(OtherActor))
     self.TriggerCB(self.Ability, OtherActor, self:GetTransform())
     self.bBallTriggered = true
     ---@note 避免crash, 延迟destory; 原因应该是某个相关的structure引用了此Actor
