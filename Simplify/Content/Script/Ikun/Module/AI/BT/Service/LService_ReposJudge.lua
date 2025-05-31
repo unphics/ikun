@@ -21,10 +21,9 @@ function LService_ReposJudge:OnUpdate(DeltaTime)
         return
     end
     if debug_util.IsChrDebug(self.Chr) then
-        log.dev('LService_ReposJudge')
+        local a = 1
     end
     if not actor_util.has_obstacles(self.FightTarget.Avatar, self.Chr, actor_util.filter_is_firend_4_obstacles(self.Chr), function(tb)
-            -- log.dev('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq', #tb)
             local owner = self.Chr:GetRole()
             for i, chr in ipairs(tb) do
                 local role = chr:GetRole() ---@type RoleClass

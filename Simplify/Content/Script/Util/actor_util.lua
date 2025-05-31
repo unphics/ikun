@@ -49,7 +49,7 @@ actor_util.has_obstacles = function(pos1, pos2,  allow_fn, fn)
         local Actor = HitResults:Get(i).HitObjectHandle.Actor
         local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
         if role then
-            log.dev('actor_util.has_obstacles ::::: ', role.RoleInstId, role.DisplayName)
+            -- log
         end
         if allow_fn then
             if allow_fn(Actor) then
