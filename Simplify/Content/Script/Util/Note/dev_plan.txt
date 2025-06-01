@@ -1,6 +1,10 @@
-DM01:
+DM_1:
     目标-初步小队AI
     现在:
         排查Repos : 2025/5/26 -> 2025/5/30
         Consume掉DirectiveMoveCoord : 2025/5/30 -> 2025/5/30
         转身旋转过度limit : 2025/5/30 -> 2025/5/30
+DM_2:
+    目标-伤害计算及配置
+    现在:
+        GameplayEffectEcecuteCalculate
