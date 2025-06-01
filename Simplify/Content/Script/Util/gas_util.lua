@@ -32,7 +32,7 @@ gas_util.find_active_by_tag = function(ikun_chr, tag)
 end
 ---@public 查找激活的技能
 gas_util.find_active_by_name = function(ikun_chr, name)
-    return gas_util.find_active_by_tag(ikun_chr, UE.UIkunFuncLib.RequestGameplayTag(name))
+    return gas_util.find_active_by_tag(ikun_chr, UE.UIkunFnLib.RequestGameplayTag(name))
 end
 
 ---@public ASC添加Tag
@@ -47,7 +47,7 @@ gas_util.asc_add_tag_by_tag = function(ikun_chr, tag)
 end
 ---@public ASC添加Tag
 gas_util.asc_add_tag_by_name = function(ikun_chr, name)
-    gas_util.asc_add_tag_by_tag(ikun_chr, UE.UIkunFuncLib.RequestGameplayTag(name))
+    gas_util.asc_add_tag_by_tag(ikun_chr, UE.UIkunFnLib.RequestGameplayTag(name))
 end
 
 ---@public ASC移除Tag
@@ -62,7 +62,7 @@ gas_util.asc_remove_tag_by_tag = function(ikun_chr, tag)
 end
 ---@public ASC移除Tag
 gas_util.asc_remove_tag_by_name = function(ikun_chr, name)
-    gas_util.asc_remove_tag_by_tag(ikun_chr, UE.UIkunFuncLib.RequestGameplayTag(name))
+    gas_util.asc_remove_tag_by_tag(ikun_chr, UE.UIkunFnLib.RequestGameplayTag(name))
 end
 
 
@@ -72,7 +72,7 @@ gas_util.asc_has_tag_by_tag = function(ikun_chr, tag)
 end
 ---@public 判断ASC包含Tag
 gas_util.asc_has_tag_by_name = function(ikun_chr, name)
-    return ikun_chr:GetAbilitySystemComponent():HasGameplayTag(UE.UIkunFuncLib.RequestGameplayTag(name))
+    return ikun_chr:GetAbilitySystemComponent():HasGameplayTag(UE.UIkunFnLib.RequestGameplayTag(name))
 end
 
 ---@public 从ASC中查找Abilities
@@ -85,7 +85,7 @@ gas_util.find_abilities_by_name = function(ikun_chr, name)
     for i = 1, AbilityHandles:Length() do
         local Handle = AbilityHandles:Get(i)
         local Ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(ASC, Handle)
-        if UE.UBlueprintGameplayTagLibrary.HasTag(Ability.AbilityTags, UE.UIkunFuncLib.RequestGameplayTag(name), true) then
+        if UE.UBlueprintGameplayTagLibrary.HasTag(Ability.AbilityTags, UE.UIkunFnLib.RequestGameplayTag(name), true) then
             table.insert(ActivableAbilities, {Handle = Handle, Ability = Ability})
         end
     end
@@ -116,7 +116,7 @@ gas_util.get_all_active_abilities = function(ikun_chr)
     local abilities = {}
     local handles = {}
     for _, spec in ipairs(gas_util.get_all_ability_spec(ikun_chr)) do
-        if UE.UBlueprintGameplayTagLibrary.HasTag(spec.Ability.AbilityTags, UE.UIkunFuncLib.RequestGameplayTag('Skill.Tag.Active'), false) then
+        if UE.UBlueprintGameplayTagLibrary.HasTag(spec.Ability.AbilityTags, UE.UIkunFnLib.RequestGameplayTag('Skill.Tag.Active'), false) then
             table.insert(abilities, spec.Ability)
             table.insert(handles, spec.Handle)
         end

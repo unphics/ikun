@@ -53,7 +53,7 @@ function M:OnEventReceived(EventTag, EventData)
     if net_util.is_client(SelfActor) then
         return
     end
-    if EventTag.TagName ~= UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Hit.01').TagName then
+    if EventTag.TagName ~= UE.UIkunFnLib.RequestGameplayTag('Chr.Skill.Hit.01').TagName then
         return
     end
     local Target = SelfActor:GetRole().BT.Blackboard:GetBBValue(BBKeyDef.FightTarget)
@@ -120,8 +120,11 @@ function M:OnTAValidData(Data, EventTag)
     for i = 1, ActorArray:Length() do
         local Actor = ActorArray:Get(i)
         if Actor ~= SelfActor and Actor.GetRole and Actor:GetRole() and SelfActor:GetRole():IsEnemy(Actor:GetRole()) then
-            local EffectContext = UE.FGameplayEffectContextHandle() ---@todo 做更多事情, 传递更多信息
-            Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContext)
+            ---@todo GetContextFromOwner
+            -- local EffectContextHandle = UE.FGameplayEffectContextHandle() ---@type FGameplayEffectContext
+            -- EffectContextHandle.AbilityCDO = self.StaticClass()
+            local EffectContextHandle = self:GetContextFromOwner(Data)
+            Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         end
     end
     -- self:GASuccess()

@@ -29,7 +29,7 @@ function GA_Lich_Skill_01:OnEventReceived(EventTag, EventData)
     if net_util.is_client(OwnerActor) then
         return
     end
-    if EventTag.TagName ~= UE.UIkunFuncLib.RequestGameplayTag('Chr.Skill.Hit.01').TagName then
+    if EventTag.TagName ~= UE.UIkunFnLib.RequestGameplayTag('Chr.Skill.Hit.01').TagName then
         return
     end
 
