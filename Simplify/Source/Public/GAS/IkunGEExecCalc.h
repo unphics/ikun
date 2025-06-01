@@ -6,14 +6,33 @@
 #include "GameplayEffectExecutionCalculation.h"
 #include "IkunGEExecCalc.generated.h"
 
-/**
- * 
- */
 
-USTRUCT(BlueprintType)
-struct IKUN_API FAggrEval {
-	GENERATED_BODY();
-	FAggregatorEvaluateParameters AggrEvalParam;
+UCLASS(BlueprintType, Blueprintable)
+class IKUN_API UIkunEffectCalc : public UObject {
+	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintCallable)
+	void InitEffectCalcData(const FGameplayEffectCustomExecutionParameters& ExecutionParams);
+	UFUNCTION(BlueprintCallable)
+	virtual FGameplayEffectCustomExecutionOutput CalcEffectData(const FGameplayEffectCustomExecutionParameters& ExecutionParams);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void OnCalcEffectData();
+	UFUNCTION(BlueprintCallable)
+	float ReadAttrValue(FName Name, bool bSource = false);
+	UFUNCTION(BlueprintCallable)
+	void ModiAttrValue(FName Name, float Value, TEnumAsByte<EGameplayModOp::Type> ModOp = EGameplayModOp::Additive);
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayEffectCustomExecutionParameters InExecParams;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayEffectCustomExecutionOutput OutExecParams;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* SourceAvatar;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* TargetAvatar;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayEffectSpec Spec;
+	FAggregatorEvaluateParameters EvaluateParameters;
 };
 
 UCLASS()
@@ -22,27 +41,4 @@ class IKUN_API UIkunGEExecCalc : public UGameplayEffectExecutionCalculation {
 public:
 	UIkunGEExecCalc(const FObjectInitializer& ObjectInitializer);
 	void Execute(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const;
-
-
-
-	UFUNCTION(BlueprintCallable)
-	static AActor* GetExecSourceAvatar(const FGameplayEffectCustomExecutionParameters& ExecutionParams);
-
-	UFUNCTION(BlueprintCallable)
-	static AActor* GetExecTargetAvatar(const FGameplayEffectCustomExecutionParameters& ExecutionParams);
-
-	UFUNCTION(BlueprintCallable)
-	static const FGameplayEffectSpec& GetExecGESpec(const FGameplayEffectCustomExecutionParameters& ExecutionParams);
-
-	UFUNCTION(BlueprintCallable)
-	static FAggrEval MakeExecAggrEval(const FGameplayEffectSpec& Spec);
-
-	UFUNCTION(BlueprintCallable)
-	static float GetExecAttrVal(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayAttribute Prop, const FAggrEval& EvaluateParameters);
-
-	UFUNCTION(BlueprintCallable)
-	static FGameplayEffectCustomExecutionOutput ModiExecAttrVal(FGameplayEffectCustomExecutionOutput OutExecutionOutput, FGameplayAttribute Prop, float AttrVal);
-
-	UFUNCTION(BlueprintCallable)
-	void Test(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const;
 };
