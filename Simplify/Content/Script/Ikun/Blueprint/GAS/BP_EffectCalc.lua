@@ -9,10 +9,13 @@
 local BP_EffectCalc = UnLua.Class()
 
 function BP_EffectCalc:OnCalcEffectData()
-    local value = self:ReadAttrValue('Health', false)
-    log.dev('BP_EffectCalc:OnCalcEffectData', value)
     local ContextHandle = self.Spec.EffectContext
     local Ability = UE.UIkunFnLib.EffectContextGetAbility(self.Spec.EffectContext)
+
+    ---@todo 思考一个整体的复杂的伤害计算公式
+    
+    log.dev('BP_EffectCalc:OnCalcEffectData', value)
+    local value = self:ReadAttrValue('Health', false)
     self:ModiAttrValue('Health', -3, UE.EGameplayModOp.Additive)
 end
 
