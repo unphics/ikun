@@ -14,8 +14,13 @@ function BP_EffectCalc:OnCalcEffectData()
 
     ---@todo 思考一个整体的复杂的伤害计算公式
     
-    log.dev('BP_EffectCalc:OnCalcEffectData', value)
-    local value = self:ReadAttrValue('Health', false)
+    local TargetPhysicalDefenseVal = self:ReadAttrValue('PhysicalDefense', false)
+    local PercentPhysicalDefenseVal = math.log(TargetPhysicalDefenseVal) -- log的底数为nil的话默认是e
+    
+    local TargetHealthVal = self:ReadAttrValue('Health', false)
+    log.dev('BP_EffectCalc:OnCalcEffectData', TargetHealthVal)
+
+
     self:ModiAttrValue('Health', -3, UE.EGameplayModOp.Additive)
 end
 
