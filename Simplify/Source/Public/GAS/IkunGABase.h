@@ -15,7 +15,7 @@ class IKUN_API UIkunGABase : public UGameplayAbility {
 public:
 	// 技能的配置Id
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill config ident"))
-	int SkillCfgId = 0;
+	int AbilityCfgId = 0;
 	// 考虑激活的最大距离
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill min distance that consider to activated"))
 	int MaxConsiderDist = 0;
