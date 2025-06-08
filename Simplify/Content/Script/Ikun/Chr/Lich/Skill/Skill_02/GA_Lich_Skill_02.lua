@@ -120,9 +120,6 @@ function M:OnTAValidData(Data, EventTag)
     for i = 1, ActorArray:Length() do
         local Actor = ActorArray:Get(i)
         if Actor ~= SelfActor and Actor.GetRole and Actor:GetRole() and SelfActor:GetRole():IsEnemy(Actor:GetRole()) then
-            ---@todo GetContextFromOwner
-            -- local EffectContextHandle = UE.FGameplayEffectContextHandle() ---@type FGameplayEffectContext
-            -- EffectContextHandle.AbilityCDO = self.StaticClass()
             local EffectContextHandle = self:GetContextFromOwner(Data)
             Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         end

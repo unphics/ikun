@@ -58,8 +58,8 @@ function GA_Lich_Skill_01:OnTAValidData(Data, EventTag)
     for i = 1, ActorArray:Length() do
         local Actor = ActorArray:Get(i)
         if Actor ~= OwnerActor and Actor.GetRole and Actor:GetRole() and OwnerActor:GetRole():IsEnemy(Actor:GetRole()) then
-            local EffectContext = UE.FGameplayEffectContextHandle() ---@todo 做更多事情, 传递更多信息
-            Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContext)
+            local EffectContextHandle = self:GetContextFromOwner(Data)
+            Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         end
     end
 end
