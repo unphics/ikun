@@ -19,7 +19,9 @@ function GE_EffectCalcBase:Execute(InParams, OutParams)
 
     self:OnExecute(CalcObj, Ability, CalcObj.Spec.Def)
     
-    OutParams = CalcObj.OutExecParams
+    -- OutParams = CalcObj.OutExecParams
+
+    OutParams.OutputModifiers:Append( CalcObj.OutExecParams.OutputModifiers)
 end
 
 ---@protected
