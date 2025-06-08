@@ -25,9 +25,9 @@ function EC_MagicDmg:OnExecute(CalcObj, Ability, Effect)
     local TarMgcDefVal = CalcObj:ReadAttrValue('MagicalDefense', false)
     local PercMgcDefVal = math.log(TarMgcDefVal) -- log的底数为nil的话默认是e
     local MgcDmgVal = SrcMagicPowerVal * MgcDmgCfgCorr * (1 - PercMgcDefVal)
-    log.dev('EC_MagicDmg:OnExecute ', SrcMagicPowerVal, MgcDmgCfgCorr, PercMgcDefVal, MgcDmgVal)
+    -- log.dev('EC_MagicDmg:OnExecute ', SrcMagicPowerVal, MgcDmgCfgCorr, PercMgcDefVal, MgcDmgVal)
     local TarHealthVal = CalcObj:ReadAttrValue('Health', false)
-    log.dev('EC_MagicDmg:OnExecute', TarHealthVal)
+    log.dev('EC_MagicDmg:OnExecute TarHealthVal', TarHealthVal)
     CalcObj:ModiAttrValue('Health', -3, UE.EGameplayModOp.Additive)
 end
 
