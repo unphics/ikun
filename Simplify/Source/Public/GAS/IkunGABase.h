@@ -13,25 +13,28 @@ UCLASS()
 class IKUN_API UIkunGABase : public UGameplayAbility {
 	GENERATED_BODY()
 public:
-	// ¿¼ÂÇ¼¤»îµÄ×î´ó¾àÀë
+	// æŠ€èƒ½çš„é…ç½®Id
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill config ident"))
+	int AbilityCfgId = 0;
+	// è€ƒè™‘æ¿€æ´»çš„æœ€å¤§è·ç¦»
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill min distance that consider to activated"))
 	int MaxConsiderDist = 0;
-	// ¿¼ÂÇ¼¤»îµÄ×îĞ¡¾àÀë
+	// è€ƒè™‘æ¿€æ´»çš„æœ€å°è·ç¦»
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill min distance that consider to activated"))
 	int MinConsiderDist = 0;
-	// ¿É¼¤»îµÄ×î´ó¾àÀë
+	// å¯æ¿€æ´»çš„æœ€å¤§è·ç¦»
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill max distance that can be activated"))
 	int MaxActivatableDist = 0;
-	// ¿É¼¤»îµÄ×îĞ¡¾àÀë
+	// å¯æ¿€æ´»çš„æœ€å°è·ç¦»
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill min distance that can be activated"))
 	int MinActivatableDist = 0;
-	// ¿É¼¤»îµÄ·½Ïò, Ïà½ÏÓÚÇ°Ïò
+	// å¯æ¿€æ´»çš„æ–¹å‘, ç›¸è¾ƒäºå‰å‘
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill direct that can be activated, compared to forward direction"))
 	int YawActivatableDir = 0;
-	// ¿É¼¤»îµÄ·½ÏòÀ©Õ¹
+	// å¯æ¿€æ´»çš„æ–¹å‘æ‰©å±•
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill direct extend that can be activated"))
 	int YawActivatableExtend = 0;
-	// ¼¼ÄÜÈ¨ÖØ
+	// æŠ€èƒ½æƒé‡
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "IkunAbilitySetting", meta = (ToolTip = "Skill weight"))
 	int SkillWeight = 0;
 

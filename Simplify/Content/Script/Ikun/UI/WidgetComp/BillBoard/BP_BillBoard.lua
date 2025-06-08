@@ -53,27 +53,19 @@ function M:OnRoleNameUpdate(RoleName)
 end
 ---@private [Tick]
 function M:OnTick()
-    if not net_util.is_server() then
-        return
-    end
-    -- local Role = self:GetOwner():GetRole() ---@type RoleClass
-    -- if Role and Role.RoleInstId == debug_util.debugrole then
-    --     self.BillboardContent.debug_bt = 'DebugBT_DebugBT'
-    -- end
+    local CurHealth = self:GetOwner().AttrSet:GetAttrValueByName("Health")
+    local MaxHealth = self:GetOwner().AttrSet:GetAttrValueByName("MaxHealth")
+    local HP = CurHealth / MaxHealth
+    self:GetWidget().HealthBar:SetPercent(HP)
 end
 
----@private [Debug]
+---@private [Debug] 刷新Debug文字, 每次修改后调用
 function M:RefreshBillboardShowText()
     local str = ''
     for key, text in pairs(self.BillboardContent) do
         str = str .. text .. '\n'
     end
     self:Multicast_SetText(str)
-end
----@public [Debug]
-function M:UpdateFightPos()
-    local Role = self:GetOwner():GetRole() ---@type RoleClass
-    -- self.BillboardContent.FightPos = Role.FightPos
 end
 
 return M

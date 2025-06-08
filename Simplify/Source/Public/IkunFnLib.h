@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Engine/World.h"
-#include "IkunFuncLib.generated.h"
+#include "GameplayEffectTypes.h"
+#include "IkunFnLib.generated.h"
 
 struct FGameplayTagContainer;
 struct FGameplayTag;
@@ -15,7 +16,7 @@ struct FSpawnParamters;
  * 
  */
 UCLASS()
-class IKUN_API UIkunFuncLib : public UBlueprintFunctionLibrary {
+class IKUN_API UIkunFnLib : public UBlueprintFunctionLibrary {
 	GENERATED_BODY()
 
 public:
@@ -25,6 +26,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void BindAction(UEnhancedInputComponent* EnhancedInputComp, const UInputAction* Action, ETriggerEvent TriggerEvent, UObject* Object, FName FunctionName);
 	
+#pragma region GAS
 	UFUNCTION(BlueprintCallable)
 	static FGameplayTag RequestGameplayTag(FName TagName);
 
@@ -36,6 +38,11 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	static AActor* SpawnActor(UWorld* World, UClass* Class, FTransform Transform, const FSpawnParamters& Param);
+
+	UFUNCTION(BlueprintCallable)
+	static const UGameplayAbility* EffectContextGetAbility(const FGameplayEffectContextHandle& ContextHandle);
+
+#pragma endregion
 	
 	UFUNCTION(BlueprintCallable)
 	static FQuat MakeQuatFromRot(FRotator& Rot);
@@ -44,7 +51,7 @@ public:
 	//static void CustomPassTest(UTextureRenderTarget2D* RT);
 #pragma region python
 	/*
-	for x in sorted(dir(unreal.IkunFuncLib)):
+	for x in sorted(dir(unreal.IkunFnLib)):
 		print(x)
 	*/
 	UFUNCTION(BlueprintCallable)
