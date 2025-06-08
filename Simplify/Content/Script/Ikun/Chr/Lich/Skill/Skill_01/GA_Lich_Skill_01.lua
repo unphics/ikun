@@ -33,13 +33,6 @@ function GA_Lich_Skill_01:OnEventReceived(EventTag, EventData)
         return
     end
 
-    do -- 可以拿来做转向修正
-        -- local Target = SelfActor:GetRole():GetTarget()
-        -- if not Target then
-        --     return
-        -- end
-        -- Target = Target.Avatar
-    end
     local TA = actor_util.spawn_always(OwnerActor, self.TargetActorClass, OwnerActor:GetTransform())
     -- local AT =  UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, '', 
     --     UE.EGameplayTargetingConfirmation.Custom, TA)
@@ -48,10 +41,7 @@ function GA_Lich_Skill_01:OnEventReceived(EventTag, EventData)
     -- self.AT = AT
     -- self.TA = TA
 
-    -- self:qqq()
-    self:www(TA)
-    self.tt.ValidData:Add(self, self.OnTAValidData)
-    self.tt = nil
+    self:WaitTargetData_Tmp(TA)
 end
 
 function GA_Lich_Skill_01:OnTAValidData(Data, EventTag)
