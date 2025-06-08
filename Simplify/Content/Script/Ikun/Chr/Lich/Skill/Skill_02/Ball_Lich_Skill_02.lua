@@ -101,7 +101,7 @@ end
 
 ---@private
 function M:ReturnResult(OtherActor)
-    local AvatarC = self.Ability.AvatarLua ---@type BP_ChrBase -- :GetAvatarActorFromActorInfo() ---@type BP_ChrBase
+    local AvatarC = self.Ability.AvatarLua ---@type BP_ChrBase
     if not self.Ability then
         return log.error("Ball: 爆炸时自身状态错误! no self.Ability")
     end
