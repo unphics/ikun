@@ -1,6 +1,8 @@
 
 ---
----@brief Lich三技能治疗术
+---@brief Lich三技能治疗术, 持续施法每秒恢复目标的生命值
+---@author zys
+---@data Tue Jun 10 2025 11:27:57 GMT+0800 (中国标准时间)
 ---
 
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
@@ -25,7 +27,6 @@ function GA_Lich_Skill_03:OnActivateAbility()
 
     self:CheckBlueprintCfg()
 end
-
 
 function GA_Lich_Skill_03:K2_OnEndAbility(WasCancelled)
     if net_util.is_server(self:GetAvatarActorFromActorInfo()) then
@@ -54,11 +55,11 @@ function GA_Lich_Skill_03:TimerLoopCall()
     self:GetHealTarget():GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
 end
 
----@private
+---@private 获取治疗目标
 ---@return BP_ChrBase
 function GA_Lich_Skill_03:GetHealTarget()
     ---@todo 这里的Target肯定不是啥FightTarget
-    local Target = self.AvatarLua:GetRole().BT.Blackboard:GetBBValue(BBKeyDef.FightTarget)
+    local Target = self.AvatarLua:GetRole().BT.Blackboard:GetBBValue(BBKeyDef.SupportTarget)
     Target = Target.Avatar
     return Target
 end
@@ -71,6 +72,7 @@ function GA_Lich_Skill_03:OnCancelled(EventTag, EventData)
     self:GAFail()
 end
 
+---@private 检查技能的某些配置项正常
 function GA_Lich_Skill_03:CheckBlueprintCfg()
     if self.MaxHealTime and self.MaxHealTime > 0 then
         return
