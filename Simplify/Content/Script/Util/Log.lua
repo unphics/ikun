@@ -41,7 +41,7 @@ end
 function log.roleid(Chr)
     local role = log.role(Chr)
     if role then
-        return string.format('[%s]', tostring(role.RoleInstId))
+        return string.format('[%s]', tostring(role:GetRoleInstId()))
     else
         return ''
     end

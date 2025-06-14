@@ -152,7 +152,7 @@ function TB_Fight:DefensivePos(Army)
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 150)
-        self.DirectiveMoveCoord[Role.RoleInstId] = ResultLoc
+        self.DirectiveMoveCoord[Role:GetRoleInstId()] = ResultLoc
     end
 end
 
@@ -167,7 +167,7 @@ function TB_Fight:AsgnFightTarget(Army)
         if not Enemy.tbEnemyRolePerception[i] then
             break
         end
-        self.DynaSuppressTarget[Role.RoleInstId] = Enemy.tbEnemyRolePerception[i].Role
+        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.tbEnemyRolePerception[i].Role
     end
     Enemy.FireTarget = Enemy.tbEnemyRolePerception[1].Role
 
@@ -176,25 +176,28 @@ function TB_Fight:AsgnFightTarget(Army)
         if not Enemy.tbEnemyRolePerception[i] then
             break
         end
-        self.DynaSuppressTarget[Role.RoleInstId] = Enemy.tbEnemyRolePerception[1].Role
+        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.tbEnemyRolePerception[1].Role
     end
 end
 
-function TB_Fight:ReadDirectiveMoveCoord(RoleInstId)
-    local MoveLoc = self.DirectiveMoveCoord[RoleInstId]
+---@param Id number RoleInstId
+function TB_Fight:ReadDirectiveMoveCoord(Id)
+    local MoveLoc = self.DirectiveMoveCoord[Id]
     if MoveLoc then
-        self.DirectiveMoveCoord[RoleInstId] = nil
+        self.DirectiveMoveCoord[Id] = nil
         return MoveLoc
     end
 end
-function TB_Fight:ReadDynaSuppressTarget(RoleInstId)
-    local Role = self.DynaSuppressTarget[RoleInstId]
+
+---@param Id number RoleInstId
+function TB_Fight:ReadDynaSuppressTarget(Id)
+    local Role = self.DynaSuppressTarget[Id]
     if not Role or Role:IsDead() then
-        log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Role.RoleInstId or 'nil', Role and Role.DisplayName or 'nil')
+        log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Id or 'nil', Role and Role:GetRoleDispName() or 'nil')
         -- self.OwnerTeam.TeamEnemy:RemoveEnemyRole(Role)
         self.OwnerTeam.TeamEnemy:CheckEnemyDead()
         self:AsgnFightTarget(self.Army)
-        Role = self.DynaSuppressTarget[RoleInstId]
+        Role = self.DynaSuppressTarget[Id]
     end
     return Role
 end

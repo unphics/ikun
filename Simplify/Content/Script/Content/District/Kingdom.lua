@@ -74,11 +74,12 @@ end
 function Kingdom:AddKingdomMember(Role)
     table.insert(self.tbRole, Role)
     ---@rule 内建规则: 对于没有实例Id的角色, 第一次挂靠的国家应赋予角色实例Id, 可以理解为出生籍贯
-    if not Role.RoleInstId then
-        table.insert(self.tbRoleBornRecord, Role.DisplayName)
-        Role.RoleInstId = self.KingdomInstId * 1000 + #self.tbRoleBornRecord
-        MdMgr.RoleMgr:NewRole(Role.RoleInstId, Role)
-        log.log('zys AddKingdomMember', Role.DisplayName, self.Name, Role.RoleInstId)
+    if not Role:GetRoleInstId() then
+        local InstId = self.KingdomInstId * 1000 + #self.tbRoleBornRecord
+        table.insert(self.tbRoleBornRecord, Role:GetRoleDispName())
+        Role.RoleInfo:InitRoleInstId(InstId)
+        MdMgr.RoleMgr:NewRole(InstId, Role)
+        log.log('zys AddKingdomMember', Role:GetRoleDispName(), self.Name, InstId)
     end
 end
 ---@public 友谊度判断

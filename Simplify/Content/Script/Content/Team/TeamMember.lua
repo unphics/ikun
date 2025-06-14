@@ -36,19 +36,19 @@ end
 ---@public 添加成员
 function TeamMemberClass:AddMember(Role)
     table.insert(self.tbMember, Role)
-    self.mapMemberId[Role.RoleInstId] = Role
+    self.mapMemberId[Role:GetRoleInstId()] = Role
 end
 ---@public 移除成员
-function TeamMemberClass:RemoveMember(RoleInstId)
-    self.mapMemberId[RoleInstId] = nil
+function TeamMemberClass:RemoveMember(InstId)
     local Index = -1
     for i, Role in ipairs(self.tbMember) do
-        if Role.RoleInstId == RoleInstId then
+        if Role:GetRoleInstId() == InstId then
             Index = i
             break
         end
     end
     if Index > 0 then
+        self.mapMemberId[InstId] = nil
         table.remove(self.tbMember, Index)
     else
         log.error('TeamMemberClass:RemoveMember() 不存在的RoleInstId')
@@ -65,7 +65,7 @@ function TeamMemberClass:ElectLeader()
 end
 function TeamMemberClass:GetLeader()
     if self.TeamLeader.Dead then
-        self:RemoveMember(self.TeamLeader.RoleInstId)
+        self:RemoveMember(self.TeamLeader:GetRoleInstId())
         self:ElectLeader()
     end
     return self.TeamLeader

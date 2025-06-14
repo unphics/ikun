@@ -59,7 +59,7 @@ end
 ---@return string
 function BP_ChrBase:PrintRoleInfo()
     local Role = self:GetRole()
-    return ' [Actor='..obj_util.dispname(self)..', RoleName='..Role.DisplayName..', RoleId='..Role.RoleInstId..'] '
+    return ' [Actor='..obj_util.dispname(self)..', RoleName='..Role:GetRoleDispName()..', RoleId='..Role:GetRoleInstId()..'] '
 end
 
 ---@private
