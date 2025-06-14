@@ -30,7 +30,6 @@ function BP_ChrBase:ReceiveTick(DeltaSeconds)
     self.Overridden.ReceiveTick(self, DeltaSeconds)
     if not self.bChrDead and net_util.is_server(self) then
         local HP = self.AttrSet:GetAttrValueByName("Health")
-        -- log.dev('hp', HP)
         if math_util.is_zero(HP) then
             self:ChrBeginDeath()
         end

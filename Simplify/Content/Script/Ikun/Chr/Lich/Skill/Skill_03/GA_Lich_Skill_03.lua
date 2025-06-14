@@ -53,7 +53,6 @@ function GA_Lich_Skill_03:TimerLoopCall()
         return
     end
     local EffectContextHandle = self:GetContextFromOwner(nil)
-    log.dev('qqq')
     self:GetHealTarget():GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
 end
 
