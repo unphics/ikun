@@ -1,4 +1,4 @@
-这是一个个人学习与实验项目
+# 个人学习与实验项目
 
 该项目不用于商业目的，欢迎参考、借鉴或基于此延伸开发。
 
@@ -12,6 +12,8 @@ Ikun/
 ├── Simplify/               # 迁移过来且后续维护开发的工程
 ├── LICENSE                 # WTFPL
 └── README.md
+```
+---
 
 ## 项目依赖
 
@@ -19,6 +21,7 @@ Ikun/
   本项目集成了 UnLua（MIT License），用于支持 Lua 脚本逻辑及热更新功能。  
   相关代码归原作者所有，LICENSE 文件已包含在项目中。
 
+---
 
 ## 关于 Unreal Engine
 
@@ -36,4 +39,5 @@ Ikun/
 - [Zenn](https://zenn.dev/neighbortone) 博客  
 - ChatGPT (GPT-4) 文字辅助建议
 
+---
 如有疑问或建议，欢迎通过 GitHub Issues 联系。
