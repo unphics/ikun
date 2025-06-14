@@ -10,11 +10,12 @@ local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTDef = require('Ikun/Module/AI/BT/BTDef')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
+local RoleInfoClass = require('Content/Role/RoleInfo')
 
 ---@class RoleClass: MdBase
 ---@field DisplayName string * 显示名称
 ---@field RoleInstId number * 角色实例Id
----@field RoleConfigId number * 角色配置Id
+---@field RoleInfo RoleInfoClass * 角色基础信息
 ---@field Avatar BP_ChrBase * 角色在游戏场景中的AvatarActor
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
@@ -37,11 +38,12 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     GetBelongKingdom = function()end,
     RoleInstId = nil,
     Team = nil,
-    FightTarget = nil,
+    GetRoleCfgId = function()end,
 --[[private]]
     StartBT = function()end,
+    RoleInfo = nil,
+    FightTarget = nil,
     DisplayName = nil,
-    RoleConfigId = nil,
     Dead = false,
     Avatar = nil,
     BelongKingdomLua = nil,
@@ -69,10 +71,13 @@ function RoleClass:Tick(DeltaTime)
     end
 end
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
-function RoleClass:InitByAvatar(Avatar, Id, bNpc)
-    local Config = RoleConfig[Id] ---@type RoleConfig
+function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
+    local Config = RoleConfig[CfgId] ---@type RoleConfig
+    if not Config then
+        return log.error(log.key.roleinit,'投胎失败!!!')
+    end
+    self.RoleInfo = class.new 'RoleInfoClass' (self, CfgId)
     self.Avatar = Avatar
-    self.RoleConfigId = Id
     self.DisplayName = Config.DisplayName
     self.bNpc = bNpc
 
@@ -89,7 +94,7 @@ function RoleClass:GetDisplayName()
     return self.DisplayName
 end
 function RoleClass:StartBT()
-    local RoleCfg = RoleConfig[self.RoleConfigId]
+    local RoleCfg = RoleConfig[self:GetRoleCfgId()]
     if RoleCfg then
         self:SwitchNewBT(RoleCfg.InitBT)
     end
@@ -145,8 +150,8 @@ function RoleClass:AddEnemyChecked(OtherRole)
     if not self:IsEnemy(OtherRole) then
         return false
     end
-    local OwnerRoleCfg = RoleConfig[self.RoleConfigId]
-    local OtherRoleCfg = RoleConfig[OtherRole.RoleConfigId]
+    local OwnerRoleCfg = RoleConfig[self:GetRoleCfgId()]
+    local OtherRoleCfg = RoleConfig[OtherRole:GetRoleCfgId()]
     if not OtherRoleCfg then
         return false
     end
@@ -188,6 +193,15 @@ function RoleClass:PrintRole()
     local hp = obj_util.is_valid(self.Avatar) and self.Avatar.AttrSet:GetAttrValueByName("Health")
     str = str..'{ Id:'..self.RoleInstId..', Dead:'..tostring(self.Dead)..', hp:'..tostring(hp)..' }'
     return str
+end
+
+---@public
+---@return number
+function RoleClass:GetRoleCfgId()
+    if not self.RoleInfo then
+        return log.error('这个角色初始化有问题!!!')
+    end
+    return self.RoleInfo.RoleCfgId
 end
 
 require('Content/Role/Impl/RoleDef')

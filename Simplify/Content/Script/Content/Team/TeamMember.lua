@@ -85,9 +85,9 @@ function TeamMemberClass:GetAllMember_PosCount()
     local ArrMulti = {}
     for _, ele in ipairs(self.tbMember) do
         local Role = ele ---@type RoleClass
-        local tbFPAssign = RoleConfig[Role.RoleConfigId].FightPosAssign
+        local tbFPAssign = RoleConfig[Role:GetRoleCfgId()].FightPosAssign
         if not tbFPAssign or #tbFPAssign == 0 then
-            log.error('TeamMemberClass:GetAllMember_PosCount() 发现不承担战场位置的角色', Role.RoleConfigId)
+            log.error('TeamMemberClass:GetAllMember_PosCount() 发现不承担战场位置的角色', Role:GetRoleCfgId())
         end
         if #tbFPAssign == 1 then
             table.insert(ArrSingle, Role)
@@ -102,7 +102,7 @@ function TeamMemberClass:CalcMaxCountPerPos()
     local MaxCountPerPos = {}
     for _, ele in ipairs(self.tbMember) do
         local Role = ele ---@type RoleClass
-        local tbFightPos = RoleConfig[Role.RoleConfigId].FightPosAssign
+        local tbFightPos = RoleConfig[Role:GetRoleCfgId()].FightPosAssign
         for _, pos in ipairs(tbFightPos) do
             if not MaxCountPerPos[pos] then
                 MaxCountPerPos[pos] = 0

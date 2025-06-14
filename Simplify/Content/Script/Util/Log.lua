@@ -62,6 +62,7 @@ end
 log.key = {
     luainit = '[Lua初始化]',
     ueinit = '[UE初始化]',
+    roleinit = '[角色初始化]',
     repos = '[射手站位调整]',
 }
 

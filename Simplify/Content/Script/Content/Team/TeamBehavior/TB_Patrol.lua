@@ -21,7 +21,7 @@ function TB_Patrol:Init()
     for _, role in ipairs(AllMember) do
         ---@type RoleClass
         local Role = role
-        local NewBTKey = RoleConfig[Role.RoleConfigId].BTCfg[BTType.Patrol]
+        local NewBTKey = RoleConfig[Role:GetRoleCfgId()].BTCfg[BTType.Patrol]
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
 end
