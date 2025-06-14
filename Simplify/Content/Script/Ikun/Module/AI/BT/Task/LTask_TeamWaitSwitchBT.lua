@@ -47,7 +47,7 @@ function LTask_TeamWaitSwitchBT:PrintNode(nDeep)
         end
     end
     local CurTime = self.CurTime and string.format('%02.1f', self.CurTime) or 'nil'
-    Text = string.format('%sTask : %s-%s : %s\n', Text, self.DisplayName, CurTime,ELStatus.PrintLStatus(self.LastStatus))
+    Text = string.format('%sTask : %s-%s : %s\n', Text, self.NodeDispName, CurTime,ELStatus.PrintLStatus(self.LastStatus))
     return Text
 end
 return LTask_TeamWaitSwitchBT

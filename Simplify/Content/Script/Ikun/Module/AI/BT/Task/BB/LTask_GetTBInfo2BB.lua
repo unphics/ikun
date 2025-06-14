@@ -11,8 +11,8 @@
 local LTask_GetTBInfo2BB = class.class 'LTask_GetTBInfo2BB' : extends 'LTask' {
     ctor = function()end,
 }
-function LTask_GetTBInfo2BB:ctor(DisplayName, TableName, BBKey)
-    class.LTask.ctor(self, DisplayName)
+function LTask_GetTBInfo2BB:ctor(NodeDispName, TableName, BBKey)
+    class.LTask.ctor(self, NodeDispName)
 
     self.ConstTableName = TableName
     self.ConstBBKey = BBKey

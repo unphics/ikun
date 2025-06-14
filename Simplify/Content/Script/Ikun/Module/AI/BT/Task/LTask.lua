@@ -12,14 +12,14 @@ end
 function LTask:DoUpdate(DeltaTime)
     if self:IsRunning() then
         self:OnUpdate(DeltaTime)
-        self.LBT.CurRunningTaskName = self.DisplayName
+        self.LBT.CurRunningTaskName = self.NodeDispName
     end
     return self:GetStatus()
 end
 function LTask:OnUpdate(DeltaTime)
     self.TimeCount = self.TimeCount + DeltaTime
     if self.TimeCount > self.Threshold then
-        if self.DisplayName == '失败' then
+        if self.NodeDispName == '失败' then
             self:DoTerminate(false)
         else
             self:DoTerminate(true)
@@ -36,6 +36,6 @@ function LTask:PrintNode(nDeep)
             Text = Text .. '        '
         end
     end
-    Text = Text .. 'Task : ' .. self.DisplayName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
+    Text = Text .. 'Task : ' .. self.NodeDispName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
     return Text
 end

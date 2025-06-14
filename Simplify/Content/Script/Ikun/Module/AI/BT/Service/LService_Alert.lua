@@ -10,8 +10,8 @@
 local LService_Alert = class.class 'LService_Alert' : extends 'LService' {
     OnUpdate = function()end,
 }
-function LService_Alert:ctor(DisplayName, TickInterval, Range)
-    class.LService.ctor(self, DisplayName, TickInterval)
+function LService_Alert:ctor(NodeDispName, TickInterval, Range)
+    class.LService.ctor(self, NodeDispName, TickInterval)
     self.StaticRange = Range or 1500
 end
 function LService_Alert:OnUpdate(DeltaTime)

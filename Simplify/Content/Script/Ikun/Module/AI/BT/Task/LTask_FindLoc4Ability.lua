@@ -13,8 +13,8 @@ local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
 local LTask_FindLoc4Ability = class.class 'LTask_FindLoc4Ability' : extends 'LTask' {
     ctor = function()end,
 }
-function LTask_FindLoc4Ability:ctor(DisplayName)
-    class.LTask.ctor(self, DisplayName)
+function LTask_FindLoc4Ability:ctor(NodeDispName)
+    class.LTask.ctor(self, NodeDispName)
 end
 
 function LTask_FindLoc4Ability:OnInit()

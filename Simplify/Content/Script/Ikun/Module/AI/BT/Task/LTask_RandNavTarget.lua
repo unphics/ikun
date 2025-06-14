@@ -9,8 +9,8 @@ local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 local LTask_RandNavTarget = class.class 'LTask_RandNavTarget' : extends 'LTask' {
     ctor = function() end,
 }
-function LTask_RandNavTarget:ctor(DisplayName, NearestDist, FarestDist, MaxIterCount)
-    class.LTask.ctor(self, DisplayName)
+function LTask_RandNavTarget:ctor(NodeDispName, NearestDist, FarestDist, MaxIterCount)
+    class.LTask.ctor(self, NodeDispName)
     self.StaticNearestDist = NearestDist
     self.StaticFarestDist = FarestDist
     self.StaticMaxIterCount = MaxIterCount or 10

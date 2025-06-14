@@ -11,7 +11,8 @@ local LDecorator_TeamCondition = class.class 'LDecorator_TeamCondition' : extend
 --[[private]]
     TeamConditionFnName = nil,
 }
-function LDecorator_TeamCondition:ctor (DisplayName, TeamConditionFnName)
+function LDecorator_TeamCondition:ctor (NodeDispName, TeamConditionFnName)
+    class.LDecorator.ctor(self, NodeDispName)
     self.TeamConditionFnName = TeamConditionFnName
 end
 function LDecorator_TeamCondition:Judge()

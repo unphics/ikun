@@ -15,8 +15,8 @@ local LTask_SelectAbility = class.class 'LTask_SelectAbility' : extends 'LTask' 
     SelectAbilityRandom = function()end,
     SelectResult = nil,
 }
-function LTask_SelectAbility:ctor(DisplayName)
-    class.LTask.ctor(self, DisplayName)
+function LTask_SelectAbility:ctor(NodeDispName)
+    class.LTask.ctor(self, NodeDispName)
     self.SelectResult = nil
 end
 function LTask_SelectAbility:OnInit()

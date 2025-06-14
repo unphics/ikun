@@ -12,8 +12,8 @@ local LTask_ActiveAbility = class.class 'LTask_ActiveAbility' : extends 'LTask' 
     MaxWaitTime = nil,
     CurTime = nil,
 }
-function LTask_ActiveAbility:ctor(DisplayName, MaxWaitTime)
-    class.LTask.ctor(self, DisplayName)
+function LTask_ActiveAbility:ctor(NodeDispName, MaxWaitTime)
+    class.LTask.ctor(self, NodeDispName)
 
     self.MaxWaitTime = MaxWaitTime or 5
 end

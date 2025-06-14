@@ -5,8 +5,8 @@ local LDecorator_RoleCondition = class.class 'LDecorator_RoleCondition' : extend
 --[[private]]
     CondFnName = nil,
 }
-function LDecorator_RoleCondition:ctor(DisplayName, CondFnName)
-    class.LDecorator.ctor(self, DisplayName)
+function LDecorator_RoleCondition:ctor(NodeDispName, CondFnName)
+    class.LDecorator.ctor(self, NodeDispName)
     self.CondFnName = CondFnName
 end
 function LDecorator_RoleCondition:Judge()

@@ -12,8 +12,8 @@ local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 local LTask_TeamGetMoveTarget = class.class 'LTask_TeamGetMoveTarget' : extends 'LTask' {
     ctor = function()end,
 }
-function LTask_TeamGetMoveTarget:ctor(DisplayName)
-    class.LTask.ctor(self, DisplayName)
+function LTask_TeamGetMoveTarget:ctor(NodeDispName)
+    class.LTask.ctor(self, NodeDispName)
 end
 function LTask_TeamGetMoveTarget:OnInit()
     class.LTask.OnInit(self)

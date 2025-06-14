@@ -18,8 +18,8 @@ local LDecorator = class.class 'LDecorator': extends 'LNode' {
     Result = nil,
     bNegate = nil,
 }
-function LDecorator:ctor(DisplayName)
-    class.LNode.ctor(self, DisplayName)
+function LDecorator:ctor(NodeDispName)
+    class.LNode.ctor(self, NodeDispName)
     self.bNegate = false
 end
 function LDecorator:SetChild(Node)
@@ -67,7 +67,7 @@ function LDecorator:PrintNode(nDeep)
             Text = Text .. '        '
         end
     end
-    Text = Text .. 'Decorator : ' .. self.DisplayName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
+    Text = Text .. 'Decorator : ' .. self.NodeDispName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
     Text = Text .. self.Child:PrintNode(nDeep)
     return Text
 end

@@ -7,8 +7,8 @@ local LService = class.class 'LService' : extends 'LDecorator' {
     ctor = function()end,
 }
 ---@param TickInterval number
-function LService:ctor(DisplayName, TickInterval)
-    class.LDecorator.ctor(self, DisplayName)
+function LService:ctor(NodeDispName, TickInterval)
+    class.LDecorator.ctor(self, NodeDispName)
     self.StaticTickInterval = TickInterval
 end
 function LService:OnInit()
@@ -38,7 +38,7 @@ function LService:PrintNode(nDeep)
             Text = Text .. '        '
         end
     end
-    Text = Text .. 'Service : ' .. self.DisplayName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
+    Text = Text .. 'Service : ' .. self.NodeDispName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
     Text = Text .. self.Child:PrintNode(nDeep)
     return Text
 end

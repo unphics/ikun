@@ -13,8 +13,8 @@ local LDecorator_DutyTraticPos = class.class 'LDecorator_DutyTraticPos' : extend
 --[[private]]
     ConstDutyDistance = nil,
 }
-function LDecorator_DutyTraticPos:ctor(DisplayName, DutyDistance)
-    class.LDecorator.ctor(self, DisplayName)
+function LDecorator_DutyTraticPos:ctor(NodeDispName, DutyDistance)
+    class.LDecorator.ctor(self, NodeDispName)
     self.ConstDutyDistance = DutyDistance or 100
 end
 function LDecorator_DutyTraticPos:Judge()

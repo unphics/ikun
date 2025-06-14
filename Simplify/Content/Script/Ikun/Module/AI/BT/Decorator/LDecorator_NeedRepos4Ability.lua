@@ -11,8 +11,8 @@ local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 local LDecorator_NeedRepos4Ability = class.class 'LDecorator_NeedRepos4Ability' : extends 'LDecorator' {
 --[[private]]
 }
-function LDecorator_NeedRepos4Ability:ctor(DisplayName)
-    class.LDecorator.ctor(self, DisplayName)
+function LDecorator_NeedRepos4Ability:ctor(NodeDispName)
+    class.LDecorator.ctor(self, NodeDispName)
 end
 function LDecorator_NeedRepos4Ability:Judge()
     local FightTargetActor = self:GetTargetActor()

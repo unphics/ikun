@@ -13,8 +13,8 @@ local LDecorator_BBCondition = class.class 'LDecorator_BBCondition' : extends 'L
 --[[private]]
     CondBBKeyName = nil,
 }
-function LDecorator_BBCondition:ctor(DisplayName, CondBBKeyName)
-    class.LDecorator.ctor(self, DisplayName)
+function LDecorator_BBCondition:ctor(NodeDispName, CondBBKeyName)
+    class.LDecorator.ctor(self, NodeDispName)
     self.CondBBKeyName = CondBBKeyName
 end
 function LDecorator_BBCondition:Judge()
@@ -34,7 +34,7 @@ function LDecorator_BBCondition:PrintNode(nDeep)
             Text = Text .. '        '
         end
     end
-    Text = Text .. string.format('Decorator : %s [%s] : %s\n',self.DisplayName, self.CondBBKeyName, ELStatus.PrintLStatus(self.LastStatus))
+    Text = Text .. string.format('Decorator : %s [%s] : %s\n',self.NodeDispName, self.CondBBKeyName, ELStatus.PrintLStatus(self.LastStatus))
     Text = Text .. self.Child:PrintNode(nDeep)
     return Text
 end
