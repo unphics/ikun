@@ -1,6 +1,6 @@
 
 ---
----@brief 角色的基础信息类, 包括基础的配置信息, 与角色生活状态(死活)无关(暂时)
+---@brief 角色的基础信息类
 ---@author zys
 ---@data Sat Jun 14 2025 18:43:45 GMT+0800 (中国标准时间)
 ---
@@ -11,14 +11,17 @@ local RoleConfig = require('Content/Role/Config/RoleConfig')
 ---@field OwnerRole RoleClass
 ---@field RoleInstId number 角色实例Id
 ---@field RoleCfgId number 配置表模板Id
----@field RoleDispName string
+---@field RoleDispName string 角色名字
+---@field bDead boolean
 local RoleInfoClass = class.class'RoleInfoClass' {
 --[[public]]
     ctor = function()end,
     InitRoleInstId = function()end,
+    RoleDoDeath = function()end,
     RoleCfgId = nil,
     RoleDispName = nil,
     RoleInstId = nil,
+    bDead = nil,
 --[[private]]
     OwnerRole = nil,
 }
@@ -29,6 +32,7 @@ function RoleInfoClass:ctor(Role, CfgId)
     self.OwnerRole = Role
     self.RoleCfgId = CfgId
     self.RoleDispName = Config.DisplayName
+    self.bDead = true
 end
 ---@param InstId number
 function RoleInfoClass:InitRoleInstId(InstId)
@@ -39,4 +43,8 @@ function RoleInfoClass:InitRoleInstId(InstId)
         return log.error(log.key.roleinit, '无效的InstId')
     end
     self.RoleInstId = InstId
+    self.bDead = false
+end
+function RoleInfoClass:RoleDoDeath()
+    self.bDead = true
 end

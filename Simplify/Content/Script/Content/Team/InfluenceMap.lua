@@ -87,7 +87,7 @@ function InfluenceMapClass:AddCalcRoleCount()
     ---@param InfluenceItem InfluenceItem
     ---@param Role RoleClass
     local function fn(InfluenceItem, Role, InfluenceMapClass)
-        if not Role.Dead then
+        if not Role:IsRoleDead() then
             InfluenceItem.RoleCount = InfluenceItem.RoleCount + 1
         end
     end

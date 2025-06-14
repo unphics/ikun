@@ -129,7 +129,7 @@ function TeamEnemyClass:CheckEnemyDead()
     local Index = 1
     while Index <= #self.tbEnemyRolePerception do
         local Info = self.tbEnemyRolePerception[Index] ---@type TeamEnemyPerception
-        if Info.Role:IsDead() then
+        if Info.Role:IsRoleDead() then
             table.remove(self.tbEnemyRolePerception, Index)
         else
             Index = Index + 1

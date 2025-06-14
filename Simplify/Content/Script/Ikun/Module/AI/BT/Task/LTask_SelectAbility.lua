@@ -37,7 +37,7 @@ end
 function LTask_SelectAbility:SelectAbilityRandom()
     local CurEnemyRole = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
     local CurEnemyTarget = CurEnemyRole.Avatar ---@type BP_ChrBase
-    if not CurEnemyTarget or not obj_util.is_valid(CurEnemyTarget) or CurEnemyTarget:GetRole():IsDead() then
+    if not CurEnemyTarget or not obj_util.is_valid(CurEnemyTarget) or CurEnemyTarget:GetRole():IsRoleDead() then
         CurEnemyRole = self.Chr:GetRole().Team.CurTB:ReadDynaSuppressTarget(CurEnemyRole:GetRoleInstId())
         CurEnemyTarget = CurEnemyRole.Avatar
         -- return log.error('LTask_SelectAbility:SelectAbilityRandom() Failed to index valid enemy target !')

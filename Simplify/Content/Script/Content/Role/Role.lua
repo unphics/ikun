@@ -19,7 +19,6 @@ local RoleInfoClass = require('Content/Role/RoleInfo')
 ---@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
 ---@field FightTarget FightTargetClass * 战斗目标
----@field Dead boolean 已经死亡
 ---@field bNpc boolean
 local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
 --[[public]]
@@ -38,18 +37,17 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     GetRoleCfgId = function()end,
     GetRoleInstId = function()end,
     GetRoleDispName = function()end,
+    IsRoleDead = function()end,
 --[[private]]
     StartBT = function()end,
     RoleInfo = nil,
     FightTarget = nil,
-    Dead = false,
     Avatar = nil,
     BelongKingdomLua = nil,
     BT = nil,
     bNpc = nil,
 }
 function RoleClass:ctor()
-    self.Dead = false
     self.bNpc = false
     self.FightTarget = class.new'FightTargetClass'(self)
 end
@@ -83,9 +81,6 @@ function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     self.BelongKingdomLua:AddKingdomMember(self)
 
     self:StartBT()
-end
-function RoleClass:IsDead()
-    return self.Dead
 end
 function RoleClass:GetDisplayName()
     return self.RoleInfo.RoleDispName
@@ -141,7 +136,7 @@ function RoleClass:AddEnemyChecked(OtherRole)
     if not OtherRole then
         return false
     end
-    if OtherRole.Dead then
+    if OtherRole:IsRoleDead() then
         return false
     end
     if not self:IsEnemy(OtherRole) then
@@ -164,7 +159,7 @@ function RoleClass:GetTarget()
 end
 
 function RoleClass:RoleBeginDeath()
-    self.Dead = true
+    self.RoleInfo:RoleDoDeath()
     self.BT = nil
 end
 
@@ -188,7 +183,7 @@ end
 function RoleClass:PrintRole()
     local str = ''
     local hp = obj_util.is_valid(self.Avatar) and self.Avatar.AttrSet:GetAttrValueByName("Health")
-    str = str..'{ Id:'..self:GetRoleInstId()..', Dead:'..tostring(self.Dead)..', hp:'..tostring(hp)..' }'
+    str = str..'{ Id:'..self:GetRoleInstId()..', Dead:'..tostring(self:IsRoleDead())..', hp:'..tostring(hp)..' }'
     return str
 end
 
@@ -202,6 +197,10 @@ end
 
 function RoleClass:GetRoleDispName()
     return self.RoleInfo.RoleDispName
+end
+
+function RoleClass:IsRoleDead()
+    return self.RoleInfo.bDead
 end
 
 require('Content/Role/Impl/RoleDef')

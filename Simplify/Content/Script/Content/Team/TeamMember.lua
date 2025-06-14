@@ -64,7 +64,7 @@ function TeamMemberClass:ElectLeader()
     self.TeamLeader = TeamLeader
 end
 function TeamMemberClass:GetLeader()
-    if self.TeamLeader.Dead then
+    if self.TeamLeader:IsRoleDead() then
         self:RemoveMember(self.TeamLeader:GetRoleInstId())
         self:ElectLeader()
     end

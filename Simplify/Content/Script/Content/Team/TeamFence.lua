@@ -44,7 +44,7 @@ function TeamFenceClass:IsAllMemberRegister()
     local CallbackCount = #self.arrFnCallback
     for i, ele in ipairs(AllMember) do
         local Role = ele ---@type RoleClass
-        if not Role.Dead then
+        if not Role:IsRoleDead() then
             RoleCount = RoleCount + 1
         end
     end
