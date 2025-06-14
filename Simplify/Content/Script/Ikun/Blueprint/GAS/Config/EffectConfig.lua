@@ -15,7 +15,7 @@ EffectConfig[1] = {
 EffectConfig[2] = {
     EffectId = 2,
     EffectDesc = '治疗',
-    EffectVal = 20,
+    EffectVal = 5,
 }
 
 return EffectConfig

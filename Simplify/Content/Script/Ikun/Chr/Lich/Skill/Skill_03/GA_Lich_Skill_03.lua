@@ -40,8 +40,8 @@ function GA_Lich_Skill_03:OnEventReceived(EventTag, EventData)
         return
     end
     if EventTag.TagName == UE.UIkunFnLib.RequestGameplayTag('Chr.Skill.Hit.01').TagName then
-        self.TimerHandle = async_util.timer(self.AvatarLua, self.TimerLoopCall, self.HealInterval, true)
         self.HealedTime = 0
+        self.TimerHandle = async_util.timer(self.AvatarLua, function()self:TimerLoopCall() end, self.HealInterval, true)
     end
 end
 
@@ -50,8 +50,10 @@ function GA_Lich_Skill_03:TimerLoopCall()
     if (not self:GetHealTarget()) or (self.HealedTime >= self.MaxHealTime) then
         async_util.clear_timer(self.AvatarLua, self.TimerHandle)
         self:MontageJumpToSection('End')
+        return
     end
     local EffectContextHandle = self:GetContextFromOwner(nil)
+    log.dev('qqq')
     self:GetHealTarget():GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
 end
 
