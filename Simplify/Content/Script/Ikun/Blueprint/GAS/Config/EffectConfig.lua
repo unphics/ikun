@@ -9,7 +9,7 @@ local EffectConfig = {}
 EffectConfig[1] = {
     EffectId = 1,
     EffectDesc = '火球爆炸',
-    EffectCorr = 1,
+    EffectCorr = 0.4,
 }
 
 EffectConfig[2] = {
