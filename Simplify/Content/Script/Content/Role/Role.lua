@@ -25,7 +25,6 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     ctor = function()end,
     Tick = function()end,
     InitByAvatar = function()end,
-    GetDisplayName = function()end,
     SwitchNewBT = function()end,
     IsFirend = function()end,
     IsEnemy = function()end,
@@ -81,9 +80,6 @@ function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     self.BelongKingdomLua:AddKingdomMember(self)
 
     self:StartBT()
-end
-function RoleClass:GetDisplayName()
-    return self.RoleInfo.RoleDispName
 end
 function RoleClass:StartBT()
     local RoleCfg = RoleConfig[self:GetRoleCfgId()]

@@ -47,7 +47,7 @@ function M:OnChrInitDisplay()
     if net_util.is_client(self:GetOwner()) or (not self.bNpc) then
         return
     end
-    self:GetOwner().MsgBusComp:TriggerEvent('RoleName', self.Role:GetDisplayName())
+    self:GetOwner().MsgBusComp:TriggerEvent('RoleName', self.Role:GetRoleDispName())
 end
 
 function M:LogBT2UI_RPC(Text)

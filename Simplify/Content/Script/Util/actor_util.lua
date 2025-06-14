@@ -149,10 +149,10 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
             return false
         end
         if OwnerRole:IsFirend(HitRole) then
-            log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [firend] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
+            log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [firend] '..OwnerRole:GetRoleDispName()..','..HitRole:GetRoleDispName())
             return true
         end
-        log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [enemy] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
+        log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [enemy] '..OwnerRole:GetRoleDispName()..','..HitRole:GetRoleDispName())
         return false
     end
     return filter
