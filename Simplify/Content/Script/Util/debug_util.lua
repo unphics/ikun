@@ -5,10 +5,12 @@
 ---@data Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
 ---
 
-log.error("debug_util Loaded")
+log.log("debug_util Loaded")
 
 ---@class debug_util
 local debug_util = {}
+
+debug_util.debug_class = false
 
 debug_util.debug_bt = 1
 debug_util.debugrole = 10102001

@@ -5,10 +5,10 @@
 
 void AIkunGameModeBase::StartPlay() {
 	Super::StartPlay();
-	UE_LOG(LogTemp, Warning, TEXT("===== AIkunGameModeBase::StartPlay() ====="))
+	// UE_LOG(LogTemp, Warning, TEXT("===== AIkunGameModeBase::StartPlay() ====="))
 }
 
 void AIkunGameModeBase::BeginDestroy() {
 	Super::BeginDestroy();
-	UE_LOG(LogTemp, Warning, TEXT("===== AIkunGameModeBase::BeginDestroy() ====="))
+	// UE_LOG(LogTemp, Warning, TEXT("===== AIkunGameModeBase::BeginDestroy() ====="))
 }
