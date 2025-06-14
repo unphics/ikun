@@ -40,7 +40,8 @@ end
 
 local function create_class(class_name, structure, super_class)
     if (classes[class_name]) then
-        log.log("class error : class already exists : " .. class_name)
+        ---@todo log
+        -- log.log("class error : class already exist : " .. class_name)
     end
     local new_class = structure -- deepcopy(structure)
     new_class.__class_name = class_name
@@ -91,9 +92,6 @@ local function class(class_name)
             log.error("class error : class not found : " .. class_name)
         end,
         __call = function(self, ...)
-            if classes[class_name] then
-                log.log("class error : class already exist : " .. class_name)
-            end
             local new_inst = create_class(class_name, ...)
             return new_inst
         end

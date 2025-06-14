@@ -6,13 +6,14 @@
 ---
 
 log = require('Util.Log')
+debug_util = require('Util/debug_util')
+
 _ = require("Util.Class.class1")
 class = require("Util.Class.class2")
 _ = require("Util.Class.test1")
 _ = require("Util.Class.test2")
 
 table_util = require('Util/table_util')
-debug_util = require('Util/debug_util')
 world_util = require("Util/world_util")
 gas_util = require('Util/gas_util')
 actor_util = require('Util/actor_util')

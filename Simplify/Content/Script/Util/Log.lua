@@ -60,8 +60,11 @@ function log.role(Chr)
 end
 
 log.key = {
-    repos = '[射手站位调整]',
+    luainit = '[Lua初始化]',
     ueinit = '[UE初始化]',
+    repos = '[射手站位调整]',
 }
+
+log.error(log.key.luainit..' --------------------------------------------------------------------------')
 
 return log

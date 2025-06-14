@@ -3,6 +3,7 @@
 ---
 
 ---@class GA_IkunBase: GA_IkunBase_C
+---@field AvatarLua BP_ChrBase
 local M = UnLua.Class()
 
 ---@protected [ImplBP]
@@ -29,6 +30,7 @@ function M:GAInitData()
     self.tbUStructRef = {}
     self.OnAbilityEnd = {}
     self.MapUObjectRef:Clear()
+    self.AvatarLua = self:GetAvatarActorFromActorInfo()
 end
 
 ---@protected [Call] [End]

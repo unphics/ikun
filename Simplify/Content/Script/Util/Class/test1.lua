@@ -1,4 +1,9 @@
 local class = require("Util.Class.class1")
+
+if not debug_util.debug_class then
+    return
+end
+
 class.class "base" {
     x = 10,
     z = 1,

@@ -9,12 +9,10 @@
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class GA_Lich_Skill_02: GA_IkunBase
-local M = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
+local GA_Lich_Skill_02 = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
 
-function M:OnActivateAbility()
+function GA_Lich_Skill_02:OnActivateAbility()
     self.Super.OnActivateAbility(self)
-
-    self.AvatarLua = self:GetAvatarActorFromActorInfo()
 
     ---@type UATPlayMtgAndWaitEvent
     local AT = UE.UATPlayMtgAndWaitEvent.PlayMtgAndWaitEvent(self, 'task name', 
@@ -30,7 +28,7 @@ function M:OnActivateAbility()
     log.log('GA_Lich_01:OnActivateAbility()')
 end
 
-function M:K2_OnEndAbility(WasCancelled)
+function GA_Lich_Skill_02:K2_OnEndAbility(WasCancelled)
     if net_util.is_server(self:GetAvatarActorFromActorInfo()) then
         -- if self.Ball and obj_util.is_valid(self.Ball) then
         --     self.Ball:K2_DestoryActor()
@@ -48,7 +46,7 @@ function M:K2_OnEndAbility(WasCancelled)
     self.Super.K2_OnEndAbility(self, WasCancelled)
 end
 
-function M:OnEventReceived(EventTag, EventData)
+function GA_Lich_Skill_02:OnEventReceived(EventTag, EventData)
     local SelfActor = self:GetAvatarActorFromActorInfo() ---@type BP_ChrBase
     if net_util.is_client(SelfActor) then
         return
@@ -74,15 +72,15 @@ function M:OnEventReceived(EventTag, EventData)
     Ball:InitBallByAbility(self, SelfActor,self.OnBallTrigger)
 end
 
-function M:OnCompleted(EventTag, EventData)
+function GA_Lich_Skill_02:OnCompleted(EventTag, EventData)
     self:GASuccess()
 end
 
-function M:OnCancelled(EventTag, EventData)
+function GA_Lich_Skill_02:OnCancelled(EventTag, EventData)
     self:GAFail()
 end
 
-function M:OnBallTrigger(Actor, Transform)
+function GA_Lich_Skill_02:OnBallTrigger(Actor, Transform)
     self.Overridden.OnBallTrigger(self, Actor, Transform)
     do return end ---@todo zys 此处会触发crash, 只能调用蓝图了
         
@@ -106,7 +104,7 @@ function M:OnBallTrigger(Actor, Transform)
     -- self:RefUObject('TargetActor', TargetActor)
 end
 
-function M:OnTAValidData(Data, EventTag)
+function GA_Lich_Skill_02:OnTAValidData(Data, EventTag)
     local ActorArray = UE.UAbilitySystemBlueprintLibrary.GetAllActorsFromTargetData(Data) ---@type TArray
     local TargetActor = nil
     for i = 1, ActorArray:Length() do
@@ -120,9 +118,6 @@ function M:OnTAValidData(Data, EventTag)
     for i = 1, ActorArray:Length() do
         local Actor = ActorArray:Get(i)
         if Actor ~= SelfActor and Actor.GetRole and Actor:GetRole() and SelfActor:GetRole():IsEnemy(Actor:GetRole()) then
-            ---@todo GetContextFromOwner
-            -- local EffectContextHandle = UE.FGameplayEffectContextHandle() ---@type FGameplayEffectContext
-            -- EffectContextHandle.AbilityCDO = self.StaticClass()
             local EffectContextHandle = self:GetContextFromOwner(Data)
             Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         end
@@ -130,4 +125,4 @@ function M:OnTAValidData(Data, EventTag)
     -- self:GASuccess()
 end
 
-return M
+return GA_Lich_Skill_02

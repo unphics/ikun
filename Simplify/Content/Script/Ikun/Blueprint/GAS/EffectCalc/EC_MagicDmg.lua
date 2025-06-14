@@ -7,20 +7,18 @@
 
 local EffectConfig = require('Ikun/Blueprint/GAS/Config/EffectConfig')
 
----@class EC_MagicDmg_C
+---@class EC_MagicDmg : GE_EffectCalcBase
 local EC_MagicDmg = UnLua.Class('Ikun/Blueprint/GAS/EffectCalc/GE_EffectCalcBase')
 
 ---@override
 function EC_MagicDmg:OnExecute(CalcObj, Ability, Effect)
-    
     local MgcDmgCfgCorr = 0
     if Effect and Effect.EffectCfgId then
         local Info = EffectConfig[Effect.EffectCfgId] ---@type EffectConfig
         if Info then
-            MgcDmgCfgCorr = Info.EffectDmgCorr
+            MgcDmgCfgCorr = Info.EffectCorr
         end
     end
-    
     local SrcMagicPowerVal = CalcObj:ReadAttrValue('MagicPower', true)
     local TarMgcDefVal = CalcObj:ReadAttrValue('MagicalDefense', false)
     local PercMgcDefVal = math.log(TarMgcDefVal) -- log的底数为nil的话默认是e

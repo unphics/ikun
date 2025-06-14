@@ -24,10 +24,18 @@ end
 ---@param Fn function
 ---@param Time number
 ---@param bLoop boolean
+---@return FTimerHandle
 async_util.timer = function(UObject, Fn, Time, bLoop)
     bLoop = bLoop or false
     local timer = UE.UKismetSystemLibrary.K2_SetTimerDelegate({UObject, Fn}, Time, bLoop, 0, 0)
     return timer
+end
+
+---@param UObject UObject
+---@param handle FTimerHandle
+async_util.clear_timer = function(UObject, handle)
+    UE.UKismetSystemLibrary.K2_ClearAndInvalidateTimerHandle(UObject, handle)
+    handle = nil
 end
 
 return async_util
