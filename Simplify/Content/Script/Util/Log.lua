@@ -43,7 +43,7 @@ function log.roleid(Chr)
     if role then
         return string.format('[%s]', tostring(role:GetRoleInstId()))
     else
-        return ''
+        return 'undefined'
     end
 end
 
@@ -64,6 +64,7 @@ log.key = {
     ueinit = '[UE初始化]',
     roleinit = '[角色初始化]',
     repos = '[射手站位调整]',
+    lich02boom = '[Lich二技能]',
 }
 
 log.error(log.key.luainit..' --------------------------------------------------------------------------')

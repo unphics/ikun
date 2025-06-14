@@ -5,7 +5,6 @@
 ---@data Fri Jan 31 2025 14:13:55 GMT+0800 (中国标准时间)
 ---
 
--- local lua = require('Ikun/Blueprint/GAS/GA_IkunBase')
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class GA_Lich_Skill_02: GA_IkunBase
@@ -16,7 +15,7 @@ function GA_Lich_Skill_02:OnActivateAbility()
 
     ---@type UATPlayMtgAndWaitEvent
     local AT = UE.UATPlayMtgAndWaitEvent.PlayMtgAndWaitEvent(self, 'task name', 
-        self.Mtg, UE.FGameplayTagContainer(),  1.0 , '', false, 1.0)
+        self.Mtg, UE.FGameplayTagContainer(),  1 , '', false, 1.0)
     AT.OnBlendOut:Add(self, self.OnCompleted)
     AT.OnCompleted:Add(self, self.OnCompleted)
     AT.OnInterrupted:Add(self, self.OnCancelled)
@@ -114,10 +113,12 @@ function GA_Lich_Skill_02:OnTAValidData(Data, EventTag)
             ActorArray:Remove(Actor)
         end
     end
+    log.dev(log.key.lich02boom, '爆炸波及敌人数量', tostring(ActorArray:Length()))
     local SelfActor = self:GetAvatarActorFromActorInfo() ---@type BP_ChrBase
     for i = 1, ActorArray:Length() do
         local Actor = ActorArray:Get(i)
         if Actor ~= SelfActor and Actor.GetRole and Actor:GetRole() and SelfActor:GetRole():IsEnemy(Actor:GetRole()) then
+            log.dev(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleInstId())
             local EffectContextHandle = self:GetContextFromOwner(Data)
             Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         end

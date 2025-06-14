@@ -29,6 +29,11 @@ debug_util.printrole = function(id)
     end
 end
 
+debug_util.gamespeed = function(speed)
+    local time = MdMgr.TimeMgr ---@type TimeMgr
+    time:SetGameSpeed(speed)
+end
+
 ---@public
 ---@param Chr BP_ChrBase | RoleClass | number
 ---@return boolean

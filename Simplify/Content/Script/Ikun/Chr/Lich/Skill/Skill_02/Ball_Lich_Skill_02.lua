@@ -111,7 +111,8 @@ function M:ReturnResult(OtherActor)
     if not obj_util.is_valid(AvatarC) then
         return log.error("Ball: 爆炸时自身状态错误! invalid SelfAvatar", self.Ability, self)
     end
-    log.dev('Ball: 爆炸成功 '..AvatarC:PrintRoleInfo()..self:PrintRhsActor(OtherActor))
+    log.dev(log.key.lich02boom, '爆炸成功', '自己='..log.roleid(AvatarC), '对方='..log.roleid(OtherActor), '-------------------')
+    -- log.dev('Ball: 爆炸成功\n        自己 = '..AvatarC:PrintRoleInfo()..'\n        对方 = '..self:PrintRhsActor(OtherActor))
     self.TriggerCB(self.Ability, OtherActor, self:GetTransform())
     self.bBallTriggered = true
     ---@note 避免crash, 延迟destory; 原因应该是某个相关的structure引用了此Actor
