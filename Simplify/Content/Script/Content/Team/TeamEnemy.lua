@@ -83,7 +83,7 @@ function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
         Role = EnemyRole,
         LastSeenLoc = EnemyRole.Avatar:K2_GetActorLocation(),
         LastSeenTime = 0,
-        Visibility = true, ---@todo 隐身/遮挡/埋伏等藏起来的角色不可见
+        Visibility = true, ---@note 隐身/遮挡/埋伏等藏起来的角色不可见
         Investigation = 1,
         Confidence = 1,
         TargetBy = nil,

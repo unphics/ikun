@@ -35,7 +35,6 @@ end
 function LDecorator:Judge()
     return false
 end
----@todo
 function LDecorator:Negate()
     self.bNegate = true
     return self.LBT

@@ -190,7 +190,6 @@ end
 ---@param FnFilter function(AActor>)
 ---@return UE.TArray<UE.AActor>
 actor_util.find_actors_in_range = function(Actor, Loc, Range, FnFilter)
-    ---@todo
     local ResultHits = UE.TArray(UE.FHitResult)
     local Ignore = UE.TArray(UE.AActor)
     Ignore:Add(Actor)

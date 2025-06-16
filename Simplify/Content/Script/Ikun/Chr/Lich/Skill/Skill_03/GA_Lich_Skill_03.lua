@@ -59,7 +59,6 @@ end
 ---@private 获取治疗目标
 ---@return BP_ChrBase
 function GA_Lich_Skill_03:GetHealTarget()
-    ---@todo 这里的Target肯定不是啥FightTarget
     local Target = self.AvatarLua:GetRole().BT.Blackboard:GetBBValue(BBKeyDef.SupportTarget)
     Target = Target.Avatar
     return Target

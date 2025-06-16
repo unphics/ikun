@@ -25,7 +25,6 @@ function LService_TeamAlert:OnUpdate(DeltaTime)
         for i = 1, Hits:Length()do
             local Hit = Hits:Get(i)
             if Hit:IsA(UE.ACharacter) then
-                ---@todo last 该写Team添加敌人了
                 if self.Chr:GetRole():IsEnemy(Hit:GetRole()) then
                     local FightTarget = Hit:GetRole().Team or Hit:GetRole()
                     self.Chr:GetRole().Team:Encounter(FightTarget)
