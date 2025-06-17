@@ -8,10 +8,10 @@
 ---@enum BehavDef
 local BehavDef = {
     Special = '特殊行为',
+    Survive = '生存行为',
     Support = '支援行为',
+    Attack = '进攻行为',
     Disturb = '骚扰行为',
-    Defense = '防御行为',
-    Damage = '伤害行为',
     Move = '移动行为',
 }
 

@@ -15,7 +15,11 @@ local Key = {
     FightPosLoc = 'FightPosLoc',            -- 战斗位置坐标
     UrgentMoveTarget = 'UrgentMoveTarget',  -- 紧急移动的目标
 
-    SupportTarget = 'SupportTarget',              -- 支援目标(治疗,加buff等)
+    SupportTarget = 'SupportTarget',        -- 支援目标(治疗,加buff等)
+
+    LastBehav = 'LastBehav',                -- 上一个行为
+    CurBehav = 'CurBehav',                  -- 当前行为
+    NextBehav = 'NextBehav',                -- 下一个行为
 }
 
 return Key

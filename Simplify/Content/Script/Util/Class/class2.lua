@@ -40,7 +40,6 @@ end
 
 local function create_class(class_name, structure, super_class)
     if (classes[class_name]) then -- 重复注册
-        return
     end
     local new_class = structure -- deepcopy(structure)
     new_class.__class_name = class_name
