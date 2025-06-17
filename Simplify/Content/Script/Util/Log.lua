@@ -59,6 +59,18 @@ function log.role(Chr)
     return nil
 end
 
+---@param Chr RoleClass | BP_ChrBase
+---@return BP_ChrBase
+function log.chr(Chr)
+    if class.instanceof(Chr, class.RoleClass) then
+        return Chr:GetRole()
+    end
+    if Chr.GetRole then
+        return Chr
+    end
+    return nil
+end
+
 log.key = {
     luainit = '[Lua初始化]',
     ueinit = '[UE初始化]',
