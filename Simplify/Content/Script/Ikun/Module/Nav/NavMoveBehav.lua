@@ -11,14 +11,15 @@
 ---@field MaxStuckTime number
 ---@field QueryNavExtent FVector
 ---@field MoveToInfo MoveToInfo
+---@field NavMoveData NavMoveData
 ---@field MoveStuckMonitor MoveStuckMonitor
 local NavMoveBehav = class.class 'NavMoveBehav' : extends 'MdBase' {
 --[[public]]
     ctor = function()end,
     NewMoveTo = function()end,
+--[[private]]
     GetTaskTarget = function()end,
     GetTaskTargetLoc = function()end,
---[[private]]
     TaskEnd = function()end,
     Chr = nil,
     Role = nil,
@@ -62,6 +63,7 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
     -- 检查目标有效
     local TargetLoc = self:GetTaskTargetLoc()
     if not TargetLoc then
+        self.MoveToInfo.bLostTarget = true
         self.MoveToInfo.CallbackInfo.OnNavMoveLostTarget(self.MoveToInfo.CallbackInfo.This)
         return
     end
@@ -78,15 +80,67 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
         self.MoveToInfo.CallbackInfo.OnNavMoveArrived(self.MoveToInfo.CallbackInfo.This)
         return
     end
-    -- 
+    -- 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
+    self.NavMoveData = class.new'NavMoveData'()
+    if not self.NavMoveData:GenPathData(self.Chr, OwnerAgentLoc, TargetLoc) then
+        local bTargetReachable = class.NavMoveData.ProjectPointToNavMesh(self.Chr, TargetLoc)
+        if bTargetReachable then
+            local bSelfMovable, NearNavPoint = class.NavMoveData.ProjectPointToNavMesh(self.Chr, OwnerAgentLoc, self.QueryNavExtent)
+            if bSelfMovable then
+                self.NavMoveData:GenPathData(self.Chr, NearNavPoint, TargetLoc, OwnerAgentLoc)
+            end
+            if not self.NavMoveData:IsValid() then
+                self.MoveToInfo.CallbackInfo.OnNavMoveStuck(self.MoveToInfo.CallbackInfo.This)
+                return
+            end
+        end
+    end
 end
 
----@public 获取寻路目标
+---@public
+function NavMoveBehav:TickMove(DeltaTime)
+    -- 判断跑完了
+    if self.NavMoveData:IsFinish() then    
+        self.MoveToInfo.bArrived = true
+        self.MoveToInfo.CallbackInfo.OnNavMoveArrived(self.MoveToInfo.CallbackInfo.This)
+        return
+    end
+    -- 判断被阻挡
+    local OwnerAgentLoc = self.Chr:GetNavAgentLocation()
+    if self.MoveStuckMonitor:TickCheck(DeltaTime, OwnerAgentLoc) then
+        self.MoveToInfo.bStuck = true
+        self.MoveToInfo.CallbackInfo.OnNavMoveStuck(self.MoveToInfo.CallbackInfo.This)
+        return
+    end
+    -- 寻路移动
+    local Dir = self.NavMoveData:CalcChr2CurSegEndDir2D(self.Chr) ---@type FVector
+    Dir:Normalize()
+    self.Chr:AddMovementInput(Dir, 1, false)
+    -- 抵达当前段目标则走下一段
+    if self:HasReachedCurSegEnd(0.1) then
+        self.NavMoveData:AdvanceSeg()
+    end
+end
+
+---@private 已经抵达了当前段的目标
+---@param RadiusCorr number 半径修正系数
+function NavMoveBehav:HasReachedCurSegEnd(RadiusCorr)
+    local OwnerAgentLoc = self.Chr:GetNavAgentLocation()
+    local CurSegEndLoc = self.NavMoveData:GetCurSegEnd()
+    local Radius = self.AccectableRadius * RadiusCorr
+    local Distance = UE.UKismetMathLibrary.Vector_Distance(OwnerAgentLoc, CurSegEndLoc)
+    if Distance < Radius then
+        return true
+    end
+    return false
+end
+
+---@private 获取寻路目标
 function NavMoveBehav:GetTaskTarget()
     return self.MoveToInfo and self.MoveToInfo.MoveTarget or nil
 end
 
----@public 获取寻路目标的位置
+---@private 获取寻路目标的位置
 function NavMoveBehav:GetTaskTargetLoc()
     if not self.MoveToInfo then
         return
