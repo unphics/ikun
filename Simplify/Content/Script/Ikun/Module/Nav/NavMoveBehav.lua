@@ -1,6 +1,6 @@
 
 ---
----@brief   移动行为
+---@brief   移动行为, 偏应用
 ---@author  zys
 ---@data    Wed Jun 18 2025 00:02:19 GMT+0800 (中国标准时间)
 ---
@@ -13,11 +13,13 @@
 ---@field MoveToInfo MoveToInfo
 ---@field NavMoveData NavMoveData
 ---@field MoveStuckMonitor MoveStuckMonitor
-local NavMoveBehav = class.class 'NavMoveBehav' : extends 'MdBase' {
+local NavMoveBehav = class.class 'NavMoveBehav' {
 --[[public]]
     ctor = function()end,
-    NewMoveTo = function()end,
+    NewMoveToTask = function()end,
+    TickMove = function()end,
 --[[private]]
+    HasReachedCurSegEnd = function()end,
     GetTaskTarget = function()end,
     GetTaskTargetLoc = function()end,
     TaskEnd = function()end,
@@ -65,6 +67,7 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
     if not TargetLoc then
         self.MoveToInfo.bLostTarget = true
         self.MoveToInfo.CallbackInfo.OnNavMoveLostTarget(self.MoveToInfo.CallbackInfo.This)
+        self:TaskEnd()
         return
     end
     -- 检查是否已经可以判断抵达
@@ -77,7 +80,9 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
     self.MoveStuckMonitor = class.new'MoveStuckMonitor'(self.MaxStuckTime, OwnerAgentLoc)
     local Distance = UE.UKismetMathLibrary.Vector_Distance(OwnerAgentLoc, TargetLoc)
     if Distance < self.MoveToInfo.AcceptRadius then
+        self.MoveToInfo.bArrived = true
         self.MoveToInfo.CallbackInfo.OnNavMoveArrived(self.MoveToInfo.CallbackInfo.This)
+        self:TaskEnd()
         return
     end
     -- 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
@@ -90,7 +95,9 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
                 self.NavMoveData:GenPathData(self.Chr, NearNavPoint, TargetLoc, OwnerAgentLoc)
             end
             if not self.NavMoveData:IsValid() then
+                self.MoveToInfo.bStuck = true
                 self.MoveToInfo.CallbackInfo.OnNavMoveStuck(self.MoveToInfo.CallbackInfo.This)
+                self:TaskEnd()
                 return
             end
         end
@@ -99,10 +106,14 @@ end
 
 ---@public
 function NavMoveBehav:TickMove(DeltaTime)
+    if not self.NavMoveData then
+        return
+    end
     -- 判断跑完了
     if self.NavMoveData:IsFinish() then    
         self.MoveToInfo.bArrived = true
         self.MoveToInfo.CallbackInfo.OnNavMoveArrived(self.MoveToInfo.CallbackInfo.This)
+        self:TaskEnd()
         return
     end
     -- 判断被阻挡
@@ -110,6 +121,7 @@ function NavMoveBehav:TickMove(DeltaTime)
     if self.MoveStuckMonitor:TickCheck(DeltaTime, OwnerAgentLoc) then
         self.MoveToInfo.bStuck = true
         self.MoveToInfo.CallbackInfo.OnNavMoveStuck(self.MoveToInfo.CallbackInfo.This)
+        self:TaskEnd()
         return
     end
     -- 寻路移动
