@@ -44,6 +44,7 @@ end
 M['Team_Fight_1'] = function(Avatar)
     local LBT = class.new 'LBT'(nil, Avatar, 'Team_Fight_1') ---@type LBT
     LBT:CreateRoot()
+        :AddService('LService_ConsiderBehav', 0.3)
         :AddSelector()
             -- 团队控制强制指挥(紧急掩护, 紧急位移等)
             -- 战斗单位自主行为

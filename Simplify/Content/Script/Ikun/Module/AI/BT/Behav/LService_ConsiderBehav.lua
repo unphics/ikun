@@ -7,6 +7,7 @@
 ---@ref     
 ---
 
+local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 local BehavDef = require("Ikun.Module.AI.BT.Behav.BehavDef")
 
@@ -82,6 +83,22 @@ function LService_ConsiderBehav:CanAttack(Context)
         return false
     end
     return true
+end
+---@private
+function LService_ConsiderBehav:PrintNode(nDeep)
+    local Text = ''
+    if nDeep > 0 then
+        for i = 1, nDeep do
+            Text = Text .. '        '
+        end
+    end
+    local LastBehav = self.Blackboard:GetBBValue(BBKeyDef.LastBehav) or 'nil'
+    local CurBehav = self.Blackboard:GetBBValue(BBKeyDef.CurBehav) or 'nil'
+    local NextBehav = self.Blackboard:GetBBValue(BBKeyDef.NextBehav) or 'nil'
+    local StrBehavStatus = 'LastBehav:' .. LastBehav .. ', CurBehav:' .. CurBehav .. ', NextBehav:' .. NextBehav
+    Text = Text .. 'Service : ' .. self.NodeDispName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. StrBehavStatus .. '\n'
+    Text = Text .. self.Child:PrintNode(nDeep)
+    return Text
 end
 
 return LService_ConsiderBehav

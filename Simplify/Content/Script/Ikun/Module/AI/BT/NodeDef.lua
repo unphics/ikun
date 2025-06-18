@@ -41,3 +41,11 @@ require('Ikun/Module/AI/BT/Service/LService_Alert')
 require('Ikun/Module/AI/BT/Service/LService_NeedSwitchBT')
 require('Ikun/Module/AI/BT/Service/LService_TeamAlert')
 require('Ikun/Module/AI/BT/Service/LService_ReposJudge')
+
+
+require('Ikun/Module/AI/BT/Behav/LService_ConsiderBehav')
+require('Ikun/Module/AI/BT/Behav/LDecorator_IsBehav')
+require('Ikun/Module/AI/BT/Behav/LService_MoveBehav')
+require('Ikun/Module/AI/BT/Behav/LTask_WaitMoveArrived')
+require('Ikun/Module/AI/BT/Behav/LTask_NextBehav')
+

@@ -19,7 +19,7 @@ function LService:DoUpdate(DeltaTime)
         self.CurTickCount = self.CurTickCount + DeltaTime
         if self.CurTickCount > self.StaticTickInterval then
             self.CurTickCount = self.CurTickCount - self.StaticTickInterval
-            self:OnUpdate(DeltaTime)
+            self:OnUpdate(self.StaticTickInterval == 0 and DeltaTime or self.StaticTickInterval)
             if self:IsTerminated() then
                 return self:GetStatus()
             end

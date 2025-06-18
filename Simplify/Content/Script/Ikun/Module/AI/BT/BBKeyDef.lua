@@ -20,6 +20,8 @@ local Key = {
     LastBehav = 'LastBehav',                -- 上一个行为
     CurBehav = 'CurBehav',                  -- 当前行为
     NextBehav = 'NextBehav',                -- 下一个行为
+
+    MoveBehavObj = 'MoveBehavObj'           -- 移动行为的对象
 }
 
 return Key

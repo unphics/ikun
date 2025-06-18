@@ -113,12 +113,12 @@ function GA_Lich_Skill_02:OnTAValidData(Data, EventTag)
             ActorArray:Remove(Actor)
         end
     end
-    log.dev(log.key.lich02boom, '爆炸波及敌人数量', tostring(ActorArray:Length()))
+    log.log(log.key.lich02boom, '爆炸波及敌人数量', tostring(ActorArray:Length()))
     local SelfActor = self:GetAvatarActorFromActorInfo() ---@type BP_ChrBase
     for i = 1, ActorArray:Length() do
         local Actor = ActorArray:Get(i)
         if Actor ~= SelfActor and Actor.GetRole and Actor:GetRole() and SelfActor:GetRole():IsEnemy(Actor:GetRole()) then
-            log.dev(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleInstId())
+            log.log(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleInstId())
             local EffectContextHandle = self:GetContextFromOwner(Data)
             Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         end

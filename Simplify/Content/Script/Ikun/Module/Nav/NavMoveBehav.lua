@@ -10,9 +10,9 @@
 ---@field Role RoleClass
 ---@field MaxStuckTime number
 ---@field QueryNavExtent FVector
----@field MoveToInfo MoveToInfo
----@field NavMoveData NavMoveData
----@field MoveStuckMonitor MoveStuckMonitor
+---@field MoveToInfo MoveToInfo each
+---@field NavMoveData NavMoveData each
+---@field MoveStuckMonitor MoveStuckMonitor each
 local NavMoveBehav = class.class 'NavMoveBehav' {
 --[[public]]
     ctor = function()end,
@@ -44,6 +44,7 @@ end
 ---@field OnNavMoveLostTarget function 失去目标时
 ---@field OnNavMoveCancelled function 取消时
 ---@field OnNavMoveStuck function 阻挡被时
+---@field OnMoveTaskEnd function 移动任务结束时
 
 ---@public 移动到一个新地方
 ---@param Target BP_ChrBase|FVector
@@ -179,5 +180,8 @@ end
 
 ---@private 移动任务结束, 清理数据
 function NavMoveBehav:TaskEnd()
+    self.MoveToInfo.CallbackInfo.OnMoveTaskEnd(self.MoveToInfo.CallbackInfo.This)
     self.MoveToInfo = nil
+    self.NavMoveData = nil
+    self.MoveStuckMonitor = nil
 end
