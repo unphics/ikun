@@ -6,16 +6,6 @@
 
 local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
 
----@param Status ELStatus
-local function PrintLStatus(Status)
-    local Arr = {'Failure', 'Success', 'Running', 'Aborted', 'Invalid'}
-    local Text = Arr[Status]
-    if Text == 'Running' then
-        Text = Text .. '    <---------'
-    end
-    return Text
-end
-
 ---@class LNode 基节点, 包含所有节点的共用功能
 ---@field NodeDispName string
 ---@field NodeName string
@@ -137,7 +127,7 @@ function LComposite:PrintNode(nDeep)
             Text = Text .. '        '
         end
     end
-    Text = Text .. self.NodeDispName .. ' : ' .. PrintLStatus(self.LastStatus) .. '\n'
+    Text = Text .. self.NodeDispName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
     if self.Children then
         for _, Node in ipairs(self.Children) do
             Text = Text .. Node:PrintNode(nDeep + 1)
@@ -184,12 +174,15 @@ end
 
 
 ---@class LSelector: LSequence 选择器
+---@field ConstDebugCode number
 local LSelector = class.class'LSelector' : extends 'LSequence' {
     ctor = function()end,
     OnUpdate = function()end,
+    ConstDebugCode = nil,
 }
-function LSelector:ctor(NodeDispName)
+function LSelector:ctor(NodeDispName, DebugCode)
     class.LSequence.ctor(self, NodeDispName)
+    self.ConstDebugCode = DebugCode
 end
 -- 选择器Tick当前节点, 失败则换下一个, 否则就一直Tick当前节点
 -- 只要有一个成功, 则选择器成功; 如果都失败, 则选择器失败

@@ -54,7 +54,7 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
     ---@class MoveToInfo
     local Info = {
         MoveTarget = Target, -- 主索引
-        CacheTargetLoc = UE.FVector(),
+        CacheTargetLoc = nil, ---@type FVector
         bArrived = false,
         bLostTarget = false,
         bCancelled = false,
@@ -140,7 +140,7 @@ end
 function NavMoveBehav:HasReachedCurSegEnd(RadiusCorr)
     local OwnerAgentLoc = self.Chr:GetNavAgentLocation()
     local CurSegEndLoc = self.NavMoveData:GetCurSegEnd()
-    local Radius = self.AccectableRadius * RadiusCorr
+    local Radius = self.MoveToInfo.AcceptRadius * RadiusCorr
     local Distance = UE.UKismetMathLibrary.Vector_Distance(OwnerAgentLoc, CurSegEndLoc)
     if Distance < Radius then
         return true
@@ -180,7 +180,9 @@ end
 
 ---@private 移动任务结束, 清理数据
 function NavMoveBehav:TaskEnd()
-    self.MoveToInfo.CallbackInfo.OnMoveTaskEnd(self.MoveToInfo.CallbackInfo.This)
+    if self.MoveToInfo.CallbackInfo.OnMoveTaskEnd then
+        self.MoveToInfo.CallbackInfo.OnMoveTaskEnd(self.MoveToInfo.CallbackInfo.This)
+    end
     self.MoveToInfo = nil
     self.NavMoveData = nil
     self.MoveStuckMonitor = nil

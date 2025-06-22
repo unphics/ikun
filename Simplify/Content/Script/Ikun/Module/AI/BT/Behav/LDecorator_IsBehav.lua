@@ -21,7 +21,7 @@ local LDecorator_IsBehav = class.class 'LDecorator_IsBehav' : extends 'LDecorato
 }
 ---@override
 function LDecorator_IsBehav:ctor(NodeDispName, CondBehavKey)
-    class.LDecorator_IsBehav.ctor(self, NodeDispName)
+    class.LDecorator.ctor(self, NodeDispName)
     self.CondBehavKey = CondBehavKey
 end
 ---@override

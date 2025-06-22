@@ -92,8 +92,9 @@ function LBT:AddCompsite(LCompositeNode)
     return self
 end
 -- 添加到最后一个可挂接Child的Node上, 然后选择器变成最后一个可挂接的Node
-function LBT:AddSelector()
-    local Node = class.new 'LSelector' ('Select')
+function LBT:AddSelector(DebugCode)
+    local Node = class.new 'LSelector' ('Select', DebugCode)
+    self:InitNode(Node, 'Selector')
     return self:AddCompsite(Node)
 end
 -- 添加到最后一个可挂接Child的Node上, 然后顺序器变成最后一个可挂接的Node

@@ -17,6 +17,7 @@ local LService_ConsiderBehav = class.class 'LService_ConsiderBehav' : extends 'L
     ctor = function()end,
     OnUpdate = function()end,
 --[[private]]
+    HasSpecial = function()end,
     NeedSurvive = function()end,
     CanSupport = function()end,
     CanAttack = function()end,
@@ -28,12 +29,11 @@ end
 ---@override
 function LService_ConsiderBehav:OnUpdate(DeltaTime)
     class.LService.OnUpdate(self, DeltaTime)
-
     local canAttack = true -- 有攻击技能
     local canSupport = false -- 有支援技能
     local canDisturb = canAttack -- 能进攻就能骚扰
     
-    ---@class ConsiderContext
+    ---@class ConsiderContext 思考上下文, 内建数据结构; 不可外部传播, 有导致结构混乱的风险
     local Context = {
         canAttack = canAttack,
         canSupport = canSupport,
@@ -45,13 +45,27 @@ function LService_ConsiderBehav:OnUpdate(DeltaTime)
         LastBehav = self.Blackboard:GetBBValue(BBKeyDef.LastBehav),
         CurBehav = self.Blackboard:GetBBValue(BBKeyDef.CurBehav),
     }
-    if self:NeedSurvive(Context) then
+    if self:HasSpecial(Context) then
+        self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Special)
+    elseif self:NeedSurvive(Context) then
         self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Survive)
     elseif self:CanSupport(Context) then
         self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Support)
     elseif self:CanAttack(Context) then
         self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Attack)
     end
+end
+---@private 单位有需要执行的特殊行为
+---@todo 其实是Team要求，后面拆分一下
+---@param Context ConsiderContext
+function LService_ConsiderBehav:HasSpecial(Context)
+    local Role = self.Chr:GetRole() ---@type RoleClass
+    local Team = Role.Team
+    local vec = Team.CurTB.DirectiveMoveCoord[Role:GetRoleInstId()]
+    if vec then
+        return true
+    end
+    return false
 end
 ---@private 单位此时需要着重考虑自己的存活
 ---@param Context ConsiderContext

@@ -17,6 +17,7 @@ require('Ikun/Module/AI/BT/Task/LTask_SwitchBT')
 require('Ikun/Module/AI/BT/Task/LTask_SelectAbility')
 require('Ikun/Module/AI/BT/Task/LTask_ActiveAbility')
 require('Ikun/Module/AI/BT/Task/LTask_RoleDoFn')
+require('Ikun/Module/AI/BT/Task/LTask_RandomResult')
 
 require('Ikun/Module/AI/BT/Task/BB/LTask_GetTBInfo2BB')
 require('Ikun/Module/AI/BT/Task/BB/LTask_ClearBBValue')
@@ -44,8 +45,8 @@ require('Ikun/Module/AI/BT/Service/LService_ReposJudge')
 
 
 require('Ikun/Module/AI/BT/Behav/LService_ConsiderBehav')
-require('Ikun/Module/AI/BT/Behav/LDecorator_IsBehav')
 require('Ikun/Module/AI/BT/Behav/LService_MoveBehav')
+require('Ikun/Module/AI/BT/Behav/LDecorator_IsBehav')
 require('Ikun/Module/AI/BT/Behav/LTask_WaitMoveArrived')
 require('Ikun/Module/AI/BT/Behav/LTask_NextBehav')
 

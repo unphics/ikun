@@ -1,3 +1,12 @@
+https://www.zhihu.com/question/362586693/answer/950268177
+https://www.zhihu.com/question/21090429/answer/44109092
+https://www.zhihu.com/question/21090429/answer/21265438
+https://zhuanlan.zhihu.com/p/1890120073890489606
+
+https://www.bilibili.com/video/BV1rW4y1k7bp/?spm_id_from=333.1387.favlist.content.click
+https://www.bilibili.com/video/BV1v7411t7oU/?spm_id_from=333.1387.favlist.content.click
+
+
 行为树根据角色目前的状态选择当前角色建议执行的行为
     血量多则倾向于进攻, 血量少则倾向于后撤防御
     上次是进攻的话, 连续进攻的可能性很高

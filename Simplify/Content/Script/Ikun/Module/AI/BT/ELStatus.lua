@@ -1,16 +1,17 @@
 ---@enum ELStatus
 local ELStatus = {
-    Failure = 1, -- 失败
-    Success = 2, -- 成功
-    Running = 3, -- 运行中
-    Aborted = 4, -- 中断
-    Invalid = 5, -- 无效
+    Failure = 'Failure', -- 失败
+    Success = 'Success', -- 成功
+    Running = 'Running', -- 运行中
+    Aborted = 'Aborted', -- 中断
+    Invalid = 'Invalid', -- 无效
 }
 
 ---@param Status ELStatus
 ELStatus.PrintLStatus = function(Status)
-    local Arr = {'Failure', 'Success', 'Running', 'Aborted', 'Invalid'}
-    local Text = Arr[Status]
+    -- local Arr = {'Failure', 'Success', 'Running', 'Aborted', 'Invalid'}
+    -- local Text = Arr[Status]
+    local Text = Status
     if Text == 'Running' then
         Text = Text .. '    <---------'
     end

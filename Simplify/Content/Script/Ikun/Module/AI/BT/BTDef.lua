@@ -7,6 +7,7 @@
 ---
 
 local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
+local BehavDef = require("Ikun.Module.AI.BT.Behav.BehavDef")
 
 local M = {}
 
@@ -44,7 +45,6 @@ end
 M['Team_Fight_1'] = function(Avatar)
     local LBT = class.new 'LBT'(nil, Avatar, 'Team_Fight_1') ---@type LBT
     LBT:CreateRoot()
-        :AddService('LService_ConsiderBehav', 0.3)
         :AddSelector()
             -- 团队控制强制指挥(紧急掩护, 紧急位移等)
             -- 战斗单位自主行为
@@ -81,6 +81,41 @@ M['Team_Fight_1'] = function(Avatar)
                     :Up()
                     :AddTask('LTask_AimTarget')
                     :AddTask('LTask_ActiveAbility')
+    return LBT
+end
+
+---@brief 团队战斗行为树2
+M['Team_Fight_2'] = function(Avatar)
+    local LBT = class.new 'LBT'(nil, Avatar, 'Team_Fight_2') ---@type LBT
+    LBT:CreateRoot()
+        :AddSelector()
+            :AddSequence()
+                :AddService('LService_ConsiderBehav', 0.3)
+                :AddService('LService_MoveBehav', 0)
+                :AddSequence()
+                    :AddTask('LTask_NextBehav')
+                    :AddSelector()
+                        :AddDecorator('LDecorator_IsBehav', BehavDef.Special)
+                        :AddSequence()
+                            :AddTask('LTask_ClearBBValue', BBKeyDef.MoveTarget, BBKeyDef.FightTarget)
+                            :AddTask('LTask_GetTBInfo2BB', 'DirectiveMoveCoord', BBKeyDef.MoveTarget)
+                            :AddTask('LTask_Wait', 0.5, 0)
+                            :AddTask('LTask_RotateSmooth')
+                            :AddTask('LTask_WaitMoveArrived', BBKeyDef.MoveTarget)
+                            :AddTask('LTask_Wait', 0.2, 0)
+                        :Up()
+                        :AddDecorator('LDecorator_IsBehav', BehavDef.Survive)
+                        :AddSequence()
+                            :AddTask('LTask_Wait', 0.5, 0)
+                        :Up()
+                        :AddDecorator('LDecorator_IsBehav', BehavDef.Support)
+                        :AddSequence()
+                            :AddTask('LTask_Wait', 0.5, 0)
+                        :Up()
+                        :AddDecorator('LDecorator_IsBehav', BehavDef.Attack)
+                        :AddSequence()
+                            :AddTask('LTask_Wait', 0.5, 0)
+                        :Up()
     return LBT
 end
 

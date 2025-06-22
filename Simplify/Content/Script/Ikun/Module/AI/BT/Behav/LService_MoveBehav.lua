@@ -20,12 +20,15 @@ local LService_MoveBehav = class.class 'LService_MoveBehav' : extends 'LService'
 }
 function LService_MoveBehav:ctor(NodeDispName, TickInterval)
     class.LService.ctor(self, NodeDispName, TickInterval)
-    self.NavMoveBehav = class.new 'NavMoveBehav' (self.Chr, 5)
 end
 function LService_MoveBehav:OnInit()
     class.LService.OnInit(self)
-    self.Blackboard:SetBBValue(BBKeyDef.MoveBehavObj, self.NavMoveBehav)
+    if not self.NavMoveBehav then
+        self.NavMoveBehav = class.new 'NavMoveBehav' (self.Chr, 5)
+        self.Blackboard:SetBBValue(BBKeyDef.MoveBehavObj, self.NavMoveBehav)
+    end
 end
 function LService_MoveBehav:OnUpdate(DeltaTime)
+    class.LService.OnUpdate(self, DeltaTime)
     self.NavMoveBehav:TickMove(DeltaTime)
 end

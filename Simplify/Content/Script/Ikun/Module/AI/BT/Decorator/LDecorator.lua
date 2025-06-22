@@ -32,6 +32,7 @@ function LDecorator:OnInit()
         self.Result = self:Judge()
     end
 end
+
 function LDecorator:Judge()
     return false
 end
@@ -48,10 +49,8 @@ function LDecorator:DoUpdate(DeltaTime)
         else
             return ELStatus.Failure
         end
-    elseif Status == ELStatus.Running then
-        return ELStatus.Running
     else
-        return ELStatus.Success
+        return Status
     end
 end
 -- 装饰器瞬间出结果, 失败则整体失败, 成功则保持成功直到子节点成功或失败

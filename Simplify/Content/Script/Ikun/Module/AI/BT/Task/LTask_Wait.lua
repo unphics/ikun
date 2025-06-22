@@ -1,7 +1,7 @@
 ---
----@brief WaitTime
----@author zys
----@data Sun Jan 26 2025 22:56:00 GMT+0800 (中国标准时间)
+---@brief   WaitTime
+---@author  zys
+---@data    Sun Jan 26 2025 22:56:00 GMT+0800 (中国标准时间)
 ---
 
 local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
