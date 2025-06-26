@@ -30,10 +30,19 @@ end
 function LService_ConsiderBehav:OnUpdate(DeltaTime)
     class.LService.OnUpdate(self, DeltaTime)
     local canAttack = true -- 有攻击技能
-    local canSupport = false -- 有支援技能
+    local canSupport = true -- 有支援技能
     local canDisturb = canAttack -- 能进攻就能骚扰
     
     ---@class ConsiderContext 思考上下文, 内建数据结构; 不可外部传播, 有导致结构混乱的风险
+    ---@field canAttack boolean 有攻击技能
+    ---@field canSupport boolean 有支援技能
+    ---@field canDisturb boolean 能骚扰
+    ---@field Health number 血量
+    ---@field MaxHealth number 最大血量
+    ---@field NeedSupportMemberCount number 需要支援的成员的数量
+    ---@field AllMember number 所有友军数量
+    ---@field LastBehav BehavDef 上一个行为
+    ---@field CurBehav BehavDef 当前行为
     local Context = {
         canAttack = canAttack,
         canSupport = canSupport,
