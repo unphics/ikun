@@ -18,9 +18,12 @@ end
 function LTask_NeedSupportSurvive:OnInit()
     class.LTask.OnInit(self)
 
-    
+    local role = self.Chr:GetRole()
+    role.Team.TeamSupport:PublishSupportReq(role)
 end
 
 function LTask_NeedSupportSurvive:OnUpdate(DeltaTime)
     self:DoTerminate(true)
 end
+
+return LTask_NeedSupportSurvive
