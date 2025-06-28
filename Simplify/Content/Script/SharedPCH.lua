@@ -14,6 +14,9 @@ class = require("Util.Class.class2")
 _ = require("Util.Class.test1")
 _ = require("Util.Class.test2")
 
+duplex = require("Util/Duplex‌/duplex")
+_ = require("Util/Duplex‌/test")
+
 table_util = require('Util/table_util')
 world_util = require("Util/world_util")
 gas_util = require('Util/gas_util')
