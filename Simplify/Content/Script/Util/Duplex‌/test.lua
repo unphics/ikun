@@ -16,6 +16,6 @@ duplex:dinsert(1008, {id = 1008, name = 'ddd'})
 
 log.dev('dp', duplex:dlength())
 
-for _, k, v in duplex:iter() do
-    log.dev('dp ', k, v.id, v.name)
+for _, k, v in duplex:diter() do
+    log.log('dp ', k, v.id, v.name)
 end
