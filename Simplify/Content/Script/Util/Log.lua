@@ -13,26 +13,18 @@
 
 local log = {}
 
----@param tag string
----@param vararg string
 function log.log(...)
     print( ...)
 end
 
----@param tag string
----@param vararg string
 function log.warn(...)
     UnLua.LogWarn(...)
 end
 
----@param tag string
----@param vararg string
 function log.error(...)
     UnLua.LogError(...)
 end
 
----@param tag string
----@param vararg string
 function log.dev(...)
     UnLua.LogError(...)
 end
@@ -72,12 +64,13 @@ function log.chr(Chr)
 end
 
 log.key = {
-    luainit = '[Lua初始化]',
-    ueinit = '[UE初始化]',
-    roleinit = '[角色初始化]',
-    repos = '[射手站位调整]',
-    lich02boom = '[Lich二技能]',
-    beha = '[行为选择]',
+    luainit     = '[Lua初始化]',
+    ueinit      = '[UE初始化]',
+    roleinit    = '[角色初始化]',
+    repos       = '[射手站位调整]',
+    lich02boom  = '[Lich二技能]',
+    beha        = '[行为选择]',
+    support     = '[支援]',
 }
 
 log.error(log.key.luainit..' --------------------------------------------------------------------------')

@@ -26,6 +26,10 @@ end
 ---@public [Logic] 发布需要驰援的请求; 被支援者调用
 function TeamSupportClass:PublishSupportReq(ReqRole)
     if ReqRole then
+        if self.dpSupportPair:dfind(ReqRole:GetRoleInstId()) then
+        log.dev(log.key.support, log.roleid(ReqRole)..'再次请求支援')  
+            return
+        end
         ---@class SupportInfo
         ---@field ReqRole RoleClass
         ---@field dpSupporters duplex<number, RoleClass>[]
@@ -34,11 +38,13 @@ function TeamSupportClass:PublishSupportReq(ReqRole)
             dpSupporters = duplex.create()
         }
         self.dpSupportPair:dinsert(ReqRole:GetRoleInstId(), SupportInfo)
+        log.dev(log.key.support, log.roleid(ReqRole)..'请求支援')
     end
 end
 ---@public [Logic] 不再需要支援; 被支援者调用
 function TeamSupportClass:StopSupportReq(ReqRole)
     self.dpSupportPair:dremove(ReqRole:GetRoleInstId())
+    log.dev(log.key.support, log.roleid(ReqRole)..'不再需要支援')
 end
 ---@public [Logic] 随便支援一个人; 支援者调用
 ---@param Role RoleClass
@@ -57,15 +63,18 @@ function TeamSupportClass:BeginSupport(Role)
         end
     end
     info.dpSupporters:dinsert(Role:GetRoleInstId(), Role)
+    log.dev(log.key.support, log.roleid(Role)..'支援了'..log.roleid(info.ReqRole))
     return info.ReqRole
 end
 ---@public [Logic] 结束支援; 支援者调用
----@param RoleReq RoleClass 被支援者
----@param RoleRsp RoleClass 支援者
-function TeamSupportClass:EndSupport(RoleReq, RoleRsp)
-    local info = self.dpSupportPair:dfind(RoleReq:GetRoleInstId())
+---@param ReqRole RoleClass 被支援者
+---@param RspRole RoleClass 支援者
+function TeamSupportClass:EndSupport(ReqRole, RspRole)
+    local info = self.dpSupportPair:dfind(ReqRole:GetRoleInstId())
     if info then
-        info.dpSupporters:dremove(RoleRsp:GetRoleInstId())
+        if info.dpSupporters:dremove(RspRole:GetRoleInstId()) then
+            log.dev(log.key.support, log.roleid(RspRole)..'结束了对'..log.roleid(ReqRole)..'的支援')
+        end
     end
 end
 ---@public [Pure] 计算未被支援的数量
