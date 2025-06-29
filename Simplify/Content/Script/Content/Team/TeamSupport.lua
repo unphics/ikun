@@ -7,7 +7,7 @@
 
 ---@class TeamSupportClass
 ---@field OwnerTeam TeamClass
----@field SupportPairs SupportInfo[]
+---@field dpSupportPair duplex<number, SupportInfo>
 local TeamSupportClass = class.class'TeamSupportClass' {
 --[[public]]
     ctor = function()end,
@@ -16,72 +16,63 @@ local TeamSupportClass = class.class'TeamSupportClass' {
     EndSupport = function()end,
     GetNoSupportCount = function()end,
 --[[private]]
-    SupportPairs = nil,
+    dpSupportPair = nil,
 }
 ---@public
 function TeamSupportClass:ctor(Team)
     self.OwnerTeam = Team
-    self.SupportPairs = {}
+    self.dpSupportPair = duplex.create()
 end
----@public [Logic] 发布需要驰援的请求
+---@public [Logic] 发布需要驰援的请求; 被支援者调用
 function TeamSupportClass:PublishSupportReq(ReqRole)
     if ReqRole then
         ---@class SupportInfo
         ---@field ReqRole RoleClass
-        ---@field Supporters RoleClass[]
+        ---@field dpSupporters duplex<number, RoleClass>[]
         local SupportInfo = {
             ReqRole = ReqRole,
-            Supporters = {}
+            dpSupporters = duplex.create()
         }
-        table.insert(self.SupportPairs, SupportInfo)
+        self.dpSupportPair:dinsert(ReqRole:GetRoleInstId(), SupportInfo)
     end
 end
----@public [Logic] 不再需要支援
+---@public [Logic] 不再需要支援; 被支援者调用
 function TeamSupportClass:StopSupportReq(ReqRole)
-    for i, info in ipairs(self.SupportPairs) do
-        if info.ReqRole:GetRoleInstId() == ReqRole:GetRoleInstId() then
-            table.remove(self.SupportPairs, i)
-            break
-        end
-    end
+    self.dpSupportPair:dremove(ReqRole:GetRoleInstId())
 end
----@public [Logic] 支援一下
+---@public [Logic] 随便支援一个人; 支援者调用
 ---@param Role RoleClass
 ---@return RoleClass
 function TeamSupportClass:BeginSupport(Role)
-    local info = self.SupportPairs[1]
-    for _, ele in ipairs(self.SupportPairs) do 
-        if #ele.Supporters == 0 then
+    local info = nil ---@type SupportInfo
+    for _, k, ele in self.dpSupportPair:diter() do
+        if ele.dpSupporters:dlength() == 0 then
             info = ele
             break
         end
-        if #ele.Supporters < #info.Supporters then
+        if not info then
+            info = ele
+        elseif ele.dpSupporters:dlength() < info.dpSupporters:dlength() then
             info = ele
         end
     end
-    table.insert(info.Supporters, Role)
+    info.dpSupporters:dinsert(Role:GetRoleInstId(), Role)
     return info.ReqRole
 end
----@public [] 结束支援
+---@public [Logic] 结束支援; 支援者调用
 ---@param RoleReq RoleClass 被支援者
 ---@param RoleRsp RoleClass 支援者
 function TeamSupportClass:EndSupport(RoleReq, RoleRsp)
-    for _, info in ipairs(self.SupportPairs) do
-        if info.ReqRole:GetRoleInstId() == RoleReq:GetRoleInstId() then
-            for i, role in ipairs(info.Supporters) do
-                if role:GetRoleInstId() == RoleRsp() then
-                    table.remove(info.Supporters, i)
-                    break
-                end
-            end
-        end
+    local info = self.dpSupportPair:dfind(RoleReq:GetRoleInstId())
+    if info then
+        info.dpSupporters:dremove(RoleRsp:GetRoleInstId())
     end
 end
 ---@public [Pure] 计算未被支援的数量
 function TeamSupportClass:GetNoSupportCount()
     local count = 0
-    for _, info in ipairs(self.SupportPairs) do
-        if not (#info.Supporters > 0) then
+    for _, id, info in self.dpSupportPair:diter() do
+        if info.dpSupporters:dlength() == 0 then
             count = count + 1
         end
     end

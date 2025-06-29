@@ -32,8 +32,8 @@ local duplex = class.class 'duplex' {
 }
 ---@public
 ---@return duplex<K, V>
-function duplex.create(...)
-    return class.new'duplex'(...)
+function duplex.create()
+    return class.new'duplex'()
 end
 ---@private
 function duplex:ctor()

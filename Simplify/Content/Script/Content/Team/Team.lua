@@ -53,6 +53,7 @@ function TeamClass:ctor()
     self.TeamEnemy = class.new 'TeamEnemyClass' (self)
     self.TeamMove = class.new 'TeamMoveClass'(self)
     self.TeamFence = class.new 'TeamFenceClass'(self)
+    self.TeamSupport = class.new 'TeamSupportClass'(self)
 end
 function TeamClass:Init()
     self.TeamMember:ElectLeader()
