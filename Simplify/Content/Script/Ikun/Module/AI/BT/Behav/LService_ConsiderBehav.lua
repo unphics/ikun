@@ -29,9 +29,7 @@ end
 ---@override
 function LService_ConsiderBehav:OnUpdate(DeltaTime)
     class.LService.OnUpdate(self, DeltaTime)
-    local canAttack = true -- 有攻击技能
-    local canSupport = true -- 有支援技能
-    local canDisturb = canAttack -- 能进攻就能骚扰
+    local NoSupportCount = self.Chr:GetRole().Team.TeamSupport:GetNoSupportCount()
     
     ---@class ConsiderContext 思考上下文, 内建数据结构; 不可外部传播, 有导致结构混乱的风险
     ---@field canAttack boolean 有攻击技能
@@ -44,12 +42,12 @@ function LService_ConsiderBehav:OnUpdate(DeltaTime)
     ---@field LastBehav BehavDef 上一个行为
     ---@field CurBehav BehavDef 当前行为
     local Context = {
-        canAttack = canAttack,
-        canSupport = canSupport,
-        canDisturb = canDisturb,
+        canAttack = true,
+        canSupport = true,
+        canDisturb = true,
         Health = self.Chr.AttrSet:GetAttrValueByName("Health"),
         MaxHealth = self.Chr.AttrSet:GetAttrValueByName("MaxHealth"),
-        NeedSupportMemberCount = 0,
+        NeedSupportMemberCount = NoSupportCount,
         AllMemberCount = 10,
         LastBehav = self.Blackboard:GetBBValue(BBKeyDef.LastBehav),
         CurBehav = self.Blackboard:GetBBValue(BBKeyDef.CurBehav),
