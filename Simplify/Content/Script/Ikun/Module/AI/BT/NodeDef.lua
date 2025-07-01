@@ -50,4 +50,4 @@ require('Ikun/Module/AI/BT/Behav/LDecorator_IsBehav')
 require('Ikun/Module/AI/BT/Behav/LTask_WaitMoveArrived')
 require('Ikun/Module/AI/BT/Behav/LTask_NextBehav')
 require('Ikun/Module/AI/BT/Behav/LTask_NeedSupportSurvive')
-
+require('Ikun/Module/AI/BT/Behav/LTask_FindSafeArea')

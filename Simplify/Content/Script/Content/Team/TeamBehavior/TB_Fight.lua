@@ -1,3 +1,4 @@
+
 ---
 ---@brief 战斗行为
 ---@author zys
@@ -19,6 +20,8 @@ local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 --[[public]]
     OnEncounterEnemy = function()end,
     Tick = function()end,
+    ReadDirectiveMoveCoord = function()end,
+    ReadDynaSuppressTarget = function()end,
 --[[private]]
     AllMemberSwitchFightBT = function()end,
     CombatFeasibilityResolution = function()end,
@@ -180,6 +183,7 @@ function TB_Fight:AsgnFightTarget(Army)
     end
 end
 
+---@public 给行为树任务使用
 ---@param Id number RoleInstId
 function TB_Fight:ReadDirectiveMoveCoord(Id)
     local MoveLoc = self.DirectiveMoveCoord[Id]
@@ -189,6 +193,7 @@ function TB_Fight:ReadDirectiveMoveCoord(Id)
     end
 end
 
+---@public 给行为树任务使用
 ---@param Id number RoleInstId
 function TB_Fight:ReadDynaSuppressTarget(Id)
     local Role = self.DynaSuppressTarget[Id]

@@ -21,7 +21,8 @@ local Key = {
     CurBehav = 'CurBehav',                  -- 当前行为
     NextBehav = 'NextBehav',                -- 下一个行为
     Standing = 'Standing',                  -- 站住, 不移动
-    MoveBehavObj = 'MoveBehavObj'           -- 移动行为的对象
+    MoveBehavObj = 'MoveBehavObj',          -- 移动行为的对象
+    SafeLoc = 'SafeLoc',                    -- 安全区
 }
 
 return Key
