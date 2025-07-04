@@ -46,17 +46,29 @@ end
 ---@param value V
 function duplex:dinsert(key, value)
     assert(key ~= nil, "duplex:dinsert() key cannot be nil")
-    if self._mapContainer[key] then
-        error('duplicate key:'..tostring(key))
+    local item = self._mapContainer[key]
+    if item then
+        if item._valid then
+            error('duplicate key: ' .. tostring(key))
+        else
+            -- 复用删除项
+            item._value = value
+            item._valid = true
+            self._mapContainer[key] = item
+            self._count = self._count + 1
+            self:_autoCompact()
+            return
+        end
     end
-    local duplex_item = {
+    local newItem = {
         _key = key,
         _value = value,
         _valid = true,
     }
-    table.insert(self._arrContainer, duplex_item)
-    self._mapContainer[key] = duplex_item
+    table.insert(self._arrContainer, newItem)
+    self._mapContainer[key] = newItem
     self._count = self._count + 1
+    self:_autoCompact()
 end
 ---@public
 ---@param key K
@@ -75,6 +87,7 @@ function duplex:dremove(key)
     item._valid = false
     self._mapContainer[key] = nil
     self._count = self._count - 1
+    self:_autoCompact()
     return true
 end
 ---@public
@@ -100,6 +113,24 @@ function duplex:diter()
             i = i + 1
         end
     end, self._arrContainer, 0
+end
+
+--- 手动压缩数组
+function duplex:dcompact()
+    local newArr = {}
+    for _, item in ipairs(self._arrContainer) do
+        if item._valid then
+            table.insert(newArr, item)
+        end
+    end
+    self._arrContainer = newArr
+end
+
+--- 自动压缩条件：当数组中无效项占一半以上时压缩
+function duplex:_autoCompact()
+    if #self._arrContainer >= self._count * 2 then
+        self:dcompact()
+    end
 end
 
 return duplex
