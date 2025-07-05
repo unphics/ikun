@@ -44,7 +44,9 @@ end
 function TeamMemberClass:GetAllMember()
     local allMemeber = {}
     for _, id, role in self.dpMember:diter() do
-        table.insert(allMemeber, role)
+        if log.is_live_role(role) then
+            table.insert(allMemeber, role)
+        end
     end
     return allMemeber
 end

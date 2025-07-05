@@ -29,6 +29,15 @@ function log.dev(...)
     UnLua.LogError(...)
 end
 
+---@param inRole RoleClass
+---@return boolean
+function log.is_live_role(inRole)
+    if inRole and not inRole:IsRoleDead() then
+        return true
+    end
+    return false
+end
+
 ---@param Chr RoleClass | BP_ChrBase
 function log.roleid(Chr)
     local role = log.role(Chr)
@@ -40,7 +49,7 @@ function log.roleid(Chr)
 end
 
 ---@param Chr RoleClass | BP_ChrBase
----@return RoleClass
+---@return RoleClass?
 function log.role(Chr)
     if class.instanceof(Chr, class.RoleClass) then
         return Chr
@@ -52,13 +61,13 @@ function log.role(Chr)
 end
 
 ---@param Chr RoleClass | BP_ChrBase
----@return BP_ChrBase
+---@return BP_ChrBase?
 function log.chr(Chr)
     if class.instanceof(Chr, class.RoleClass) then
-        return Chr:GetRole()
+        return obj_util.is_valid(Chr.Avatar) and Chr.Avatar or nil
     end
     if Chr.GetRole then
-        return Chr
+        return obj_util.is_valid(Chr) and Chr or nil
     end
     return nil
 end

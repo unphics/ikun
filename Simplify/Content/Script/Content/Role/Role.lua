@@ -156,6 +156,9 @@ end
 
 function RoleClass:RoleBeginDeath()
     self.RoleInfo:RoleDoDeath()
+    if self.Team then
+        self.Team.TeamSupport:StopSupportReq(self)
+    end
     self.BT = nil
 end
 

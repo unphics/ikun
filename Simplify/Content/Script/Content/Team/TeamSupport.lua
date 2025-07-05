@@ -27,7 +27,7 @@ end
 function TeamSupportClass:PublishSupportReq(ReqRole)
     if ReqRole then
         if self.dpSupportPair:dfind(ReqRole:GetRoleInstId()) then
-        log.dev(log.key.support, log.roleid(ReqRole)..'再次请求支援')  
+            log.log(log.key.support, log.roleid(ReqRole)..'再次请求支援')  
             return
         end
         ---@class SupportInfo
@@ -70,6 +70,9 @@ end
 ---@param ReqRole RoleClass 被支援者
 ---@param RspRole RoleClass 支援者
 function TeamSupportClass:EndSupport(ReqRole, RspRole)
+    if not log.is_live_role(ReqRole) then
+        return
+    end
     local info = self.dpSupportPair:dfind(ReqRole:GetRoleInstId())
     if info then
         if info.dpSupporters:dremove(RspRole:GetRoleInstId()) then

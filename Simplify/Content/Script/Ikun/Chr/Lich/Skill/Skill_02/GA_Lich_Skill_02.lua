@@ -80,6 +80,9 @@ function GA_Lich_Skill_02:OnCancelled(EventTag, EventData)
 end
 
 function GA_Lich_Skill_02:OnBallTrigger(Actor, Transform)
+    if not obj_util.is_valid(self) or not obj_util.is_valid(Actor) then
+        return
+    end
     self.Overridden.OnBallTrigger(self, Actor, Transform)
     do return end ---@todo zys 此处会触发crash, 只能调用蓝图了
         

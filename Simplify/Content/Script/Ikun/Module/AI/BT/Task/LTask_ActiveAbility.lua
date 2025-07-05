@@ -1,22 +1,28 @@
 
 ---
----@brief ActiveAbility
----@data Mon Jan 13 2025 15:53:06 GMT+0800 (中国标准时间)
+---@brief   ActiveAbility
+---@author  zys
+---@data    Mon Jan 13 2025 15:53:06 GMT+0800 (中国标准时间)
 ---
 
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_ActiveAbility: LTask
+---@field ConstMaxWaitTime number
 local LTask_ActiveAbility = class.class 'LTask_ActiveAbility' : extends 'LTask' {
     ctor = function()end,
-    MaxWaitTime = nil,
+    ConstMaxWaitTime = nil,
     CurTime = nil,
 }
+
+---@override
 function LTask_ActiveAbility:ctor(NodeDispName, MaxWaitTime)
     class.LTask.ctor(self, NodeDispName)
 
-    self.MaxWaitTime = MaxWaitTime or 5
+    self.ConstMaxWaitTime = MaxWaitTime or 5
 end
+
+---@override
 function LTask_ActiveAbility:OnInit()
     class.LTask.OnInit(self)
 
@@ -25,23 +31,22 @@ function LTask_ActiveAbility:OnInit()
     local SelectAbility = self.Blackboard:GetBBValue(BBKeyDef.SelectAbility)
 
     local Ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(self.Chr.ASC, SelectAbility.Handle) ---@type GA_IkunBase
-    ---@todo
-    -- if Ability then
-    --     Ability:RegOnAbilityEnd(self, self.OnAbilityEnded)
-    -- end
 
     local result = self.Chr.ASC:TryActivateAbility(SelectAbility.Handle, true)
     log.log('LTask_ActiveAbility:OnInit()', result)
 end
+
+---@override
 function LTask_ActiveAbility:OnUpdate(DeltaTime)
     self.CurTime = self.CurTime + DeltaTime
-    if self.CurTime > self.MaxWaitTime then
+    if self.CurTime > self.ConstMaxWaitTime then
         self:DoTerminate(true)
     end
 end
+
+---@override
 function LTask_ActiveAbility:OnTerminate() 
     log.log('LTask_ActiveAbility:OnTerminate')
 end
-function LTask_ActiveAbility:OnAbilityEnded(Ability)
-    self.CurTime = self.MaxWaitTime - 1
-end
+
+return LTask_ActiveAbility

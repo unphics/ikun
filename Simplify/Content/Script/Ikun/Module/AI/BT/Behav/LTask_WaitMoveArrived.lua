@@ -26,6 +26,9 @@ end
 function LTask_WaitMoveArrived:OnInit()
     local MoveBehavObj = self.Blackboard:GetBBValue(BBKeyDef.MoveBehavObj) ---@type NavMoveBehav
     local MoveTarget = self.Blackboard:GetBBValue(self.ConstMoveTargetBBKey)
+    -- if self.ConstMoveTargetBBKey == BBKeyDef.SafeLoc then
+    --     log.dev('寻路安全区', MoveTarget)
+    -- end
     if MoveBehavObj and MoveTarget then
         local tb = {} ---@type NavMoveBehavCallbackInfo
         tb.This = self

@@ -146,7 +146,7 @@ local function deriveof(derive, base)
 end
 
 local function instanceof(Object, Class)
-    if not Object or not Object.__class_name then
+    if not Object or not Object.__class_name or not Class or not Class.__class_name then
         return false
     end
     local ObjectClass = classes[Object.__class_name]

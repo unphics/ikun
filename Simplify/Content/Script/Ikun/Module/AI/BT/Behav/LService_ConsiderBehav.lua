@@ -77,7 +77,7 @@ end
 ---@private 单位此时需要着重考虑自己的存活
 ---@param Context ConsiderContext
 function LService_ConsiderBehav:NeedSurvive(Context)
-    if (Context.Health / Context.MaxHealth) < 0.3 then
+    if (Context.Health / Context.MaxHealth) < 0.5 then
         return true
     end
     return false
@@ -88,11 +88,11 @@ function LService_ConsiderBehav:CanSupport(Context)
     if not Context.canSupport then
         return false
     end
-    if not (Context.NeedSupportMemberCount > 0) then
+    if Context.NeedSupportMemberCount == 0 then
         return false
     end
     ---@todo 此处考虑角色个人的进攻意愿设定和支援意愿设定
-    if Context.CurBehav == BehavDef.Attack and math.random() > 0.2 then
+    if Context.CurBehav == BehavDef.Attack and math.random() > 0.5 then
         return false
     end
     return true

@@ -24,16 +24,20 @@ function LTask_FindSafeArea:OnInit()
     local OwnerAgent = self.Chr:GetNavAgentLocation()
     local Team = self.Chr:GetRole().Team
     local TeamCenter = Team.TeamMove:CalcTeamMemberCenter(Team.TeamMember:GetAllMember())
+    local EnemyCenter = Team.TeamMove:CalcTeamMemberCenter(Team.TeamEnemy:GetAllEnemy())
     local Distance = UE.UKismetMathLibrary.Vector_Distance(TeamCenter, OwnerAgent)
-    if Distance < 400 then
-        local BackLoc = TeamCenter - OwnerAgent
-        BackLoc:Normalize()
-        BackLoc = BackLoc * 200
-        local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(self.Chr, BackLoc, 400)
+    if Distance > 200 then
+        local BackDir = TeamCenter - EnemyCenter
+        BackDir:Normalize()
+        BackDir = BackDir * 200
+        local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(self.Chr, TeamCenter + BackDir, 150)
         if bSuccess then
+            -- if debug_util.IsChrDebug(self.Chr) then
+                draw_util.draw_dir_sphere(self.Chr, ResultLoc, draw_util.blue)
+            -- end
             self.Blackboard:SetBBValue(BBKeyDef.SafeLoc, ResultLoc)
         else
-            self.Blackboard:SetBBValue(BBKeyDef.SafeLoc, nil)
+            self.Blackboard:SetBBValue(BBKeyDef.SafeLoc, TeamCenter)
         end
     end
 end
