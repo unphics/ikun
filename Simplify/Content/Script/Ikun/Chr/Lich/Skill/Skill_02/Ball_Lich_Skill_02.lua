@@ -13,6 +13,8 @@ local M = UnLua.Class()
 
 ---@protected [ImplBP]
 function M:ReceiveBeginPlay()
+    self.AliveTime = 7
+    self.CurTime = 0
     self.Ability = nil
     self.Avatar = nil
     self.TriggerCB = nil
@@ -28,6 +30,10 @@ end
 
 ---@protected [ImplBP]
 function M:ReceiveTick(DeltaSeconds)
+    self.CurTime = self.CurTime + DeltaSeconds
+    if self.CurTime > self.AliveTime then
+        self.DestroySelf = true
+    end
     if self.DestroySelf then
         self.DestroySelf = false
         self:K2_DestroyActor()

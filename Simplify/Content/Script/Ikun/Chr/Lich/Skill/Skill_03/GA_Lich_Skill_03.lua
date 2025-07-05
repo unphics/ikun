@@ -62,7 +62,7 @@ function GA_Lich_Skill_03:TimerLoopCall()
     self.HealedTime = self.HealedTime + self.HealInterval
     local healTarget = self:GetHealTarget()
     local perHealth = gas_util.get_health_per(healTarget)
-    if perHealth > 0.9 then
+    if perHealth > 0.75 then
         self.TimerHandle = nil
         self:MontageJumpToSection('End')
         self.AvatarLua:GetRole().Team.TeamSupport:StopSupportReq(log.role(healTarget))
