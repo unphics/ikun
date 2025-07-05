@@ -1,8 +1,8 @@
 
 ---
----@brief 团队敌军信息, TeamClass的成员
----@author zys
----@data Sat Apr 12 2025 15:02:17 GMT+0800 (中国标准时间)
+---@brief   团队敌军信息, TeamClass的成员
+---@author  zys
+---@data    Sat Apr 12 2025 15:02:17 GMT+0800 (中国标准时间)
 ---
 
 ---@class TeamEnemyPerception
@@ -12,11 +12,10 @@
 ---@field Confidence number 可信度
 ---@field Investigation number 侦查值(侦查程度)
 ---@field Visibility boolean 可见?
----@field TargetBy RoleClass|nil
+---@field TargetBy RoleClass?
 
 ---@class TeamEnemyClass
----@field tbEnemyRolePerception TeamEnemyPerception[] 紧凑排列的数组表, 用于遍历; Perception:感知
----@field refEnemyRole table<number, TeamEnemyPerception> HashMap的Role表,用于查找
+---@field dpEnemyPerception duplex<number, TeamEnemyPerception> 感知到的敌军信息
 ---@field OwnerTeam TeamClass
 ---@field FireTarget RoleClass 集火目标
 local TeamEnemyClass = class.class 'TeamEnemyClass' {
@@ -31,8 +30,7 @@ local TeamEnemyClass = class.class 'TeamEnemyClass' {
     FireTarget = nil,
 ---[[private]]
     TryAddNewEnemyRole = function()end,
-    tbEnemyRolePerception = nil,
-    refEnemyRole = nil,
+    dpEnemyPerception = nil,
     OwnerTeam = nil,
 } 
 function TeamEnemyClass:ctor(OwnerTeam)
@@ -42,11 +40,12 @@ function TeamEnemyClass:ctor(OwnerTeam)
         log.error('TeamEnemyClass:ctor() Failed to index valid OwnerTeam')
     end
 end
+
 ---@public 重置敌人
 function TeamEnemyClass:ResetTeamEnemyData()
-    self.refEnemyRole = {}
-    self.tbEnemyRolePerception = {}
+    self.dpEnemyPerception = duplex.create()
 end
+
 ---@public 遭遇敌军; 第一次遭遇时, 根据敌军情况第一次评估敌军信息
 ---@param EnemyTeam TeamClass | RoleClass
 ---@return boolean 是否是遭遇(是否第一次)
@@ -57,7 +56,7 @@ function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
     if class.instanceof(EnemyTeam, class.TeamClass) then
         ---@step 如该TeamLeader已添加, 则该Team已添加
         local EnemyLeaer = EnemyTeam.TeamMember:GetLeader()
-        if self.refEnemyRole[EnemyLeaer:GetRoleInstId()] then
+        if self.dpEnemyPerception:dfind(EnemyLeaer:GetRoleInstId()) then
             return false
         end
         ---@step 存储敌军所有角色
@@ -65,17 +64,18 @@ function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
             self:TryAddNewEnemyRole(Role)
         end
     else
-        if self.refEnemyRole[EnemyTeam] then
+        if self.dpEnemyPerception:dfind(EnemyTeam:GetRoleInstId()) then
             return false
         end
         self:TryAddNewEnemyRole(EnemyTeam)
     end
     return true
 end
+
 ---@private 尝试添加一个敌人角色
 ---@param EnemyRole RoleClass
 function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
-    if self.refEnemyRole[EnemyRole:GetRoleInstId()] then
+    if self.dpEnemyPerception:dfind(EnemyRole:GetRoleInstId()) then
         return
     end
     ---@type TeamEnemyPerception
@@ -88,13 +88,13 @@ function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
         Confidence = 1,
         TargetBy = nil,
     }
-    self.refEnemyRole[EnemyRole:GetRoleInstId()] = RolePerception
-    table.insert(self.tbEnemyRolePerception, RolePerception)
+    self.dpEnemyPerception:dinsert(EnemyRole:GetRoleInstId(), RolePerception)
 end
+
 ---@public 根据远近排序(第一个最近)
 function TeamEnemyClass:SortEnemyByDist()
     local OwnerLoc = self.OwnerTeam.TeamMember:GetLeader().Avatar:K2_GetActorLocation()
-    table.sort(self.tbEnemyRolePerception, function(a, b)
+    self.dpEnemyPerception:dsort(function (a, b)        
         a.LastSeenLoc = a.Role.Avatar:K2_GetActorLocation()
         b.LastSeenLoc = b.Role.Avatar:K2_GetActorLocation()
         local Dist_A = UE.UKismetMathLibrary.Vector_Distance(a.LastSeenLoc, OwnerLoc)
@@ -102,37 +102,28 @@ function TeamEnemyClass:SortEnemyByDist()
         return Dist_A < Dist_B
     end)
 end
+
 ---@public 获取所有敌人
 function TeamEnemyClass:GetAllEnemy()
     local All = {}
-    for i, ele in ipairs(self.tbEnemyRolePerception) do
+    for _, id, ele in self.dpEnemyPerception:diter() do
         table.insert(All, ele.Role)
     end
     return All
 end
+
 ---@public 移除一个角色
 ---@param Role RoleClass
 function TeamEnemyClass:RemoveEnemyRole(Role)
-    local Index = 1
-    while Index <= #self.tbEnemyRolePerception do
-        local CheckRole = self.tbEnemyRolePerception[Index] ---@type RoleClass
-        if CheckRole:GetRoleInstId() == Role:GetRoleInstId() then
-            log.dev('TeamEnemyClass:RemoveEnemyRole() : ', CheckRole:GetRoleDispName(), Role:GetRoleDispName())
-            table.remove(self.tbEnemyRolePerception, Index)
-            break
-        end
-        Index = Index + 1
-    end
+    self.dpEnemyPerception:dremove(Role:GetRoleInstId())
+    log.dev('TeamEnemyClass:RemoveEnemyRole() : ', Role:GetRoleDispName())
 end
+
 ---@public
 function TeamEnemyClass:CheckEnemyDead()
-    local Index = 1
-    while Index <= #self.tbEnemyRolePerception do
-        local Info = self.tbEnemyRolePerception[Index] ---@type TeamEnemyPerception
-        if Info.Role:IsRoleDead() then
-            table.remove(self.tbEnemyRolePerception, Index)
-        else
-            Index = Index + 1
+    for _, id, info in self.dpEnemyPerception:diter() do
+        if info.Role:IsRoleDead() then
+            self.dpEnemyPerception:dremove(id)
         end
     end
 end

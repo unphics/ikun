@@ -163,23 +163,20 @@ end
 function TB_Fight:AsgnFightTarget(Army)
     local Enemy = self.OwnerTeam.TeamEnemy
     Enemy:SortEnemyByDist()
-    -- local avatar = Enemy.tbEnemyRolePerception[1].Role.Avatar
-    -- UE.UKismetSystemLibrary.DrawDebugSphere(avatar, avatar:K2_GetActorLocation(), 100, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
+    ---@rule 给前排分配对面的前排
     for i, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
-        if not Enemy.tbEnemyRolePerception[i] then
+        local perception = Enemy.dpEnemyPerception:dget(i)
+        if not perception then
             break
         end
-        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.tbEnemyRolePerception[i].Role
+        self.DynaSuppressTarget[Role:GetRoleInstId()] = perception.Role
     end
-    Enemy.FireTarget = Enemy.tbEnemyRolePerception[1].Role
-
+    Enemy.FireTarget = Enemy.dpEnemyPerception:dget(1).Role
+    ---@rule 给后排分配对面的前排
     for i, ele in ipairs(Army[FightPosDef.Backline]) do
         local Role = ele ---@type RoleClass
-        if not Enemy.tbEnemyRolePerception[i] then
-            break
-        end
-        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.tbEnemyRolePerception[1].Role
+        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.dpEnemyPerception:dget(1).Role
     end
 end
 

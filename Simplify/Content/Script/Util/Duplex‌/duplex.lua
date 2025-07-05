@@ -72,9 +72,26 @@ function duplex:dinsert(key, value)
 end
 ---@public
 ---@param key K
+---@return V
 function duplex:dfind(key)
     local item = self._mapContainer[key] ---@type duplex_item
     return item and item._valid and item._value or nil
+end
+---@public
+---@param idx number
+---@return V
+function duplex:dget(idx)
+    assert(idx > 0, 'duplex:dget')
+    local count = 0
+    for _, item in ipairs(self._arrContainer) do
+        if item._valid then
+            count = count + 1
+            if count == idx then
+                return item._value
+            end
+        end
+    end
+    return nil
 end
 ---@public
 ---@param key K
@@ -89,6 +106,17 @@ function duplex:dremove(key)
     self._count = self._count - 1
     self:_autoCompact()
     return true
+end
+---@public
+---@param fnCompare fun(a: V, b: V):boolean
+function duplex:dsort(fnCompare)
+    if not fnCompare then
+        return
+    end
+    self:dcompact()
+    table.sort(self._arrContainer, function(a, b)
+        return fnCompare(a._value, b._value)
+    end)
 end
 ---@public
 function duplex:dclear()
@@ -121,6 +149,8 @@ function duplex:dcompact()
     for _, item in ipairs(self._arrContainer) do
         if item._valid then
             table.insert(newArr, item)
+        else
+            self._mapContainer[item._key] = nil
         end
     end
     self._arrContainer = newArr
