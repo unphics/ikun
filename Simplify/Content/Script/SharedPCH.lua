@@ -5,6 +5,7 @@
 ---@notice 此文件的修改必须征得本人同意(全局变量增加要慎重)!!!
 ---
 
+
 log = require('Util.Log')
 debug_util = require('Util/debug_util')
 
@@ -12,6 +13,9 @@ _ = require("Util.Class.class1")
 class = require("Util.Class.class2")
 _ = require("Util.Class.test1")
 _ = require("Util.Class.test2")
+
+duplex = require("Util/Duplex‌/duplex")
+_ = require("Util/Duplex‌/test")
 
 table_util = require('Util/table_util')
 world_util = require("Util/world_util")

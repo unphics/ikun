@@ -12,8 +12,8 @@ local LTask_MakeTeam = class.class 'LTask_MakeTeam' : extends 'LTask' {
 --[[private]]
     ConstMakeTeamJudgeRange = nil,
 }
-function LTask_MakeTeam:ctor(DisplayName)
-    class.LTask.ctor(self, DisplayName)
+function LTask_MakeTeam:ctor(NodeDispName)
+    class.LTask.ctor(self, NodeDispName)
     self.ConstMakeTeamJudgeRange = 1500
 end
 function LTask_MakeTeam:OnInit()

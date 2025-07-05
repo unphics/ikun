@@ -6,7 +6,7 @@
 ---
 
 ---@class world_util
----@field GameWorld UWorld WorldContextObject
+---@field World UWorld WorldContextObject
 local world_util = {}
 
 world_util.World = nil

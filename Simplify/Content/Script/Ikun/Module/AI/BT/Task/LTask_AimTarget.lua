@@ -20,8 +20,8 @@ local LTask_AimTarget = class.class 'LTask_AimTarget' : extends 'LTask' {
 }
 ---@param RotSpeed number 转身速度, 单位是角度
 ---@param ConstFillInThreshold number 进入转身的门槛
-function LTask_AimTarget:ctor(DisplayName, RotSpeed, FillInThreshold)
-    class.LTask.ctor(self, DisplayName)
+function LTask_AimTarget:ctor(NodeDispName, RotSpeed, FillInThreshold)
+    class.LTask.ctor(self, NodeDispName)
     self.ConstRotSpeed = RotSpeed or 300
     self.ConstFillInThreshold = FillInThreshold or 1
 end

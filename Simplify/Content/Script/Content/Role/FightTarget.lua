@@ -31,7 +31,7 @@ function FightTargetClass:GetTarget()
 end
 ---@public 日常调用, 检查目标死亡
 function FightTargetClass:CheckTargetDead()
-    if self.TargetRole.Dead then
+    if self.TargetRole:IsRoleDead() then
         self.TargetRole = nil
         self:OnTargetDeath()
     end

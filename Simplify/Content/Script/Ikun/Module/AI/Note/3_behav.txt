@@ -1,0 +1,39 @@
+https://www.zhihu.com/question/362586693/answer/950268177
+https://www.zhihu.com/question/21090429/answer/44109092
+https://www.zhihu.com/question/21090429/answer/21265438
+https://zhuanlan.zhihu.com/p/1890120073890489606
+
+https://www.bilibili.com/video/BV1rW4y1k7bp/?spm_id_from=333.1387.favlist.content.click
+https://www.bilibili.com/video/BV1v7411t7oU/?spm_id_from=333.1387.favlist.content.click
+
+
+行为树根据角色目前的状态选择当前角色建议执行的行为
+    血量多则倾向于进攻, 血量少则倾向于后撤防御
+    上次是进攻的话, 连续进攻的可能性很高
+    双方状态比较一致就会对峙(单人时或者说人少时)
+
+    影响因素:
+        血量百分比 -> 进攻概率/撤退概率
+        有需要帮助的友军/魔法值 -> 支援行为
+        对方在持续释放技能/可打断地方行动 -> 骚扰行为
+        所有情况对移动行为的影响:
+            进攻行为时会根据攻击距离自动走位, 此时会考虑使用位移技能
+            撤退行为时会移动到后方, 判断危险性强时考虑使用位移技能
+            骚扰行为时可能骚扰完回原距离
+            支援行为同进攻行为
+
+    举例:
+        当前是进攻行为, 没啥意外的话会一直进攻
+
+    预期行为树:
+        服务-根据情况设置下一个行为
+        服务-移动
+        序列
+            任务-行为开始
+            选择器
+                装饰器-进攻行为
+                序列
+                    选敌人
+                    选技能
+                    等待追过去
+                    放技能

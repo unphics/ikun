@@ -124,4 +124,13 @@ gas_util.get_all_active_abilities = function(ikun_chr)
     return abilities, handles
 end
 
+---@public 获取血量百分比
+---@version 1.0.0
+---@return number
+gas_util.get_health_per = function(Chr)
+    local health = Chr.AttrSet:GetAttrValueByName("Health")
+    local maxHealth = Chr.AttrSet:GetAttrValueByName("MaxHealth")
+    return health / maxHealth
+end
+
 return gas_util

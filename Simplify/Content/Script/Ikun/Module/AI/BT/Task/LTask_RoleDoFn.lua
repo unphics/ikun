@@ -10,8 +10,8 @@ local LTask_RoleDoFn = class.class 'LTask_RoleDoFn' : extends 'LTask' {
     ctor = function()end,
     ConstFnName = nil
 }
-function LTask_RoleDoFn:ctor(DisplayName, FnName)
-    class.LTask.ctor(self, DisplayName)
+function LTask_RoleDoFn:ctor(NodeDispName, FnName)
+    class.LTask.ctor(self, NodeDispName)
     if not FnName then
         log.error("LTask_RoleDoFn:ctor(): Failed to index param FnName !")
     end

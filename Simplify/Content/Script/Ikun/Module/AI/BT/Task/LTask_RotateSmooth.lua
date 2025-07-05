@@ -20,8 +20,8 @@ local LTask_RotateSmooth = class.class 'LTask_RotateSmooth' : extends 'LTask' {
 }
 ---@param RotSpeed number 转身速度, 单位是角度
 ---@param ConstFillInThreshold number 进入转身的门槛
-function LTask_RotateSmooth:ctor(DisplayName, RotSpeed, FillInThreshold)
-    class.LTask.ctor(self, DisplayName)
+function LTask_RotateSmooth:ctor(NodeDispName, RotSpeed, FillInThreshold)
+    class.LTask.ctor(self, NodeDispName)
     self.ConstRotSpeed = RotSpeed or 300
     self.ConstFillInThreshold = FillInThreshold or 10
 end

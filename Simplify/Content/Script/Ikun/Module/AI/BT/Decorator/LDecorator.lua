@@ -18,8 +18,8 @@ local LDecorator = class.class 'LDecorator': extends 'LNode' {
     Result = nil,
     bNegate = nil,
 }
-function LDecorator:ctor(DisplayName)
-    class.LNode.ctor(self, DisplayName)
+function LDecorator:ctor(NodeDispName)
+    class.LNode.ctor(self, NodeDispName)
     self.bNegate = false
 end
 function LDecorator:SetChild(Node)
@@ -32,10 +32,10 @@ function LDecorator:OnInit()
         self.Result = self:Judge()
     end
 end
+
 function LDecorator:Judge()
     return false
 end
----@todo
 function LDecorator:Negate()
     self.bNegate = true
     return self.LBT
@@ -49,10 +49,8 @@ function LDecorator:DoUpdate(DeltaTime)
         else
             return ELStatus.Failure
         end
-    elseif Status == ELStatus.Running then
-        return ELStatus.Running
     else
-        return ELStatus.Success
+        return Status
     end
 end
 -- 装饰器瞬间出结果, 失败则整体失败, 成功则保持成功直到子节点成功或失败
@@ -67,7 +65,7 @@ function LDecorator:PrintNode(nDeep)
             Text = Text .. '        '
         end
     end
-    Text = Text .. 'Decorator : ' .. self.DisplayName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
+    Text = Text .. 'Decorator : ' .. self.NodeDispName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
     Text = Text .. self.Child:PrintNode(nDeep)
     return Text
 end

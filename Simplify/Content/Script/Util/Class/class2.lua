@@ -39,9 +39,7 @@ local function inherit_fn(derive, base)
 end
 
 local function create_class(class_name, structure, super_class)
-    if (classes[class_name]) then
-        ---@todo log
-        -- log.log("class error : class already exist : " .. class_name)
+    if (classes[class_name]) then -- 重复注册
     end
     local new_class = structure -- deepcopy(structure)
     new_class.__class_name = class_name
@@ -148,7 +146,7 @@ local function deriveof(derive, base)
 end
 
 local function instanceof(Object, Class)
-    if not Object or not Object.__class_name then
+    if not Object or not Object.__class_name or not Class or not Class.__class_name then
         return false
     end
     local ObjectClass = classes[Object.__class_name]

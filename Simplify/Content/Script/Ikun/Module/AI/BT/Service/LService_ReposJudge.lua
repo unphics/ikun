@@ -17,7 +17,7 @@ function LService_ReposJudge:OnUpdate(DeltaTime)
     if not self.FightTarget then
         self.FightTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
     end
-    if self.FightTarget:IsDead() then
+    if self.FightTarget:IsRoleDead() then
         return
     end
     if debug_util.IsChrDebug(self.Chr) then

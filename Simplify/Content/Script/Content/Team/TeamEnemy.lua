@@ -57,7 +57,7 @@ function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
     if class.instanceof(EnemyTeam, class.TeamClass) then
         ---@step 如该TeamLeader已添加, 则该Team已添加
         local EnemyLeaer = EnemyTeam.TeamMember:GetLeader()
-        if self.refEnemyRole[EnemyLeaer.RoleInstId] then
+        if self.refEnemyRole[EnemyLeaer:GetRoleInstId()] then
             return false
         end
         ---@step 存储敌军所有角色
@@ -75,7 +75,7 @@ end
 ---@private 尝试添加一个敌人角色
 ---@param EnemyRole RoleClass
 function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
-    if self.refEnemyRole[EnemyRole.RoleInstId] then
+    if self.refEnemyRole[EnemyRole:GetRoleInstId()] then
         return
     end
     ---@type TeamEnemyPerception
@@ -83,12 +83,12 @@ function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
         Role = EnemyRole,
         LastSeenLoc = EnemyRole.Avatar:K2_GetActorLocation(),
         LastSeenTime = 0,
-        Visibility = true, ---@todo 隐身/遮挡/埋伏等藏起来的角色不可见
+        Visibility = true, ---@note 隐身/遮挡/埋伏等藏起来的角色不可见
         Investigation = 1,
         Confidence = 1,
         TargetBy = nil,
     }
-    self.refEnemyRole[EnemyRole.RoleInstId] = RolePerception
+    self.refEnemyRole[EnemyRole:GetRoleInstId()] = RolePerception
     table.insert(self.tbEnemyRolePerception, RolePerception)
 end
 ---@public 根据远近排序(第一个最近)
@@ -116,8 +116,8 @@ function TeamEnemyClass:RemoveEnemyRole(Role)
     local Index = 1
     while Index <= #self.tbEnemyRolePerception do
         local CheckRole = self.tbEnemyRolePerception[Index] ---@type RoleClass
-        if CheckRole.RoleInstId == Role.RoleInstId then
-            log.dev('TeamEnemyClass:RemoveEnemyRole() : ', CheckRole.DisplayName, Role.DisplayName)
+        if CheckRole:GetRoleInstId() == Role:GetRoleInstId() then
+            log.dev('TeamEnemyClass:RemoveEnemyRole() : ', CheckRole:GetRoleDispName(), Role:GetRoleDispName())
             table.remove(self.tbEnemyRolePerception, Index)
             break
         end
@@ -129,7 +129,7 @@ function TeamEnemyClass:CheckEnemyDead()
     local Index = 1
     while Index <= #self.tbEnemyRolePerception do
         local Info = self.tbEnemyRolePerception[Index] ---@type TeamEnemyPerception
-        if Info.Role:IsDead() then
+        if Info.Role:IsRoleDead() then
             table.remove(self.tbEnemyRolePerception, Index)
         else
             Index = Index + 1

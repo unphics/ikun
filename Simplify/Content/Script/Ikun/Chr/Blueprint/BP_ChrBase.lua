@@ -28,9 +28,8 @@ end
 ---@protected [ImplBP]
 function BP_ChrBase:ReceiveTick(DeltaSeconds)
     self.Overridden.ReceiveTick(self, DeltaSeconds)
-    if not self.Dead and net_util.is_server(self) then
+    if not self.bChrDead and net_util.is_server(self) then
         local HP = self.AttrSet:GetAttrValueByName("Health")
-        -- log.dev('hp', HP)
         if math_util.is_zero(HP) then
             self:ChrBeginDeath()
         end
@@ -59,7 +58,7 @@ end
 ---@return string
 function BP_ChrBase:PrintRoleInfo()
     local Role = self:GetRole()
-    return ' [Actor='..obj_util.dispname(self)..', RoleName='..Role.DisplayName..', RoleId='..Role.RoleInstId..'] '
+    return ' [Actor='..obj_util.dispname(self)..', RoleName='..Role:GetRoleDispName()..', RoleId='..Role:GetRoleInstId()..'] '
 end
 
 ---@private
@@ -78,7 +77,7 @@ end
 
 ---@private Chr开始死亡
 function BP_ChrBase:ChrBeginDeath()
-    self.Dead = true
+    self.bChrDead = true
     if self:GetRole() then
         self:GetRole():RoleBeginDeath()
         async_util.delay(self, 0.1, function()

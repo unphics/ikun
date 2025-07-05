@@ -11,6 +11,7 @@ require('Content/Team/TeamEnemy')
 require('Content/Team/TeamMember')
 require('Content.Team/TeamMove')
 require('Content/Team/TeamFence')
+require('Content/Team/TeamSupport')
 
 require('Content/Team/TeamBehavior/TeamBehaviorBase')
 require('Content/Team/TeamBehavior/TB_Patrol')
@@ -22,6 +23,7 @@ require('Content/Team/TeamBehavior/TB_Fight')
 ---@field CurTB TeamBehaviorBase * 团队行为
 ---@field TeamMove TeamMoveClass * 团队移动
 ---@field TeamFence TeamFenceClass * 栅栏
+---@field TeamSupport TeamSupportClass * 团队支援
 ---@field DecisionInterval number 决策间隔
 ---@field DecisionTimeCount number 决策间隔计时
 ---@field bFight boolean
@@ -51,6 +53,7 @@ function TeamClass:ctor()
     self.TeamEnemy = class.new 'TeamEnemyClass' (self)
     self.TeamMove = class.new 'TeamMoveClass'(self)
     self.TeamFence = class.new 'TeamFenceClass'(self)
+    self.TeamSupport = class.new 'TeamSupportClass'(self)
 end
 function TeamClass:Init()
     self.TeamMember:ElectLeader()

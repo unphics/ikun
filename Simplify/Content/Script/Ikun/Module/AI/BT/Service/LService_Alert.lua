@@ -10,8 +10,8 @@
 local LService_Alert = class.class 'LService_Alert' : extends 'LService' {
     OnUpdate = function()end,
 }
-function LService_Alert:ctor(DisplayName, TickInterval, Range)
-    class.LService.ctor(self, DisplayName, TickInterval)
+function LService_Alert:ctor(NodeDispName, TickInterval, Range)
+    class.LService.ctor(self, NodeDispName, TickInterval)
     self.StaticRange = Range or 1500
 end
 function LService_Alert:OnUpdate(DeltaTime)
@@ -28,7 +28,6 @@ function LService_Alert:OnUpdate(DeltaTime)
                     self:DrawAlertResult(Hit)
                 end
                 if true then -- 这个是Team的
-                    ---@todo last 该写Team添加敌人了
                     if self.Chr:GetRole():IsEnemy(Hit:GetRole()) then
                         self.Chr:GetRole().Team:Encounter(Hit:GetRole().Team)
                     end

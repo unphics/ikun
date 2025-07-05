@@ -7,6 +7,7 @@
 ---
 
 local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
+local BehavDef = require("Ikun.Module.AI.BT.Behav.BehavDef")
 
 local M = {}
 
@@ -77,12 +78,68 @@ M['Team_Fight_1'] = function(Avatar)
                         :AddTask('LTask_RotateSmooth')
                         :AddTask('LTask_Wait', 0.2)
                         :AddTask('LTask_Move4Repos', 20, 160, 3, UE.FVector(200, 200, 200))
-                        -- :AddTask('LTask_AiMoveBase', 200, 160, 3, UE.FVector(200, 200, 200))
                     :Up()
                     :AddTask('LTask_AimTarget')
                     :AddTask('LTask_ActiveAbility')
-                    -- :AddTask('LTask_Wait', 1)
-                    
+    return LBT
+end
+
+---@brief 团队战斗行为树2
+M['Team_Fight_2'] = function(Avatar)
+    local LBT = class.new 'LBT'(nil, Avatar, 'Team_Fight_2') ---@type LBT
+    LBT:CreateRoot()
+        :AddSelector()
+            :AddSequence()
+                :AddService('LService_ConsiderBehav', 0.3)
+                :AddService('LService_MoveBehav', 0)
+                :AddSequence()
+                    :AddTask('LTask_NextBehav')
+                    :AddSelector()
+                        :AddDecorator('LDecorator_IsBehav', BehavDef.Special)
+                        :AddSequence()
+                            :AddTask('LTask_ClearBBValue', BBKeyDef.MoveTarget)
+                            :AddTask('LTask_GetTBInfo2BB', 'DirectiveMoveCoord', BBKeyDef.MoveTarget)
+                            :AddTask('LTask_RotateSmooth')
+                            :AddTask('LTask_WaitMoveArrived', BBKeyDef.MoveTarget)
+                        :Up()
+                        :AddDecorator('LDecorator_IsBehav', BehavDef.Survive)
+                        :AddSequence()
+                            :AddTask('LTask_NeedSupportSurvive')
+                            -- 如果当前地点安全就零散放几个技能; 否则就去安全区
+                            :AddTask('LTask_Wait', 0.5, 0)
+                            :AddTask("LTask_FindSafeArea")
+                            :AddTask('LTask_WaitMoveArrived', BBKeyDef.SafeLoc)
+                        :Up()
+                        :AddDecorator('LDecorator_IsBehav', BehavDef.Support)
+                        :AddSequence()
+                            :AddTask('LTask_Wait', 0.5, 0)
+                            -- 找个需要支援的, 释放支援技能(先原地释放, 略过走位等)
+                            :AddTask("LTask_FindSupportTarget")
+                            :AddTask("LTask_SelectAbility", {'Skill.Tag.Support'})
+                            :AddTask('LTask_ActiveAbility')
+                        :Up()
+                        :AddDecorator('LDecorator_IsBehav', BehavDef.Attack)
+                        :AddSequence()
+                            :AddTask('LTask_GetTBInfo2BB', 'DynaSuppressTarget', BBKeyDef.FightTarget)
+                            :AddDecorator('LDecorator_BBCondition', BBKeyDef.FightTarget)
+                            :AddSequence()
+                                :AddTask('LTask_Wait', 0.1, 0.2)
+                                :AddTask('LTask_SelectAbility', {'Skill.Tag.Attack'})
+                                :AddSelector()
+                                    :AddDecorator('LDecorator_NeedRepos4Ability')
+                                    :AddSequence()
+                                        :AddTask('LTask_ClearBBValue', BBKeyDef.MoveTarget)
+                                        :AddTask('LTask_FindLoc4Ability')
+                                        :AddTask('LTask_RotateSmooth')
+                                        :AddTask('LTask_Wait', 0.2)
+                                        :AddTask('LTask_Move4Repos', 20, 160, 3, UE.FVector(200, 200, 200))
+                                    :Up()
+                                    :AddTask('LTask_RandomResult', 1)
+                                :Up()
+                                :AddTask('LTask_AimTarget')
+                                :AddTask('LTask_ActiveAbility')
+                            :Up()
+                        :Up()
     return LBT
 end
 

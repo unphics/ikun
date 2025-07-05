@@ -33,7 +33,8 @@ RoleConfig[2] = {
 }
 RoleConfig[2].BTCfg[BTType.Init] = 'Team_MakeTeam_1'
 RoleConfig[2].BTCfg[BTType.Patrol] = 'Team_Patrol_Together_1'
-RoleConfig[2].BTCfg[BTType.Fight] = 'Team_Fight_1'
+-- RoleConfig[2].BTCfg[BTType.Fight] = 'Team_Fight_1'
+RoleConfig[2].BTCfg[BTType.Fight] = 'Team_Fight_2'
 
 RoleConfig[3] = {
     DisplayName = '阿巴克',
@@ -55,7 +56,8 @@ RoleConfig[4] = {
 }
 RoleConfig[4].BTCfg[BTType.Init] = 'Team_MakeTeam_1'
 RoleConfig[4].BTCfg[BTType.Patrol] = 'Team_Patrol_Together_1'
-RoleConfig[4].BTCfg[BTType.Fight] = 'Team_Fight_1'
+-- RoleConfig[4].BTCfg[BTType.Fight] = 'Team_Fight_1'
+RoleConfig[4].BTCfg[BTType.Fight] = 'Team_Fight_2'
 
 RoleConfig[5] = {
     DisplayName = '阿卡拉',

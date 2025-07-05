@@ -8,9 +8,8 @@ local RoleConfig = require('Content/Role/Config/RoleConfig')
 
 ---@class TeamMemberClass
 ---@field OwnerTeam TeamClass
----@field tbMember RoleClass[]
----@field mapMemberId table<number, RoleClass>
 ---@field TeamLeader RoleClass
+---@field dpMember duplex<number, RoleClass>
 local TeamMemberClass = class.class 'TeamMemberClass' {
     --[[public]]
     ctor = function() end,
@@ -24,48 +23,45 @@ local TeamMemberClass = class.class 'TeamMemberClass' {
     CalcMaxCountPerPos = function()end,
     --[[private]]
     tbMember = nil,
-    mapMemberId = nil,
     OwnerTeam = nil,
     TeamLeader = nil,
 }
 function TeamMemberClass:ctor(Team)
     self.OwnerTeam = Team
-    self.tbMember = {}
-    self.mapMemberId = {}
+    self.dpMember = duplex.create()
 end
 ---@public 添加成员
 function TeamMemberClass:AddMember(Role)
-    table.insert(self.tbMember, Role)
-    self.mapMemberId[Role.RoleInstId] = Role
+    self.dpMember:dinsert(Role:GetRoleInstId(), Role)
 end
 ---@public 移除成员
-function TeamMemberClass:RemoveMember(RoleInstId)
-    self.mapMemberId[RoleInstId] = nil
-    local Index = -1
-    for i, Role in ipairs(self.tbMember) do
-        if Role.RoleInstId == RoleInstId then
-            Index = i
-            break
-        end
-    end
-    if Index > 0 then
-        table.remove(self.tbMember, Index)
-    else
+function TeamMemberClass:RemoveMember(InstId)
+    if not self.dpMember:dremove(InstId) then
         log.error('TeamMemberClass:RemoveMember() 不存在的RoleInstId')
     end
 end
 ---@public 获取所有成员
 function TeamMemberClass:GetAllMember()
-    return table_util.shallow_copy(self.tbMember)
+    local allMemeber = {}
+    for _, id, role in self.dpMember:diter() do
+        if log.is_live_role(role) then
+            table.insert(allMemeber, role)
+        end
+    end
+    return allMemeber
 end
 ---@public 选举领导者
 function TeamMemberClass:ElectLeader()
-    local TeamLeader = self.tbMember[1]
+    local TeamLeader = nil
+    for _, id, role in self.dpMember:diter() do
+        TeamLeader = role
+        break
+    end
     self.TeamLeader = TeamLeader
 end
 function TeamMemberClass:GetLeader()
-    if self.TeamLeader.Dead then
-        self:RemoveMember(self.TeamLeader.RoleInstId)
+    if self.TeamLeader:IsRoleDead() then
+        self:RemoveMember(self.TeamLeader:GetRoleInstId())
         self:ElectLeader()
     end
     return self.TeamLeader
@@ -73,8 +69,8 @@ end
 ---@public 打印成员类信息
 function TeamMemberClass:PrintMember()
     local str = 'Team Leader =' .. self.TeamLeader.Avatar:PrintRoleInfo() .. ' :\n'
-    for _, Role in ipairs(self.tbMember) do
-        str = str .. '\t\t\t' .. Role.Avatar:PrintRoleInfo() .. '\n'
+    for _, id, role in self.dpMember:diter() do
+        str = str..'\t\t\t'..role.Avatar:PrintRoleInfo()..'\n'
     end
     return str
 end
@@ -83,16 +79,15 @@ end
 function TeamMemberClass:GetAllMember_PosCount()
     local ArrSingle = {}
     local ArrMulti = {}
-    for _, ele in ipairs(self.tbMember) do
-        local Role = ele ---@type RoleClass
-        local tbFPAssign = RoleConfig[Role.RoleConfigId].FightPosAssign
+    for _, id, role in self.dpMember:diter() do
+        local tbFPAssign = RoleConfig[role:GetRoleCfgId()].FightPosAssign
         if not tbFPAssign or #tbFPAssign == 0 then
-            log.error('TeamMemberClass:GetAllMember_PosCount() 发现不承担战场位置的角色', Role.RoleConfigId)
+            log.error('TeamMemberClass:GetAllMember_PosCount() 发现不承担战场位置的角色', role:GetRoleCfgId())
         end
         if #tbFPAssign == 1 then
-            table.insert(ArrSingle, Role)
+            table.insert(ArrSingle, role)
         else
-            table.insert(ArrMulti, Role)
+            table.insert(ArrMulti, role)
         end
     end
     return ArrSingle, ArrMulti
@@ -100,9 +95,8 @@ end
 ---@public [Pure] 计算每个职业的最大人员数量
 function TeamMemberClass:CalcMaxCountPerPos()
     local MaxCountPerPos = {}
-    for _, ele in ipairs(self.tbMember) do
-        local Role = ele ---@type RoleClass
-        local tbFightPos = RoleConfig[Role.RoleConfigId].FightPosAssign
+    for _, id, role in self.dpMember:diter() do
+        local tbFightPos = RoleConfig[role:GetRoleCfgId()].FightPosAssign
         for _, pos in ipairs(tbFightPos) do
             if not MaxCountPerPos[pos] then
                 MaxCountPerPos[pos] = 0
@@ -112,5 +106,5 @@ function TeamMemberClass:CalcMaxCountPerPos()
     end
     return MaxCountPerPos
 end
----@public
+
 return TeamMemberClass

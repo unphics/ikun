@@ -9,8 +9,8 @@
 local LTask_ClearBBValue = class.class 'LTask_ClearBBValue' : extends 'LTask' {
     ctor = function()end,
 }
-function LTask_ClearBBValue:ctor(DisplayName, ...)
-    class.LTask.ctor(self, DisplayName)
+function LTask_ClearBBValue:ctor(NodeDispName, ...)
+    class.LTask.ctor(self, NodeDispName)
     self.BBKeys = {...}
 end
 function LTask_ClearBBValue:OnInit()

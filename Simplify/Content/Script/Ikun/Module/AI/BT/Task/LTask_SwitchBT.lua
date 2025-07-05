@@ -11,8 +11,8 @@ local LTask_SwitchBT = class.class 'LTask_SwitchBT' : extends 'LTask' {
     OnInit = function()end,
     OnUpdate = function()end,
 }
-function LTask_SwitchBT:ctor(DisplayName, NewBTKey)
-    class.LTask.ctor(self, DisplayName)
+function LTask_SwitchBT:ctor(NodeDispName, NewBTKey)
+    class.LTask.ctor(self, NodeDispName)
 
     self.NewBTKey = NewBTKey
 end

@@ -28,7 +28,6 @@ net_util.client_get_player_chr = function(World)
         log.error('Must be client!')
         return
     end
-    ---@todo 多人的时候记得判断一下客户端PlayerIndex=0准确与否
     return UE.UGameplayStatics.GetPlayerCharacter(World, 0)
 end
 

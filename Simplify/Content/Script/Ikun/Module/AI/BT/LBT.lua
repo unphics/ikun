@@ -92,8 +92,9 @@ function LBT:AddCompsite(LCompositeNode)
     return self
 end
 -- 添加到最后一个可挂接Child的Node上, 然后选择器变成最后一个可挂接的Node
-function LBT:AddSelector()
-    local Node = class.new 'LSelector' ('Select')
+function LBT:AddSelector(DebugCode)
+    local Node = class.new 'LSelector' ('Select', DebugCode)
+    self:InitNode(Node, 'Selector')
     return self:AddCompsite(Node)
 end
 -- 添加到最后一个可挂接Child的Node上, 然后顺序器变成最后一个可挂接的Node
@@ -170,7 +171,7 @@ function LBT:PrintBT()
     end
     local strName = 'Name: ' .. obj_util.dispname(self.Chr)
     local Role = self.Chr:GetRole() ---@type RoleClass
-    local strId = ', Id : ' .. Role.RoleInstId
+    local strId = ', Id : ' .. Role:GetRoleInstId()
     PrintText = PrintText .. strName .. strId .. '\n'
     PrintText = PrintText .. 'BT: ' .. self.Desc .. '\n'
     PrintText = PrintText .. self.Root:PrintNode(0)

@@ -94,7 +94,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         true, TraceColor, HitColor, DrawTime)
     local Results = {}
     local owner = log.role(pos1)
-    if owner.RoleInstId == debug_util.debugrole then
+    if owner:GetRoleInstId() == debug_util.debugrole then
         local a = 1
     end
     for i = 1, HitResults:Length() do
@@ -104,7 +104,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         end
         local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
         if role then
-            log.log(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor '..role.RoleInstId ..','..role.DisplayName)
+            log.log(log.key.repos..log.roleid(pos1)..'has_obstacles_box: Hit Actor '..role:GetRoleInstId() ..','..role:GetRoleDispName())
         end
         if not Actor.GetMovementComponent then
             goto continue
@@ -145,14 +145,14 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
         if not HitRole then
             return false
         end
-        if OwnerRole.RoleInstId == HitRole.RoleInstId then
+        if OwnerRole:GetRoleInstId() == HitRole:GetRoleInstId() then
             return false
         end
         if OwnerRole:IsFirend(HitRole) then
-            log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [firend] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
+            log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [firend] '..OwnerRole:GetRoleDispName()..','..HitRole:GetRoleDispName())
             return true
         end
-        log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [enemy] '..OwnerRole:GetDisplayName()..','..HitRole:GetDisplayName())
+        log.log(log.key.repos..log.roleid(OwnerRole)..'filter firend = [enemy] '..OwnerRole:GetRoleDispName()..','..HitRole:GetRoleDispName())
         return false
     end
     return filter
@@ -190,7 +190,6 @@ end
 ---@param FnFilter function(AActor>)
 ---@return UE.TArray<UE.AActor>
 actor_util.find_actors_in_range = function(Actor, Loc, Range, FnFilter)
-    ---@todo
     local ResultHits = UE.TArray(UE.FHitResult)
     local Ignore = UE.TArray(UE.AActor)
     Ignore:Add(Actor)

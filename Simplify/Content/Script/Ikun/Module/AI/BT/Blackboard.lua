@@ -23,7 +23,8 @@ function BlackboardClass:SetBBValue(Key, Value)
     self.BlackboardData[Key] = Value
 end
 function BlackboardClass:GetBBValue(Key)
-    return self.BlackboardData[Key]
+    local Value = self.BlackboardData[Key]
+    return Value
 end
 
 return BlackboardClass

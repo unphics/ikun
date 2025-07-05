@@ -17,18 +17,20 @@ function RoleMgrClass:ctor()
     self.AllRoles = {}
 end
 ---@public
+---@param Id number RoleInstId
 ---@return RoleClass
-function RoleMgrClass:FindRole(RoleInstId)
-    return self.AllRoles[RoleInstId]
+function RoleMgrClass:FindRole(Id)
+    return self.AllRoles[Id]
 end
 ---@public
+---@param Id number RoleInstId
 ---@param Role RoleClass
-function RoleMgrClass:NewRole(RoleInstId, Role)
-    if not RoleInstId or not Role then
-        return log.error('RoleMgrClass:NewRole(): 数据错误', RoleInstId, Role)
+function RoleMgrClass:NewRole(Id, Role)
+    if not Id or not Role then
+        return log.error('RoleMgrClass:NewRole(): 数据错误', Id, Role)
     end
-    if self.AllRoles[RoleInstId] then
-        return log.error('RoleMgrClass:NewRole(): 重复的Role', RoleInstId)
+    if self.AllRoles[Id] then
+        return log.error('RoleMgrClass:NewRole(): 重复的Role', Id)
     end
-    self.AllRoles[RoleInstId] = Role
+    self.AllRoles[Id] = Role
 end

@@ -6,18 +6,8 @@
 
 local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
 
----@param Status ELStatus
-local function PrintLStatus(Status)
-    local Arr = {'Failure', 'Success', 'Running', 'Aborted', 'Invalid'}
-    local Text = Arr[Status]
-    if Text == 'Running' then
-        Text = Text .. '    <---------'
-    end
-    return Text
-end
-
 ---@class LNode 基节点, 包含所有节点的共用功能
----@field DisplayName string
+---@field NodeDispName string
 ---@field NodeName string
 ---@field Status ELStatus
 ---@field LastStatus ELStatus
@@ -43,7 +33,7 @@ local LNode = class.class 'LNode' {
     Abort = function()end,
     Ctlr = nil,
     Chr = nil,
-    DisplayName = 'Node',
+    NodeDispName = 'Node',
     Blackboard = nil,
 --[[private]]
     SetStatus = function()end,
@@ -53,9 +43,9 @@ local LNode = class.class 'LNode' {
     NodeName = nil,
     LBT = nil,
 }
-function LNode:ctor(DisplayName)
+function LNode:ctor(NodeDispName)
     self.Status = ELStatus.Invalid
-    self.DisplayName = DisplayName
+    self.NodeDispName = NodeDispName
     self.NodeName = self.__class_name
 end
 function LNode:OnInit()
@@ -79,7 +69,7 @@ function LNode:OnUpdate(DeltaTime)
     return ELStatus.Failure
 end
 function LNode:PrintNode(nDeep)
-    return self.DisplayName .. ' :\n'
+    return self.NodeDispName .. ' :\n'
 end
 function LNode:IsTerminated()
     return self:IsSuccess() or self:IsFailure()
@@ -117,14 +107,14 @@ end
 ---@field bComposite boolean
 local LComposite = class.class 'LComposite' : extends 'LNode' {
 --[[public]]
-    ctor = function(DisplayName)end,
+    ctor = function(NodeDispName)end,
     PrintNode = function(nDeep)end,
     bComposite = true,
 --[[private]]
     Children = nil,
 }
-function LComposite:ctor(DisplayName)
-    class.LNode.ctor(self, DisplayName)
+function LComposite:ctor(NodeDispName)
+    class.LNode.ctor(self, NodeDispName)
     self.Children = {}
 end
 function LComposite:AddChild(Node)
@@ -137,7 +127,7 @@ function LComposite:PrintNode(nDeep)
             Text = Text .. '        '
         end
     end
-    Text = Text .. self.DisplayName .. ' : ' .. PrintLStatus(self.LastStatus) .. '\n'
+    Text = Text .. self.NodeDispName .. ' : ' .. ELStatus.PrintLStatus(self.LastStatus) .. '\n'
     if self.Children then
         for _, Node in ipairs(self.Children) do
             Text = Text .. Node:PrintNode(nDeep + 1)
@@ -159,8 +149,8 @@ local LSequence = class.class 'LSequence' : extends 'LComposite' {
     CurNode = nil,
     CurIdx = nil
 }
-function LSequence:ctor(DisplayName)
-    class.LComposite.ctor(self, DisplayName)
+function LSequence:ctor(NodeDispName)
+    class.LComposite.ctor(self, NodeDispName)
 end
 function LSequence:OnInit()
     self.CurNode = self.Children[1]
@@ -184,12 +174,15 @@ end
 
 
 ---@class LSelector: LSequence 选择器
+---@field ConstDebugCode number
 local LSelector = class.class'LSelector' : extends 'LSequence' {
     ctor = function()end,
     OnUpdate = function()end,
+    ConstDebugCode = nil,
 }
-function LSelector:ctor(DisplayName)
-    class.LSequence.ctor(self, DisplayName)
+function LSelector:ctor(NodeDispName, DebugCode)
+    class.LSequence.ctor(self, NodeDispName)
+    self.ConstDebugCode = DebugCode
 end
 -- 选择器Tick当前节点, 失败则换下一个, 否则就一直Tick当前节点
 -- 只要有一个成功, 则选择器成功; 如果都失败, 则选择器失败

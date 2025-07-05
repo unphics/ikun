@@ -29,6 +29,11 @@ debug_util.printrole = function(id)
     end
 end
 
+debug_util.gamespeed = function(speed)
+    local time = MdMgr.TimeMgr ---@type TimeMgr
+    time:SetGameSpeed(speed)
+end
+
 ---@public
 ---@param Chr BP_ChrBase | RoleClass | number
 ---@return boolean
@@ -37,10 +42,10 @@ debug_util.IsChrDebug = function(Chr)
         return Chr == debug_util.debugrole
     end
     if Chr.GetRole then
-        return Chr:GetRole().RoleInstId == debug_util.debugrole
+        return Chr:GetRole():GetRoleInstId() == debug_util.debugrole
     end
     if class.instanceof(Chr, class.RoleClass) then
-        return Chr.RoleInstId == debug_util.debugrole
+        return Chr:GetRoleInstId() == debug_util.debugrole
     end
     return false
 end

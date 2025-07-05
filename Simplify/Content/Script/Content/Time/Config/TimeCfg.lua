@@ -1,12 +1,17 @@
-local M = {}
 
--- 时间流速(秒钟进制分钟)
-M.TimeFlowRate = 20
+---@class TimeCfg
+local TimeCfg = {}
 
-M.SecondRadix = 60
-M.MinuteRadix = 60
-M.HourRadix = 24
-M.DayRadix = 30
-M.MonthRadix = 12
+-- 游戏时间流速倍率(比现实)
+TimeCfg.TimeFlowRate = 20
 
-return M
+-- 游戏速度
+TimeCfg.GameSpeed = 1
+
+TimeCfg.SecondRadix = 60
+TimeCfg.MinuteRadix = 60
+TimeCfg.HourRadix = 24
+TimeCfg.DayRadix = 30
+TimeCfg.MonthRadix = 12
+
+return TimeCfg

@@ -1,3 +1,4 @@
+
 ---
 ---@brief 战斗行为
 ---@author zys
@@ -19,6 +20,8 @@ local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 --[[public]]
     OnEncounterEnemy = function()end,
     Tick = function()end,
+    ReadDirectiveMoveCoord = function()end,
+    ReadDynaSuppressTarget = function()end,
 --[[private]]
     AllMemberSwitchFightBT = function()end,
     CombatFeasibilityResolution = function()end,
@@ -69,7 +72,7 @@ function TB_Fight:AllMemberSwitchFightBT()
     for _, ele in ipairs(AllMember) do
         ---@type RoleClass
         local Role = ele
-        local NewBTKey = RoleConfig[Role.RoleConfigId].BTCfg[BTType.Fight]
+        local NewBTKey = RoleConfig[Role:GetRoleCfgId()].BTCfg[BTType.Fight]
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
 end
@@ -122,7 +125,7 @@ function TB_Fight:AsgnFightPos()
     ---@todo 优先处理只能承担单一职业的角色; 此处略过
     for _, ele in ipairs(tbMultiFP) do
         local Role = ele ---@type RoleClass
-        local tbFP = RoleConfig[Role.RoleConfigId].FightPosAssign
+        local tbFP = RoleConfig[Role:GetRoleCfgId()].FightPosAssign
         local FightPos = nil
         ---@todo (if 有得跑 or 有牧师)血量极少, 强制后排
         ---@todo 血量较少, 优先后排
@@ -152,7 +155,7 @@ function TB_Fight:DefensivePos(Army)
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 150)
-        self.DirectiveMoveCoord[Role.RoleInstId] = ResultLoc
+        self.DirectiveMoveCoord[Role:GetRoleInstId()] = ResultLoc
     end
 end
 
@@ -167,7 +170,7 @@ function TB_Fight:AsgnFightTarget(Army)
         if not Enemy.tbEnemyRolePerception[i] then
             break
         end
-        self.DynaSuppressTarget[Role.RoleInstId] = Enemy.tbEnemyRolePerception[i].Role
+        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.tbEnemyRolePerception[i].Role
     end
     Enemy.FireTarget = Enemy.tbEnemyRolePerception[1].Role
 
@@ -176,25 +179,30 @@ function TB_Fight:AsgnFightTarget(Army)
         if not Enemy.tbEnemyRolePerception[i] then
             break
         end
-        self.DynaSuppressTarget[Role.RoleInstId] = Enemy.tbEnemyRolePerception[1].Role
+        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.tbEnemyRolePerception[1].Role
     end
 end
 
-function TB_Fight:ReadDirectiveMoveCoord(RoleInstId)
-    local MoveLoc = self.DirectiveMoveCoord[RoleInstId]
+---@public 给行为树任务使用
+---@param Id number RoleInstId
+function TB_Fight:ReadDirectiveMoveCoord(Id)
+    local MoveLoc = self.DirectiveMoveCoord[Id]
     if MoveLoc then
-        self.DirectiveMoveCoord[RoleInstId] = nil
+        self.DirectiveMoveCoord[Id] = nil
         return MoveLoc
     end
 end
-function TB_Fight:ReadDynaSuppressTarget(RoleInstId)
-    local Role = self.DynaSuppressTarget[RoleInstId]
-    if not Role or Role:IsDead() then
-        log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Role.RoleInstId or 'nil', Role and Role.DisplayName or 'nil')
+
+---@public 给行为树任务使用
+---@param Id number RoleInstId
+function TB_Fight:ReadDynaSuppressTarget(Id)
+    local Role = self.DynaSuppressTarget[Id]
+    if not Role or Role:IsRoleDead() then
+        log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Id or 'nil', Role and Role:GetRoleDispName() or 'nil')
         -- self.OwnerTeam.TeamEnemy:RemoveEnemyRole(Role)
         self.OwnerTeam.TeamEnemy:CheckEnemyDead()
         self:AsgnFightTarget(self.Army)
-        Role = self.DynaSuppressTarget[RoleInstId]
+        Role = self.DynaSuppressTarget[Id]
     end
     return Role
 end

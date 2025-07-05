@@ -31,11 +31,11 @@ function TeamMoveClass:ctor(Team)
 end
 ---@public Role抵达后调用
 function TeamMoveClass:OnArrived(Role)
-    if not Role or not self.mapMemberMoveTarget or not self.mapMemberMoveTarget[Role.RoleInstId] then
+    if not Role or not self.mapMemberMoveTarget or not self.mapMemberMoveTarget[Role:GetRoleInstId()] then
         return log.error('TeamMoveClass:OnArrived() 自身状态错误')
     end
 
-    self.mapMemberMoveTarget[Role.RoleInstId].bArrived = true
+    self.mapMemberMoveTarget[Role:GetRoleInstId()].bArrived = true
 
     if self:IsAllMemberArrived() then
         self:OnAllMemberArrived()
@@ -66,7 +66,7 @@ function TeamMoveClass:GetMoveTarget(Role)
             self.OwnerTeam.CurTB:CalcAllMemberMoveTarget()
         end
     end
-    local MoveTargetData = self.mapMemberMoveTarget[Role.RoleInstId]
+    local MoveTargetData = self.mapMemberMoveTarget[Role:GetRoleInstId()]
     if not MoveTargetData then
         self.OwnerTeam.CurTB:CalcMemberMoveTarget(Role)
     end
@@ -77,7 +77,6 @@ function TeamMoveClass:GetMoveTarget(Role)
     return MoveTargetData.MoveTarget
 end
 ---@public Team保存留给成员的移动目标
----@todo 后面搞成类的静态方法或者写到lib类中
 ---@param MoveTarget FVector
 ---@param bForceMove boolean 强制移动
 function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget, bForceMove)
@@ -86,7 +85,7 @@ function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget, bForceMove)
     end
     ---@type TeamMoveTarget
     local tb = {MoveTarget = MoveTarget, bArrived = false, bForceMove = bForceMove}
-    self.mapMemberMoveTarget[Role.RoleInstId] = tb
+    self.mapMemberMoveTarget[Role:GetRoleInstId()] = tb
     return tb
 end
 

@@ -10,24 +10,21 @@ local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTDef = require('Ikun/Module/AI/BT/BTDef')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
+local RoleInfoClass = require('Content/Role/RoleInfo')
 
 ---@class RoleClass: MdBase
----@field DisplayName string * 显示名称
----@field RoleInstId number * 角色实例Id
----@field RoleConfigId number * 角色配置Id
+---@field RoleInfo RoleInfoClass * 角色基础信息
 ---@field Avatar BP_ChrBase * 角色在游戏场景中的AvatarActor
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
 ---@field FightTarget FightTargetClass * 战斗目标
----@field Dead boolean 已经死亡
 ---@field bNpc boolean
 local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
 --[[public]]
     ctor = function()end,
     Tick = function()end,
     InitByAvatar = function()end,
-    GetDisplayName = function()end,
     SwitchNewBT = function()end,
     IsFirend = function()end,
     IsEnemy = function()end,
@@ -35,21 +32,21 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     HasTarget = function()end,
     GetTarget = function()end,
     GetBelongKingdom = function()end,
-    RoleInstId = nil,
     Team = nil,
-    FightTarget = nil,
+    GetRoleCfgId = function()end,
+    GetRoleInstId = function()end,
+    GetRoleDispName = function()end,
+    IsRoleDead = function()end,
 --[[private]]
     StartBT = function()end,
-    DisplayName = nil,
-    RoleConfigId = nil,
-    Dead = false,
+    RoleInfo = nil,
+    FightTarget = nil,
     Avatar = nil,
     BelongKingdomLua = nil,
     BT = nil,
     bNpc = nil,
 }
 function RoleClass:ctor()
-    self.Dead = false
     self.bNpc = false
     self.FightTarget = class.new'FightTargetClass'(self)
 end
@@ -59,7 +56,7 @@ function RoleClass:Tick(DeltaTime)
     end
     if self.BT then
         self.BT:Tick(DeltaTime)
-        if self.RoleInstId == debug_util.debugrole then
+        if self:GetRoleInstId() == debug_util.debugrole then
             if debug_util.debug_bt == 1 then
                 self.Avatar.RoleComp:LogBT2UI(self.BT:PrintBT())
             else
@@ -69,11 +66,13 @@ function RoleClass:Tick(DeltaTime)
     end
 end
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
-function RoleClass:InitByAvatar(Avatar, Id, bNpc)
-    local Config = RoleConfig[Id] ---@type RoleConfig
+function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
+    local Config = RoleConfig[CfgId] ---@type RoleConfig
+    if not Config then
+        return log.error(log.key.roleinit,'投胎失败!!!')
+    end
+    self.RoleInfo = class.new 'RoleInfoClass' (self, CfgId)
     self.Avatar = Avatar
-    self.RoleConfigId = Id
-    self.DisplayName = Config.DisplayName
     self.bNpc = bNpc
 
     local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
@@ -82,31 +81,25 @@ function RoleClass:InitByAvatar(Avatar, Id, bNpc)
 
     self:StartBT()
 end
-function RoleClass:IsDead()
-    return self.Dead
-end
-function RoleClass:GetDisplayName()
-    return self.DisplayName
-end
 function RoleClass:StartBT()
-    local RoleCfg = RoleConfig[self.RoleConfigId]
+    local RoleCfg = RoleConfig[self:GetRoleCfgId()]
     if RoleCfg then
         self:SwitchNewBT(RoleCfg.InitBT)
     end
 end
 function RoleClass:SwitchNewBT(NewBTKey)
-    log.log('RoleDisplayName = '..tostring(self.DisplayName)..', switch new bt: '..tostring(NewBTKey))
+    log.log('RoleDisplayName = '..tostring(self:GetRoleDispName())..', switch new bt: '..tostring(NewBTKey))
     if self.Avatar.RoleComp.bCustomStartBT then
         return
     end
     local BTClass = BTDef[NewBTKey]
     if not BTClass then
-        log.error('Failed to index BTClass, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self.DisplayName))
+        log.error('Failed to index BTClass, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self:GetRoleDispName()))
         return
     end
     self.BT = BTClass(self.Avatar)
         if not self.BT then
-        log.error('Failed to init bt, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self.DisplayName))
+        log.error('Failed to init bt, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self:GetRoleDispName()))
         return
     end
 end
@@ -139,18 +132,18 @@ function RoleClass:AddEnemyChecked(OtherRole)
     if not OtherRole then
         return false
     end
-    if OtherRole.Dead then
+    if OtherRole:IsRoleDead() then
         return false
     end
     if not self:IsEnemy(OtherRole) then
         return false
     end
-    local OwnerRoleCfg = RoleConfig[self.RoleConfigId]
-    local OtherRoleCfg = RoleConfig[OtherRole.RoleConfigId]
+    local OwnerRoleCfg = RoleConfig[self:GetRoleCfgId()]
+    local OtherRoleCfg = RoleConfig[OtherRole:GetRoleCfgId()]
     if not OtherRoleCfg then
         return false
     end
-    log.log('RoleClass:AddEnemyChecked; self =', OwnerRoleCfg.DisplayName, '; enemy =', OtherRoleCfg.DisplayName)
+    log.log('RoleClass:AddEnemyChecked; self =', OwnerRoleCfg:GetRoleDispName(), '; enemy =', OtherRoleCfg:GetRoleDispName())
     self.FightTarget:SetTarget(OtherRole)
     return true
 end
@@ -162,7 +155,10 @@ function RoleClass:GetTarget()
 end
 
 function RoleClass:RoleBeginDeath()
-    self.Dead = true
+    self.RoleInfo:RoleDoDeath()
+    if self.Team then
+        self.Team.TeamSupport:StopSupportReq(self)
+    end
     self.BT = nil
 end
 
@@ -180,14 +176,30 @@ end
 
 ---@public [LBTCondition]
 function RoleClass:HasTeamMoveTarget()
-    return self.Team.TeamMove.mapMemberMoveTarget and self.Team.TeamMove.mapMemberMoveTarget[self.RoleInstId] or nil
+    return self.Team.TeamMove.mapMemberMoveTarget and self.Team.TeamMove.mapMemberMoveTarget[self:GetRoleInstId()] or nil
 end
 
 function RoleClass:PrintRole()
     local str = ''
     local hp = obj_util.is_valid(self.Avatar) and self.Avatar.AttrSet:GetAttrValueByName("Health")
-    str = str..'{ Id:'..self.RoleInstId..', Dead:'..tostring(self.Dead)..', hp:'..tostring(hp)..' }'
+    str = str..'{ Id:'..self:GetRoleInstId()..', Dead:'..tostring(self:IsRoleDead())..', hp:'..tostring(hp)..' }'
     return str
+end
+
+function RoleClass:GetRoleCfgId()
+    return self.RoleInfo.RoleCfgId
+end
+
+function RoleClass:GetRoleInstId()
+    return self.RoleInfo.RoleInstId
+end
+
+function RoleClass:GetRoleDispName()
+    return self.RoleInfo.RoleDispName
+end
+
+function RoleClass:IsRoleDead()
+    return self.RoleInfo.bDead
 end
 
 require('Content/Role/Impl/RoleDef')
