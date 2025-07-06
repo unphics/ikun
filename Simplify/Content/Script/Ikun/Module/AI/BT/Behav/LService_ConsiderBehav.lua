@@ -68,6 +68,9 @@ end
 function LService_ConsiderBehav:HasSpecial(Context)
     local Role = self.Chr:GetRole() ---@type RoleClass
     local Team = Role.Team
+    if not Team.CurTB.DirectiveMoveCoord then
+        return false
+    end
     local vec = Team.CurTB.DirectiveMoveCoord[Role:GetRoleInstId()]
     if vec then
         return true

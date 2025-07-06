@@ -32,8 +32,8 @@ local NavMoveBehav = class.class 'NavMoveBehav' {
 ---@override
 ---@param Chr BP_ChrBase|RoleClass
 function NavMoveBehav:ctor(Chr, MaxStuckTime)
-    self.Chr = log.chr(Chr)
-    self.Role = log.role(Chr)
+    self.Chr = rolelib.chr(Chr)
+    self.Role = rolelib.role(Chr)
     self.MaxStuckTime = MaxStuckTime
     self.QueryNavExtent = UE.FVector(200, 200, 200)
 end

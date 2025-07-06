@@ -22,8 +22,9 @@ function TeamBehaviorBase:OnEncounterEnemy(EnemyTeam)
 end
 
 function TeamBehaviorBase:CalcAllMemberMoveTarget()
-    for _, role in ipairs(self.OwnerTeam.TeamMember.tbMember) do
-        self:CalcMemberMoveTarget(role)
+    local allMember = self.OwnerTeam.TeamMember:GetAllMember()
+    for _, Role in ipairs(allMember) do
+        self:CalcMemberMoveTarget(Role)
     end
 end
 

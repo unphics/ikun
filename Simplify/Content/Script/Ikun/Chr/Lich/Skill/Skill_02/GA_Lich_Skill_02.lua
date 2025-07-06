@@ -53,7 +53,11 @@ function GA_Lich_Skill_02:OnEventReceived(EventTag, EventData)
     if EventTag.TagName ~= UE.UIkunFnLib.RequestGameplayTag('Chr.Skill.Hit.01').TagName then
         return
     end
-    local Target = SelfActor:GetRole().BT.Blackboard:GetBBValue(BBKeyDef.FightTarget)
+    local CurBT = SelfActor:GetRole().BT
+    if not CurBT then
+        return
+    end
+    local Target = CurBT.Blackboard:GetBBValue(BBKeyDef.FightTarget)
     if not Target then
         return
     end
@@ -132,7 +136,7 @@ function GA_Lich_Skill_02:OnTAValidData(Data, EventTag)
             local EffectContextHandle = self:GetContextFromOwner(Data)
             Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         else
-            log.log(log.key.lich02boom, '...过滤的人', isSelf, log.roleid(hitRole), isEnemy or 'nil')
+            log.log(log.key.lich02boom, '...过滤的人', isSelf, rolelib.roleid(hitRole), isEnemy or 'nil')
         end
     end
     self:GASuccess()

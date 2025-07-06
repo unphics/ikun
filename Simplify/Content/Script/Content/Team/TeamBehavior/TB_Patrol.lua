@@ -29,7 +29,8 @@ function TB_Patrol:CalcAllMemberMoveTarget()
     local Leader = self.OwnerTeam.TeamMember:GetLeader()
     local Loc = Leader.Avatar:GetNavAgentLocation()
     local bTeamSuccess, TeamMoveTargetLoc = class.NavMoveData.RandomNavPointInRadius(Leader.Avatar, Loc, 3000)
-    for _, Role in ipairs(self.OwnerTeam.TeamMember.tbMember) do
+    local allMember = self.OwnerTeam.TeamMember:GetAllMember()
+    for _, Role in ipairs(allMember) do
         if Role == Leader then
             self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, TeamMoveTargetLoc, false)
         else

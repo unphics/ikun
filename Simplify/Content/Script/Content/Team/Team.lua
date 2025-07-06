@@ -12,12 +12,14 @@ require('Content/Team/TeamMember')
 require('Content.Team/TeamMove')
 require('Content/Team/TeamFence')
 require('Content/Team/TeamSupport')
+require('Content/Team/TeamInfo')
 
 require('Content/Team/TeamBehavior/TeamBehaviorBase')
 require('Content/Team/TeamBehavior/TB_Patrol')
 require('Content/Team/TeamBehavior/TB_Fight')
 
 ---@class TeamClass : MdBase
+---@field TeamInfo TeamInfoClass
 ---@field TeamMember TeamMemberClass * 团队成员
 ---@field TeamEnemy TeamEnemyClass * 团队敌人
 ---@field CurTB TeamBehaviorBase * 团队行为
@@ -30,7 +32,7 @@ require('Content/Team/TeamBehavior/TB_Fight')
 local TeamClass = class.class 'TeamClass': extends 'MdBase' {
 --[[public]]
     ctor = function()end,
-    Init = function()end,
+    TeamInit = function()end,
     Tick = function()end,
     Encounter = function()end,
     NextTeamState = function()end,
@@ -45,20 +47,26 @@ local TeamClass = class.class 'TeamClass': extends 'MdBase' {
     DecisionTimeCount = nil,
     bFight = nil,
 }
+
 function TeamClass:ctor()
     self.TeamMember = class.new 'TeamMemberClass' (self)
     self.DecisionInterval = 10 -- default
     self.DecisionTimeCount = self.DecisionInterval + 0.1
     self.bFight = false
+    self.TeamInfo = class.new 'TeamInfoClass'(self)
     self.TeamEnemy = class.new 'TeamEnemyClass' (self)
     self.TeamMove = class.new 'TeamMoveClass'(self)
     self.TeamFence = class.new 'TeamFenceClass'(self)
     self.TeamSupport = class.new 'TeamSupportClass'(self)
 end
-function TeamClass:Init()
+
+---@public
+function TeamClass:TeamInit()
     self.TeamMember:ElectLeader()
     self:NextTeamState(class.new 'TB_Patrol' (self))
 end
+
+---@public
 function TeamClass:Tick(DeltaTime)
     self.DecisionTimeCount = self.DecisionTimeCount + DeltaTime
     if self.DecisionTimeCount > self.DecisionInterval then
@@ -68,23 +76,31 @@ function TeamClass:Tick(DeltaTime)
         end
     end
 end
+
 ---@public
 ---@param TO TeamBehaviorBase
 function TeamClass:NextTeamState(TO)
     self.CurTB = TO
     self.CurTB:Init()
 end
----@public
+
+---@public 遭遇敌人
 ---@param Enemy TeamClass
 function TeamClass:Encounter(Enemy)
     if true then
         self.CurTB:OnEncounterEnemy(Enemy)
     end
 end
+
 ---@public 在战斗中
 ---@return boolean
 function TeamClass:IsInfight()
     return self.bFight
+end
+
+---@public
+function TeamClass:IsTeamLive()
+    return self.TeamInfo.bTeamLive
 end
 
 return TeamClass

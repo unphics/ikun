@@ -104,7 +104,7 @@ function M:ReturnResult(OtherActor)
     if not bValid then
         return log.error('Ball: 爆炸时自身状态错误!!!', invalidIdx)
     end
-    log.log(log.key.lich02boom, '爆炸成功', '自己='..log.roleid(AvatarC), '对方='..log.roleid(OtherActor), '-------------------')
+    log.log(log.key.lich02boom, '爆炸成功', '自己='..rolelib.roleid(AvatarC), '对方='..rolelib.roleid(OtherActor), '-------------------')
     self.TriggerCB(self.OwnerAbility, OtherActor, self:GetTransform())
     self.bBallTriggered = true
     ---@note 避免crash, 延迟destory; 原因应该是某个相关的structure引用了此Actor

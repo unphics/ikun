@@ -12,6 +12,7 @@ local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
 local DftFPAsgnRate = require('Content/Team/Config/DftFPAsgnRate')
 
 ---@class TB_Fight : TeamBehaviorBase
+---@field OwnerTeam TeamClass
 ---@field Army table
 ---@field DirectiveMoveCoord table<number, FVector> 指令性运动坐标(移动坐标, 分配三要素-1)
 ---@field DynaSuppressTarget table<number, RoleClass> 动态抑制目标(攻击目标, 分配三要素-2)
@@ -198,6 +199,12 @@ function TB_Fight:ReadDynaSuppressTarget(Id)
         log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Id or 'nil', Role and Role:GetRoleDispName() or 'nil')
         -- self.OwnerTeam.TeamEnemy:RemoveEnemyRole(Role)
         self.OwnerTeam.TeamEnemy:CheckEnemyDead()
+        local allEnemy = self.OwnerTeam.TeamEnemy:GetAllEnemy()
+        if #allEnemy == 0 then
+            log.dev('qqqqqqqqqqqqqqqqqqqqqqqqq')
+            self.OwnerTeam:NextTeamState(class.new 'TB_Patrol' (self.OwnerTeam))
+            return
+        end
         self:AsgnFightTarget(self.Army)
         Role = self.DynaSuppressTarget[Id]
     end

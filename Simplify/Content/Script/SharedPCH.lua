@@ -14,8 +14,9 @@ class = require("Util.Class.class2")
 _ = require("Util.Class.test1")
 _ = require("Util.Class.test2")
 
-duplex = require("Util/Duplex‌/duplex")
+duplex = require("Util/Duplex‌/duplex") ---@type duplex
 _ = require("Util/Duplex‌/test")
+msg_bus = require("Util.msg_bus") ---@type msgbus
 
 table_util = require('Util/table_util')
 world_util = require("Util/world_util")
@@ -32,6 +33,8 @@ draw_util = require('Util/draw_util')
 
 require('Ikun.Module.MdMgr')
 require('Content/Role/Role')
+
+rolelib = require('Content/Role/RoleLib') ---@type rolelib
 
 require('Ikun/Module/AI/BT/LBT')
 require("Ikun/Module/AI/MLP")

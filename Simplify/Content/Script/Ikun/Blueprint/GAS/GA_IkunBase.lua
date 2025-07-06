@@ -35,6 +35,9 @@ end
 
 ---@protected [Call] [End]
 function M:GAFail()
+    if not obj_util.is_valid(self) then
+        return
+    end
     self.Result = false
     self:K2_EndAbility()
 end

@@ -65,7 +65,7 @@ function GA_Lich_Skill_03:TimerLoopCall()
     if perHealth > 0.75 then
         self.TimerHandle = nil
         self:MontageJumpToSection('End')
-        self.AvatarLua:GetRole().Team.TeamSupport:StopSupportReq(log.role(healTarget))
+        self.AvatarLua:GetRole().Team.TeamSupport:StopSupportReq(rolelib.role(healTarget))
         return
     end
     if not healTarget or (self.HealedTime >= self.MaxHealTime) then
@@ -82,7 +82,7 @@ end
 ---@return BP_ChrBase?
 function GA_Lich_Skill_03:GetHealTarget()
     local Target = self.AvatarLua:GetRole().BT.Blackboard:GetBBValue(BBKeyDef.SupportTarget)
-    return log.chr(Target)
+    return rolelib.chr(Target)
 end
 
 function GA_Lich_Skill_03:OnCompleted(EventTag, EventData)
