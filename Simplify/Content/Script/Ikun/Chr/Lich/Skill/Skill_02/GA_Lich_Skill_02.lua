@@ -68,11 +68,15 @@ function GA_Lich_Skill_02:OnEventReceived(EventTag, EventData)
     -- local ADC = UE.NewObject(UE.UApplyDataContainer)
     self.Ball = Ball
 
-    Ball:InitBallByAbility(self, SelfActor,self.OnBallTrigger)
+    Ball:InitBallByAbility(self, SelfActor,self.OnBallTrigger, self.OnBallDestroy)
+end
+
+function GA_Lich_Skill_02:OnBallDestroy()
+    self:GAFail()
 end
 
 function GA_Lich_Skill_02:OnCompleted(EventTag, EventData)
-    self:GASuccess()
+    -- self:GASuccess()
 end
 
 function GA_Lich_Skill_02:OnCancelled(EventTag, EventData)
@@ -120,13 +124,18 @@ function GA_Lich_Skill_02:OnTAValidData(Data, EventTag)
     local SelfActor = self:GetAvatarActorFromActorInfo() ---@type BP_ChrBase
     for i = 1, ActorArray:Length() do
         local Actor = ActorArray:Get(i)
-        if Actor ~= SelfActor and Actor.GetRole and Actor:GetRole() and SelfActor:GetRole():IsEnemy(Actor:GetRole()) then
+        local isSelf = Actor == SelfActor
+        local hitRole = Actor.GetRole and Actor:GetRole()
+        local isEnemy = hitRole and SelfActor:GetRole():IsEnemy(Actor:GetRole())
+        if not isSelf and hitRole and isEnemy then
             log.log(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleInstId())
             local EffectContextHandle = self:GetContextFromOwner(Data)
             Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
+        else
+            log.log(log.key.lich02boom, '...过滤的人', isSelf, log.roleid(hitRole), isEnemy or 'nil')
         end
     end
-    -- self:GASuccess()
+    self:GASuccess()
 end
 
 return GA_Lich_Skill_02

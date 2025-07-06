@@ -54,7 +54,7 @@ function log.role(Chr)
     if class.instanceof(Chr, class.RoleClass) then
         return Chr
     end
-    if Chr.GetRole then
+    if Chr and Chr.GetRole then
         return Chr:GetRole()
     end
     return nil

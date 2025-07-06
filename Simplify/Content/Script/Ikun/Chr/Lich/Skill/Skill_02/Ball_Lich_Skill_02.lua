@@ -1,53 +1,44 @@
 ---
----@brief
+---@brief   Lich二技能的投射物
+---@author  zys
+---@data    Sun Jul 06 2025 17:32:54 GMT+0800 (中国标准时间)
 ---
 
 ---@class Ball_Lich_Skill_02: Ball_Lich_Skill_02_C
+---@field ConstAliveTime number 投射物最大存活时间
+---@field CurLiveTime number 投射物当前存活时间
+---@field OwnerAbility GA_IkunBase 所属技能
+---@field OwnerAvatar BP_ChrBase 所属角色
+---@field TriggerCB fun(GA_IkunBase, AActor, FTransform) 投射物碰撞回调
+---@field bDestroySelf boolean 需要销毁自己
 local M = UnLua.Class()
 
--- function M:Initialize(Initializer)
--- end
-
--- function M:UserConstructionScript()
--- end
-
----@protected [ImplBP]
+---@override
 function M:ReceiveBeginPlay()
-    self.AliveTime = 7
-    self.CurTime = 0
-    self.Ability = nil
-    self.Avatar = nil
+    self.ConstAliveTime = 7
+    self.CurLiveTime = 0
+    self.OwnerAbility = nil
+    self.OwnerAvatar = nil
     self.TriggerCB = nil
+    self.bDestroySelf = false
     self.Collision.OnComponentBeginOverlap:Add(self, self.OnCollisionComponentBeginOverlap)
 end
 
----@protected [ImplBP]
-function M:ReceiveEndPlay()
-    self.Ability = nil
-    self.Avatar = nil
-    self.TriggerCB = nil
-end
-
----@protected [ImplBP]
+---@override
 function M:ReceiveTick(DeltaSeconds)
-    self.CurTime = self.CurTime + DeltaSeconds
-    if self.CurTime > self.AliveTime then
-        self.DestroySelf = true
+    self.CurLiveTime = self.CurLiveTime + DeltaSeconds
+    if self.CurLiveTime > self.ConstAliveTime then
+        self.bDestroySelf = true
     end
-    if self.DestroySelf then
-        self.DestroySelf = false
+    if self.bDestroySelf then
+        if self.DestroyCB then
+            self.DestroyCB(self.OwnerAbility)
+            self.DestroyCB = nil
+        end
+        self.bDestroySelf = false
         self:K2_DestroyActor()
     end
 end
-
--- function M:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
--- end
-
--- function M:ReceiveActorBeginOverlap(OtherActor)
--- end
-
--- function M:ReceiveActorEndOverlap(OtherActor)
--- end
 
 ---@private
 function M:OnCollisionComponentBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult)
@@ -58,23 +49,24 @@ function M:OnCollisionComponentBeginOverlap(OverlappedComponent, OtherActor, Oth
         return
     end
     if self:CheckTarget(OtherActor) then
-        log.log('Ball: overlap -> '..self:PrintRhsActor(OtherActor))
+        log.log(log.key.lich02boom, 'Ball: overlap -> '..self:PrintRhsActor(OtherActor))
         self:ReturnResult(OtherActor)
     end
 end
 
 ---@public
----@param Ability UGameplayAbility
----@param Avatar BP_ChrBase
----@param TriggerCB functon<AActor, FTransform>
-function M:InitBallByAbility(Ability, Avatar, TriggerCB)
-    -- log.dev('M:InitBallByAbility', Ability, self)
-    self.Ability = Ability
-    self.Avatar = Avatar
+---@param OwnerAbility UGameplayAbility
+---@param OwnerAvatar BP_ChrBase
+---@param TriggerCB fun(GA_IkunBase, AActor, FTransform)
+function M:InitBallByAbility(OwnerAbility, OwnerAvatar, TriggerCB, DestroyCB)
+    -- log.dev('M:InitBallByAbility', OwnerAbility, self)
+    self.OwnerAbility = OwnerAbility
+    self.OwnerAvatar = OwnerAvatar
     self.TriggerCB = TriggerCB
+    self.DestroyCB = DestroyCB
 
     self.bAbilityDataInited = true
-    self.DestroySelf = false
+    self.bDestroySelf = false
 
     if self.ArrActorBeforeAbilityDataInited then
         for i = 1, self.ArrActorBeforeAbilityDataInited:Length() do
@@ -89,7 +81,7 @@ end
 
 ---@private
 function M:CheckTarget(OtherActor)
-    if OtherActor == self.Avatar then
+    if OtherActor == self.OwnerAvatar then
         return false
     end
     if OtherActor == self then
@@ -107,22 +99,16 @@ end
 
 ---@private
 function M:ReturnResult(OtherActor)
-    local AvatarC = self.Ability.AvatarLua ---@type BP_ChrBase
-    if not self.Ability then
-        return log.error("Ball: 爆炸时自身状态错误! no self.Ability")
-    end
-    if not obj_util.is_valid(self) then
-        return log.error("Ball: 爆炸时自身状态错误! invalid self")
-    end
-    if not obj_util.is_valid(AvatarC) then
-        return log.error("Ball: 爆炸时自身状态错误! invalid SelfAvatar", self.Ability, self)
+    local AvatarC = self.OwnerAbility.AvatarLua ---@type BP_ChrBase
+    local bValid, invalidIdx = obj_util.all_valid(self.OwnerAbility, self, AvatarC)
+    if not bValid then
+        return log.error('Ball: 爆炸时自身状态错误!!!', invalidIdx)
     end
     log.log(log.key.lich02boom, '爆炸成功', '自己='..log.roleid(AvatarC), '对方='..log.roleid(OtherActor), '-------------------')
-    -- log.dev('Ball: 爆炸成功\n        自己 = '..AvatarC:PrintRoleInfo()..'\n        对方 = '..self:PrintRhsActor(OtherActor))
-    self.TriggerCB(self.Ability, OtherActor, self:GetTransform())
+    self.TriggerCB(self.OwnerAbility, OtherActor, self:GetTransform())
     self.bBallTriggered = true
     ---@note 避免crash, 延迟destory; 原因应该是某个相关的structure引用了此Actor
-    self.DestroySelf = true
+    self.bDestroySelf = true
 end
 
 ---@private 打印OtherActor
