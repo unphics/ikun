@@ -76,6 +76,7 @@ function TeamMoveClass:GetMoveTarget(Role)
     end
     return MoveTargetData.MoveTarget
 end
+
 ---@public Team保存留给成员的移动目标
 ---@param MoveTarget FVector
 ---@param bForceMove boolean 强制移动
@@ -89,7 +90,8 @@ function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget, bForceMove)
     return tb
 end
 
----@public [Calc] 鲁棒中心估计(质心+离群排除)
+---@public [Pure] [Calc] 鲁棒中心估计(质心+离群排除)
+---@return FVector
 function TeamMoveClass:CalcTeamMemberCenter(ArrRole)
     local AllMember = ArrRole -- self.OwnerTeam.TeamMember:GetAllMember()
     if #AllMember == 0 then
@@ -135,4 +137,5 @@ function TeamMoveClass:CalcTeamMemberCenter(ArrRole)
     local KAvg = UE.UKismetMathLibrary.Divide_VectorInt(KSumLoc, KeptLen)
     return KAvg
 end
+
 return TeamMoveClass
