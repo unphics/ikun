@@ -7,7 +7,7 @@
 
 ---@class TeamInfoClass: MdBase
 ---@field OwnerTeam TeamClass
----@field TeamIdx number
+---@field TeamId number
 ---@field bTeamLive boolean
 ---@field TeamMsgBus msgbus
 local TeamInfoClass = class.class 'TeamInfoClass' : extends 'MdBase' {
@@ -17,7 +17,7 @@ local TeamInfoClass = class.class 'TeamInfoClass' : extends 'MdBase' {
     TeamInfoInitOnCreate = function()end,
 --[[private]]
     OwnerTeam = nil,
-    TeamIdx = nil,
+    TeamId = nil,
     TeamMsgBus = nil
 }
 
@@ -30,8 +30,8 @@ function TeamInfoClass:Init()
 end
 
 ---@public 创建时初始化一些信息
-function TeamInfoClass:TeamInfoInitOnCreate(TeamIdx)
-    self.TeamIdx = TeamIdx
+function TeamInfoClass:TeamInfoInitOnCreate(TeamId)
+    self.TeamId = TeamId
     self.bTeamLive = true
 end
 

@@ -38,9 +38,10 @@ end
 ---@public
 ---@return TeamClass
 function TeamMgr:CreateNewTeam()
+    local id = #self.tbAllTeam
     local newTeam = class.new 'TeamClass' () ---@type TeamClass
     table.insert(self.tbAllTeam, newTeam)
-    newTeam.TeamInfo:TeamInfoInitOnCreate(#self.tbAllTeam)
+    newTeam.TeamInfo:TeamInfoInitOnCreate(id)
     return newTeam
 end
 
