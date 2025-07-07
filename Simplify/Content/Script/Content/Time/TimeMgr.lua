@@ -2,7 +2,6 @@
 ---@brief 游戏世界时间管理
 ---@author zys
 ---@data Sun May 04 2025 13:53:30 GMT+0800 (中国标准时间)
----@todo 此模块的同步方案后面再议
 ---
 
 local TimeCfg = require('Content/Time/Config/TimeCfg')

@@ -103,26 +103,22 @@ function RoleClass:SwitchNewBT(NewBTKey)
 end
 
 ---@public 判断是友方
----@todo 预期中使用权重判断: 自己,队友,团队,家族,国家,种族
 ---@param OtherRole RoleClass
 function RoleClass:IsFirend(OtherRole)
     local Weight = 0
     if self.BelongKingdomLua then
         Weight = Weight + self.BelongKingdomLua:CalcRoleKingdomFriendShip(OtherRole)
     end
-    ---@todo 此处简单判断大于零, 预期后面会有友好阈值
     return Weight > 0
 end
 
 ---@public 判断是敌人
----@todo 预期中使用权重判断: 自己,队友,团队,家族,国家,种族
 ---@param OtherRole RoleClass
 function RoleClass:IsEnemy(OtherRole)
     local Weight = 0
     if self.BelongKingdomLua then
         Weight = Weight + self.BelongKingdomLua:CalcRoleKingdomFriendShip(OtherRole)
     end
-    ---@todo 此处简单判断小于零, 预期后面会有敌对阈值
     return Weight < 0
 end
 

@@ -54,10 +54,10 @@ function LService_ConsiderBehav:OnUpdate(DeltaTime)
     }
     if self:HasSpecial(Context) then
         self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Special)
-    -- elseif self:NeedSurvive(Context) then
-    --     self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Survive)
-    -- elseif self:CanSupport(Context) then
-    --     self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Support)
+    elseif self:NeedSurvive(Context) then
+        self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Survive)
+    elseif self:CanSupport(Context) then
+        self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Support)
     elseif self:CanAttack(Context) then
         self.Blackboard:SetBBValue(BBKeyDef.NextBehav, BehavDef.Attack)
     end

@@ -187,16 +187,13 @@ M['JungleMonsters_Fight_1'] = function(Avatar)
                 :AddTask('LTask_SelectAbility')
                 :AddTask('LTask_RotateSmooth')
                 :AddTask('LTask_AiMoveBase', 2000, 160, 3, UE.FVector(200, 200, 200))
-                ---@todo 转向/靠近/调整站位
                 -- :AddDecorator()
                 :AddTask('LTask_RotateSmooth', nil, 1)
                 :AddTask('LTask_ActiveAbility')
             :Up()
             :AddSequence()
-                ---@todo 先索敌
                 :AddTask('LTask_Wait', 1)
                 :AddTask('LTask_SwitchBT', 'JungleMonsters_Peace_1')
-            ---@todo 脱战
     return LBT
 end
 
