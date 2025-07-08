@@ -12,6 +12,7 @@ local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
 local DftFPAsgnRate = require('Content/Team/Config/DftFPAsgnRate')
 
 ---@class TB_Fight : TeamBehaviorBase
+---@field OwnerTeam TeamClass
 ---@field Army table
 ---@field DirectiveMoveCoord table<number, FVector> 指令性运动坐标(移动坐标, 分配三要素-1)
 ---@field DynaSuppressTarget table<number, RoleClass> 动态抑制目标(攻击目标, 分配三要素-2)
@@ -163,23 +164,20 @@ end
 function TB_Fight:AsgnFightTarget(Army)
     local Enemy = self.OwnerTeam.TeamEnemy
     Enemy:SortEnemyByDist()
-    -- local avatar = Enemy.tbEnemyRolePerception[1].Role.Avatar
-    -- UE.UKismetSystemLibrary.DrawDebugSphere(avatar, avatar:K2_GetActorLocation(), 100, 12, UE.FLinearColor(0, 0, 1), 1.5, 4)
+    ---@rule 给前排分配对面的前排
     for i, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
-        if not Enemy.tbEnemyRolePerception[i] then
+        local perception = Enemy.dpEnemyPerception:dget(i)
+        if not perception then
             break
         end
-        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.tbEnemyRolePerception[i].Role
+        self.DynaSuppressTarget[Role:GetRoleInstId()] = perception.Role
     end
-    Enemy.FireTarget = Enemy.tbEnemyRolePerception[1].Role
-
+    Enemy.FireTarget = Enemy.dpEnemyPerception:dget(1).Role
+    ---@rule 给后排分配对面的前排
     for i, ele in ipairs(Army[FightPosDef.Backline]) do
         local Role = ele ---@type RoleClass
-        if not Enemy.tbEnemyRolePerception[i] then
-            break
-        end
-        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.tbEnemyRolePerception[1].Role
+        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.dpEnemyPerception:dget(1).Role
     end
 end
 
@@ -201,6 +199,12 @@ function TB_Fight:ReadDynaSuppressTarget(Id)
         log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Id or 'nil', Role and Role:GetRoleDispName() or 'nil')
         -- self.OwnerTeam.TeamEnemy:RemoveEnemyRole(Role)
         self.OwnerTeam.TeamEnemy:CheckEnemyDead()
+        local allEnemy = self.OwnerTeam.TeamEnemy:GetAllEnemy()
+        if #allEnemy == 0 then
+            log.dev('qqqqqqqqqqqqqqqqqqqqqqqqq')
+            self.OwnerTeam:NextTeamState(class.new 'TB_Patrol' (self.OwnerTeam))
+            return
+        end
         self:AsgnFightTarget(self.Army)
         Role = self.DynaSuppressTarget[Id]
     end

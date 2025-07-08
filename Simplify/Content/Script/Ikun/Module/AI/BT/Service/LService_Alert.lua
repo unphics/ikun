@@ -24,8 +24,9 @@ function LService_Alert:OnUpdate(DeltaTime)
             local Hit = Hits:Get(i)
             if Hit:IsA(UE.ACharacter) then
                 if false then -- 这个是单人的
-                    self.Chr:GetRole():AddEnemyChecked(Hit:GetRole())
-                    self:DrawAlertResult(Hit)
+                    log.error('这里需要处理!!!')
+                    -- self.Chr:GetRole():AddEnemyChecked(Hit:GetRole())
+                    -- self:DrawAlertResult(Hit)
                 end
                 if true then -- 这个是Team的
                     if self.Chr:GetRole():IsEnemy(Hit:GetRole()) then

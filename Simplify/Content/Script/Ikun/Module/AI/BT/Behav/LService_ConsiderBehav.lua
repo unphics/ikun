@@ -68,6 +68,9 @@ end
 function LService_ConsiderBehav:HasSpecial(Context)
     local Role = self.Chr:GetRole() ---@type RoleClass
     local Team = Role.Team
+    if not Team.CurTB.DirectiveMoveCoord then
+        return false
+    end
     local vec = Team.CurTB.DirectiveMoveCoord[Role:GetRoleInstId()]
     if vec then
         return true
@@ -77,7 +80,7 @@ end
 ---@private 单位此时需要着重考虑自己的存活
 ---@param Context ConsiderContext
 function LService_ConsiderBehav:NeedSurvive(Context)
-    if (Context.Health / Context.MaxHealth) < 0.5 then
+    if (Context.Health / Context.MaxHealth) < 0.35 then
         return true
     end
     return false

@@ -27,7 +27,7 @@ end
 function TeamSupportClass:PublishSupportReq(ReqRole)
     if ReqRole then
         if self.dpSupportPair:dfind(ReqRole:GetRoleInstId()) then
-            log.log(log.key.support, log.roleid(ReqRole)..'再次请求支援')  
+            log.log(log.key.support, rolelib.roleid(ReqRole)..'再次请求支援')  
             return
         end
         ---@class SupportInfo
@@ -38,13 +38,13 @@ function TeamSupportClass:PublishSupportReq(ReqRole)
             dpSupporters = duplex.create()
         }
         self.dpSupportPair:dinsert(ReqRole:GetRoleInstId(), SupportInfo)
-        log.dev(log.key.support, log.roleid(ReqRole)..'请求支援')
+        log.dev(log.key.support, rolelib.roleid(ReqRole)..'请求支援')
     end
 end
 ---@public [Logic] 不再需要支援; 被支援者调用
 function TeamSupportClass:StopSupportReq(ReqRole)
     self.dpSupportPair:dremove(ReqRole:GetRoleInstId())
-    log.dev(log.key.support, log.roleid(ReqRole)..'不再需要支援')
+    log.dev(log.key.support, rolelib.roleid(ReqRole)..'不再需要支援')
 end
 ---@public [Logic] 随便支援一个人; 支援者调用
 ---@param Role RoleClass
@@ -63,20 +63,20 @@ function TeamSupportClass:BeginSupport(Role)
         end
     end
     info.dpSupporters:dinsert(Role:GetRoleInstId(), Role)
-    log.dev(log.key.support, log.roleid(Role)..'支援了'..log.roleid(info.ReqRole))
+    log.dev(log.key.support, rolelib.roleid(Role)..'支援了'..rolelib.roleid(info.ReqRole))
     return info.ReqRole
 end
 ---@public [Logic] 结束支援; 支援者调用
 ---@param ReqRole RoleClass 被支援者
 ---@param RspRole RoleClass 支援者
 function TeamSupportClass:EndSupport(ReqRole, RspRole)
-    if not log.is_live_role(ReqRole) then
+    if not rolelib.is_live_role(ReqRole) then
         return
     end
     local info = self.dpSupportPair:dfind(ReqRole:GetRoleInstId())
     if info then
         if info.dpSupporters:dremove(RspRole:GetRoleInstId()) then
-            log.dev(log.key.support, log.roleid(RspRole)..'结束了对'..log.roleid(ReqRole)..'的支援')
+            log.dev(log.key.support, rolelib.roleid(RspRole)..'结束了对'..rolelib.roleid(ReqRole)..'的支援')
         end
     end
 end

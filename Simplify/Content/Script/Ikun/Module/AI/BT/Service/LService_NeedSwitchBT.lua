@@ -21,6 +21,6 @@ end
 function LService_NeedSwitchBT:DoSwitchBT(NewBTKey)
     local OldBT = self.Chr:GetRole().BT.Desc
     log.log('LTask_SwitchBT', OldBT, NewBTKey, self.Chr:PrintRoleInfo())
-    self.Chr:GetRole():SwitchNewBT(NewBTKey)
     self.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, nil)
+    self.Chr:GetRole():SwitchNewBT(NewBTKey)
 end

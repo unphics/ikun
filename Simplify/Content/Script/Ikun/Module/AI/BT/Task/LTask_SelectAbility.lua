@@ -47,14 +47,18 @@ end
 
 ---@private 在一定条件下随机选择技能
 function LTask_SelectAbility:SelectAbilityRandom()
-    local OwnerRole = log.role(self.Chr)
+    local OwnerRole = rolelib.role(self.Chr)
     local FightTargetRole = self.Blackboard:GetBBValue(BBKeyDef.FightTarget) ---@type RoleClass
     local FightTargetAvatar = FightTargetRole.Avatar ---@type BP_ChrBase
 
-    if not obj_util.is_valid(FightTargetAvatar) or not log.is_live_role(FightTargetRole) then
+    if not obj_util.is_valid(FightTargetAvatar) or not rolelib.is_live_role(FightTargetRole) then
+        ---@todo
+        if not class.instanceof(OwnerRole.Team.CurTB, class.TB_Patrol) then
+            return
+        end
         FightTargetRole = OwnerRole.Team.CurTB:ReadDynaSuppressTarget(FightTargetRole:GetRoleInstId())
         FightTargetAvatar = FightTargetRole and FightTargetRole.Avatar
-        if not obj_util.is_valid(FightTargetAvatar) or not log.is_live_role(FightTargetRole) then
+        if not obj_util.is_valid(FightTargetAvatar) or not rolelib.is_live_role(FightTargetRole) then
             return log.error('LTask_SelectAbility:SelectAbilityRandom(): 没有有效的敌人 !!!')
         end
     end

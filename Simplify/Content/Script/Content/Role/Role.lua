@@ -18,7 +18,6 @@ local RoleInfoClass = require('Content/Role/RoleInfo')
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
----@field FightTarget FightTargetClass * 战斗目标
 ---@field bNpc boolean
 local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
 --[[public]]
@@ -40,20 +39,17 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
 --[[private]]
     StartBT = function()end,
     RoleInfo = nil,
-    FightTarget = nil,
     Avatar = nil,
     BelongKingdomLua = nil,
     BT = nil,
     bNpc = nil,
 }
+
 function RoleClass:ctor()
     self.bNpc = false
-    self.FightTarget = class.new'FightTargetClass'(self)
 end
+
 function RoleClass:Tick(DeltaTime)
-    if self.Team and self.Team.TeamMember:GetLeader() == self then
-        self.Team:Tick(DeltaTime)
-    end
     if self.BT then
         self.BT:Tick(DeltaTime)
         if self:GetRoleInstId() == debug_util.debugrole then
@@ -65,6 +61,7 @@ function RoleClass:Tick(DeltaTime)
         end
     end
 end
+
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
 function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     local Config = RoleConfig[CfgId] ---@type RoleConfig
@@ -87,6 +84,7 @@ function RoleClass:StartBT()
         self:SwitchNewBT(RoleCfg.InitBT)
     end
 end
+
 function RoleClass:SwitchNewBT(NewBTKey)
     log.log('RoleDisplayName = '..tostring(self:GetRoleDispName())..', switch new bt: '..tostring(NewBTKey))
     if self.Avatar.RoleComp.bCustomStartBT then
@@ -103,29 +101,28 @@ function RoleClass:SwitchNewBT(NewBTKey)
         return
     end
 end
+
 ---@public 判断是友方
----@todo 预期中使用权重判断: 自己,队友,团队,家族,国家,种族
 ---@param OtherRole RoleClass
 function RoleClass:IsFirend(OtherRole)
     local Weight = 0
     if self.BelongKingdomLua then
         Weight = Weight + self.BelongKingdomLua:CalcRoleKingdomFriendShip(OtherRole)
     end
-    ---@todo 此处简单判断大于零, 预期后面会有友好阈值
     return Weight > 0
 end
+
 ---@public 判断是敌人
----@todo 预期中使用权重判断: 自己,队友,团队,家族,国家,种族
 ---@param OtherRole RoleClass
 function RoleClass:IsEnemy(OtherRole)
     local Weight = 0
     if self.BelongKingdomLua then
         Weight = Weight + self.BelongKingdomLua:CalcRoleKingdomFriendShip(OtherRole)
     end
-    ---@todo 此处简单判断小于零, 预期后面会有敌对阈值
     return Weight < 0
 end
----@public 给Role添加敌人
+
+---@deprecated 给Role添加敌人
 ---@param OtherRole RoleClass
 ---@return boolean
 function RoleClass:AddEnemyChecked(OtherRole)
@@ -147,38 +144,39 @@ function RoleClass:AddEnemyChecked(OtherRole)
     self.FightTarget:SetTarget(OtherRole)
     return true
 end
-function RoleClass:HasTarget()
-    return self.FightTarget:GetTarget() and true or false
-end
-function RoleClass:GetTarget()
-    return self.FightTarget:GetTarget()
-end
 
+---@public [Data] 角色开始死亡流程
 function RoleClass:RoleBeginDeath()
     self.RoleInfo:RoleDoDeath()
     if self.Team then
         self.Team.TeamSupport:StopSupportReq(self)
+        self.Team.TeamMember:RemoveMember(rolelib.roleid(self))
     end
     self.BT = nil
 end
 
+---@public [Pure] 获取所属国家
 ---@return Kingdom
 function RoleClass:GetBelongKingdom()
     return self.BelongKingdomLua
 end
 
+---@public [LBTCondition] [Pure]
 function RoleClass:No()
     return false
 end
+
+---@public [LBTCondition] [Pure]
 function RoleClass:Yes()
     return true
 end
 
----@public [LBTCondition]
+---@public [LBTCondition] [Pure] 角色此时有团队指导的移动目标
 function RoleClass:HasTeamMoveTarget()
     return self.Team.TeamMove.mapMemberMoveTarget and self.Team.TeamMove.mapMemberMoveTarget[self:GetRoleInstId()] or nil
 end
 
+---@public [Debug] [Pure] 打印这个角色的信息
 function RoleClass:PrintRole()
     local str = ''
     local hp = obj_util.is_valid(self.Avatar) and self.Avatar.AttrSet:GetAttrValueByName("Health")
@@ -186,18 +184,22 @@ function RoleClass:PrintRole()
     return str
 end
 
+---@public [Pure] 获取角色配置Id
 function RoleClass:GetRoleCfgId()
     return self.RoleInfo.RoleCfgId
 end
 
+---@public [Pure] 获取角色实力Id
 function RoleClass:GetRoleInstId()
     return self.RoleInfo.RoleInstId
 end
 
+---@public [Pure] 获取角色显示名称
 function RoleClass:GetRoleDispName()
     return self.RoleInfo.RoleDispName
 end
 
+---@public [Pure] 角色是否死亡
 function RoleClass:IsRoleDead()
     return self.RoleInfo.bDead
 end

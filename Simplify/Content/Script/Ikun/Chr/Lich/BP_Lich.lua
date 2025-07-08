@@ -16,8 +16,6 @@ local M = UnLua.Class('/Ikun/Chr/Blueprint/BP_ChrBase')
 ---@protected [ImplBP]
 function M:ReceiveBeginPlay()
     self.Super.ReceiveBeginPlay(self)
-    ---@todo zys Lich的颜色
-    -- self.MsgBusComp:RegEvent("ChrInitDisplay", self, self.InitLichColor)
 end
 
 -- function M:ReceiveEndPlay()

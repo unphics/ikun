@@ -39,12 +39,15 @@ function TeamMemberClass:RemoveMember(InstId)
     if not self.dpMember:dremove(InstId) then
         log.error('TeamMemberClass:RemoveMember() 不存在的RoleInstId')
     end
+    if self.dpMember:dlength() == 0 then
+        self.OwnerTeam.TeamInfo:TeamDestory()
+    end
 end
 ---@public 获取所有成员
 function TeamMemberClass:GetAllMember()
     local allMemeber = {}
     for _, id, role in self.dpMember:diter() do
-        if log.is_live_role(role) then
+        if rolelib.is_live_role(role) then
             table.insert(allMemeber, role)
         end
     end
@@ -60,7 +63,7 @@ function TeamMemberClass:ElectLeader()
     self.TeamLeader = TeamLeader
 end
 function TeamMemberClass:GetLeader()
-    if self.TeamLeader:IsRoleDead() then
+    if not self.TeamLeader or self.TeamLeader:IsRoleDead() then
         self:RemoveMember(self.TeamLeader:GetRoleInstId())
         self:ElectLeader()
     end
