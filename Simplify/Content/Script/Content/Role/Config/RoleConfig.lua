@@ -4,10 +4,6 @@ local FightPosDef = require('Content/Role/FightPosDef')
 
 local RoleConfig = {}
 
-local row = function(tb)
-    table.insert(RoleConfig, tb)
-end
-
 ---@class RoleConfig
 ---@field FightPosAssign FightPosDef[]
 ---@field BTCfg table<BTType, string>
@@ -27,7 +23,7 @@ RoleConfig[2] = {
     Desc = '常见的; 法师, 战士',
     BelongKingdomCfgId = 2,
     InitBT = 'Team_MakeTeam_1',
-    Color = -1,
+    Color = 1,
     FightPosAssign = {FightPosDef.Backline, FightPosDef.Frontline},
     BTCfg = {},
 }
@@ -50,7 +46,7 @@ RoleConfig[4] = {
     Desc = '法师, 战士',
     BelongKingdomCfgId = 3,
     InitBT = 'Team_MakeTeam_1',
-    Color = 1,
+    Color = 2,
     FightPosAssign = {FightPosDef.Backline, FightPosDef.Frontline},
     BTCfg = {},
 }
