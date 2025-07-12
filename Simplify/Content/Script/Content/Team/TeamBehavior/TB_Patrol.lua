@@ -16,7 +16,8 @@ local TB_Patrol = class.class 'TB_Patrol' : extends 'TeamBehaviorBase' {
     CalcAllMemberMoveTarget = function()end,
     OnEncounterEnemy = function()end,
 }
-function TB_Patrol:Init()
+---@override
+function TB_Patrol:InitTB()
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, role in ipairs(AllMember) do
         ---@type RoleClass
@@ -25,6 +26,7 @@ function TB_Patrol:Init()
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
 end
+
 function TB_Patrol:CalcAllMemberMoveTarget()
     local Leader = self.OwnerTeam.TeamMember:GetLeader()
     local Loc = Leader.Avatar:GetNavAgentLocation()
@@ -39,6 +41,7 @@ function TB_Patrol:CalcAllMemberMoveTarget()
         end
     end
 end
+
 ---@override 当巡逻中遭遇敌人时则转入战斗模式
 ---@param EnemyTeam TeamClass
 function TB_Patrol:OnEncounterEnemy(EnemyTeam)
