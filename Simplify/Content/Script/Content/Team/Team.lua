@@ -80,7 +80,9 @@ end
 ---@public
 ---@param TO TeamBehaviorBase
 function TeamClass:NextTeamState(TO)
-    self.CurTB:UninitTB()
+    if self.CurTB then
+        self.CurTB:UninitTB()
+    end
     self.CurTB = TO
     self.CurTB:InitTB()
 end
