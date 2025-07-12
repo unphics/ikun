@@ -4,6 +4,7 @@
 ---@author zys
 ---
 
+---@class class
 local classes = {}
 
 local inherit_reserved_keyword = {
@@ -58,11 +59,12 @@ local internal_name = {
     class = 1,
     new = 2,
     instanceof = 3,
+    extends = 4
 }
 
 -- 以上, 单元测试1
 
-local function class(class_name)
+function classes.class(class_name)
     if internal_name[class_name] then
         return log.error('class error: invalid class_name --- internal_name : ' .. class_name)
     end
@@ -98,7 +100,7 @@ local function class(class_name)
 end
 
 -- 以上, 单元测试2
-local function new(class_name)
+function classes.new(class_name)
     return function(...)
         local classe = classes[class_name]
         if not classe then
@@ -145,7 +147,7 @@ local function deriveof(derive, base)
     
 end
 
-local function instanceof(Object, Class)
+function classes.instanceof(Object, Class)
     if not Object or not Object.__class_name or not Class or not Class.__class_name then
         return false
     end
@@ -162,11 +164,4 @@ end
 
 -- 以上, 单元测试3
 
-local tb = {
-    class = class,
-    new = new,
-    instanceof = instanceof,
-}
-setmetatable(tb, {__index = classes})
-
-return tb
+return classes
