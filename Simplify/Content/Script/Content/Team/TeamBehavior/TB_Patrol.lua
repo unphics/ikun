@@ -1,8 +1,8 @@
 
 ---
----@brief 巡逻行为
----@author zys
----@data Thu Apr 24 2025 00:12:44 GMT+0800 (中国标准时间)
+---@brief   巡逻行为
+---@author  zys
+---@data    Thu Apr 24 2025 00:12:44 GMT+0800 (中国标准时间)
 ---
 
 local RoleConfig = require('Content/Role/Config/RoleConfig')
@@ -45,10 +45,9 @@ end
 ---@override 当巡逻中遭遇敌人时则转入战斗模式
 ---@param EnemyTeam TeamClass
 function TB_Patrol:OnEncounterEnemy(EnemyTeam)
-    -- self.OwnerTeam.bFight = true
-
-    self.OwnerTeam:NextTeamState(class.new'TB_Fight'(self.OwnerTeam))
-    self.OwnerTeam.CurTB:OnEncounterEnemy(EnemyTeam)
+    local newTB = class.new'TB_Fight'(self.OwnerTeam) ---@type TeamBehaviorBase
+    self.OwnerTeam:NextTeamState(newTB)
+    newTB:OnEncounterEnemy(EnemyTeam)
 end
 
 return TB_Patrol
