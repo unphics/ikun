@@ -1,8 +1,8 @@
 
 ---
----@brief 巡逻行为
----@author zys
----@data Thu Apr 24 2025 00:12:44 GMT+0800 (中国标准时间)
+---@brief   巡逻行为
+---@author  zys
+---@data    Thu Apr 24 2025 00:12:44 GMT+0800 (中国标准时间)
 ---
 
 local RoleConfig = require('Content/Role/Config/RoleConfig')
@@ -16,7 +16,8 @@ local TB_Patrol = class.class 'TB_Patrol' : extends 'TeamBehaviorBase' {
     CalcAllMemberMoveTarget = function()end,
     OnEncounterEnemy = function()end,
 }
-function TB_Patrol:Init()
+---@override
+function TB_Patrol:InitTB()
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, role in ipairs(AllMember) do
         ---@type RoleClass
@@ -25,6 +26,7 @@ function TB_Patrol:Init()
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
 end
+
 function TB_Patrol:CalcAllMemberMoveTarget()
     local Leader = self.OwnerTeam.TeamMember:GetLeader()
     local Loc = Leader.Avatar:GetNavAgentLocation()
@@ -39,13 +41,13 @@ function TB_Patrol:CalcAllMemberMoveTarget()
         end
     end
 end
+
 ---@override 当巡逻中遭遇敌人时则转入战斗模式
 ---@param EnemyTeam TeamClass
 function TB_Patrol:OnEncounterEnemy(EnemyTeam)
-    -- self.OwnerTeam.bFight = true
-
-    self.OwnerTeam:NextTeamState(class.new'TB_Fight'(self.OwnerTeam))
-    self.OwnerTeam.CurTB:OnEncounterEnemy(EnemyTeam)
+    local newTB = class.new'TB_Fight'(self.OwnerTeam) ---@type TeamBehaviorBase
+    self.OwnerTeam:NextTeamState(newTB)
+    newTB:OnEncounterEnemy(EnemyTeam)
 end
 
 return TB_Patrol

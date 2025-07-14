@@ -80,25 +80,26 @@ end
 ---@public
 ---@param TO TeamBehaviorBase
 function TeamClass:NextTeamState(TO)
+    if self.CurTB then
+        self.CurTB:UninitTB()
+    end
     self.CurTB = TO
-    self.CurTB:Init()
+    self.CurTB:InitTB()
 end
 
----@public 遭遇敌人
+---@public [Fwd] 遭遇敌人
 ---@param Enemy TeamClass
 function TeamClass:Encounter(Enemy)
-    if true then
-        self.CurTB:OnEncounterEnemy(Enemy)
-    end
+    self.CurTB:OnEncounterEnemy(Enemy)
 end
 
----@public 在战斗中
+---@public [Pure] 在战斗中
 ---@return boolean
 function TeamClass:IsInfight()
     return self.bFight
 end
 
----@public
+---@public [Pure]
 function TeamClass:IsTeamLive()
     return self.TeamInfo.bTeamLive
 end

@@ -36,7 +36,7 @@ local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
     TacticManeuverZone = nil,
 }
 function TB_Fight:ctor(OwnerTeam)
-    self.OwnerTeam = OwnerTeam
+    class.TeamBehaviorBase.ctor(self, OwnerTeam)
     self.Army = {} -- 多个战场位置组成的军队
     self.DirectiveMoveCoord = {}
     self.DynaSuppressTarget = {}

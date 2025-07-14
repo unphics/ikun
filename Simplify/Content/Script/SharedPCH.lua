@@ -10,7 +10,7 @@ log = require('Util.Log')
 debug_util = require('Util/debug_util')
 
 _ = require("Util.Class.class1")
-class = require("Util.Class.class2")
+class = require("Util.Class.class2") ---@type class
 _ = require("Util.Class.test1")
 _ = require("Util.Class.test2")
 
