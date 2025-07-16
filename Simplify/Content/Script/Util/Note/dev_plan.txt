@@ -37,3 +37,4 @@ DM_6:
     Team解耦, 使用事件分发器
     Team巡逻修改成行为树主控
     TeamMove重构
+    Disband这个词不错
