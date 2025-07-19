@@ -22,3 +22,7 @@ void UIkunGameInst::Shutdown() {
 	Super::Shutdown();
 	// UE_LOG(LogTemp, Warning, TEXT("===== UIkunGameInst::Shutdown() ====="))
 }
+
+void UIkunGameInst::OnWorldChanged(UWorld* OldWorld, UWorld* NewWorld) {
+	this->ReceiveOnWorldChanged(OldWorld, NewWorld);
+}

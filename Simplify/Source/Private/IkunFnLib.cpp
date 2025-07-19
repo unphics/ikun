@@ -23,6 +23,10 @@ void UIkunFnLib::BindAction(UEnhancedInputComponent* EnhancedInputComp, const UI
 	}
 }
 
+int UIkunFnLib::GetWorldType(UWorld* World) {
+	return World->WorldType;
+}
+
 FGameplayTag UIkunFnLib::RequestGameplayTag(FName TagName) {
 	return FGameplayTag::RequestGameplayTag(TagName);
 }

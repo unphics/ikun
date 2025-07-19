@@ -26,6 +26,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void BindAction(UEnhancedInputComponent* EnhancedInputComp, const UInputAction* Action, ETriggerEvent TriggerEvent, UObject* Object, FName FunctionName);
 	
+	UFUNCTION(BlueprintCallable)
+	static int GetWorldType(UWorld* World);
 #pragma region GAS
 	UFUNCTION(BlueprintCallable)
 	static FGameplayTag RequestGameplayTag(FName TagName);

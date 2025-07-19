@@ -1,10 +1,11 @@
-https://www.zhihu.com/question/362586693/answer/950268177
-https://www.zhihu.com/question/21090429/answer/44109092
-https://www.zhihu.com/question/21090429/answer/21265438
-https://zhuanlan.zhihu.com/p/1890120073890489606
+策略类游戏的AI该如何编写:https://www.zhihu.com/question/59259526/answer/2748621069
+如何让游戏中NPC的AI更智能:https://www.zhihu.com/question/362586693/answer/950268177
+即时战略游戏的AI是怎样实现的:https://www.zhihu.com/question/21090429/answer/44109092
+即时战略游戏的AI是怎样实现的:https://www.zhihu.com/question/21090429/answer/21265438
+从群体AI到协同攻击:https://zhuanlan.zhihu.com/p/1890120073890489606
 
-https://www.bilibili.com/video/BV1rW4y1k7bp/?spm_id_from=333.1387.favlist.content.click
-https://www.bilibili.com/video/BV1v7411t7oU/?spm_id_from=333.1387.favlist.content.click
+全甲格斗:https://www.bilibili.com/video/BV1rW4y1k7bp/?spm_id_from=333.1387.favlist.content.click
+击剑比赛:https://www.bilibili.com/video/BV1v7411t7oU/?spm_id_from=333.1387.favlist.content.click
 
 
 行为树根据角色目前的状态选择当前角色建议执行的行为
