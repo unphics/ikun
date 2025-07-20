@@ -48,26 +48,31 @@ end
 -- function BP_IkunPC:ReceiveActorEndOverlap(OtherActor)
 -- end
 
----@private [Client]
+---@private [Input]
 function BP_IkunPC:InitInputSystem()
-    log.dev('BP_IkunPC:InitInputSystem()')
+    log.log('BP_IkunPC:InitInputSystem()')
     EnhInput.InitByPlayerController(self)
-    EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Move))
+    EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
+    EnhInput.RegisterInputAction(EnhInput.IADef.IA_Move, self, self.OnMoveInput)
+    EnhInput.RegisterInputAction(EnhInput.IADef.IA_Look, self, self.OnLookInput)
+end
+EnhInput.BindActions(BP_IkunPC)
 
-    local inputcomp = self.InputComponent ---@type UEnhancedInputComponent
-    if inputcomp:Cast(UE.UEnhancedInputComponent) then
-        UE.UIkunFnLib.BindAction(inputcomp, UE.UObject.Load(EnhInput.IADef.IA_Move), UE.ETriggerEvent.Started, self, 'eee')
+---@private [Input]
+function BP_IkunPC:OnMoveInput(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+    local rot = self:GetControlRotation()
+    local yawRot = UE.FRotator(0, rot.Yaw, 0)
+    local forward = yawRot:GetForwardVector()
+    if self.OwnerChr then
+        self.OwnerChr:MoveForwardBack(forward, ActionValue.Y)
+        self.OwnerChr:MoveRightLeft(forward, ActionValue.X)
     end
 end
 
--- EnhInput.BindMove(BP_IkunPC)
-
-function BP_IkunPC:eee()
-    log.dev('eee')
-end
-
-function BP_IkunPC:qqq()
-    BP_IkunPC.__UnLuaInputBindings = {}
+---@private [Input]
+function BP_IkunPC:OnLookInput(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+    self:AddYawInput(-ActionValue.X)
+    self:AddPitchInput(ActionValue.Y)
 end
 
 return BP_IkunPC

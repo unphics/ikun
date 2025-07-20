@@ -10,15 +10,21 @@ local EnhancedInput = require("UnLua.EnhancedInput")
 ---@class EnhInput
 ---@field _EnhInputSubsys UEnhancedInputLocalPlayerSubsystem
 ---@field PlayerController BP_IkunPC
+---@field _InputEvents table<IADef, table<UObject, fun(PC, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)>>
 local EnhInput = {}
 
+EnhInput._InputEvents = {}
+
 EnhInput.IMCDef = {
-    IMC_Move = '/Game/Ikun/Blueprint/Input/IMC/IMC_Move.IMC_Move',
+    IMC_Base = '/Game/Ikun/Blueprint/Input/IMC/IMC_Base.IMC_Base',
 }
 
-EnhInput.IADef = {
+---@enum IADef
+local IADef = {
     IA_Move = '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move',
+    IA_Look = '/Game/Ikun/Blueprint/Input/IA/IA_Look.IA_Look',
 }
+EnhInput.IADef = IADef
 
 EnhInput.TriggerEvent = {
     Triggered = 'Triggered',
@@ -72,19 +78,32 @@ EnhInput._GetEnhInputSubsys = function()
 end
 
 ---@public
-EnhInput.BindMove = function(pc)
-    log.dev(log.key.ueinit, 'EnhInput.BindMove running')
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Started,
+---@param IADef IADef
+---@param Object UObject
+---@param fn fun(PC, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+EnhInput.RegisterInputAction = function(IADef, Object, fn)
+    EnhInput._InputEvents[IADef] = {[Object] = fn}
+end
+
+---@public
+EnhInput.BindActions = function(pc)
+    log.log(log.key.ueinit, 'EnhInput.BindActions running')
+    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            local pc = SourceObj ---@type BP_IkunPC
-            log.dev('EnhInput.BindMove', ActionValue)
-            local rot = pc:GetControlRotation()
-            local yawRot = UE.FRotator(0, rot.Yaw, 0)
-            local forward = yawRot:GetForwardVector()
-            pc:qqq()
-            if pc.OwnerChr then
-                -- pc.OwnerChr:MoveForwardBack(forward, ActionValue.Y)
-                -- pc.OwnerChr:MoveRightLeft(forward, ActionValue.X)
+            local event = EnhInput._InputEvents[EnhInput.IADef.IA_Move]
+            if event then
+                for o, fn in pairs(event) do
+                    fn(o, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+                end
+            end
+        end)
+    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered,
+        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            local event = EnhInput._InputEvents[EnhInput.IADef.IA_Look]
+            if event then
+                for o, fn in pairs(event) do
+                    fn(o, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+                end
             end
         end)
 end

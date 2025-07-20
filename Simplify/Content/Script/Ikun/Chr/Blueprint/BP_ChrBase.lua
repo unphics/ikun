@@ -85,4 +85,21 @@ function BP_ChrBase:ChrBeginDeath()
         end)
     end
 end
+
+---@public [Input]
+function BP_ChrBase:MoveForwardBack(Fwd, Value)
+    local rot = self:GetControlRotation()
+    local yawRot = UE.FRotator(0, rot.Yaw, 0)
+    local fornt = yawRot:GetForwardVector()
+    self:AddMovementInput(fornt, Value, false)    
+end
+
+---@public [Input]
+function BP_ChrBase:MoveRightLeft(Fwd, Value)
+    local rot = self:GetControlRotation()
+    local yawRot = UE.FRotator(0, rot.Yaw, 0)
+    local right = yawRot:GetRightVector()
+    self:AddMovementInput(right, Value, false)
+end
+
 return BP_ChrBase
