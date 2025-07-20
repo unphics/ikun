@@ -29,8 +29,6 @@ function BP_GameInst:ReceiveOnWorldChanged(OldWorld, NewWorld)
     local newWorldName = NewWorld and NewWorld:GetName()
     local type = NewWorld and UE.UIkunFnLib.GetWorldType(NewWorld)
     log.dev('BP_GameInst:ReceiveOnWorldChanged()', OldWorld, NewWorld, newWorldName, type)
-
-    -- EnhInput.BindMove(BP_IkunPC)
 end
 
 return BP_GameInst

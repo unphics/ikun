@@ -8,6 +8,7 @@
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 
 ---@class BP_IkunPC: BP_IkunPC_C
+---@field OwnerChr BP_ChrBase
 local BP_IkunPC = UnLua.Class()
 
 -- function BP_IkunPC:Initialize(Initializer)
@@ -55,6 +56,7 @@ function BP_IkunPC:InitInputSystem()
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
     EnhInput.RegisterInputAction(EnhInput.IADef.IA_Move, self, self.OnMoveInput)
     EnhInput.RegisterInputAction(EnhInput.IADef.IA_Look, self, self.OnLookInput)
+    EnhInput.RegisterInputAction(EnhInput.IADef.IA_MouseLeftDown, self, self.OnMouseLeftDown)
 end
 EnhInput.BindActions(BP_IkunPC)
 
@@ -73,6 +75,13 @@ end
 function BP_IkunPC:OnLookInput(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
     self:AddYawInput(-ActionValue.X)
     self:AddPitchInput(ActionValue.Y)
+end
+
+---@private [Input]
+function BP_IkunPC:OnMouseLeftDown(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+    if self.OwnerChr then
+        self.OwnerChr.InFightComp:C2S_FallInFight()
+    end
 end
 
 return BP_IkunPC

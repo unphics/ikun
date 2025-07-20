@@ -23,6 +23,7 @@ EnhInput.IMCDef = {
 local IADef = {
     IA_Move = '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move',
     IA_Look = '/Game/Ikun/Blueprint/Input/IA/IA_Look.IA_Look',
+    IA_MouseLeftDown = '/Game/Ikun/Blueprint/Input/IA/IA_MouseLeftDown.IA_MouseLeftDown',
 }
 EnhInput.IADef = IADef
 
@@ -106,6 +107,16 @@ EnhInput.BindActions = function(pc)
                 end
             end
         end)
+    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started,
+        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            local event = EnhInput._InputEvents[EnhInput.IADef.IA_MouseLeftDown]
+            if event then
+                for o, fn in pairs(event) do
+                    fn(o, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+                end
+            end
+        end)
+    
 end
 
 return EnhInput
