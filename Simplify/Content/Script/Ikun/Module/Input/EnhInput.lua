@@ -7,13 +7,12 @@
 
 local EnhancedInput = require("UnLua.EnhancedInput")
 
+local InputMgr = require('Ikun/Module/Input/InputMgr')
+
 ---@class EnhInput
 ---@field _EnhInputSubsys UEnhancedInputLocalPlayerSubsystem
 ---@field PlayerController BP_IkunPC
----@field _InputEvents table<IADef, table<UObject, fun(PC, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)>>
 local EnhInput = {}
-
-EnhInput._InputEvents = {}
 
 EnhInput.IMCDef = {
     IMC_Base = '/Game/Ikun/Blueprint/Input/IMC/IMC_Base.IMC_Base',
@@ -35,14 +34,14 @@ EnhInput.TriggerEvent = {
     Completed = 'Completed',
 }
 
----@public
+---@public [Init]
 ---@param PC BP_IkunPC
 EnhInput.InitByPlayerController = function(PC)
     EnhInput.PlayerController = PC
     EnhInput._GetEnhInputSubsys()
 end
 
----@public
+---@public [IMC]
 EnhInput.AddIMC = function(IMC)
     local sys = EnhInput.GetEnhInputSubsys()
     if sys and not EnhInput.HasIMC(IMC) then
@@ -50,21 +49,21 @@ EnhInput.AddIMC = function(IMC)
     end
 end
 
----@public
+---@public [IMC]
 EnhInput.RemoveIMC = function(IMC)
     if EnhInput.GetEnhInputSubsys() and EnhInput.HasIMC(IMC) then
         EnhInput.GetEnhInputSubsys():RemoveMappingContext(IMC, UE.FModifyContextOptions())
     end
 end
 
----@public
+---@public [IMC]
 EnhInput.HasIMC = function(IMC)
     if EnhInput.GetEnhInputSubsys() then
         return EnhInput.GetEnhInputSubsys():HasMappingContext(IMC)
     end
 end
 
----@public
+---@public [Tool]
 ---@return UEnhancedInputLocalPlayerSubsystem
 EnhInput.GetEnhInputSubsys = function()
     if not EnhInput._EnhInputSubsys then
@@ -73,17 +72,9 @@ EnhInput.GetEnhInputSubsys = function()
     return EnhInput._EnhInputSubsys
 end
 
----@private
+---@private [Tool]
 EnhInput._GetEnhInputSubsys = function()
     EnhInput._EnhInputSubsys  = UE.USubsystemBlueprintLibrary.GetLocalPlayerSubSystemFromPlayerController(EnhInput.PlayerController, UE.UEnhancedInputLocalPlayerSubsystem)
-end
-
----@public
----@param IADef IADef
----@param Object UObject
----@param fn fun(PC, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-EnhInput.RegisterInputAction = function(IADef, Object, fn)
-    EnhInput._InputEvents[IADef] = {[Object] = fn}
 end
 
 ---@public
@@ -91,32 +82,16 @@ EnhInput.BindActions = function(pc)
     log.log(log.key.ueinit, 'EnhInput.BindActions running')
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            local event = EnhInput._InputEvents[EnhInput.IADef.IA_Move]
-            if event then
-                for o, fn in pairs(event) do
-                    fn(o, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-                end
-            end
+            InputMgr.TriggerInputAction(IADef.IA_Move, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            local event = EnhInput._InputEvents[EnhInput.IADef.IA_Look]
-            if event then
-                for o, fn in pairs(event) do
-                    fn(o, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-                end
-            end
+            InputMgr.TriggerInputAction(IADef.IA_Look, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            local event = EnhInput._InputEvents[EnhInput.IADef.IA_MouseLeftDown]
-            if event then
-                for o, fn in pairs(event) do
-                    fn(o, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-                end
-            end
+            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
-    
 end
 
 return EnhInput

@@ -6,6 +6,7 @@
 ---
 
 local EnhInput = require('Ikun/Module/Input/EnhInput')
+local InputMgr = require("Ikun/Module/Input/InputMgr")
 
 ---@class BP_IkunPC: BP_IkunPC_C
 ---@field OwnerChr BP_ChrBase
@@ -54,9 +55,9 @@ function BP_IkunPC:InitInputSystem()
     log.log('BP_IkunPC:InitInputSystem()')
     EnhInput.InitByPlayerController(self)
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
-    EnhInput.RegisterInputAction(EnhInput.IADef.IA_Move, self, self.OnMoveInput)
-    EnhInput.RegisterInputAction(EnhInput.IADef.IA_Look, self, self.OnLookInput)
-    EnhInput.RegisterInputAction(EnhInput.IADef.IA_MouseLeftDown, self, self.OnMouseLeftDown)
+    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Move, self.OnMoveInput)
+    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Look, self.OnLookInput)
+    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, self.OnMouseLeftDown)
 end
 EnhInput.BindActions(BP_IkunPC)
 
