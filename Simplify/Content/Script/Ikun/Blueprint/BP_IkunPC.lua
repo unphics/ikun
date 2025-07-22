@@ -55,6 +55,8 @@ function BP_IkunPC:InitInputSystem()
     log.log('BP_IkunPC:InitInputSystem()')
     EnhInput.InitByPlayerController(self)
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
+
+    InputMgr.ObtainInputPower(self)
     InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Move, self.OnMoveInput)
     InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Look, self.OnLookInput)
     InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, self.OnMouseLeftDown)
