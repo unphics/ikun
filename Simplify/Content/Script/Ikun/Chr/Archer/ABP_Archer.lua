@@ -43,6 +43,10 @@ end
 
 ---@private 更新地面移动有关信息
 function ABP_Archer:UpdateMoveSpeed(DeltaTime)
+    self.VelAmount = 
+
+    
+    
     ---@step 1.计算此时瞬时混合速度
     local worldVel = self.Chr:GetVelocity() -- 这是一个世界空间的速度
     local worldRot = self.Chr:K2_GetActorRotation()
