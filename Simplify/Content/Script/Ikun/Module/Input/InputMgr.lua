@@ -5,48 +5,95 @@
 ---@data    Sat Jul 19 2025 20:53:10 GMT+0800 (中国标准时间)
 ---
 
+---@class InputPower
+---@field Object UObject
+---@field bBorrowInput boolean
+
 ---@class InputMgr
----@field _InputEvents table<UObject, table<IADef, fun(PC, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)>>
----@field _InputOwnership table
+---@field _InputEvents table<UObject, table<IADef, fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction): boolean>>
+---@field _InputPowerStack InputPower[]
+---@field _CachedInputPowerOwner UObject[]
 local InputMgr = {}
 
 InputMgr._InputEvents = {}
-InputMgr._InputOwnership = {}
+InputMgr._InputPowerStack = {}
+InputMgr._CachedInputPowerOwner = {}
 
----@public
-InputMgr.ObtainOwnership = function(Object)
-
+---@public 获取输入监听权
+InputMgr.ObtainInputPower = function(Object)
+    for _, item in ipairs(InputMgr._InputPowerStack) do
+        if item.Object == Object then
+            return log.error('InputMgr.ObtainInputPower() 重复获取所有权')
+        end
+    end
+    local item = {} ---@type InputPower
+    item.Object = Object
+    item.bBorrowInput = false
+    table.insert(InputMgr._InputPowerStack, item)
+    InputMgr._RefreshCachedInputPowerOwner()
 end
 
----@public
-InputMgr.ReliquishOwnership = function(Object)
-
+---@public 借出输入监听权
+InputMgr.BorrowInputPower = function(Object)
+    for _, item in ipairs(InputMgr._InputPowerStack) do
+        if item.Object == Object then
+            return log.error('InputMgr.BorrowInputPower() 重复获取所有权')
+        end
+    end
+    local item = {} ---@type InputPower
+    item.Object = Object
+    item.bBorrowInput = true
+    table.insert(InputMgr._InputPowerStack, item)
+    InputMgr._RefreshCachedInputPowerOwner()
 end
 
----@public
+---@public 放弃输入监听权
+InputMgr.ReliquishInputPower = function(Object)
+    for i, item in ipairs(InputMgr._InputPowerStack) do
+        if item.Object == Object then
+            table.remove(InputMgr._InputPowerStack, i)
+            break
+        end
+    end
+    InputMgr._RefreshCachedInputPowerOwner()
+end
+
+---@private 刷新缓存的当前所有权拥有者
+InputMgr._RefreshCachedInputPowerOwner = function()
+    InputMgr._CachedInputPowerOwner = {}
+    for i = #InputMgr._InputPowerStack, 1, -1 do
+        local inputPower = InputMgr._InputPowerStack[i] ---@type InputPower
+        table.insert(InputMgr._CachedInputPowerOwner, inputPower.Object)
+        if not inputPower.bBorrowInput then
+            break
+        end
+    end
+end
+
+---@public 注册监听输入事件
 ---@param Object UObject
 ---@param IADef IADef
----@param fn fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+---@param fn fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction): boolean
 InputMgr.RegisterInputAction = function(Object, IADef, fn)
     InputMgr._InputEvents[Object] = {}
     InputMgr._InputEvents[Object][IADef] = fn
 end
 
----@public
+---@public 反注册监听输入
 ---@param Object UObject
 InputMgr.UnregisterInputAction = function(Object)
     InputMgr._InputEvents = nil
 end
 
----@public
----@todo 当前的输入所有权暂定
+---@public 触发输入事件
 ---@param IADef IADef
 InputMgr.TriggerInputAction = function(IADef, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-    local ownershipObject = next(InputMgr._InputEvents) ---@type UObject
-    if ownershipObject then
-        local fn = InputMgr._InputEvents[ownershipObject][IADef]
+    for _, object in ipairs(InputMgr._CachedInputPowerOwner) do
+        local fn = InputMgr._InputEvents[object][IADef]
         if fn then
-            fn(ownershipObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            if fn(object, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction) then
+                break
+            end
         end
     end
 end
