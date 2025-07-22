@@ -75,24 +75,31 @@ end
 ---@param IADef IADef
 ---@param fn fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction): boolean
 InputMgr.RegisterInputAction = function(Object, IADef, fn)
-    InputMgr._InputEvents[Object] = {}
+    if not InputMgr._InputEvents[Object] then
+        InputMgr._InputEvents[Object] = {}
+    end
+    if InputMgr._InputEvents[Object][IADef] then
+        return log.error('InputMgr.RegisterInputAction() 重复的IA事件监听')
+    end
     InputMgr._InputEvents[Object][IADef] = fn
 end
 
 ---@public 反注册监听输入
 ---@param Object UObject
 InputMgr.UnregisterInputAction = function(Object)
-    InputMgr._InputEvents = nil
+    InputMgr._InputEvents[Object] = nil
 end
 
 ---@public 触发输入事件
 ---@param IADef IADef
 InputMgr.TriggerInputAction = function(IADef, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
     for _, object in ipairs(InputMgr._CachedInputPowerOwner) do
-        local fn = InputMgr._InputEvents[object][IADef]
-        if fn then
-            if fn(object, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction) then
-                break
+        if object and obj_util.is_valid(object) then
+            local fn = InputMgr._InputEvents[object][IADef]
+            if fn then
+                if fn(object, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction) then
+                    break
+                end
             end
         end
     end
