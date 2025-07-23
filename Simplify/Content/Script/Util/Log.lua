@@ -9,8 +9,6 @@
 ---@field tb_log table<string, number>
 ---@field tb_warn table<string, number>
 ---@field tb_error table<string, number>
-
-
 local log = {}
 
 function log.log(...)
@@ -27,6 +25,13 @@ end
 
 function log.dev(...)
     UnLua.LogError(...)
+end
+
+function log.fmt84(num)
+    return string.format('%08.4f', num)
+end
+function log.fmt32(num)
+    return string.format('%03.2f', num)
 end
 
 log.key = {

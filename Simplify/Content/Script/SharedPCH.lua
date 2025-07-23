@@ -6,7 +6,7 @@
 ---
 
 
-log = require('Util.Log')
+log = require('Util.Log') ---@type log
 debug_util = require('Util/debug_util')
 
 _ = require("Util.Class.class1")
