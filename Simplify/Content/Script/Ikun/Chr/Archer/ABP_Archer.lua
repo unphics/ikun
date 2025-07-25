@@ -29,6 +29,9 @@ function ABP_Archer:BlueprintUpdateAnimation(DeltaTimeX)
     if not self.Chr then
         return
     end
+    if net_util.is_server(self.Chr) then
+        return
+    end
     self:UpdateFightInfo()
     self:UpdateMoveSpeed(DeltaTimeX)
 end
@@ -44,7 +47,7 @@ end
 
 ---@private 更新地面移动有关信息
 function ABP_Archer:UpdateMoveSpeed(DeltaTime)
-    do
+    do -- 速度的标量大小
         local worldVel = self.Chr:GetVelocity()
         worldVel.Z = 0
         self.Speed = UE.UKismetMathLibrary.VSize(worldVel)
@@ -53,9 +56,11 @@ function ABP_Archer:UpdateMoveSpeed(DeltaTime)
         ---@step 1.计算此时瞬时混合速度
         local worldVel = self.Chr:GetVelocity() -- 这是一个世界空间的速度
         local worldRot = self.Chr:K2_GetActorRotation()
-        local worldVelDir = UE.UKismetMathLibrary.Normal(worldVel, 0.1) -- tolerance:公差
+        local worldVelDir = UE.UKismetMathLibrary.Normal(worldVel, 0.01) -- tolerance:公差
         local relVelDir = UE.UKismetMathLibrary.LessLess_VectorRotator(worldVelDir, worldRot) ---@type FVector 将世界空间的速度转成角色本地空间的速度
     
+        log.dev('qqq worldVelDir', worldVelDir)
+
         local velSumCount = math.abs(relVelDir.X) + math.abs(relVelDir.Y) + math.abs(relVelDir.Z)
         local velDirPer = relVelDir / velSumCount ---@type FVector 归一化的相对速度, 每个值都是百分比占比量
     
@@ -64,14 +69,17 @@ function ABP_Archer:UpdateMoveSpeed(DeltaTime)
         velBelnd.B = math.abs(math_util.clamp(velDirPer.X, -1, 0))
         velBelnd.L = math.abs(math_util.clamp(velDirPer.Y, -1, 0))
         velBelnd.R = math_util.clamp(velDirPer.Y, 0, 1)
+
+        log.dev('qqq', log.fmt54(velBelnd.F), log.fmt54(velBelnd.B), log.fmt54(velBelnd.L),
+            log.fmt54(velBelnd.R))
     
         ---@step 2.将当前混合速度插值到此时的瞬时混合速度
-    
-        local interp_speed = 1
-        self.VelBlend.F = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.F, velBelnd.F, DeltaTime, interp_speed)
-        self.VelBlend.B = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.B, velBelnd.B, DeltaTime, interp_speed)
-        self.VelBlend.L = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.L, velBelnd.L, DeltaTime, interp_speed)
-        self.VelBlend.R = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.R, velBelnd.R, DeltaTime, interp_speed)
+
+        local interp_speed = 5
+        -- self.VelBlend.F = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.F, velBelnd.F, DeltaTime, interp_speed)
+        -- self.VelBlend.B = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.B, velBelnd.B, DeltaTime, interp_speed)
+        -- self.VelBlend.L = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.L, velBelnd.L, DeltaTime, interp_speed)
+        -- self.VelBlend.R = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.R, velBelnd.R, DeltaTime, interp_speed)
         
         -- log.dev(log.key.abp, 'relVelDir', relVelDir)
         -- log.dev(log.key.abp, 'velDirPer', velDirPer)
@@ -84,12 +92,13 @@ function ABP_Archer:UpdateMoveSpeed(DeltaTime)
         local localVelRot = UE.UKismetMathLibrary.NormalizedDeltaRotator(worldVelRot, aimRot)
         local IsAngleInRage = function(Angle, MinAngle, MaxAngle, Buffer, bIncreaseBuffer)
             if bIncreaseBuffer then
-                UE.UKismetMathLibrary.InRange_FloatFloat(Angle, MinAngle - Buffer, MaxAngle + Buffer, true, true)
+                return UE.UKismetMathLibrary.InRange_FloatFloat(Angle, MinAngle - Buffer, MaxAngle + Buffer, true, true)
             else
-                UE.UKismetMathLibrary.InRange_FloatFloat(Angle, MinAngle + Buffer, MaxAngle - Buffer, true, true)
+                return UE.UKismetMathLibrary.InRange_FloatFloat(Angle, MinAngle + Buffer, MaxAngle - Buffer, true, true)
             end
         end
         local CalcQuadrant = function(CurDir, FRThreshold, FLThreshold, BRThreshold, BLThreshold, Buffer, Angle)
+            do return MoveDirEnum.Back end
             if IsAngleInRage(Angle, FLThreshold, FRThreshold, Buffer, CurDir ~= MoveDirEnum.Forward or CurDir ~= MoveDirEnum.Back) then
                 return MoveDirEnum.Forward
             elseif IsAngleInRage(Angle, FRThreshold, BRThreshold, Buffer, CurDir ~= MoveDirEnum.Right or CurDir ~= MoveDirEnum.Left) then

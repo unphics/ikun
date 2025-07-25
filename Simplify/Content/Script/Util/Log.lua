@@ -30,8 +30,8 @@ end
 function log.fmt84(num)
     return string.format('%08.4f', num)
 end
-function log.fmt32(num)
-    return string.format('%03.2f', num)
+function log.fmt54(num)
+    return string.format('%05.4f', num)
 end
 
 log.key = {

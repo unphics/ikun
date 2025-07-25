@@ -32,10 +32,10 @@ function UI_MainHud:UpdateAnimInfo()
     local str = ''
     if velBlend then
         str = 'VelBlend:\n'
-        str = str..'    F: '..log.fmt32(velBlend.F)..'\n'
-        str = str..'    L: '..log.fmt32(velBlend.L)..'\n'
-        str = str..'    R: '..log.fmt32(velBlend.R)..'\n'
-        str = str..'    B: '..log.fmt32(velBlend.B)..'\n'
+        str = str..'    F: '..log.fmt54(velBlend.F)..'\n'
+        str = str..'    L: '..log.fmt54(velBlend.L)..'\n'
+        str = str..'    R: '..log.fmt54(velBlend.R)..'\n'
+        str = str..'    B: '..log.fmt54(velBlend.B)..'\n'
     end
     local EMoveDir = animInst.MoveDir
     if EMoveDir then
