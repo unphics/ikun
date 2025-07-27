@@ -27,6 +27,9 @@ end
 
 function UI_MainHud:UpdateAnimInfo()
     local chr = UE.UGameplayStatics.GetPlayerCharacter(self, 0) ---@type BP_ChrBase
+    if not obj_util.is_valid(chr) then
+        return
+    end
     local animInst = chr.Mesh:GetAnimInstance()
     local velBlend = animInst.VelBlend
     local str = ''
@@ -39,7 +42,8 @@ function UI_MainHud:UpdateAnimInfo()
     end
     local EMoveDir = animInst.MoveDir
     if EMoveDir then
-        str = str..'MoveDir: '..tostring(EMoveDir)..'\n'
+        local name = {'Front', 'Back', 'Left', 'Right'}
+        str = str..'MoveDir: '..tostring(name[EMoveDir + 1] or 'nil')..'\n'
     end
     self.TxtAnim:SetText(str)
 end
