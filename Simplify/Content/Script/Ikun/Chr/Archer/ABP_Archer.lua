@@ -59,7 +59,7 @@ function ABP_Archer:UpdateMoveSpeed(DeltaTime)
         local worldVelDir = UE.UKismetMathLibrary.Normal(worldVel, 0.0001) -- tolerance:公差
         local relVelDir = UE.UKismetMathLibrary.LessLess_VectorRotator(worldVelDir, worldRot) ---@type FVector 将世界空间的速度转成角色本地空间的速度
     
-        log.dev('qqq worldVelDir', worldVelDir)
+        -- log.dev('qqq worldVelDir', worldVelDir)
 
         local velSumCount = math.abs(relVelDir.X) + math.abs(relVelDir.Y) + math.abs(relVelDir.Z)
         local velDirPer = relVelDir / velSumCount ---@type FVector 归一化的相对速度, 每个值都是百分比占比量
@@ -75,7 +75,7 @@ function ABP_Archer:UpdateMoveSpeed(DeltaTime)
     
         ---@step 2.将当前混合速度插值到此时的瞬时混合速度
 
-        local interp_speed = 5
+        local interp_speed = 50
         self.VelBlend.F = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.F, velBelnd.F, DeltaTime, interp_speed)
         self.VelBlend.B = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.B, velBelnd.B, DeltaTime, interp_speed)
         self.VelBlend.L = UE.UKismetMathLibrary.FInterpTo(self.VelBlend.L, velBelnd.L, DeltaTime, interp_speed)
