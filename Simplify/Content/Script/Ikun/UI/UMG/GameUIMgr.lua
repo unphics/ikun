@@ -20,6 +20,7 @@ function GameUIMgr:Construct()
 
     self:ShowUI(ui_util.uidef.MainHud)
     self:ShowUI(ui_util.uidef.BreathePointer)
+    self:ShowUI(ui_util.uidef.TalkList)
 end
 
 --function GameUIMgr:Tick(MyGeometry, InDeltaTime)

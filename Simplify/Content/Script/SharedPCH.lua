@@ -27,7 +27,7 @@ obj_util = require('Util/obj_util') ---@type obj_util
 net_util = require("Util/net_util")
 async_util = require("Util/async_util")
 math_util = require('Util/math_util')
-ui_util = require("Util/UI/ui_util")
+ui_util = require("Util/UI/ui_util") ---@type ui_util
 dev_util = require('Util/dev_util')
 draw_util = require('Util/draw_util')
 
