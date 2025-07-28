@@ -10,30 +10,17 @@ local TalkConfig = require('Ikun/UI/UMG/TalkList/TalkConfig')
 ---@class UI_TalkList: UI_TalkList_C
 ---@field TalkingRoleList table<string, TalkListItem>
 ---@field TalkingContentList TalkListItem[]
-local M = UnLua.Class()
+local UI_TalkList = UnLua.Class()
 
---function M:Initialize(Initializer)
---end
-
---function M:PreConstruct(IsDesignTime)
---end
-
-function M:Construct()
+---@override
+function UI_TalkList:Construct()
     self.TalkingRoleList = {}
     self.TalkingContentList = {}
-
-    self.test_idx = 1
-    async_util.timer(self, function()
-        local data = TalkConfig[self.test_idx]
-        self.test_idx = self.test_idx + 1
-        if self.test_idx > #TalkConfig then
-            self.test_idx = 1
-        end
-        self:PushContent(data.Name, data.Content, 8)
-    end, 5, true)
+    self:Test()
 end
 
-function M:Tick(MyGeometry, InDeltaTime)
+---@override
+function UI_TalkList:Tick(MyGeometry, InDeltaTime)
 end
 
 ---@public
@@ -41,7 +28,7 @@ end
 ---@param Content string 内容
 ---@param Duration number 持续时间
 ---@param Callback fun() 播放完成的回调
-function M:PushContent(Name, Content, Duration, Callback)
+function UI_TalkList:PushContent(Name, Content, Duration, Callback)
     -- if self.TalkingRoleList[Name] then
     --     log.error('当前角色正在说话中, 说完前一句话才能说第二句 : ', Name, Content)
     --     return false
@@ -62,13 +49,13 @@ function M:PushContent(Name, Content, Duration, Callback)
 end
 
 ---@private
-function M:UpdateTalkList()
+function UI_TalkList:UpdateTalkList()
     ui_util.set_list_items(self.TalkList, self.TalkingContentList)
 end
 
 ---@private [ItemCall]
 ---@param ItemData TalkListItem
-function M:OnItemTalkFinsih(ItemData)
+function UI_TalkList:OnItemTalkFinsih(ItemData)
     self.TalkingRoleList[ItemData.Name] = nil
     local Index = -1
     for i, ele in ipairs(self.TalkingContentList) do
@@ -81,4 +68,17 @@ function M:OnItemTalkFinsih(ItemData)
     self:UpdateTalkList()
 end
 
-return M
+---@private
+function UI_TalkList:Test()
+    self.test_idx = 1
+    async_util.timer(self, function()
+        local data = TalkConfig[self.test_idx]
+        self.test_idx = self.test_idx + 1
+        if self.test_idx > #TalkConfig then
+            self.test_idx = 1
+        end
+        self:PushContent(data.Name, data.Content, 8)
+    end, 5, true)
+end
+
+return UI_TalkList

@@ -39,4 +39,24 @@ TalkConfig[6] = {
     Content = '欲买桂花同载酒, 终不似, 少年游'
 }
 
+TalkConfig[7] = {
+    Name = '教员',
+    Content = '存地失人, 则人地皆失, 存人失地, 则人地皆存'
+}
+
+TalkConfig[8] = {
+    Name = '诺曼底登陆前夕盟军向法国抵抗组织',
+    Content = '漫漫秋日, 如提琴长叹, 我心暗伤, 于北方之地, 交杯共饮'
+}
+
+TalkConfig[9] = {
+    Name = '菲律宾军政部(第14军)',
+    Content = '欲咒人者, 续掘二穴'
+}
+
+TalkConfig[10] = {
+    Name = '论语·为政',
+    Content = '攻乎异端, 斯害也已'
+}
+
 return TalkConfig
