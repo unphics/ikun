@@ -59,4 +59,9 @@ TalkConfig[10] = {
     Content = '攻乎异端, 斯害也已'
 }
 
+TalkConfig[11] = {
+    Name = '宁静之祷',
+    Content = '上帝啊, 请赐我宁静, 让我接受那些自己无法改变的事情; 请赐我勇气, 让我改变那那些自己可以改变的事情; 请赐我智慧, 让我分辨两者的区别'
+}
+
 return TalkConfig
