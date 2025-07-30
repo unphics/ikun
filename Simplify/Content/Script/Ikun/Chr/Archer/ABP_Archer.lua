@@ -34,6 +34,9 @@ function ABP_Archer:BlueprintUpdateAnimation(DeltaTimeX)
     end
     self:UpdateFightInfo()
     self:UpdateMoveSpeed(DeltaTimeX)
+    self:UpdateTurnInfo(DeltaTimeX)
+    
+    self:UpdateCacheVal()
 end
 
 ---@override
@@ -101,6 +104,19 @@ function ABP_Archer:UpdateMoveSpeed(DeltaTime)
         end
         self.MoveDir = CalcQuadrant(self.MoveDir, 70, -70, 110, -110, 5, localVelRot.Yaw)
     end
+end
+
+---@private 更新角色的转身信息
+function ABP_Archer:UpdateTurnInfo(DeltaTime)
+    do
+        local deltaYaw = self.Chr:GetControlRotation().Yaw - self.CachedPrevAimYaw
+        local aimYawRate = math.abs(deltaYaw / DeltaTime)
+    end
+end
+
+---@private 缓存一些上一帧的信息用来做插值计算
+function ABP_Archer:UpdateCacheVal()
+    self.CachedPrevAimYaw = self.Chr:GetControlRotation().Yaw
 end
 
 return ABP_Archer

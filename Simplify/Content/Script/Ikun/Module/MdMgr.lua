@@ -11,6 +11,7 @@ require("Content/Area/Cosmos")
 require('Content/Time/TimeMgr')
 require('Content/Role/RoleMgr')
 require('Content/Team/TeamMgr')
+require('Content/Task/TaskMgr')
 
 ---@class MdMgr
 ---@field Cosmos Cosmos 游戏宇宙
