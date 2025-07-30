@@ -1,8 +1,11 @@
 
 ---
+---@brief   动画蓝图
 ---@author  zys
 ---@data    Sun Jul 20 2025 12:27:04 GMT+0800 (中国标准时间)
+---@note    2025年7月30日23:55:40: 开始处理旋转的时候要把OrientRotationToMovement关掉, 同时UseControllerRotationYaw也要关掉
 ---
+
 
 local VelBlendStruct = UE.UObject.Load('/Game/Ikun/Blueprint/Anim/VelBlend.VelBlend') ---@type FVelBlend
 local MoveDirEnum = UE.UObject.Load('/Game/Ikun/Blueprint/Anim/MoveDir.MoveDir') ---@type MoveDir
@@ -109,8 +112,10 @@ end
 ---@private 更新角色的转身信息
 function ABP_Archer:UpdateTurnInfo(DeltaTime)
     do
-        local deltaYaw = self.Chr:GetControlRotation().Yaw - self.CachedPrevAimYaw
-        local aimYawRate = math.abs(deltaYaw / DeltaTime)
+        if self.CachedPrevAimYaw then
+            local deltaYaw = self.Chr:GetControlRotation().Yaw - self.CachedPrevAimYaw
+            local aimYawRate = math.abs(deltaYaw / DeltaTime)
+        end
     end
 end
 
