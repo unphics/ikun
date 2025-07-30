@@ -6,19 +6,21 @@
 ---
 
 ---@class AnimComp: AnimComp_C
-local M = UnLua.Class()
+local AnimComp = UnLua.Class()
 
--- function M:Initialize(Initializer)
+-- function AnimComp:Initialize(Initializer)
 -- end
 
--- function M:ReceiveBeginPlay()
+-- function AnimComp:ReceiveBeginPlay()
 -- end
 
--- function M:ReceiveEndPlay()
+-- function AnimComp:ReceiveEndPlay()
 -- end
 
-function M:ReceiveTick(DeltaSeconds)
-
+function AnimComp:ReceiveTick(DeltaSeconds)
 end
 
-return M
+function AnimComp:UpdatetGroundRot()
+end
+
+return AnimComp

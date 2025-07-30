@@ -23,8 +23,19 @@ end
 ---@override
 function UI_MainHud:Tick(MyGeometry, InDeltaTime)
     self:UpdateAnimInfo()
+    self:UpdateTimeInfo()
 end
 
+---@private
+function UI_MainHud:UpdateTimeInfo()
+    if MdMgr and MdMgr.TimeMgr then
+        self.TxtTime:SetText(MdMgr.TimeMgr:GetCurTimeDisplay())
+    else
+        log.error('UI_MainHud:UpdateTimeInfo() 客户端没有MdMgr')
+    end
+end
+
+---@private [Debug] 更新动画蓝图的信息
 function UI_MainHud:UpdateAnimInfo()
     local chr = UE.UGameplayStatics.GetPlayerCharacter(self, 0) ---@type BP_ChrBase
     if not obj_util.is_valid(chr) then
