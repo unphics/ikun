@@ -1,5 +1,5 @@
 
-log.log("全局class0使用")
+log.info("全局class0使用")
 --- # 深拷贝
 ---@param res table
 ---@return table

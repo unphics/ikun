@@ -79,7 +79,7 @@ end
 
 ---@public
 EnhInput.BindActions = function(pc)
-    log.log(log.key.ueinit, 'EnhInput.BindActions running')
+    log.info(log.key.ueinit, 'EnhInput.BindActions running')
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
             InputMgr.TriggerInputAction(IADef.IA_Move, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)

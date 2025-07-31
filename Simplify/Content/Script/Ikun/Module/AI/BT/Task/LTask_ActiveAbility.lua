@@ -33,7 +33,7 @@ function LTask_ActiveAbility:OnInit()
     local Ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(self.Chr.ASC, SelectAbility.Handle) ---@type GA_IkunBase
 
     local result = self.Chr.ASC:TryActivateAbility(SelectAbility.Handle, true)
-    log.log('LTask_ActiveAbility:OnInit()', result)
+    -- log.debug('LTask_ActiveAbility:OnInit()', result)
 end
 
 ---@override
@@ -46,7 +46,7 @@ end
 
 ---@override
 function LTask_ActiveAbility:OnTerminate() 
-    log.log('LTask_ActiveAbility:OnTerminate')
+    -- log.debug('LTask_ActiveAbility:OnTerminate')
 end
 
 return LTask_ActiveAbility

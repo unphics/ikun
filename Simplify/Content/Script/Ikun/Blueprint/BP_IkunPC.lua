@@ -28,7 +28,7 @@ end
 
 ---@override
 function BP_IkunPC:ReceiveBeginPlay()
-    log.log(log.key.ueinit..' BP_IkunPC:ReceiveBeginPlay() svr:'..tostring(net_util.is_server(self)))
+    log.info(log.key.ueinit..' BP_IkunPC:ReceiveBeginPlay() svr:'..tostring(net_util.is_server(self)))
     self.Overridden.ReceiveBeginPlay(self)
     if net_util.is_client(self) then
         self:InitInputSystem()
@@ -52,7 +52,7 @@ end
 
 ---@private [Input]
 function BP_IkunPC:InitInputSystem()
-    log.log('BP_IkunPC:InitInputSystem()')
+    log.info('BP_IkunPC:InitInputSystem()')
     EnhInput.InitByPlayerController(self)
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
 

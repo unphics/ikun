@@ -16,7 +16,7 @@ local BP_GameStateBase = UnLua.Class()
 ---@protected [ImplBP]
 function BP_GameStateBase:ReceiveBeginPlay()
     world_util.World = self
-    log.log(log.key.ueinit..' BP_GameStateBase:ReceiveBeginPlay() svr:'..tostring(net_util.is_server()))
+    log.info(log.key.ueinit..' BP_GameStateBase:ReceiveBeginPlay() svr:'..tostring(net_util.is_server()))
     self:InitUIModule()
 
     -- 56.8ms

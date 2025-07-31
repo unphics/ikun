@@ -79,7 +79,7 @@ function Kingdom:AddKingdomMember(Role)
         table.insert(self.tbRoleBornRecord, Role:GetRoleDispName())
         Role.RoleInfo:InitRoleInstId(InstId)
         MdMgr.RoleMgr:NewRole(InstId, Role)
-        log.log('zys AddKingdomMember', Role:GetRoleDispName(), self.Name, InstId)
+        log.info('zys AddKingdomMember', Role:GetRoleDispName(), self.Name, InstId)
     end
 end
 ---@public 友谊度判断

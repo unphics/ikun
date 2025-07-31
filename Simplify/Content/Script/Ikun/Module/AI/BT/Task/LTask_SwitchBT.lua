@@ -29,6 +29,6 @@ function LTask_SwitchBT:OnUpdate(DeltaTime)
 end
 function LTask_SwitchBT:DoSwitchBT()
     local OldBT = self.Chr:GetRole().BT.Desc
-    log.log('LTask_SwitchBT', OldBT, self.NewBTKey, self.Chr:PrintRoleInfo())
+    log.info('LTask_SwitchBT', OldBT, self.NewBTKey, self.Chr:PrintRoleInfo())
     self.Chr:GetRole():SwitchNewBT(self.NewBTKey)
 end

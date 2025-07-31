@@ -5,7 +5,7 @@
 ---@data Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
 ---
 
-log.log("debug_util Loaded")
+log.info("debug_util Loaded")
 
 ---@class debug_util
 local debug_util = {}

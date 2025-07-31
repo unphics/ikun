@@ -86,7 +86,7 @@ function RoleClass:StartBT()
 end
 
 function RoleClass:SwitchNewBT(NewBTKey)
-    log.log('RoleDisplayName = '..tostring(self:GetRoleDispName())..', switch new bt: '..tostring(NewBTKey))
+    log.info('RoleDisplayName = '..tostring(self:GetRoleDispName())..', switch new bt: '..tostring(NewBTKey))
     if self.Avatar.RoleComp.bCustomStartBT then
         return
     end
@@ -140,7 +140,7 @@ function RoleClass:AddEnemyChecked(OtherRole)
     if not OtherRoleCfg then
         return false
     end
-    log.log('RoleClass:AddEnemyChecked; self =', OwnerRoleCfg:GetRoleDispName(), '; enemy =', OtherRoleCfg:GetRoleDispName())
+    log.info('RoleClass:AddEnemyChecked; self =', OwnerRoleCfg:GetRoleDispName(), '; enemy =', OtherRoleCfg:GetRoleDispName())
     self.FightTarget:SetTarget(OtherRole)
     return true
 end

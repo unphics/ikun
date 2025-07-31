@@ -14,8 +14,8 @@ duplex:dinsert(1006, {id = 1006, name = 'aaa'})
 duplex:dinsert(1007, {id = 1007, name = 'sss'})
 duplex:dinsert(1008, {id = 1008, name = 'ddd'})
 
--- log.log('dp', duplex:dlength())
+-- log.debug('dp', duplex:dlength())
 
 -- for _, k, v in duplex:diter() do
---     log.log('dp ', k, v.id, v.name)
+--     log.debug('dp ', k, v.id, v.name)
 -- end

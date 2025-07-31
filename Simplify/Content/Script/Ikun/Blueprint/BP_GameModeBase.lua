@@ -11,14 +11,14 @@ local BP_GameModeBase = UnLua.Class()
 -- end
 
 function BP_GameModeBase:UserConstructionScript()
-    log.log(log.key.ueinit..' BP_GameModeBase:UserConstructionScript()')
+    log.info(log.key.ueinit..' BP_GameModeBase:UserConstructionScript()')
     local MdMgr = class.new"MdMgr"() ---@type MdMgr
     _G.MdMgr = MdMgr ---@type MdMgr
     _G.MdMgr:Init()
 end
 
 function BP_GameModeBase:ReceiveBeginPlay()
-    log.log(log.key.ueinit..' BP_GameModeBase:ReceiveBeginPlay() svr:'..tostring(net_util.is_server(self)))
+    log.info(log.key.ueinit..' BP_GameModeBase:ReceiveBeginPlay() svr:'..tostring(net_util.is_server(self)))
 end
 
 -- function BP_GameModeBase:ReceiveEndPlay()

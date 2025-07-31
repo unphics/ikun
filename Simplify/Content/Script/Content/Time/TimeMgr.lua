@@ -74,7 +74,7 @@ function TimeMgr:SetGameSpeed(Speed)
     end
     self.GameSpeed = Speed
     UE.UGameplayStatics.SetGlobalTimeDilation(world_util.World, Speed)
-    log.log('游戏速度为'..tostring(Speed)..'倍')
+    log.info('游戏速度为'..tostring(Speed)..'倍')
 end
 function TimeMgr:GetGameSpeed()
     return self.GameSpeed

@@ -49,7 +49,7 @@ function M:OnCollisionComponentBeginOverlap(OverlappedComponent, OtherActor, Oth
         return
     end
     if self:CheckTarget(OtherActor) then
-        log.log(log.key.lich02boom, 'Ball: overlap -> '..self:PrintRhsActor(OtherActor))
+        -- log.debug(log.key.lich02boom, 'Ball: overlap -> '..self:PrintRhsActor(OtherActor))
         self:ReturnResult(OtherActor)
     end
 end
@@ -71,7 +71,7 @@ function M:InitBallByAbility(OwnerAbility, OwnerAvatar, TriggerCB, DestroyCB)
     if self.ArrActorBeforeAbilityDataInited then
         for i = 1, self.ArrActorBeforeAbilityDataInited:Length() do
             local OtherActor = self.ArrActorBeforeAbilityDataInited:Get(i)
-            log.log('Ball: overlap '..self:PrintRhsActor(OtherActor))
+            -- log.debug('Ball: overlap '..self:PrintRhsActor(OtherActor))
             if self:CheckTarget(OtherActor) then ---@todo 这一段逻辑组织有点混乱, 有空重写一下
                 self:ReturnResult(OtherActor)
             end
@@ -104,7 +104,7 @@ function M:ReturnResult(OtherActor)
     if not bValid then
         return log.error(log.key.lich02boom, 'Ball: 爆炸时自身状态错误!!!', invalidIdx)
     end
-    log.log(log.key.lich02boom, '爆炸成功', '自己='..rolelib.roleid(AvatarC), '对方='..rolelib.roleid(OtherActor), '-------------------')
+    log.debug(log.key.lich02boom, '爆炸成功', '自己='..rolelib.roleid(AvatarC), '对方='..rolelib.roleid(OtherActor), '-------------------')
     self.TriggerCB(self.OwnerAbility, OtherActor, self:GetTransform())
     self.bBallTriggered = true
     ---@note 避免crash, 延迟destory; 原因应该是某个相关的structure引用了此Actor
