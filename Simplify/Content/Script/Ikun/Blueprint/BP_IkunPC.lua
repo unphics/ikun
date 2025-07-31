@@ -93,7 +93,7 @@ function BP_IkunPC:OnMouseLeftStarted(ActionValue, ElapsedSeconds, TriggeredSeco
         return
     end
     self.OwnerChr.InFightComp:C2S_FallInFight()
-    self.OwnerChr:LeftStart()
+    self.OwnerChr:C2S_LeftStart()
 end
 
 function BP_IkunPC:OnMouseLeftTriggered()
@@ -111,7 +111,7 @@ function BP_IkunPC:OnMouseLeftCompleted()
     if not self.OwnerChr.InFightComp:CheckInFight() then
         return
     end
-    self.OwnerChr:LeftEnd()
+    self.OwnerChr:C2S_LeftEnd()
 end
 
 return BP_IkunPC

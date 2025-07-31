@@ -42,3 +42,7 @@ bool UIkunASC::HasGameplayTag(FGameplayTag TagToCheck) const
 {
 	return this->HasMatchingGameplayTag(TagToCheck);
 }
+
+void UIkunASC::OnTagUpdated(const FGameplayTag& Tag, bool TagExists) {
+	this->OnTagChanged.Broadcast(Tag, TagExists);
+}
