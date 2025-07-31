@@ -68,7 +68,7 @@ UECmd = function(Cmd)
         if field and type(field) == 'function' then
             xpcall(function()
                 field(table.unpack(args))
-                end, function(err)
+            end, function(err)
                 log.error("LuaCmdError:", err, '\n', debug.traceback())
             end)
         elseif field and (type(field) == 'string' or type(field) == "number" or type(field) == "boolean") then

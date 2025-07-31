@@ -11,20 +11,24 @@
 ---@field tb_error table<string, number>
 local log = {}
 
+log.lua_log_head = ' ***** '
+
+
+
 function log.log(...)
-    print( ...)
+    print( log.lua_log_head, ...)
 end
 
 function log.warn(...)
-    UnLua.LogWarn(...)
+    UnLua.LogWarn(log.lua_log_head, ...)
 end
 
 function log.error(...)
-    UnLua.LogError(...)
+    UnLua.LogError(log.lua_log_head, ...)
 end
 
 function log.dev(...)
-    UnLua.LogError(...)
+    log.error(...)
 end
 
 function log.fmt84(num)

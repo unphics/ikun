@@ -102,7 +102,7 @@ function M:ReturnResult(OtherActor)
     local AvatarC = self.OwnerAbility.AvatarLua ---@type BP_ChrBase
     local bValid, invalidIdx = obj_util.all_valid(self.OwnerAbility, self, AvatarC)
     if not bValid then
-        return log.error('Ball: 爆炸时自身状态错误!!!', invalidIdx)
+        return log.error(log.key.lich02boom, 'Ball: 爆炸时自身状态错误!!!', invalidIdx)
     end
     log.log(log.key.lich02boom, '爆炸成功', '自己='..rolelib.roleid(AvatarC), '对方='..rolelib.roleid(OtherActor), '-------------------')
     self.TriggerCB(self.OwnerAbility, OtherActor, self:GetTransform())
