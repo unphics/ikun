@@ -26,6 +26,7 @@ local IADef = {
 }
 EnhInput.IADef = IADef
 
+---@enum TriggerEvent
 EnhInput.TriggerEvent = {
     Triggered = 'Triggered',
     Started = 'Started',
@@ -82,15 +83,23 @@ EnhInput.BindActions = function(pc)
     log.info(log.key.ueinit, 'EnhInput.BindActions running')
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_Move, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Move, EnhInput.TriggerEvent.Triggered, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_Look, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Look, ActionValue, ElapsedSeconds, EnhInput.TriggerEvent.Triggered, TriggeredSeconds, InputAction)
         end)
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        end)
+    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed,
+        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        end)
+    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered,
+        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown,EnhInput.TriggerEvent.Triggered,  ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
 end
 

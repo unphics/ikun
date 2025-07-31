@@ -10,7 +10,7 @@
 ---@field bBorrowInput boolean
 
 ---@class InputMgr
----@field _InputEvents table<UObject, table<IADef, fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction): boolean>>
+---@field _InputEvents table<UObject, table<IADef, table<TriggerEvent, fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction): boolean>>>
 ---@field _InputPowerStack InputPower[]
 ---@field _CachedInputPowerOwner UObject[]
 local InputMgr = {}
@@ -73,15 +73,19 @@ end
 ---@public 注册监听输入事件
 ---@param Object UObject
 ---@param IADef IADef
+---@param TriggerEvent TriggerEvent
 ---@param fn fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction): boolean
-InputMgr.RegisterInputAction = function(Object, IADef, fn)
+InputMgr.RegisterInputAction = function(Object, IADef, TriggerEvent, fn)
     if not InputMgr._InputEvents[Object] then
         InputMgr._InputEvents[Object] = {}
     end
-    if InputMgr._InputEvents[Object][IADef] then
-        return log.error('InputMgr.RegisterInputAction() 重复的IA事件监听')
+    if not InputMgr._InputEvents[Object][IADef] then
+        InputMgr._InputEvents[Object][IADef] = {}    
     end
-    InputMgr._InputEvents[Object][IADef] = fn
+    if InputMgr._InputEvents[Object][IADef][TriggerEvent] then
+        return log.error('InputMgr.RegisterInputAction() 重复的输入事件监听')
+    end
+    InputMgr._InputEvents[Object][IADef][TriggerEvent] = fn
 end
 
 ---@public 反注册监听输入
@@ -92,10 +96,10 @@ end
 
 ---@public 触发输入事件
 ---@param IADef IADef
-InputMgr.TriggerInputAction = function(IADef, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+InputMgr.TriggerInputAction = function(IADef, TriggerEvent, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
     for _, object in ipairs(InputMgr._CachedInputPowerOwner) do
         if object and obj_util.is_valid(object) then
-            local fn = InputMgr._InputEvents[object][IADef]
+            local fn = InputMgr._InputEvents[object][IADef][TriggerEvent]
             if fn then
                 if fn(object, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction) then
                     break

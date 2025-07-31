@@ -57,9 +57,9 @@ function BP_IkunPC:InitInputSystem()
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
 
     InputMgr.ObtainInputPower(self)
-    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Move, self.OnMoveInput)
-    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Look, self.OnLookInput)
-    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, self.OnMouseLeftDown)
+    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered, self.OnMoveInput)
+    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered, self.OnLookInput)
+    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, self.OnMouseLeftDown)
 end
 EnhInput.BindActions(BP_IkunPC)
 
@@ -83,7 +83,11 @@ end
 ---@private [Input]
 function BP_IkunPC:OnMouseLeftDown(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
     if self.OwnerChr then
-        self.OwnerChr.InFightComp:C2S_FallInFight()
+        ---@rule 玩家和平状态下的第一次左键点击先入战, 下一次再考虑执行左键绑定的技能等
+        if not self.OwnerChr.InFightComp:CheckInFight() then
+            self.OwnerChr.InFightComp:C2S_FallInFight()
+            return
+        end
     end
 end
 
