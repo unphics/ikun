@@ -32,4 +32,13 @@ local BP_Archer = UnLua.Class('Ikun/Chr/Blueprint/BP_ChrBase')
 -- function BP_Archer:ReceiveActorEndOverlap(OtherActor)
 -- end
 
+function BP_Archer:LeftStart()
+    log.dev('BP_Archer:LeftStart()')
+    self.Mesh:GetAnimInstance().bPullingBow = true
+end
+function BP_Archer:LeftEnd()
+    log.dev('BP_Archer:LeftEnd()')
+    self.Mesh:GetAnimInstance().bPullingBow = false
+end
+
 return BP_Archer

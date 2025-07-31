@@ -56,6 +56,7 @@ function UI_MainHud:UpdateAnimInfo()
         local name = {'Front', 'Back', 'Left', 'Right'}
         str = str..'MoveDir: '..tostring(name[EMoveDir + 1] or 'nil')..'\n'
     end
+    str = str .. 'PullingBow: ' .. (animInst.bPullingBow and 'true' or 'false')
     self.TxtAnim:SetText(str)
 end
 

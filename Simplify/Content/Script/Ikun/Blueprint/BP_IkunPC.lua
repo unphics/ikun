@@ -59,7 +59,9 @@ function BP_IkunPC:InitInputSystem()
     InputMgr.ObtainInputPower(self)
     InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered, self.OnMoveInput)
     InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered, self.OnLookInput)
-    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, self.OnMouseLeftDown)
+    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, self.OnMouseLeftStarted)
+    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftCompleted)
+    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
 end
 EnhInput.BindActions(BP_IkunPC)
 
@@ -81,14 +83,35 @@ function BP_IkunPC:OnLookInput(ActionValue, ElapsedSeconds, TriggeredSeconds, In
 end
 
 ---@private [Input]
-function BP_IkunPC:OnMouseLeftDown(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-    if self.OwnerChr then
-        ---@rule 玩家和平状态下的第一次左键点击先入战, 下一次再考虑执行左键绑定的技能等
-        if not self.OwnerChr.InFightComp:CheckInFight() then
-            self.OwnerChr.InFightComp:C2S_FallInFight()
-            return
-        end
+function BP_IkunPC:OnMouseLeftStarted(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+    if not obj_util.is_valid(self.OwnerChr) then
+        return
     end
+    ---@rule 玩家和平状态下的第一次左键点击先入战, 下一次再考虑执行左键绑定的技能等
+    if not self.OwnerChr.InFightComp:CheckInFight() then
+        self.OwnerChr.InFightComp:C2S_FallInFight()
+        return
+    end
+    self.OwnerChr.InFightComp:C2S_FallInFight()
+    self.OwnerChr:LeftStart()
+end
+
+function BP_IkunPC:OnMouseLeftTriggered()
+    if not obj_util.is_valid(self.OwnerChr) then
+        return
+    end
+    self.OwnerChr.InFightComp:C2S_FallInFight()
+end
+
+---@private [Input]
+function BP_IkunPC:OnMouseLeftCompleted()
+    if not obj_util.is_valid(self.OwnerChr) then
+        return
+    end
+    if not self.OwnerChr.InFightComp:CheckInFight() then
+        return
+    end
+    self.OwnerChr:LeftEnd()
 end
 
 return BP_IkunPC
