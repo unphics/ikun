@@ -6,6 +6,8 @@
 
 require('Ikun/Module/Config/DirBrowser')
 
+local PreLoadConfig = {'Effect', 'Talk'}
+
 ---@class ConfigMgr : MdBase
 ---@field CachedConfigTable table<string, table>
 local ConfigMgr = class.class 'ConfigMgr':extends 'MdBase' {
@@ -28,9 +30,14 @@ end
 ---@override
 function ConfigMgr:Init()
     local brs = class.DirBrowser.create_cfg_dir()
-    if not self:LoadConfigTable(brs, 'Effect') then
-        log.error('ConfigMgr:Init()', 'Failed to load config table named:', 'Effect')
+    for _, name in ipairs(PreLoadConfig) do
+        if self:LoadConfigTable(brs, name) then
+            log.info('ConfigMgr:Init()', 'preload config table named:', name)
+        else
+            log.error('ConfigMgr:Init()', 'Failed to load config table named:', name)
+        end
     end
+    log.info('ConfigMgr:Init(): all pre load config table has already loaded !')
 end
 
 ---@public
@@ -56,7 +63,7 @@ end
 ---@return table
 function ConfigMgr:ParsePipeTable(data, key_col_index)
     key_col_index = key_col_index or 1
-    local result = {}
+    local parseResult = {}
     local header = nil -- 表头数组
     local line_num = 0
 
@@ -165,12 +172,17 @@ function ConfigMgr:ParsePipeTable(data, key_col_index)
             end
 
             if not skip then
-                table.insert(result, row)
+                local mainKey = header[key_col_index]
+                local mainKeyVal = row[mainKey]
+                if mainKeyVal then
+                    parseResult[mainKeyVal] = row
+                end
+                -- table.insert(parseResult, row)
             end
         end
     end
 
-    return result
+    return parseResult
 end
 
 return ConfigMgr

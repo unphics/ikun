@@ -5,8 +5,6 @@
 ---@data    Sun Apr 06 2025 10:35:40 GMT+0800 (中国标准时间)
 ---
 
-local TalkConfig = require('Ikun/UI/UMG/TalkList/TalkConfig')
-
 ---@class UI_TalkList: UI_TalkList_C
 ---@field TalkingRoleList table<string, TalkListItem>
 ---@field TalkingContentList TalkListItem[]
@@ -71,13 +69,15 @@ end
 ---@private
 function UI_TalkList:Test()
     self.test_idx = 1
+    local talkConfig = MdMgr.CfgMgr:GetConfig('Talk')
+    local len = table_util.map_len(talkConfig)
     async_util.timer(self, function()
-        local data = TalkConfig[self.test_idx]
+        local data = talkConfig[32000 + self.test_idx]
         self.test_idx = self.test_idx + 1
-        if self.test_idx > #TalkConfig then
+        if self.test_idx > len then
             self.test_idx = 1
         end
-        self:PushContent(data.Name, data.Content, 8)
+        self:PushContent(data.TalkerName, data.TalkContent, 8)
     end, 5, true)
 end
 
