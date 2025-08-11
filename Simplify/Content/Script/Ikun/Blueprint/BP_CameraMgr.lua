@@ -42,7 +42,6 @@ end
 ---@param CameraTarget APawn
 ---@return boolean, FVector, FRotator, number
 function BP_CameraMgr:BlueprintUpdateCamera(CameraTarget)
-    -- log.dev('update', net_util.is_server(self), self)
     if obj_util.is_valid(CameraTarget) and obj_util.is_valid(self.PC) then
         local rot = self.PC:GetControlRotation()
         local loc = CameraTarget:K2_GetActorLocation()
