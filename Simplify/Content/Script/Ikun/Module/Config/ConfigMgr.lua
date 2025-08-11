@@ -5,27 +5,56 @@
 ---
 
 require('Ikun/Module/Config/DirBrowser')
+
 ---@class ConfigMgr : MdBase
+---@field CachedConfigTable table<string, table>
 local ConfigMgr = class.class 'ConfigMgr':extends 'MdBase' {
     --[[public]]
     ctor = function() end,
+    Init = function()end,
+    GetConfig = function()end,
+    LoadConfigTable = function()end,
     --[[private]]
-    parse_pipe_table = function() end,
+    ParsePipeTable = function() end,
+    CachedConfigTable = nil,
 }
 ---@override
 function ConfigMgr:ctor()
     log.info('ConfigMgr:ctor()')
 
+    self.CachedConfigTable = {}
+end
+
+---@override
+function ConfigMgr:Init()
+    local brs = class.DirBrowser.create_cfg_dir()
+    if not self:LoadConfigTable(brs, 'Effect') then
+        log.error('ConfigMgr:Init()', 'Failed to load config table named:', 'Effect')
+    end
+end
+
+---@public
+---@param Name string
+function ConfigMgr:GetConfig(Name)
+    return self.CachedConfigTable[Name]
+end
+
+---@public
+---@param Drs DirBrowser
+---@param FileName string
+function ConfigMgr:LoadConfigTable(Drs, FileName)
     -- local brs = class.DirBrowser.create_cfg_dir() ---@as DirBrowser
-    -- local content = brs:read_file('test.csv')
-    -- local cfg = self:parse_pipe_table(content)
+    local content = Drs:read_file(FileName .. '.csv')
+    local cfg = self:ParsePipeTable(content)
+    self.CachedConfigTable[FileName] = cfg
+    return cfg
 end
 
 ---@private 解析以"|"为分隔符的csv表格内容
 ---@param data string
 ---@param key_col_index number
 ---@return table
-function ConfigMgr:parse_pipe_table(data, key_col_index)
+function ConfigMgr:ParsePipeTable(data, key_col_index)
     key_col_index = key_col_index or 1
     local result = {}
     local header = nil -- 表头数组
