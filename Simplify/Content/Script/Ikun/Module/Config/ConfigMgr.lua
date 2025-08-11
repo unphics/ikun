@@ -6,7 +6,7 @@
 
 require('Ikun/Module/Config/DirBrowser')
 
-local PreLoadConfig = {'Effect', 'Talk'}
+local PreLoadConfig = {'GlobalConst', 'Effect', 'Talk', 'CameraViewModel'}
 
 ---@class ConfigMgr : MdBase
 ---@field CachedConfigTable table<string, table>
@@ -16,7 +16,8 @@ local ConfigMgr = class.class 'ConfigMgr':extends 'MdBase' {
     Init = function()end,
     GetConfig = function()end,
     LoadConfigTable = function()end,
-    --[[private]]
+    GetGlobalConst = function()end,    
+--[[private]]
     ParsePipeTable = function() end,
     CachedConfigTable = nil,
 }
@@ -55,6 +56,14 @@ function ConfigMgr:LoadConfigTable(Drs, FileName)
     local cfg = self:ParsePipeTable(content)
     self.CachedConfigTable[FileName] = cfg
     return cfg
+end
+
+---@public 全局控制值
+---@param Name string
+---@return number|string
+function ConfigMgr:GetGlobalConst(Name)
+    local row = self.CachedConfigTable.GlobalConst[Name]
+    return row and row.Value
 end
 
 ---@private 解析以"|"为分隔符的csv表格内容

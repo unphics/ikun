@@ -43,9 +43,13 @@ end
 
 function BP_Archer:C2S_LeftStart_RPC()
     self.bPullingBow = true
+    local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
+    pc.CameraViewComp:S2C_NewCameraViewModel('Aim')
 end
 function BP_Archer:C2S_LeftEnd_RPC()
     self.bPullingBow = false
+    local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
+    pc.CameraViewComp:S2C_NewCameraViewModel('Normal')
 end
 
 -- function BP_Archer:OnASCTagChanged(GameplayTag, bExist)
