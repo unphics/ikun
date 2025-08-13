@@ -110,6 +110,12 @@ function ABP_Archer:UpdateMoveSpeed(DeltaTime)
         end
         self.MoveDir = CalcQuadrant(self.MoveDir, 70, -70, 110, -110, 5, localVelRot.Yaw)
     end
+
+    do
+        local AimRot = self.Chr:GetControlRotation()
+        self.AimYaw = AimRot.Yaw
+        self.AimPitch = AimRot.Pitch
+    end
 end
 
 ---@private 更新角色的转身信息

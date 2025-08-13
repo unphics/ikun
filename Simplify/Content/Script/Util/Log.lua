@@ -20,13 +20,13 @@ end
 
 ---@public 临时的开发用红色print
 function log.dev(...)
-    log.error(...)
+    UnLua.LogError(log.lua_log_head, '[DEV]', ...)
 end
 
 ---@public 最详细的调试信息, 记录变量值, 方法调用链路等细节; 生产环境通常关闭, 仅用于开发阶段定位问题
 ---@rule ikun中可以提交debug到版本分支
 function log.debug(...)
-    print( log.lua_log_head, 'DEBUG', ...)
+    print( log.lua_log_head, '[DEBUG]', ...)
 end
 
 ---@public 记录游戏运行的关键节点和正常状态(如登录, 场景加载完成, 系统启动等), 需保证信息对运维人员有意义且可读性强

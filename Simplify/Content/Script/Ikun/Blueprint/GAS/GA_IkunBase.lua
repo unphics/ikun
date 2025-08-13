@@ -6,14 +6,14 @@
 ---@field AvatarLua BP_ChrBase
 local M = UnLua.Class()
 
----@protected [ImplBP]
+---@override [ImplBP]
 ---@notice 此方法需要子类Super调用
 function M:OnActivateAbility()
     self.Overridden.OnActivateAbility(self)
     self:GAInitData()
 end
 
----@protected [ImplBP]
+---@override [ImplBP]
 ---@notice 此方法需要子类Super调用
 function M:K2_OnEndAbility(WasCancelled)
     if self.OnAbilityEnd then
