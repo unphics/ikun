@@ -55,6 +55,9 @@ end
 ---@private [Server]
 function GA_Archer_01:OnMouseLeftCompleted()
     log.dev('GA_Archer_01:OnMouseLeftCompleted()', net_util.print(self))
+    ---@step consume tag
+    gas_util.asc_remove_tag_by_name(self.Chr, 'Input.MouseLeft.Completed')
+    
     ---@step montage jmp section
     self:MontageJumpToSection('Aim_End')
     

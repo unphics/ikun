@@ -30,10 +30,6 @@ function BP_Archer:C2S_LeftStart_RPC()
     local _, handle = gas_util.get_all_active_abilities(self)
     local result = self.ASC:TryActivateAbility(handle[1], true)
     self.pull = true
-    
-    -- self.bPullingBow = true
-    -- local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
-    -- pc.CameraViewComp:S2C_NewCameraViewModel('Aim')
 end
 
 ---@public PC会调用此方法
@@ -44,9 +40,6 @@ function BP_Archer:C2S_LeftEnd_RPC()
     self.pull = false
     gas_util.asc_add_tag_by_name(self, 'Input.MouseLeft.Completed')
     -- UE.UAbilitySystemBlueprintLibrary.SendGameplayEventToActor(self, UE.UIkunFnLib.RequestGameplayTag('Input.MouseLeft.Completed'), nil)
-    -- self.bPullingBow = false
-    -- local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
-    -- pc.CameraViewComp:S2C_NewCameraViewModel('Normal')
 end
 
 -- function BP_Archer:OnASCTagChanged(GameplayTag, bExist)
