@@ -9,6 +9,9 @@
 #include "Blueprint/UserWidget.h"
 #include "UtilType.h"
 #include "Misc/ConfigCacheIni.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "ikun_cpp_utl.h"
 
 
 UUserWidget* UIkunFnLib::CreateWidget(UWorld* World, UClass* Class) {
@@ -37,6 +40,21 @@ bool UIkunFnLib::IsGameplayTagEqual(FGameplayTag TagA, FGameplayTag TagB) {
 
 void UIkunFnLib::AddTagToContainer(FGameplayTagContainer& Container, FGameplayTag& Tag) {
 	Container.AddTag(Tag);
+}
+
+IKUN_STEAL_PRIVATE(UAbilitySystemComponent, GetReplicatedLooseTags_Mutable)
+
+bool UIkunFnLib::HasLooseGameplayTags(AActor* Actor, const FGameplayTagContainer& GameplayTags) {
+	if (UAbilitySystemComponent* AbilitySysComp = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor)) {
+		auto fn = ikun_steal_GetReplicatedLooseTags_Mutable(*AbilitySysComp);
+		FMinimalReplicationTagCountMap& tagCountMap = ::std::mem_fn(fn)(*AbilitySysComp);
+		for (const FGameplayTag& Tag : GameplayTags) {
+			if (tagCountMap.TagMap.FindOrAdd(Tag) > 0) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 const UGameplayAbility* UIkunFnLib::EffectContextGetAbility(const FGameplayEffectContextHandle& ContextHandle) {

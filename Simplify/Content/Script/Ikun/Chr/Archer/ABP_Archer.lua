@@ -48,7 +48,7 @@ end
 
 ---@private 更新有关入战出战的相关信息
 function ABP_Archer:UpdateFightInfo()
-    self.bInFight = gas_util.asc_has_tag_by_name(self.Chr, 'Role.State.InFight')
+    self.bInFight = gas_util.has_loose_tag(self.Chr, 'Role.State.InFight')
 end
 
 ---@private 更新地面移动有关信息

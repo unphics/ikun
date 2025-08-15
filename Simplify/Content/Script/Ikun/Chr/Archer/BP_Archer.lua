@@ -13,15 +13,36 @@ local BP_Archer = UnLua.Class('Ikun/Chr/Blueprint/BP_ChrBase')
 ---@override
 function BP_Archer:ReceiveBeginPlay()
     self.Super.ReceiveBeginPlay(self)
+    -- local a = function()
+    --     log.dev('qqq', gas_util.has_loose_tag(self, 'Input.MouseLeft.Completed'))
+    -- end
     -- if net_util.is_server(self) then
-    --     self.ASC.OnTagChanged:Add(self, self.OnASCTagChanged)
+    --     -- self.ASC.OnTagChanged:Add(self, self.OnASCTagChanged)
+    --     log.dev('qqq 0', gas_util.has_loose_tag(self, 'Input.MouseLeft.Completed'))
+    --     self.ASC.OnTagChanged:Add(self, a)
+    -- end
+    -- if net_util.is_server(self) then
+    --     -- local tag = UE.UIkunFnLib.RequestGameplayTag('Input.MouseLeft.Completed')
+    --     -- local stopTask = UE.UAbilityTask_WaitGameplayTagAdded.WaitGameplayTagAdd(self, tag, nil, true)
+    --     -- stopTask.Added:Add(self, function()
+    --     --     log.dev('qqq 000', gas_util.has_loose_tag(self, 'Input.MouseLeft.Completed'))    
+    --     -- end)
+    --     -- stopTask:ReadyForActivation()
+    --     log.dev('qqq 1', gas_util.has_loose_tag(self, 'Input.MouseLeft.Completed'))
+    --     gas_util.add_loose_tag(self, 'Input.MouseLeft.Completed')
+    --     log.dev('qqq 2', gas_util.has_loose_tag(self, 'Input.MouseLeft.Completed'))
+    --     gas_util.remove_loose_tag(self, 'Input.MouseLeft.Completed')
+    --     log.dev('qqq 3', gas_util.has_loose_tag(self, 'Input.MouseLeft.Completed'))
+    --     self.ASC.OnTagChanged:Remove(self, a)
+    --     gas_util.add_loose_tag(self, 'Input.MouseLeft.Completed')
+    --     log.dev('qqq 4', gas_util.has_loose_tag(self, 'Input.MouseLeft.Completed'))
     -- end
 end
 
 ---@override
 function BP_Archer:ReceiveTick(DeltaSeconds)
     self.Super.ReceiveTick(self, DeltaSeconds)
-    -- log.dev(gas_util.asc_has_tag_by_name(self, 'Input.MouseLeft.Completed'), net_util.print(self))
+    -- log.dev(gas_util.has_loose_tag(self, 'Input.MouseLeft.Completed'), net_util.print(self))
 end
 
 ---@public PC会调用此方法
@@ -38,7 +59,8 @@ function BP_Archer:C2S_LeftEnd_RPC()
         return
     end
     self.pull = false
-    gas_util.asc_add_tag_by_name(self, 'Input.MouseLeft.Completed')
+    gas_util.add_loose_tag(self, 'Input.MouseLeft.Completed')
+    log.dev('BP_Archer:C2S_LeftEnd_RPC()', net_util.print(self), gas_util.has_loose_tag(self, 'Input.MouseLeft.Completed'))
     -- UE.UAbilitySystemBlueprintLibrary.SendGameplayEventToActor(self, UE.UIkunFnLib.RequestGameplayTag('Input.MouseLeft.Completed'), nil)
 end
 

@@ -35,44 +35,62 @@ gas_util.find_active_by_name = function(ikun_chr, name)
     return gas_util.find_active_by_tag(ikun_chr, UE.UIkunFnLib.RequestGameplayTag(name))
 end
 
----@public ASC添加Tag
-gas_util.asc_add_tag_by_container = function(ikun_chr, container)
+---@public
+---@param tag string|FGameplayTag|FGameplayTagContainer
+gas_util.add_loose_tag = function(ikun_chr, tag)
+    if not obj_util.is_valid(ikun_chr) then
+        return log.error('gas_util.add_loose_tag(): invalid ikun_chr', debug.traceback())
+    end
+    local container = nil
+    if tag.GameplayTags then
+        container = tag
+    elseif tag.TagName then
+        container = UE.FGameplayTagContainer()
+        container.GameplayTags:Add(tag)
+    else
+        container = UE.FGameplayTagContainer()
+        container.GameplayTags:Add(UE.UIkunFnLib.RequestGameplayTag(tag))
+    end
     UE.UAbilitySystemBlueprintLibrary.AddLooseGameplayTags(ikun_chr, container, true)
 end
----@public ASC添加Tag
-gas_util.asc_add_tag_by_tag = function(ikun_chr, tag)
-    local TagContainer = UE.FGameplayTagContainer()
-    TagContainer.GameplayTags:Add(tag)
-    UE.UAbilitySystemBlueprintLibrary.AddLooseGameplayTags(ikun_chr, TagContainer, true)
-end
----@public ASC添加Tag
-gas_util.asc_add_tag_by_name = function(ikun_chr, name)
-    gas_util.asc_add_tag_by_tag(ikun_chr, UE.UIkunFnLib.RequestGameplayTag(name))
-end
 
----@public ASC移除Tag
-gas_util.asc_remove_tag_by_container = function(ikun_chr, container)
+---@public
+---@param tag string|FGameplayTag|FGameplayTagContainer
+gas_util.remove_loose_tag = function(ikun_chr, tag, bShouldRep)
+    if not obj_util.is_valid(ikun_chr) then
+        return log.error('gas_util.remove_loose_tag(): invalid ikun_chr', debug.traceback())
+    end
+    bShouldRep = bShouldRep or true
+    local container = nil
+    if tag.GameplayTags then
+        container = tag
+    elseif tag.TagName then
+        container = UE.FGameplayTagContainer()
+        container.GameplayTags:Add(tag)
+    else
+        container = UE.FGameplayTagContainer()
+        container.GameplayTags:Add(UE.UIkunFnLib.RequestGameplayTag(tag))
+    end
     UE.UAbilitySystemBlueprintLibrary.RemoveLooseGameplayTags(ikun_chr, container, true)
 end
----@public ASC移除Tag
-gas_util.asc_remove_tag_by_tag = function(ikun_chr, tag)
-    local TagContainer = UE.FGameplayTagContainer()
-    TagContainer.GameplayTags:Add(tag)
-    UE.UAbilitySystemBlueprintLibrary.RemoveLooseGameplayTags(ikun_chr, TagContainer, true)
-end
----@public ASC移除Tag
-gas_util.asc_remove_tag_by_name = function(ikun_chr, name)
-    gas_util.asc_remove_tag_by_tag(ikun_chr, UE.UIkunFnLib.RequestGameplayTag(name))
-end
 
-
----@public 判断ASC包含Tag
-gas_util.asc_has_tag_by_tag = function(ikun_chr, tag)
-    return ikun_chr:GetAbilitySystemComponent():HasGameplayTag(tag)
-end
----@public 判断ASC包含Tag
-gas_util.asc_has_tag_by_name = function(ikun_chr, name)
-    return ikun_chr:GetAbilitySystemComponent():HasGameplayTag(UE.UIkunFnLib.RequestGameplayTag(name))
+---@public
+---@param tag string|FGameplayTag|FGameplayTagContainer
+gas_util.has_loose_tag = function(ikun_chr, tag)
+        if not obj_util.is_valid(ikun_chr) then
+        return log.error('gas_util.remove_loose_tag(): invalid ikun_chr', debug.traceback())
+    end
+    local container = nil
+    if tag.GameplayTags then
+        container = tag
+    elseif tag.TagName then
+        container = UE.FGameplayTagContainer()
+        container.GameplayTags:Add(tag)
+    else
+        container = UE.FGameplayTagContainer()
+        container.GameplayTags:Add(UE.UIkunFnLib.RequestGameplayTag(tag))
+    end
+    return UE.UIkunFnLib.HasLooseGameplayTags(ikun_chr, container)
 end
 
 ---@public 从ASC中查找Abilities

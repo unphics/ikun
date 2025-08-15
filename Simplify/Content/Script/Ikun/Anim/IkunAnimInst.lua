@@ -106,7 +106,7 @@ end
 
 ---@private [Update] 
 function IkunAnimInst:UpdateChrInfo()
-    self.InFight = gas_util.asc_has_tag_by_name(self.Chr, 'Chr.State.InFight')
+    self.InFight = gas_util.has_loose_tag(self.Chr, 'Chr.State.InFight')
     self.Vel, self.Acc, self.MoveInput, self.IsMove, self.HasMoveInput, self.Speed, self.MoveInputAmount, self.AimRot, self.AimYawRate = self.Chr.AnimComp:GetEssentialVal()
     self.MoveState, self.RotMode, self.Gait, self.Stance, self.ViewModel = self.Chr.AnimComp:GetChrState()
 end
