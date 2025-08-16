@@ -66,11 +66,10 @@ function GA_Archer_01:OnMouseLeftCompleted()
 end
 
 ---@private
-function GA_Archer_01:S2C_OnMouseLeftCompleted_RPC1()
-    log.dev('GA_Archer_01:OnMouseLeftCompleted()', net_util.print(self))
+function GA_Archer_01:S2C_OnMouseLeftCompleted_RPC()
+    log.dev('GA_Archer_01:OnMouseLeftCompleted()', net_util.print(self), obj_util.is_valid(self:GetAvatarActorFromActorInfo()))
     ---@step montage jmp section
-    -- self:MontageJumpToSection('Aim_End')
-    self.Overridden.S2C_OnMouseLeftCompleted(self)
+    self:MontageJumpToSection('Aim_End')
     
     ---@step 相机从越肩视角切换回普通视角
     if net_util.is_server(self) then
