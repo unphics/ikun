@@ -5,21 +5,17 @@
 ---@data    Thu Jul 31 2025 23:32:46 GMT+0800 (中国标准时间)
 ---
 
-local OutFightTime = 10 -- 出战时间
+local OUT_FIGHT_TIME = 10 -- 出战时间
 
 ---@class InFightComp: InFightComp_C
 local InFightComp = UnLua.Class()
 
--- function InFightComp:Initialize(Initializer)
--- end
-
+---@override
 function InFightComp:ReceiveBeginPlay()
     self.OutFightTimeCount = nil
 end
 
--- function InFightComp:ReceiveEndPlay()
--- end
-
+---@override
 function InFightComp:ReceiveTick(DeltaSeconds)
     if net_util.is_client(self) then
         return
@@ -33,11 +29,11 @@ function InFightComp:ReceiveTick(DeltaSeconds)
     end
 end
 
----@private 入战调用
+---@public 入战调用
 function InFightComp:C2S_FallInFight_RPC()
     if not self:CheckInFight() then
         gas_util.add_loose_tag(self:GetOwner(), 'Role.State.InFight')
-        self.OutFightTimeCount = OutFightTime
+        self.OutFightTimeCount = OUT_FIGHT_TIME
     end
 end
 
