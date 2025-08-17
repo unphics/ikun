@@ -22,7 +22,7 @@ end
 
 ---@override
 function UI_MainHud:Tick(MyGeometry, InDeltaTime)
-    self:UpdateAnimInfo()
+    -- self:UpdateAnimInfo()
     self:UpdateTimeInfo()
 end
 
