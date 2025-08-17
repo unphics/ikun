@@ -18,7 +18,7 @@ function GA_Archer_01:OnActivateAbility()
 
     ---@step 播放蒙太奇动作
     local at = UE.UATPlayMtgAndWaitEvent.PlayMtgAndWaitEvent(self, 'task name',
-        self.MtgShoot, UE.FGameplayTagContainer(), 1, '', false, 1)
+        self.MtgShoot, UE.FGameplayTagContainer(), 1, '', true, 1)
     at.OnBlendOut:Add(self, self.OnMtgCompleted)
     at.OnCompleted:Add(self, self.OnMtgCompleted)
     at.OnInterrupted:Add(self, self.OnMtgCancelled)
