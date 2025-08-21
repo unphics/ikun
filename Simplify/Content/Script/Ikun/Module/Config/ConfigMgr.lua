@@ -21,33 +21,27 @@ local ConfigMgr = class.class 'ConfigMgr':extends 'MdBase' {
     ParsePipeTable = function() end,
     CachedConfigTable = nil,
 }
----@override
+
+---@override 初始化缓存容器, 加载需要预加载的配置表
 function ConfigMgr:ctor()
     log.info('ConfigMgr:ctor()')
 
     self.CachedConfigTable = {}
+    self:PreloadConfigTable()
 end
 
 ---@override
 function ConfigMgr:Init()
-    local brs = class.DirBrowser.create_cfg_dir()
-    for _, name in ipairs(PreLoadConfig) do
-        if self:LoadConfigTable(brs, name) then
-            log.info('ConfigMgr:Init()', 'preload config table named:', name)
-        else
-            log.error('ConfigMgr:Init()', 'Failed to load config table named:', name)
-        end
-    end
-    log.info('ConfigMgr:Init(): all pre load config table has already loaded !')
 end
 
----@public
+---@public 读取配置表
 ---@param Name string
+---@return table
 function ConfigMgr:GetConfig(Name)
     return self.CachedConfigTable[Name]
 end
 
----@public
+---@public 通过目录和文件名加载配置表并缓存
 ---@param Drs DirBrowser
 ---@param FileName string
 function ConfigMgr:LoadConfigTable(Drs, FileName)
@@ -58,12 +52,41 @@ function ConfigMgr:LoadConfigTable(Drs, FileName)
     return cfg
 end
 
----@public 全局控制值
+---@public 获取全局控制值
 ---@param Name string
 ---@return number|string
 function ConfigMgr:GetGlobalConst(Name)
     local row = self.CachedConfigTable.GlobalConst[Name]
     return row and row.Value
+end
+
+---@private 预加载一些配置表
+function ConfigMgr:PreloadConfigTable()
+    log.info('ConfigMgr:PreloadConfigTable()', '预加载配置表开始!')
+
+    local brs = class.DirBrowser.create_cfg_dir() ---@type DirBrowser
+    self:LoadConfigTable(brs, 'GlobalConst')
+    local preloadConfig = self:LoadConfigTable(brs, 'Preload')
+
+    for dirName, tables in pairs(preloadConfig) do
+        if brs:cd(dirName) then
+            local tableIndex = 1
+            local cfgTableHead = 'Table'
+            while tables[cfgTableHead..tableIndex] do
+                local tableName = tables[cfgTableHead..tableIndex]
+                if tableName then
+                    if self:LoadConfigTable(brs, tableName) then
+                        log.info('ConfigMgr:PreloadConfigTable()', '加载成功:', tableName)
+                    else
+                        log.error('ConfigMgr:PreloadConfigTable()', '加载失败:', tableName)
+                    end
+                end
+                tableIndex = tableIndex + 1
+            end
+            brs:up()
+        end
+    end
+    log.info('ConfigMgr:PreloadConfigTable()', '预加载配置表结束!')
 end
 
 ---@private 解析以"|"为分隔符的csv表格内容

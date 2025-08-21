@@ -1,9 +1,9 @@
 
 ---
----@brief 角色的基类
----@author zys
----@data Mon Jan 27 2025 23:56:14 GMT+0800 (中国标准时间)
----@desc 对于摆放在场景中的Chr或者Spawn出的Chr, 分配给他们ConfigId, 在Chr里构造Role, 然后Role开始在游戏内容管理中注册, 成为世界的一员
+---@brief   角色的基类
+---@author  zys
+---@data    Mon Jan 27 2025 23:56:14 GMT+0800 (中国标准时间)
+---@desc    对于摆放在场景中的Chr或者Spawn出的Chr, 分配给他们ConfigId, 在Chr里构造Role, 然后Role开始在游戏内容管理中注册, 成为世界的一员
 ---
 
 local RoleConfig = require('Content/Role/Config/RoleConfig')
@@ -12,17 +12,17 @@ local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
 local RoleInfoClass = require('Content/Role/RoleInfo')
 
----@class RoleClass: MdBase
+---@class RoleClass
 ---@field RoleInfo RoleInfoClass * 角色基础信息
 ---@field Avatar BP_ChrBase * 角色在游戏场景中的AvatarActor
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
 ---@field bNpc boolean
-local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
+local RoleClass = class.class 'RoleClass' {
 --[[public]]
     ctor = function()end,
-    Tick = function()end,
+    RoleTick = function()end,
     InitByAvatar = function()end,
     SwitchNewBT = function()end,
     IsFirend = function()end,
@@ -45,11 +45,13 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     bNpc = nil,
 }
 
+---@override
 function RoleClass:ctor()
     self.bNpc = false
 end
 
-function RoleClass:Tick(DeltaTime)
+---@override
+function RoleClass:RoleTick(DeltaTime)
     if self.BT then
         self.BT:Tick(DeltaTime)
         if self:GetRoleInstId() == debug_util.debugrole then

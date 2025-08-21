@@ -11,7 +11,7 @@
 ---@field tb_error table<string, number>
 local log = {}
 
-log.lua_log_head = ' ***************'
+log.lua_log_head = ' *******'
 
 ---@public 临时的通用print
 function log.log(...)

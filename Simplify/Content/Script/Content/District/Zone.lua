@@ -1,10 +1,13 @@
+
 ---
----@brief 大区
+---@brief   大区
+---@author  zys
+---@data    Sat Dec 21 2024 00:51:53 GMT+0800 (中国标准时间)
 ---
 
----@class Zone: MdBase
----@field tbSettlement table 所有城市/村庄
-local Zone = class.class"Zone" : extends 'MdBase'{
+---@class ZoneClass: MdBase
+---@field tbSettlement SettlementBaseClass[] 所有城市/村庄
+local ZoneClass = class.class"ZoneClass"{
 --[public]
     ctor = function(Name) end,
 --[[private]]
@@ -12,8 +15,15 @@ local Zone = class.class"Zone" : extends 'MdBase'{
     AddSettlement = function(Settlement) end,
     tbSettlement = {},
 }
-function Zone:ctor(Name)
+
+---@override
+function ZoneClass:ctor(Name)
 end
-function Zone:AddSettlement(Settlement)
+
+---@public
+---@param Settlement SettlementBaseClass
+function ZoneClass:AddSettlement(Settlement)
     table.insert(self.tbSettlement, Settlement)
 end
+
+return ZoneClass

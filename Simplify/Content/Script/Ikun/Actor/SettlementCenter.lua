@@ -1,55 +1,47 @@
+
 ---
----@brief 人类聚集地Actor
+---@brief   人类聚集地Actor
+---@author  zys
+---@data    Fri Aug 22 2025 00:18:54 GMT+0800 (中国标准时间)
 ---
 
-local CfgSettlement = require("Content.District.Config.Settlement")
+---@class SettlementCenter: SettlementCenter_C
+local SettlementCenter = UnLua.Class()
 
----@class SettlementCenter: AActor
-local M = UnLua.Class()
-
-function M:ReceiveBeginPlay()
+---@override
+function SettlementCenter:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
-    if net_util.is_server(self) and self.WidgetComp then
+
+    if net_util.is_server(self) then
         async_util.delay(self, 2, self.InitSettlement, self)
-    else
-        log.dev('ue revision: 没有WidgetComp')
     end
 end
 
--- function M:ReceiveEndPlay()
--- end
-
-function M:ReceiveTick(DeltaSeconds)
-    if net_util.is_client(self) and self.WidgetComp then
-        self:ToplogoFaceToPlayer()
-    end
+function SettlementCenter:ReceiveTick(DeltaSeconds)
 end
 
 ---@private [server] 初始化人类聚集地
-function M:InitSettlement()
+function SettlementCenter:InitSettlement()
     -- register settlement ue entity to content module
-    local SettlementConfig = CfgSettlement[self.SettlementId]
-    local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
-    local Kingdom = DistrictMgr:FindKingdomByCfgId(SettlementConfig.BelongKingdom) ---@type Kingdom
-    local SettlementLua = Kingdom:FindSettlementLua(self.SettlementId)
-    SettlementLua.Actor = self
-    self:SetTopMarkName(SettlementLua.SettlementName)
+    local config = MdMgr.CfgMgr:GetConfig('Settlement')[self.SettlementId] ---@type SettlementConfig
+    if not config then
+        return log.error('SettlementCenter:InitSettlement()', '无效的SettlementId', self.SettlementId)
+    end
+    local districtMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
+    local kingdom = districtMgr:FindKingdomByCfgId(config.BelongKingdomId) ---@type Kingdom
+    if not kingdom then
+        return log.error('SettlementCenter:InitSettlement()', '无效的BelongKingdomId', config.BelongKingdomId)
+    end
+    local settlement = kingdom:FindSettlementLua(self.SettlementId)
+    settlement.SettlementActor = self
+    self:ShowSettlementName(settlement.SettlementName)
 end
 
----@private [multicast] 把聚集地名称写在toplogo上
-function M:SetTopMarkName_RPC(Name)
-    self.WidgetComp:GetWidget().TxtName:SetText(Name)
+---@private
+---@param inName string
+function SettlementCenter:ShowSettlementName(inName)
+    self.BillBoardComp:S2C_SetText(inName)
+    self.BillBoardComp:S2C_ShowHealthBar(false)
 end
 
----@private [Client]
-function M:ToplogoFaceToPlayer()
-    ---@type APawn
-    local PlayerPawn = UE.UGameplayStatics.GetPlayerPawn(self, 0)
-    local Rot = UE.UKismetMathLibrary.FindLookAtRotation(self:K2_GetActorLocation(), PlayerPawn:K2_GetActorLocation())
-    Rot.Roll = 0
-    Rot.Pitch = 0
-    Rot.Yaw = Rot.Yaw - self:K2_GetActorRotation().Yaw
-    self.WidgetComp:K2_SetRelativeRotation(Rot, false, UE.FHitResult(), false)
-end
-
-return M
+return SettlementCenter

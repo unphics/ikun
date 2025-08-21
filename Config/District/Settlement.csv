@@ -1,0 +1,5 @@
+SettlementId|SettlementName|SettlementType|BelongKingdomId
+|名字|类型(城市=1, 村庄=2)|所属国家
+|||
+1|蔡徐村|2|1
+|||
