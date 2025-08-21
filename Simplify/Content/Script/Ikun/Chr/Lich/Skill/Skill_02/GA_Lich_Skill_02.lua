@@ -23,8 +23,6 @@ function GA_Lich_Skill_02:OnActivateAbility()
     AT.EventReceived:Add(self, self.OnEventReceived)
     AT:ReadyForActivation()
     self:RefUObject('AT', AT)
-
-    log.log('GA_Lich_01:OnActivateAbility()')
 end
 
 function GA_Lich_Skill_02:K2_OnEndAbility(WasCancelled)
@@ -124,7 +122,7 @@ function GA_Lich_Skill_02:OnTAValidData(Data, EventTag)
             ActorArray:Remove(Actor)
         end
     end
-    log.log(log.key.lich02boom, '爆炸波及敌人数量', tostring(ActorArray:Length()))
+    -- log.debug(log.key.lich02boom, '爆炸波及敌人数量', tostring(ActorArray:Length()))
     local SelfActor = self:GetAvatarActorFromActorInfo() ---@type BP_ChrBase
     for i = 1, ActorArray:Length() do
         local Actor = ActorArray:Get(i)
@@ -132,11 +130,11 @@ function GA_Lich_Skill_02:OnTAValidData(Data, EventTag)
         local hitRole = Actor.GetRole and Actor:GetRole()
         local isEnemy = hitRole and SelfActor:GetRole():IsEnemy(Actor:GetRole())
         if not isSelf and hitRole and isEnemy then
-            log.log(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleInstId())
+            -- log.debug(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleInstId())
             local EffectContextHandle = self:GetContextFromOwner(Data)
             Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         else
-            log.log(log.key.lich02boom, '...过滤的人', isSelf, rolelib.roleid(hitRole), isEnemy or 'nil')
+            -- log.debug(log.key.lich02boom, '...过滤的人', isSelf, rolelib.roleid(hitRole), isEnemy or 'nil')
         end
     end
     self:GASuccess()

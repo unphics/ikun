@@ -20,7 +20,7 @@ function LService_NeedSwitchBT:OnUpdate(DeltaTime)
 end
 function LService_NeedSwitchBT:DoSwitchBT(NewBTKey)
     local OldBT = self.Chr:GetRole().BT.Desc
-    log.log('LTask_SwitchBT', OldBT, NewBTKey, self.Chr:PrintRoleInfo())
+    log.info('LTask_SwitchBT', OldBT, NewBTKey, self.Chr:PrintRoleInfo())
     self.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, nil)
     self.Chr:GetRole():SwitchNewBT(NewBTKey)
 end

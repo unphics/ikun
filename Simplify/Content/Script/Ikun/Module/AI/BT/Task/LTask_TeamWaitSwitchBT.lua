@@ -35,7 +35,7 @@ function LTask_TeamWaitSwitchBT:OnUpdate(DeltaTime)
 end
 function LTask_TeamWaitSwitchBT:DoSwitchBT(NewBTKey)
     local OldBT = self.Chr:GetRole().BT.Desc
-    log.log('LTask_SwitchBT', OldBT, NewBTKey, self.Chr:PrintRoleInfo())
+    log.info('LTask_SwitchBT', OldBT, NewBTKey, self.Chr:PrintRoleInfo())
     self.Chr:GetRole():SwitchNewBT(NewBTKey)
     self.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, nil)
 end

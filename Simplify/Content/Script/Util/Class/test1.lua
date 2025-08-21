@@ -9,13 +9,13 @@ class.class "base" {
     z = 1,
     ctor = function(self)
         self.tb = {}
-        log.warn("zys class base ctor", self.x)
+        log.debug("zys class base ctor", self.x)
     end,
     test = function(self)
-        log.warn("zys class base test")
+        log.debug("zys class base test")
     end,
     base_fn = function(self)
-        log.warn("zys class base fn")
+        log.debug("zys class base fn")
     end,
     tb = {}
 }
@@ -26,10 +26,10 @@ class.class "derive" : extends "base" {
     ctor = function (self)
         self.super.ctor(self.super)
         self.tb = {}
-        log.warn("zys class derive ctor", self.x)
+        log.debug("zys class derive ctor", self.x)
     end,
     test = function(self)
-        log.warn("zys class derive test")
+        log.debug("zys class derive test")
     end,
 }
 
@@ -38,7 +38,7 @@ class.class 'grand' : extends 'derive' {
     ctor = function(self)
         self.super.ctor(self.super)
         self.tb = {}
-        log.warn("zys class derive ctor", self.x)
+        log.debug("zys class derive ctor", self.x)
     end,
     test = function(self)
         self.super.test(self.super)

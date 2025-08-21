@@ -20,4 +20,7 @@ public:
 	virtual void Init() override;
 	virtual void OnStart() override;
 	virtual void Shutdown() override;
+	virtual void OnWorldChanged(UWorld* OldWorld, UWorld* NewWorld) override;
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveOnWorldChanged(UWorld* OldWorld, UWorld* NewWorld);
 };

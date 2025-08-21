@@ -5,7 +5,7 @@
 ---@data Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
 ---
 
-log.log("debug_util Loaded")
+log.info("debug_util Loaded")
 
 ---@class debug_util
 local debug_util = {}
@@ -68,7 +68,7 @@ UECmd = function(Cmd)
         if field and type(field) == 'function' then
             xpcall(function()
                 field(table.unpack(args))
-                end, function(err)
+            end, function(err)
                 log.error("LuaCmdError:", err, '\n', debug.traceback())
             end)
         elseif field and (type(field) == 'string' or type(field) == "number" or type(field) == "boolean") then

@@ -1,5 +1,5 @@
 
-log.log("全局class1使用")
+log.info("全局class1使用")
 
 local classes = {}
 local interfaces = {}
@@ -32,7 +32,7 @@ end
 
 local function create_class(class_name, structure, super_class)
     if (classes[class_name]) then
-        log.log("class error : class \"" .. class_name .. "\" already exists.")
+        log.info("class error : class \"" .. class_name .. "\" already exists.")
     end
     local new_class = structure
     new_class.__name = class_name
@@ -114,7 +114,7 @@ local function class(class_name)
         end,
         __call = function(self, ...)
             if classes[class_name] then
-                log.log("class error : class \"" .. class_name .. "\" already exist")
+                log.info("class error : class \"" .. class_name .. "\" already exist")
             end
             local new_inst = create_class(class_name, ...)
             return new_inst

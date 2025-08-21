@@ -31,4 +31,10 @@ net_util.client_get_player_chr = function(World)
     return UE.UGameplayStatics.GetPlayerCharacter(World, 0)
 end
 
+---@public
+---@return string
+net_util.print = function(world)
+    return net_util.is_server(world) and '<Net:Server>' or '<Net:Client>'
+end
+
 return net_util

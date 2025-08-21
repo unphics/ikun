@@ -72,20 +72,20 @@ function msgbus:mclear(name)
     self.tbEvent[name] = nil
 end
 
--- log.log('msgbus测试 *******************')
+-- log.debug('msgbus测试 *******************')
 -- local a = {}
 -- function a:fn(a)
---     log.log('msgbus测试 a:fn()',a)
+--     log.debug('msgbus测试 a:fn()',a)
 -- end
 
 -- local b = {}
 -- function b:fn(a)
---     log.log('msgbus测试 b:fn()',a)
+--     log.debug('msgbus测试 b:fn()',a)
 -- end
 
 -- local c = {}
 -- function c:fn(a)
---     log.log('msgbus测试 c:fn()',a)
+--     log.debug('msgbus测试 c:fn()',a)
 -- end
 
 -- local m = msgbus.create()
@@ -94,15 +94,15 @@ end
 -- m:mreg('e1', c, c.fn)
 -- m:mtrigger('e1', 'e1')
 
--- log.log('msgbus测试 *******************')
+-- log.debug('msgbus测试 *******************')
 -- m:mreg('e2', a, a.fn)
 -- m:mreg('e2', b, b.fn)
 -- m:mtrigger('e2', 'e2')
 
--- log.log('msgbus测试 *******************')
+-- log.debug('msgbus测试 *******************')
 -- m:munreg('e1', a)
 -- m:mtrigger('e1', 'e1')
 
--- log.log('msgbus测试 *******************')
+-- log.debug('msgbus测试 *******************')
 
 return msgbus

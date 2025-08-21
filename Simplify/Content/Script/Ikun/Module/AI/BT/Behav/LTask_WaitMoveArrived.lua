@@ -43,10 +43,10 @@ function LTask_WaitMoveArrived:OnUpdate(DeltaTime)
 end
 
 function LTask_WaitMoveArrived:MoveSuceesss()
-    log.log('LTask_WaitMoveArrived:MoveSuceesss()', rolelib.roleid(self.Chr))
+    -- log.debug('LTask_WaitMoveArrived:MoveSuceesss()', rolelib.roleid(self.Chr))
     self:DoTerminate(true)
 end
 function LTask_WaitMoveArrived:MoveFailed()
-    log.log('LTask_WaitMoveArrived:MoveFailed()', rolelib.roleid(self.Chr))
+    -- log.debug('LTask_WaitMoveArrived:MoveFailed()', rolelib.roleid(self.Chr))
     self:DoTerminate(false)
 end

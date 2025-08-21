@@ -1,34 +1,36 @@
+
 ---
----@brief 对话广播界面
----@author zys
----@data Sun Apr 06 2025 10:35:40 GMT+0800 (中国标准时间)
+---@brief   对话广播界面
+---@author  zys
+---@data    Sun Apr 06 2025 10:35:40 GMT+0800 (中国标准时间)
 ---
 
 ---@class UI_TalkList: UI_TalkList_C
 ---@field TalkingRoleList table<string, TalkListItem>
 ---@field TalkingContentList TalkListItem[]
-local M = UnLua.Class()
+local UI_TalkList = UnLua.Class()
 
---function M:Initialize(Initializer)
---end
-
---function M:PreConstruct(IsDesignTime)
---end
-
-function M:Construct()
+---@override
+function UI_TalkList:Construct()
     self.TalkingRoleList = {}
     self.TalkingContentList = {}
+    self:Test()
 end
 
---function M:Tick(MyGeometry, InDeltaTime)
---end
+---@override
+function UI_TalkList:Tick(MyGeometry, InDeltaTime)
+end
 
 ---@public
-function M:PushNewContent(Name, Content, Duration, Callback)
-    if self.TalkingRoleList[Name] then
-        log.error('当前角色正在说话中, 说完前一句话才能说第二句 : ', Name, Content)
-        return false
-    end
+---@param Name string 人名
+---@param Content string 内容
+---@param Duration number 持续时间
+---@param Callback fun() 播放完成的回调
+function UI_TalkList:PushContent(Name, Content, Duration, Callback)
+    -- if self.TalkingRoleList[Name] then
+    --     log.error('当前角色正在说话中, 说完前一句话才能说第二句 : ', Name, Content)
+    --     return false
+    -- end
     ---@class TalkListItem
     local Item = {
         Name = Name,
@@ -45,13 +47,13 @@ function M:PushNewContent(Name, Content, Duration, Callback)
 end
 
 ---@private
-function M:UpdateTalkList()
+function UI_TalkList:UpdateTalkList()
     ui_util.set_list_items(self.TalkList, self.TalkingContentList)
 end
 
 ---@private [ItemCall]
 ---@param ItemData TalkListItem
-function M:OnItemTalkFinsih(ItemData)
+function UI_TalkList:OnItemTalkFinsih(ItemData)
     self.TalkingRoleList[ItemData.Name] = nil
     local Index = -1
     for i, ele in ipairs(self.TalkingContentList) do
@@ -64,4 +66,19 @@ function M:OnItemTalkFinsih(ItemData)
     self:UpdateTalkList()
 end
 
-return M
+---@private
+function UI_TalkList:Test()
+    self.test_idx = 1
+    local talkConfig = MdMgr.CfgMgr:GetConfig('Talk')
+    local len = table_util.map_len(talkConfig)
+    async_util.timer(self, function()
+        local data = talkConfig[32000 + self.test_idx]
+        self.test_idx = self.test_idx + 1
+        if self.test_idx > len then
+            self.test_idx = 1
+        end
+        self:PushContent(data.TalkerName, data.TalkContent, 8)
+    end, 5, true)
+end
+
+return UI_TalkList

@@ -27,7 +27,7 @@ end
 function TeamSupportClass:PublishSupportReq(ReqRole)
     if ReqRole then
         if self.dpSupportPair:dfind(ReqRole:GetRoleInstId()) then
-            log.log(log.key.support, rolelib.roleid(ReqRole)..'再次请求支援')  
+            -- log.debug(log.key.support, rolelib.roleid(ReqRole)..'再次请求支援')  
             return
         end
         ---@class SupportInfo

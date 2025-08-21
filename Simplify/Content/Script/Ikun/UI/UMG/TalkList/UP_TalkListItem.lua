@@ -33,7 +33,7 @@ function M:OnListItemObjectSet(InItem)
 end
 
 function M:ThisTalkEnd()
-    self.ItemData.OwnerUI:OnTalkItemFinish(self.ItemData)
+    self.ItemData.OwnerUI:OnItemTalkFinsih(self.ItemData)
 end
 
 return M

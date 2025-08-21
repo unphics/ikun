@@ -20,6 +20,7 @@ function GameUIMgr:Construct()
 
     self:ShowUI(ui_util.uidef.MainHud)
     self:ShowUI(ui_util.uidef.BreathePointer)
+    -- self:ShowUI(ui_util.uidef.TalkList)
 end
 
 --function GameUIMgr:Tick(MyGeometry, InDeltaTime)
@@ -27,7 +28,7 @@ end
 
 ---@public
 function GameUIMgr:ShowUI(UIDef)
-    log.log('[GameUIMgr:ShowUI] ', UIDef)
+    log.info('[GameUIMgr:ShowUI] ', UIDef)
     local UI = self.tbUIWidget[UIDef]
     if UI then
         UI:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
@@ -50,7 +51,7 @@ end
 
 ---@public
 function GameUIMgr:HideUI(UIDef)
-    log.log('[GameUIMgr:HideUI] ', UIDef)
+    log.info('[GameUIMgr:HideUI] ', UIDef)
     if not UIDef then
         return
     end
@@ -60,7 +61,7 @@ end
 
 ---@public
 function GameUIMgr:DestoryUI(UIDef)
-    log.log('[GameUIMgr:DestoryUI]', UIDef)
+    log.info('[GameUIMgr:DestoryUI]', UIDef)
     local UI = self.tbUIWidget[UIDef]
     if UI then
         UI:RemoveFromParent()

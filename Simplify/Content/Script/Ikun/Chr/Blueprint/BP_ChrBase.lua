@@ -1,7 +1,7 @@
 ---
----@brief
----@author zys
----@data Sun Mar 02 2025 02:19:44 GMT+0800 (中国标准时间)
+---@brief   角色(chr)的基类
+---@author  zys
+---@data    Sun Mar 02 2025 02:19:44 GMT+0800 (中国标准时间)
 ---
 
 ---@class BP_ChrBase: BP_ChrBase_C
@@ -14,7 +14,7 @@ local BP_ChrBase = UnLua.Class()
 -- function BP_ChrBase:UserConstructionScript()
 -- end
 
----@protected [ImplBP]
+---@override [ImplBP]
 function BP_ChrBase:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     self.MsgBusComp:PrepareInitChrDataEvent()
@@ -25,7 +25,7 @@ end
 -- function BP_ChrBase:ReceiveEndPlay()
 -- end
 
----@protected [ImplBP]
+---@override [ImplBP]
 function BP_ChrBase:ReceiveTick(DeltaSeconds)
     self.Overridden.ReceiveTick(self, DeltaSeconds)
     if not self.bChrDead and net_util.is_server(self) then
@@ -45,7 +45,7 @@ end
 -- function BP_ChrBase:ReceiveActorEndOverlap(OtherActor)
 -- end
 
----@public [Server]
+---@public [Server] [Tool] [Pure] 获取当前Chr的Role
 ---@return RoleClass | nil
 function BP_ChrBase:GetRole()
     if not obj_util.is_valid(self) then
@@ -54,14 +54,14 @@ function BP_ChrBase:GetRole()
     return self.RoleComp.Role
 end
 
----@public [Server]
+---@public [Server] [Tool] [Pure] [Debug] 打印当前角色的一些信息
 ---@return string
 function BP_ChrBase:PrintRoleInfo()
     local Role = self:GetRole()
     return ' [Actor='..obj_util.dispname(self)..', RoleName='..Role:GetRoleDispName()..', RoleId='..Role:GetRoleInstId()..'] '
 end
 
----@private
+---@private 角色在数据初始化的时候给自己赋予所有的技能
 function BP_ChrBase:OnChrInitData()
     if net_util.is_client(self) then
         return
@@ -69,8 +69,8 @@ function BP_ChrBase:OnChrInitData()
     local ActiveAbilities = self.ActiveAbilities:ToTable()
     for _, AbilityClass in ipairs(ActiveAbilities) do
         local Handle = self.ASC:K2_GiveAbility(AbilityClass, 0, 0)
-        if Handle.Handle == -1 then
-            log.error('Failed to Give Ability')
+        if not Handle or Handle.Handle == -1 then
+            log.error('BP_ChrBase:OnChrInitData()', 'Failed to Give Ability')
         end
     end
 end
@@ -85,4 +85,21 @@ function BP_ChrBase:ChrBeginDeath()
         end)
     end
 end
+
+---@public [Input]
+function BP_ChrBase:MoveForwardBack(Fwd, Value)
+    local rot = self:GetControlRotation()
+    local yawRot = UE.FRotator(0, rot.Yaw, 0)
+    local fornt = yawRot:GetForwardVector()
+    self:AddMovementInput(fornt, Value, false)    
+end
+
+---@public [Input]
+function BP_ChrBase:MoveRightLeft(Fwd, Value)
+    local rot = self:GetControlRotation()
+    local yawRot = UE.FRotator(0, rot.Yaw, 0)
+    local right = yawRot:GetRightVector()
+    self:AddMovementInput(right, Value, false)
+end
+
 return BP_ChrBase

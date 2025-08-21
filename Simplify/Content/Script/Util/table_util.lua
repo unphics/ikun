@@ -16,4 +16,15 @@ table_util.shallow_copy = function(Table)
     return tb
 end
 
+---@public 获取字典的长度
+---@param Table table
+---@return number
+table_util.map_len = function(Table)
+    local len = 0
+    for _ in pairs(Table) do
+        len = len + 1
+    end
+    return len
+end
+
 return table_util

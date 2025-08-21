@@ -3,7 +3,7 @@
 ---
 ---
 
----@type TA_IkunBase_C
+---@class TA_IkunBase: TA_IkunBase_C
 local M = UnLua.Class()
 
 -- function M:Initialize(Initializer)

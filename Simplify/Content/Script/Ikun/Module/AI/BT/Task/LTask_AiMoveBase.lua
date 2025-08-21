@@ -71,7 +71,7 @@ function LTask_AiMoveBase:OnInit()
     local Distance = UE.UKismetMathLibrary.Vector_Distance(SelfChrAgentLoc, TargetLoc)
     if Distance < self.AccectableRadius then
         self:DoTerminate(true)
-        return log.warn('AiMoveBase: Already Reached Target Initially !')
+        return log.debug('AiMoveBase: Already Reached Target Initially !')
     end
 
     ---@step 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
@@ -101,7 +101,7 @@ function LTask_AiMoveBase:OnUpdate(DeltaTime)
     ---@step 判断跑完了最后一个寻路段
     if self.NavMoveData:IsFinish() then
         self:DoTerminate(true)
-        return log.log('AiMoveBase: Ai Move Reached !')
+        return -- log.debug('AiMoveBase: Ai Move Reached !')
     end
     local SelfChrAgentLoc = self.Chr:GetNavAgentLocation()
     ---@todo About First Point

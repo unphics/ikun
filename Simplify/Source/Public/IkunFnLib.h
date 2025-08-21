@@ -26,6 +26,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void BindAction(UEnhancedInputComponent* EnhancedInputComp, const UInputAction* Action, ETriggerEvent TriggerEvent, UObject* Object, FName FunctionName);
 	
+	UFUNCTION(BlueprintCallable)
+	static int GetWorldType(UWorld* World);
+
 #pragma region GAS
 	UFUNCTION(BlueprintCallable)
 	static FGameplayTag RequestGameplayTag(FName TagName);
@@ -35,7 +38,11 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	static void AddTagToContainer(FGameplayTagContainer& Container, FGameplayTag& Tag);
-	
+
+	UFUNCTION(BlueprintCallable)
+	static bool HasLooseGameplayTags(AActor* Actor, const FGameplayTagContainer& GameplayTags);
+#pragma endregion GAS
+
 	UFUNCTION(BlueprintCallable)
 	static AActor* SpawnActor(UWorld* World, UClass* Class, FTransform Transform, const FSpawnParamters& Param);
 

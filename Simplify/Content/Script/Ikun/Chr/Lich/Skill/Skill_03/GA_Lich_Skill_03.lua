@@ -54,13 +54,13 @@ function GA_Lich_Skill_03:OnEventReceived(EventTag, EventData)
 end
 
 function GA_Lich_Skill_03:TimerLoopCall()
-    if not obj_util.is_valid(self) then
+    local healTarget = self:GetHealTarget()
+    if not obj_util.is_valid(self) or not obj_util.is_valid(healTarget) then
         async_util.clear_timer(self.AvatarLua, self.TimerHandle)
         self.TimerHandle = nil
         return
     end
     self.HealedTime = self.HealedTime + self.HealInterval
-    local healTarget = self:GetHealTarget()
     local perHealth = gas_util.get_health_per(healTarget)
     if perHealth > 0.75 then
         self.TimerHandle = nil

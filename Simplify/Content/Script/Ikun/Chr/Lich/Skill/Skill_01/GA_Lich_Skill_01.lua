@@ -1,3 +1,4 @@
+
 ---
 ---@brief Lich一技能, 近战
 ---@author zys
@@ -20,8 +21,6 @@ function GA_Lich_Skill_01:OnActivateAbility()
     AT.EventReceived:Add(self, self.OnEventReceived)
     AT:ReadyForActivation()
     self:RefUObject('AT', AT)
-
-    log.log('GA_Lich_01:OnActivateAbility()')
 end
 
 function GA_Lich_Skill_01:OnEventReceived(EventTag, EventData)
