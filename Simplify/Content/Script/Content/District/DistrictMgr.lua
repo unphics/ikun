@@ -3,6 +3,7 @@
 ---@brief   一个星球的行政区划管理器
 ---@author  zys
 ---@data    Sat Dec 21 2024 00:51:53 GMT+0800 (中国标准时间)
+---@desc    行政区划管理器包含此星球所有国家(最大基本单位)
 ---
 
 require("Content/District/Kingdom")
@@ -26,14 +27,13 @@ local SettlementType = require('Content/District/Settlements/SettlemengType')
 local DistrictMgr = class.class"DistrictMgr" : extends "MdBase" {
 --[[public]]
     ctor = function() end,
-    Init = function() end,
-    Tick = function()end,
-    FindKingdomByInstId = function() end,
+    Tick = function(DeltaTime)end,
+    FindKingdomByInstId = function(KingdomInstId)end,
     OwnerStar = nil,
 --[[private]]
     InitAllKingdom = function()end,
     InitAllSettlement = function()end,
-    CreateSettlementByConfig = function()end,
+    CreateSettlementByConfig = function(SettlementConfig)end,
     tbKingdom = nil,
 }
 
@@ -107,13 +107,13 @@ function DistrictMgr:InitAllSettlement()
 end
 
 ---@private 通过配置创建村庄/城市
----@param Config SettlementConfig
+---@param SettlementConfig SettlementConfig
 ---@return SettlementBaseClass?
-function DistrictMgr:CreateSettlementByConfig(Config)
-    if Config.SettlementType == SettlementType.City then
-        return class.new "CityClass" (Config.SettlementName)
-    elseif Config.SettlementType == SettlementType.Village then
-        return class.new "VillageClass" (Config.SettlementName)
+function DistrictMgr:CreateSettlementByConfig(SettlementConfig)
+    if SettlementConfig.SettlementType == SettlementType.City then
+        return class.new "CityClass" (SettlementConfig.SettlementName)
+    elseif SettlementConfig.SettlementType == SettlementType.Village then
+        return class.new "VillageClass" (SettlementConfig.SettlementName)
     else
         log.error('[DistrictMgr]:CreateSettlementByConfig Undefined SettlementType')
     end

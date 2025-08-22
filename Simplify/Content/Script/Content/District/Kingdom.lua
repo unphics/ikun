@@ -3,6 +3,8 @@
 ---@brief   国家
 ---@author  zys
 ---@data    Sat Dec 21 2024 00:51:53 GMT+0800 (中国标准时间)
+---@desc    国家有很多大区行省, Kingdom包含所有挂靠在此Kingdom的Role, 负责执行他们的Tick(暂时), 凡是没有挂靠过其他国家的Role
+---             则默认籍贯为第一次挂靠的Kingdom(此国家永久记录). 
 ---
 
 -- 类注册
@@ -23,9 +25,9 @@ local Kingdom = class.class"Kingdom" {
     ctor = function() end,
     Tick = function() end,
     AddSettlement = function(Settlement) end,
-    FindSettlementLua = function(Id) end,
-    AddKingdomMember = function()end,
-    CalcRoleKingdomFriendShip = function()end,
+    FindSettlementLua = function(SettlementId) end,
+    AddKingdomMember = function(inRole)end,
+    CalcRoleKingdomFriendShip = function(rhsRole)end,
     KingdomInstId = nil,
     KingdomConfig = nil,
     KingdomName = nil,
@@ -94,9 +96,9 @@ end
 
 ---@public 友谊度判断
 ---@version 0.1.0 简单判断国家相同则+5, 不同则-5
----@param Role RoleClass
-function Kingdom:CalcRoleKingdomFriendShip(Role)
-    if Role:GetBelongKingdom().KingdomInstId ~= self.KingdomInstId then
+---@param rhsRole RoleClass
+function Kingdom:CalcRoleKingdomFriendShip(rhsRole)
+    if rhsRole:GetBelongKingdom().KingdomInstId ~= self.KingdomInstId then
         return -5
     else
         return 5
