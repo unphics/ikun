@@ -66,7 +66,13 @@ end
 
 ---@private
 function GazeComp:InterInteractInput()
-    EnhInput.AddIMC(EnhInput.IMCDef.IMC_Interact)
+    if net_util.is_server(self) then
+        return
+    end
+    ---@todo 这个延迟也不是个事呀
+    async_util.delay(self, 0.5, function()
+        EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Interact))
+    end)
 end
 
 return GazeComp
