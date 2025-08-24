@@ -41,4 +41,18 @@ ui_util.unrelease_mouse = function()
     UE.UWidgetBlueprintLibrary.SetInputMode_GameOnly(PC, true)
 end
 
+---@public
+---@param World UObject
+ui_util.show_mouse = function(World)
+    local pc = UE.UGameplayStatics.GetPlayerController(World, 0)
+    pc.bShowMouseCursor = true
+end
+
+---@public
+---@param World UObject
+ui_util.hide_mouse = function(World)
+    local pc = UE.UGameplayStatics.GetPlayerController(World, 0)
+    pc.bShowMouseCursor = false
+end
+
 return ui_util

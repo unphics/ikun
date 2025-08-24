@@ -16,6 +16,7 @@ local EnhInput = {}
 
 EnhInput.IMCDef = {
     IMC_Base = '/Game/Ikun/Blueprint/Input/IMC/IMC_Base.IMC_Base',
+    IMC_Interact = '/Game/Ikun/Blueprint/Input/IMC/IMC_Interact.IMC_Interact',
 }
 
 ---@enum IADef
@@ -23,6 +24,8 @@ local IADef = {
     IA_Move = '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move',
     IA_Look = '/Game/Ikun/Blueprint/Input/IA/IA_Look.IA_Look',
     IA_MouseLeftDown = '/Game/Ikun/Blueprint/Input/IA/IA_MouseLeftDown.IA_MouseLeftDown',
+    IA_Interact = '/Game/Ikun/Blueprint/Input/IA/IA_Interact.IA_Interact',
+    IA_TalkNext = '/Game/Ikun/Blueprint/Input/IA/IA_TalkNext.IA_TalkNext',
 }
 EnhInput.IADef = IADef
 
