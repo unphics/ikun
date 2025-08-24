@@ -56,12 +56,12 @@ function BP_IkunPC:InitInputSystem()
     EnhInput.InitByPlayerController(self)
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
 
-    InputMgr.ObtainInputPower(self)
-    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered, self.OnMoveInput)
-    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered, self.OnLookInput)
-    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, self.OnMouseLeftStarted)
-    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftCompleted)
-    InputMgr.RegisterInputAction(self, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
+    local inputPower = InputMgr.ObtainInputPower(self)
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered, self.OnMoveInput)
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered, self.OnLookInput)
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, self.OnMouseLeftStarted)
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftCompleted)
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
 end
 EnhInput.BindActions(BP_IkunPC)
 

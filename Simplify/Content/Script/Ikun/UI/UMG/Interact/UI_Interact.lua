@@ -31,7 +31,7 @@ end
 --end
 
 function UI_Interact:OnShow()
-    -- InputMgr.BorrowInputPower(self)
+    local ipInteract = InputMgr.BorrowInputPower(self)
 
     self:ShowSelectList(false)
     self.TxtInteractName:SetText('')
