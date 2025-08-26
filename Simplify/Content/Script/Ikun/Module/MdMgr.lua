@@ -13,6 +13,7 @@ require('Content/Role/RoleMgr')
 require('Content/Team/TeamMgr')
 require('Content/Task/TaskMgr')
 require('Ikun/Module/Config/ConfigMgr')
+require('Content/Quest/QuestMgr')
 
 ---@class MdMgr
 ---@field Cosmos Cosmos 游戏宇宙
@@ -20,6 +21,7 @@ require('Ikun/Module/Config/ConfigMgr')
 ---@field TimeMgr TimeMgr
 ---@field TeamMgr TeamMgr
 ---@field CfgMgr ConfigMgr
+---@field QuestMgr QuestMgr
 local MdMgr = class.class "MdMgr" : extends "MdBase" {
 --[[public]]
     ctor = function()end,
@@ -36,12 +38,14 @@ function MdMgr:Init()
     self.TimeMgr = class.new 'TimeMgr'()
     self.RoleMgr = class.new 'RoleMgrClass'()
     self.TeamMgr = class.new 'TeamMgr' ()
+    self.QuestMgr = class.new 'QuestMgr' ()
 
     self.CfgMgr:Init()
     self.Cosmos:Init()
     self.TimeMgr:Init()
     self.RoleMgr:Init()
     self.TeamMgr:Init()
+    self.QuestMgr:Init()
 end
 ---@private [override]
 function MdMgr:Tick(DeltaTime)
@@ -49,4 +53,5 @@ function MdMgr:Tick(DeltaTime)
     self.TimeMgr:Tick(DeltaTime)
     -- self.RoleMgr:Tick(DeltaTime)
     self.TeamMgr:Tick(DeltaTime)
+    self.QuestMgr:Tick(DeltaTime)
 end
