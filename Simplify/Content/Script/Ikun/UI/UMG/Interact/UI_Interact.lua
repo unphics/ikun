@@ -38,17 +38,18 @@ end
 
 ---@override
 function UI_Interact:OnShow()
-    local powerGaze = InputMgr.BorrowInputPower(self)
-    InputMgr.RegisterInputAction(powerGaze, EnhInput.IADef.IA_Interact, EnhInput.TriggerEvent.Started, self.OnHudInteract)
 
+    
     self:ShowSelectList(false)
     self.TxtInteractName:SetText('')
     self.CvsTalk:SetVisibility(UE.ESlateVisibility.Hidden)
-
-    do -- test
-        -- self:InitInteract('qqq', 1001)
-    end
 end
+
+---@override
+function UI_Interact:OnHide()
+
+end
+
 
 ---@public
 function UI_Interact:InitInteract(Name, InteractId, FinishedCallback)

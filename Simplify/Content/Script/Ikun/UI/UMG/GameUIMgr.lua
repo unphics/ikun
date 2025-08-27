@@ -21,7 +21,7 @@ function GameUIMgr:Construct()
     self:ShowUI(ui_util.uidef.MainHud)
     self:ShowUI(ui_util.uidef.BreathePointer)
     -- self:ShowUI(ui_util.uidef.TalkList)
-    self:ShowUI(ui_util.uidef.Interact)
+    -- self:ShowUI(ui_util.uidef.Interact)
     self:ShowUI(ui_util.uidef.Gaze)
 end
 

@@ -73,33 +73,7 @@ function GazeComp:C2S_ReqInteractGaze_RPC()
     ---@todo check
     ---@todo 如果是物体就执行拾取等, 如果是人就开始对话, 此时默认是人
     self:GetOwner().ChatComp:BeginChat(self.Rep_InteractActor)
-end
-
-
-
-
-
----@private 服务端对交互请求的回复
-function GazeComp:S2C_RspInteract_RPC()
-    ---@todo 客户端没有Role
-    if not net_util.is_server(self) then
-        return
-    end
-    local ui = ui_util.uimgr:GetUIIfVisible(ui_util.uidef.Interact) ---@type UI_Interact
-    if ui then
-        if obj_util.is_valid(self.Rep_InteractActor) then
-            local name = nil
-            local role = rolelib.role(self.Rep_InteractActor)
-            if role then
-                name = role:GetRoleDispName()
-            else
-                name = obj_util.dispname(self.Rep_InteractActor)
-            end
-            ui:InitInteract(name, 41001)
-        else
-            ui:InitInteract('', nil)
-        end
-    end
+    self:C2S_ReqInteractBegin()
 end
 
 ---@public 进入交互状态
