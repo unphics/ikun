@@ -1,6 +1,6 @@
 
 ---
----@brief   凝视组件
+---@brief   交互组件
 ---@author  zys
 ---@data    Sat Aug 23 2025 11:23:32 GMT+0800 (中国标准时间)
 ---
@@ -20,7 +20,7 @@ function GazeComp:ReceiveBeginPlay()
     self.GazeDistanceConst = MdMgr.CfgMgr:GetGlobalConst('GazeDistance')
     self.CurGazeCountTime = 0
 
-    self:InterInteractInput()
+    self:InitInteractInput()
 end
 
 ---@override
@@ -28,7 +28,7 @@ function GazeComp:ReceiveTick(DeltaSeconds)
     self:TayGazing(DeltaSeconds)
 end
 
----@private
+---@private [Gaze] 尝试交互一个物体
 ---@param DeltaTime number
 function GazeComp:TayGazing(DeltaTime)
     if net_util.is_server(self) then
@@ -50,6 +50,7 @@ function GazeComp:TayGazing(DeltaTime)
             false, ignores, UE.EDrawDebugTrace.None,
             hitResult, true, UE.FLinearColor(1, 0, 0),
             UE.FLinearColor(0, 1, 0), 1)
+    self:C2S_ReqInteract()
     if result then
         local actor = hitResult.HitObjectHandle.Actor
         if obj_util.is_valid(actor) then
@@ -61,11 +62,48 @@ end
 ---@private 客户端请求与该Actor交互
 ---@param InteractActor AActor
 function GazeComp:C2S_ReqInteract_RPC(InteractActor)
-
+    if self.bInteracting then
+        return
+    end
+    self.Rep_InteractActor = InteractActor
+    self:S2C_RspInteract()
 end
 
----@private
-function GazeComp:InterInteractInput()
+---@private 服务端对交互请求的回复
+function GazeComp:S2C_RspInteract_RPC()
+    ---@todo 客户端没有Role
+    if not net_util.is_server(self) then
+        return
+    end
+    local ui = ui_util.uimgr:GetUIIfVisible(ui_util.uidef.Interact) ---@type UI_Interact
+    if ui then
+        if obj_util.is_valid(self.Rep_InteractActor) then
+            local name = nil
+            local role = rolelib.role(self.Rep_InteractActor)
+            if role then
+                name = role:GetRoleDispName()
+            else
+                name = obj_util.dispname(self.Rep_InteractActor)
+            end
+            ui:InitInteract(name, 41001)
+        else
+            ui:InitInteract('', nil)
+        end
+    end
+end
+
+---@public 进入交互状态
+function GazeComp:C2S_ReqInteractBegin_RPC()
+    self.bInteracting = true
+end
+
+---@public 退出交互状态
+function GazeComp:C2S_ReqInteractEnd_RPC()
+    self.bInteracting = false
+end
+
+---@private [IMC]
+function GazeComp:InitInteractInput()
     if net_util.is_server(self) then
         return
     end

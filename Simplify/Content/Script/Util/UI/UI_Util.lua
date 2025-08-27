@@ -7,6 +7,7 @@
 
 ---@class ui_util
 ---@field uidef UIDef
+---@field uimgr GameUIMgr
 local ui_util = {}
 
 ui_util.uidef = require('Ikun/UI/UMG/GameUIDef')

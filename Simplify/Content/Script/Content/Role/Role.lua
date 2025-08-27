@@ -18,6 +18,7 @@ local RoleInfoClass = require('Content/Role/RoleInfo')
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
+---@field QuestGiver QuestGiverClass
 ---@field bNpc boolean
 local RoleClass = class.class 'RoleClass' {
 --[[public]]

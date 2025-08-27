@@ -5,8 +5,12 @@
 ---@data    Tue Aug 26 2025 19:41:08 GMT+0800 (中国标准时间)
 ---
 
+require('Content/Quest/QuestStep')
+require('Content/Quest/Quest')
+require('Content/Quest/QuestGiver')
+
 ---@class QuestMgr : MdBase
-local QuestMgr = class.class 'QuestMgr' : extend 'MdBase' {
+local QuestMgr = class.class 'QuestMgr' : extends 'MdBase' {
 --[[public]]
     ctor = function()end,
     Init = function()end,

@@ -46,7 +46,7 @@ function UI_Interact:OnShow()
     self.CvsTalk:SetVisibility(UE.ESlateVisibility.Hidden)
 
     do -- test
-        self:InitInteract('qqq', 1001)
+        -- self:InitInteract('qqq', 1001)
     end
 end
 
@@ -118,7 +118,7 @@ end
 function UI_Interact:OnBtnTalkNextClicked()
     local data = self:GetInteractData(self.CurInteractId)
     if data then
-        if data.NextId == 1000 then
+        if data.NextId == 40000 then
             self:EndInteract()
         else
             self.CurInteractId = data.NextId
@@ -131,6 +131,9 @@ end
 
 ---@private [Op] 当玩家按下想交互凝视目标时, 开始交互
 function UI_Interact:OnHudInteract()
+    if not self.CurInteractId then
+        return
+    end
     self:StartInteract()
     self:NextInteract()
 end
@@ -138,6 +141,8 @@ end
 ---@private 开始对话交互
 function UI_Interact:StartInteract()
     -- ui_util.show_mouse(self)
+    local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
+    pc.InteractComp:C2S_ReqInteractBegin()
     self:SetFocus()
     self:SetKeyboardFocus()
     self.PowerInteract = InputMgr.ObtainInputPower(self)
@@ -152,6 +157,8 @@ end
 ---@private 结束对话交互
 function UI_Interact:EndInteract()
     -- ui_util.hide_mouse(self)
+    local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
+    pc.InteractComp:C2S_ReqInteractEnd()
     InputMgr.UnregisterInputAction(self.PowerInteract)
     InputMgr.ReliquishInputPower(self.PowerInteract)
     self.CvsTalk:SetVisibility(UE.ESlateVisibility.Hidden)
