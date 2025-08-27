@@ -20,7 +20,7 @@ require('Content/Quest/QuestMgr')
 ---@field RoleMgr RoleMgrClass 角色管理器
 ---@field TimeMgr TimeMgr
 ---@field TeamMgr TeamMgr
----@field CfgMgr ConfigMgr
+---@field ConfigMgr ConfigMgr
 ---@field QuestMgr QuestMgr
 local MdMgr = class.class "MdMgr" : extends "MdBase" {
 --[[public]]
@@ -33,14 +33,14 @@ local MdMgr = class.class "MdMgr" : extends "MdBase" {
 function MdMgr:Init()
     class.MdBase.Init(self)
 
-    self.CfgMgr = class.new 'ConfigMgr'()
+    self.ConfigMgr = class.new 'ConfigMgr'()
     self.Cosmos = class.new "Cosmos"()
     self.TimeMgr = class.new 'TimeMgr'()
     self.RoleMgr = class.new 'RoleMgrClass'()
     self.TeamMgr = class.new 'TeamMgr' ()
     self.QuestMgr = class.new 'QuestMgr' ()
 
-    self.CfgMgr:Init()
+    self.ConfigMgr:Init()
     self.Cosmos:Init()
     self.TimeMgr:Init()
     self.RoleMgr:Init()

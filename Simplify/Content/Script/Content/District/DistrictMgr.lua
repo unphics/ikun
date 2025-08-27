@@ -79,7 +79,7 @@ end
 
 ---@private 初始化此行星所有国家
 function DistrictMgr:InitAllKingdom()
-    local kingdomCfg = MdMgr.CfgMgr:GetConfig('Kingdom') ---@type KingdomConfig[]
+    local kingdomCfg = MdMgr.ConfigMgr:GetConfig('Kingdom') ---@type KingdomConfig[]
     for id, kingdom in pairs(kingdomCfg) do
         local instId = self.OwnerStar.StarId * 100 + id
         local kingdomInst = class.new "Kingdom" (instId, kingdom)
@@ -89,7 +89,7 @@ end
 
 ---@public 初始化所有人类聚集地
 function DistrictMgr:InitAllSettlement()
-    local settlementCfg = MdMgr.CfgMgr:GetConfig('Settlement') ---@type SettlementConfig[]
+    local settlementCfg = MdMgr.ConfigMgr:GetConfig('Settlement') ---@type SettlementConfig[]
     for _, settlement in pairs(settlementCfg) do
         local settlementInst = self:CreateSettlementByConfig(settlement)
         if not settlementInst then

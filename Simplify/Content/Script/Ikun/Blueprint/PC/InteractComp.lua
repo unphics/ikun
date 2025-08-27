@@ -16,8 +16,8 @@ local GazeComp = UnLua.Class()
 
 ---@override
 function GazeComp:ReceiveBeginPlay()
-    self.GazeIntervalConst = MdMgr.CfgMgr:GetGlobalConst('GazeInterval')
-    self.GazeDistanceConst = MdMgr.CfgMgr:GetGlobalConst('GazeDistance')
+    self.GazeIntervalConst = MdMgr.ConfigMgr:GetGlobalConst('GazeInterval')
+    self.GazeDistanceConst = MdMgr.ConfigMgr:GetGlobalConst('GazeDistance')
     self.CurGazeCountTime = 0
 end
 

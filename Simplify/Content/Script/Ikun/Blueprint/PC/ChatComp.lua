@@ -19,7 +19,7 @@ local BP_ChatComp = UnLua.Class()
 
 ---@public [Server]
 function BP_ChatComp:BeginChat()
-    local ChatId = 
+    local ChatId = 41001
 end
 
 return BP_ChatComp

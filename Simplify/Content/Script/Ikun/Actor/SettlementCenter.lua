@@ -23,7 +23,7 @@ end
 ---@private [server] 初始化人类聚集地
 function SettlementCenter:InitSettlement()
     -- register settlement ue entity to content module
-    local config = MdMgr.CfgMgr:GetConfig('Settlement')[self.SettlementId] ---@type SettlementConfig
+    local config = MdMgr.ConfigMgr:GetConfig('Settlement')[self.SettlementId] ---@type SettlementConfig
     if not config then
         return log.error('SettlementCenter:InitSettlement()', '无效的SettlementId', self.SettlementId)
     end

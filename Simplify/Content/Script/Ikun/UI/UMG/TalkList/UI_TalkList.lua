@@ -69,7 +69,7 @@ end
 ---@private
 function UI_TalkList:Test()
     self.test_idx = 1
-    local talkConfig = MdMgr.CfgMgr:GetConfig('Talk')
+    local talkConfig = MdMgr.ConfigMgr:GetConfig('Talk')
     local len = table_util.map_len(talkConfig)
     async_util.timer(self, function()
         ---@todo 此处不该直接硬编码47000
