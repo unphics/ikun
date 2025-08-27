@@ -40,5 +40,9 @@
         用来补充配置表无法覆盖的复杂逻辑
         例如:战斗过程要求/机关迷题/剧情演出
         
-表结构设计
-    任务表:任务id,解锁条件
+功能:
+    发布任务: 负责发布任务的Npc身上的QuestGiver显示头顶问号(如有),提供与任务系统的交互入口(对话等)
+        字段: AvailableQuestList(该Npc能发放的任务), TurnInQuestList(该Npc能交互的任务)
+        流程: 1.玩家交互Npc后QuestSystem->GetAvailableQuestList(NpcId, RoleId), 过滤掉不满足条件/已完成的任务
+              2.QuestSystem.AcceptQuest(RoleId, QuestId) -> 在Role中新建一个QuestData -> 更新任务状态为InProgress
+            **3.交任务时QuestSystem.CanCompleteQuest, 满足条件则发放奖励并标注任务Completed
