@@ -9,6 +9,7 @@ local UIDef = {
     BreathePointer = '/Game/Ikun/UI/UMG/BreathePointer/UI_BreathePointer.UI_BreathePointer_C',
     TalkList = '/Game/Ikun/UI/UMG/TalkList/UI_TalkList.UI_TalkList_C',
     Interact = '/Game/Ikun/UI/UMG/Interact/UI_Interact.UI_Interact_C',
+    Gaze = '/Game/Ikun/UI/UMG/Gaze/UI_Gaze.UI_Gaze_C',
 }
 
 return UIDef

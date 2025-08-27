@@ -188,7 +188,7 @@ end
 ---@private [Pure] [Tool] 获取该交互Id的交互配置
 ---@return InteractConfig
 function UI_Interact:GetInteractData(InteractId)
-    local config = MdMgr.CfgMgr:GetConfig('Interact')
+    local config = MdMgr.CfgMgr:GetConfig('Chat')
     local data = config[InteractId]
     return data
 end

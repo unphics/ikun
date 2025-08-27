@@ -19,18 +19,16 @@ function GazeComp:ReceiveBeginPlay()
     self.GazeIntervalConst = MdMgr.CfgMgr:GetGlobalConst('GazeInterval')
     self.GazeDistanceConst = MdMgr.CfgMgr:GetGlobalConst('GazeDistance')
     self.CurGazeCountTime = 0
-
-    self:InitInteractInput()
 end
 
 ---@override
 function GazeComp:ReceiveTick(DeltaSeconds)
-    self:TayGazing(DeltaSeconds)
+    self:Gazing(DeltaSeconds)
 end
 
----@private [Gaze] 尝试交互一个物体
+---@private [Gaze] [Client] 注视物体
 ---@param DeltaTime number
-function GazeComp:TayGazing(DeltaTime)
+function GazeComp:Gazing(DeltaTime)
     if net_util.is_server(self) then
         return
     end
@@ -50,24 +48,36 @@ function GazeComp:TayGazing(DeltaTime)
             false, ignores, UE.EDrawDebugTrace.None,
             hitResult, true, UE.FLinearColor(1, 0, 0),
             UE.FLinearColor(0, 1, 0), 1)
-    self:C2S_ReqInteract()
-    if result then
-        local actor = hitResult.HitObjectHandle.Actor
-        if obj_util.is_valid(actor) then
-            self:C2S_ReqInteract(actor)
+    self:C2S_ReqUpdateGazing(hitResult.HitObjectHandle.Actor)
+end
+
+---@private [Gaze] [Server] 客户端请求更新当前注视的物体
+---@todo 增加Check
+---@param InteractActor AActor
+function GazeComp:C2S_ReqUpdateGazing_RPC(InteractActor)
+    if self.bInteracting then
+        return
+    end
+    self.Rep_GazeName = ''
+    if obj_util.is_valid(InteractActor) then
+        self.Rep_InteractActor = InteractActor
+        local role = rolelib.role(self.Rep_InteractActor)
+        if role then
+            self.Rep_GazeName = role:GetRoleDispName()
         end
     end
 end
 
----@private 客户端请求与该Actor交互
----@param InteractActor AActor
-function GazeComp:C2S_ReqInteract_RPC(InteractActor)
-    if self.bInteracting then
-        return
-    end
-    self.Rep_InteractActor = InteractActor
-    self:S2C_RspInteract()
+---@public
+function GazeComp:C2S_ReqInteractGaze_RPC()
+    ---@todo check
+    ---@todo 如果是物体就执行拾取等, 如果是人就开始对话, 此时默认是人
+    self:GetOwner().ChatComp:BeginChat(self.Rep_InteractActor)
 end
+
+
+
+
 
 ---@private 服务端对交互请求的回复
 function GazeComp:S2C_RspInteract_RPC()
@@ -102,15 +112,9 @@ function GazeComp:C2S_ReqInteractEnd_RPC()
     self.bInteracting = false
 end
 
----@private [IMC]
-function GazeComp:InitInteractInput()
-    if net_util.is_server(self) then
-        return
-    end
-    ---@todo 这个延迟也不是个事呀
-    async_util.delay(self, 0.5, function()
-        EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Interact))
-    end)
+---@public [Pure]
+function GazeComp:GetGazeName()
+    return self.Rep_GazeName
 end
 
 return GazeComp
