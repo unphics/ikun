@@ -68,21 +68,22 @@ function GazeComp:C2S_ReqUpdateGazing_RPC(InteractActor)
     end
 end
 
----@public
+---@public [Input]
 function GazeComp:C2S_ReqInteractGaze_RPC()
     ---@todo check
     ---@todo 如果是物体就执行拾取等, 如果是人就开始对话, 此时默认是人
-    self:GetOwner().ChatComp:BeginChat(self.Rep_InteractActor)
-    self:C2S_ReqInteractBegin()
+    if self:GetOwner().ChatComp:BeginChat(self.Rep_InteractActor) then
+        self:EnterInteract()
+    end
 end
 
 ---@public 进入交互状态
-function GazeComp:C2S_ReqInteractBegin_RPC()
+function GazeComp:EnterInteract()
     self.bInteracting = true
 end
 
 ---@public 退出交互状态
-function GazeComp:C2S_ReqInteractEnd_RPC()
+function GazeComp:QuitInteract()
     self.bInteracting = false
 end
 

@@ -8,7 +8,7 @@ local UIDef = {
     MainHud = '/Game/Ikun/UI/UMG/MainHud/UI_MainHud.UI_MainHud_C',
     BreathePointer = '/Game/Ikun/UI/UMG/BreathePointer/UI_BreathePointer.UI_BreathePointer_C',
     TalkList = '/Game/Ikun/UI/UMG/TalkList/UI_TalkList.UI_TalkList_C',
-    Interact = '/Game/Ikun/UI/UMG/Interact/UI_Interact.UI_Interact_C',
+    Chat = '/Game/Ikun/UI/UMG/Chat/UI_Chat.UI_Chat_C',
     Gaze = '/Game/Ikun/UI/UMG/Gaze/UI_Gaze.UI_Gaze_C',
 }
 

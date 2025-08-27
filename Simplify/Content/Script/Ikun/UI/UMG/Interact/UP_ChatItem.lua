@@ -35,20 +35,20 @@ function M:OnListItemObjectSet(ItemData)
 end
 
 function M:OnBtnSelectItemClicked()
-    if self.ItemData and self.ItemData.OnItemClicked then
-        self.ItemData.OnItemClicked(self.ItemData.OwnerUI, self.ItemData.NextId)
+    if self.ItemData and self.ItemData.DoSelectIndex then
+        self.ItemData.DoSelectIndex(self.ItemData.OwnerUI, self.ItemData.NextId)
     end
 end
 
 function M:OnBtnSelectItemHovered()
     if self.ItemData and self.ItemData.SelectIndex then    
-        self.ItemData.SelectIndex(self.ItemData.OwnerUI, self.ItemData.Index)
+        self.ItemData.ScrollIndex(self.ItemData.OwnerUI, self.ItemData.Index)
     end
 end
 
 function M:OnBtnSelectItemUnhovered()
     if self.ItemData and self.ItemData.SelectIndex then    
-        self.ItemData.SelectIndex(self.ItemData.OwnerUI, nil)
+        self.ItemData.ScrollIndex(self.ItemData.OwnerUI, nil)
     end
 end
 
