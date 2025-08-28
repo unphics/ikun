@@ -26,7 +26,7 @@ end
 
 ---@private [Server] [Init]
 function M:OnChrInitData()
-    if (net_util.is_client(self:GetOwner())) or (not self.bNpc) then
+    if (net_util.is_client(self:GetOwner())) then
         return false
     end
     ---@step 如果有特化的角色模板则使用特化初始化

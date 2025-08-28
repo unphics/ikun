@@ -68,8 +68,11 @@ function GazeComp:C2S_ReqUpdateGazing_RPC(InteractActor)
     end
 end
 
----@public [Input]
+---@public [Input] [Server]
 function GazeComp:C2S_ReqInteractGaze_RPC()
+    if not self:_CanInteract() then
+        return
+    end
     ---@todo check
     ---@todo 如果是物体就执行拾取等, 如果是人就开始对话, 此时默认是人
     if self:GetOwner().ChatComp:BeginChat(self.Rep_InteractActor) then
@@ -90,6 +93,20 @@ end
 ---@public [Pure]
 function GazeComp:GetGazeName()
     return self.Rep_GazeName
+end
+
+---@private
+function GazeComp:_CanInteract()
+    local ownerChr = self:GetOwner().OwnerChr
+    local targetChr = self.Rep_InteractActor
+    local ownerRole = rolelib.role(ownerChr)
+    local targetRole = rolelib.role(targetChr)
+    if not targetRole then
+        return false
+    end
+    targetRole.QuestGiver:HasAvailableQuest()
+        
+    return true
 end
 
 return GazeComp

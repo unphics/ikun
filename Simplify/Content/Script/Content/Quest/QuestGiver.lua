@@ -10,14 +10,22 @@
 ---@field _Owner RoleClass
 local QuestGiverClass = class.class 'QuestGiverClass' {
     ctor = function()end,
-    _AvaiableQuestList = nil,
     _Owner = nil,
 }
 
 function QuestGiverClass:ctor(Owenr)
-    self._Owenr = Owenr
+    self._Owner = Owenr
 end
 
+function QuestGiverClass:GetAvailableQuest()
+    local quests = MdMgr.QuestMgr:GetQuestConfigByAcceptNpc(self._Owner:GetRoleCfgId())
+    return quests
+end
 
+---@public
+function QuestGiverClass:HasAvailableQuest()
+    local quests = MdMgr.QuestMgr:GetQuestConfigByAcceptNpc(self._Owner:GetRoleCfgId())
+    return #quests > 0
+end
 
 return QuestGiverClass

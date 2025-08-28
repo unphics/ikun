@@ -30,10 +30,8 @@ end
 
 ---@public [Server]
 function ChatComp:BeginChat()
-    self.CurChatId = 41001
-    self.CurSelectList = nil
     self:S2C_BeginChat()
-    self:UpdateChat()
+    self:_GetNpcChat():NewChat(40001, self:GetOwner().InteractComp.Rep_InteractActor)
     return true
 end
 
@@ -55,31 +53,6 @@ function ChatComp:S2C_EndChat_RPC()
     ui_util.uimgr:HideUI(ui_util.uidef.Chat)
 end
 
----@private [Server]
-function ChatComp:UpdateChat()
-    local data = self:GetChatData(self.CurChatId)
-    if not data then
-        return log.error('ChatComp:UpdateChat()', '无效的ChatId', self.CurChatId)
-    end
-    if data.Type == 1 then
-        if data.PreExecId then
-            local code = MdMgr.ConfigMgr:GetConfig('ChatExec')[data.PreExecId].Code
-            if code and self['Exec_'..code] then
-                self['Exec_'..code](self)
-            end
-        end
-        self:S2C_ShowTalkContent(data.Content)
-    elseif data.Type == 2 then
-        self.CurSelectList = data.Select
-        local selectList = {}
-        for _, id in ipairs(self.CurSelectList) do
-            local selectData = self:GetChatData(id)
-            table.insert(selectList, selectData.Content)
-        end
-        self:S2C_ShowSelectList(selectList)
-    end
-end
-
 ---@private [Client]
 function ChatComp:S2C_ShowSelectList_RPC(SelectList)
     local ui = ui_util.uimgr:GetUIIfVisible(ui_util.uidef.Chat) ---@type Chat
@@ -99,31 +72,21 @@ end
 
 ---@public [Server]
 function ChatComp:C2S_DoSelectIndex_RPC(Index)
-    local curSelectId = self.CurSelectList[Index]
-    local data = self:GetChatData(curSelectId)
-    self.CurChatId = data.NextId
-    self:UpdateChat()
+    self:_GetNpcChat():DoSelectIndex(Index)
 end
 
 ---@public [Server]
 function ChatComp:C2S_TalkNext_RPC()
-    local data = self:GetChatData(self.CurChatId)
-    if data then
-        self.CurChatId = data.NextId
-        self:UpdateChat()
+    self:_GetNpcChat():DoTalkNext()
+end
+
+function ChatComp:_GetNpcChat()
+    local ownerChr = self:GetOwner().OwnerChr
+    local ownerRole = rolelib.role(ownerChr)
+    if ownerRole and ownerRole.NpcChat then
+        return ownerRole.NpcChat
     end
-end
-
----@private [Server] [Pure]
----@return ChatConfig
-function ChatComp:GetChatData(ChatId)
-    local config = MdMgr.ConfigMgr:GetConfig('Chat')
-    return config[ChatId]
-end
-
----@private
-function ChatComp:Exec_DoEndChat()
-    self:EndChat()
+    return nil
 end
 
 return ChatComp

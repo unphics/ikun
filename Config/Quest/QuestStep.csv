@@ -3,3 +3,5 @@ QuestStepId|Desc|StepType|Target|NextStep|Count|ConditionId|Param
 |||||||
 31001||Talk|Lucan|31002||32001|
 |||||||
+31010|来到祖安第一步|Talk|5||||
+|||||||

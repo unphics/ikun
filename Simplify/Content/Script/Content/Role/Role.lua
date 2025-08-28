@@ -11,6 +11,8 @@ local BTDef = require('Ikun/Module/AI/BT/BTDef')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
 local RoleInfoClass = require('Content/Role/RoleInfo')
+require('Content/Item/Bag')
+require('Content/Chat/NpcChat')
 
 ---@class RoleClass
 ---@field RoleInfo RoleInfoClass * 角色基础信息
@@ -19,6 +21,8 @@ local RoleInfoClass = require('Content/Role/RoleInfo')
 ---@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
 ---@field QuestGiver QuestGiverClass
+---@field Bag BagClass
+---@field NpcChat NpcChatClass
 ---@field bNpc boolean
 local RoleClass = class.class 'RoleClass' {
 --[[public]]
@@ -37,6 +41,9 @@ local RoleClass = class.class 'RoleClass' {
     GetRoleInstId = function()end,
     GetRoleDispName = function()end,
     IsRoleDead = function()end,
+    QuestGiver = nil,
+    Bag = nil,
+    NpcChat = nil,
 --[[private]]
     StartBT = function()end,
     RoleInfo = nil,
@@ -74,6 +81,10 @@ function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     self.RoleInfo = class.new 'RoleInfoClass' (self, CfgId)
     self.Avatar = Avatar
     self.bNpc = bNpc
+
+    self.QuestGiver = class.new 'QuestGiverClass'(self)
+    self.Bag = class.new 'BagClass'(self)
+    self.NpcChat = class.new 'NpcChatClass'(self)
 
     local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
     self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(Config.BelongKingdomCfgId) ---@type Kingdom
