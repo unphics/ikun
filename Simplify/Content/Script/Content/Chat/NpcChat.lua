@@ -8,6 +8,17 @@
 local ChatExecLib = require('Content/Chat/ChatExecLib')
 local DynaSelect = require('Content/Chat/DynaSelect')
 
+
+---@class ChatConfig
+---@field Id number
+---@field Type number
+---@field Cond number
+---@field Content string
+---@field NextId number
+---@field Select number[]
+---@field PreExecId number
+---@field PostExecId number
+
 ---@class NpcChatClass
 ---@field _Owner RoleClass
 ---@field _CurChatId number
@@ -19,7 +30,8 @@ local NpcChatClass = class.class 'NpcChatClass' {
     UpdateChat = function()end,
     DoSelectIndex = function()end,
     DoTalkNext = function()end,
-    _GetChatData = function()end,
+    GetChatOwner = function()end,
+    GetChatData = function()end,
     GetChatComp = function()end,
     _Owner = nil,
     _CurChatId = nil,
@@ -41,28 +53,28 @@ end
 
 ---@public
 function NpcChatClass:UpdateChat()
-    local data = self:_GetChatData(self._CurChatId)
+    local data = self:GetChatData(self._CurChatId)
         if not data then
         return log.error('NpcChatClass:UpdateChat()', '无效的ChatId', self._CurChatId)
     end
+    if data.PreExecId then
+        local execData = MdMgr.ConfigMgr:GetConfig('ChatExec')[data.PreExecId]
+        ChatExecLib.TryExec(self, execData)
+    end
     if data.Type == 1 or data.Type == 3 then
-        if data.PreExecId then
-            local code = MdMgr.ConfigMgr:GetConfig('ChatExec')[data.PreExecId].Code
-            ChatExecLib.TryExec(self, code)
-        end
         self:GetChatComp():S2C_ShowTalkContent(data.Content)
     elseif data.Type == 2 then
         self._CurSelectList = data.Select
         local selectList = {}
         for _, id in ipairs(self._CurSelectList) do
-            local selectData = self:_GetChatData(id)
+            local selectData = self:GetChatData(id)
             table.insert(selectList, selectData.Content)
         end
         self:GetChatComp():S2C_ShowSelectList(selectList)
     elseif data.Type == 4 then -- 动态选项
         self._CurSelectList = {}
         for _, id in ipairs(data.Select) do
-            local selectData = self:_GetChatData(id)
+            local selectData = self:GetChatData(id)
             local selectIds = DynaSelect.CalcSelectInfo(self, selectData)
             for _, id in ipairs(selectIds) do
                 table.insert(self._CurSelectList, id)
@@ -70,7 +82,7 @@ function NpcChatClass:UpdateChat()
         end
         local selectList = {}
         for _, id in ipairs(self._CurSelectList) do
-            local selectData = self:_GetChatData(id)
+            local selectData = self:GetChatData(id)
             table.insert(selectList, selectData.Content)
         end
         self:GetChatComp():S2C_ShowSelectList(selectList)
@@ -80,23 +92,31 @@ end
 ---@public
 function NpcChatClass:DoSelectIndex(Index)
     local curSelectId = self._CurSelectList[Index]
-    local data = self:_GetChatData(curSelectId)
+    local data = self:GetChatData(curSelectId)
+    if data.PostExecId then
+        local execData = MdMgr.ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
+        ChatExecLib.TryExec(self, execData)
+    end
     self._CurChatId = data.NextId
     self:UpdateChat()
 end
 
 ---@public
 function NpcChatClass:DoTalkNext()
-    local data = self:_GetChatData(self._CurChatId)
+    local data = self:GetChatData(self._CurChatId)
     if data then
+        if data.PostExecId then
+            local execData = MdMgr.ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
+            ChatExecLib.TryExec(self, execData)
+        end
         self._CurChatId = data.NextId
         self:UpdateChat()
     end
 end
 
----@private [Pure]
+---@public [Pure]
 ---@return ChatConfig
-function NpcChatClass:_GetChatData(ChatId)
+function NpcChatClass:GetChatData(ChatId)
     local config = MdMgr.ConfigMgr:GetConfig('Chat')
     return config[ChatId]
 end
@@ -104,6 +124,12 @@ end
 ---@public [Pure] [Comp]
 function NpcChatClass:GetChatComp()
     return self._Owner.Avatar:GetController().ChatComp
+end
+
+---@public [Pure]
+---@return RoleClass
+function NpcChatClass:GetChatOwner()
+    return self._Owner
 end
 
 return NpcChatClass

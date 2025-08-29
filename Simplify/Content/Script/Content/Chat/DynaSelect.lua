@@ -7,6 +7,7 @@
 
 
 local QuestTool = require('Content/Quest/QuestTool')
+local ChatCondLib = require('Content/Chat/ChatCondLib')
 local RoleConfig = require('Content/Role/Config/RoleConfig')
 
 ---@class DynaSelect
@@ -22,7 +23,20 @@ DynaSelect.CalcSelectInfo = function(NpcChat, SelectData)
             local id = targetRole:GetRoleCfgId()
             local config = RoleConfig[id]
             if config and config.Chat then
-                return config.Chat
+                local outSelects = {}
+                for _, chatId in ipairs(config.Chat) do
+                    local chatData = NpcChat:GetChatData(chatId)
+                    if chatData then
+                        if chatData.Cond then
+                            if ChatCondLib.TryCheckCond(NpcChat, chatData.Cond) then
+                                table.insert(outSelects, chatId)    
+                            end
+                        else
+                            table.insert(outSelects, chatId)
+                        end
+                    end
+                end
+                return outSelects
             end
         end        
     end

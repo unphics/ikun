@@ -104,7 +104,7 @@ function classes.new(class_name)
     return function(...)
         local classe = classes[class_name]
         if not classe then
-            log.error("fatal error = class2 : class not found : " .. tostring(class_name))
+            log.fatal("fatal error = class2 : class not found : " .. tostring(class_name))
             return
         end
         -- local new_obj = deepcopy(classe)

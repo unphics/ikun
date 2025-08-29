@@ -5,15 +5,6 @@
 ---@data    Wed Aug 27 2025 14:25:04 GMT+0800 (中国标准时间)
 ---
 
----@class ChatConfig
----@field Id number
----@field Type number
----@field Content string
----@field NextId number
----@field Select number[]
----@field PreExecId number
----@field PostExecId number
-
 ---@class ChatComp: BP_ChatComp_C
 local ChatComp = UnLua.Class()
 

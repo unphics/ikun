@@ -24,6 +24,7 @@ require('Content/Chat/NpcChat')
 ---@field Bag BagClass
 ---@field NpcChat NpcChatClass
 ---@field bNpc boolean
+---@field QuestComp QuestCompClass
 local RoleClass = class.class 'RoleClass' {
 --[[public]]
     ctor = function()end,
@@ -42,6 +43,7 @@ local RoleClass = class.class 'RoleClass' {
     GetRoleDispName = function()end,
     IsRoleDead = function()end,
     QuestGiver = nil,
+    QuestComp = nil,
     Bag = nil,
     NpcChat = nil,
 --[[private]]
@@ -82,6 +84,7 @@ function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     self.Avatar = Avatar
     self.bNpc = bNpc
 
+    self.QuestComp = class.new 'QuestCompClass'(self)
     self.QuestGiver = class.new 'QuestGiverClass'(self)
     self.Bag = class.new 'BagClass'(self)
     self.NpcChat = class.new 'NpcChatClass'(self)

@@ -60,7 +60,7 @@ RoleConfig[5] = {
     BelongKingdomCfgId = 1,
     InitBT = nil,
     Color = -1,
-    Chat = {41011}
+    Chat = {41011, 41021}
 }
 
 return RoleConfig
