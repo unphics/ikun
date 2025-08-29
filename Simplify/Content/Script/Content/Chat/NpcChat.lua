@@ -60,12 +60,18 @@ function NpcChatClass:UpdateChat()
         end
         self:GetChatComp():S2C_ShowSelectList(selectList)
     elseif data.Type == 4 then -- 动态选项
-        self._CurSelectList = data.Select
+        self._CurSelectList = {}
+        for _, id in ipairs(data.Select) do
+            local selectData = self:_GetChatData(id)
+            local selectIds = DynaSelect.CalcSelectInfo(self, selectData)
+            for _, id in ipairs(selectIds) do
+                table.insert(self._CurSelectList, id)
+            end
+        end
         local selectList = {}
         for _, id in ipairs(self._CurSelectList) do
             local selectData = self:_GetChatData(id)
-            local selectInfo = DynaSelect.CalcSelectInfo(self, selectData)
-            table.insert(selectList, selectInfo.Content)
+            table.insert(selectList, selectData.Content)
         end
         self:GetChatComp():S2C_ShowSelectList(selectList)
     end

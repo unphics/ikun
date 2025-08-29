@@ -1,21 +1,25 @@
 
 local QuestTool = require('Content/Quest/QuestTool')
+local RoleConfig = require('Content/Role/Config/RoleConfig')
 
 ---@class DynaSelect
 local DynaSelect = {}
 
 ---@param NpcChat NpcChatClass
----@param SelectData ChatConfig
+---@param SelectData ChatConfig[]
 DynaSelect.CalcSelectInfo = function(NpcChat, SelectData)
-    if SelectData.Content == 'Task1' then
+    if SelectData.Content == 'NpcChat' then
         local target = NpcChat.ChatTarget
-        local quests = target.QuestGiver:GetAvailableQuest()
-        if quests[1] then
-            QuestTool.IsFirstStepTalk(quests[1].QuestId)
-            return { Content = '接受任务: 测试任务1' }
-        end
+        local targetRole = rolelib.role(target)
+        if targetRole then
+            local id = targetRole:GetRoleCfgId()
+            local config = RoleConfig[id]
+            if config and config.Chat then
+                return config.Chat
+            end
+        end        
     end
-    return {Content = SelectData.Content}
+    return {}
 end
 
 return DynaSelect
