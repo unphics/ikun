@@ -21,6 +21,10 @@ function QuestCompClass:ctor(Owner)
 end
 
 function QuestCompClass:StartQuest(QuestId)
+    if self:GetQuestInstById(QuestId) then
+        log.warn('QuestCompClass:StartQuest', '任务已存在, 无法重复接取', QuestId)
+        return
+    end
     local questInst = class.new 'QuestInstClass'(self._Owner, QuestId)
     table.insert(self._Quests, questInst)
 end

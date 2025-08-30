@@ -31,7 +31,7 @@ function ChatCondLib.TryCheckCond(OwnerNpcChat, Cond)
     return false
 end
 
----@private
+---@private 任务进行中
 ---@param OwnerNpcChat NpcChatClass
 ---@param CondConfig ChatCondConfig
 function ChatCondLib._Quest(OwnerNpcChat, CondConfig)
@@ -40,6 +40,21 @@ function ChatCondLib._Quest(OwnerNpcChat, CondConfig)
     if questId and ownerRole and ownerRole.QuestComp then
         local questInst = ownerRole.QuestComp:GetQuestInstById(questId)
         if questInst and questInst:IsInProgress() then
+            return true
+        end
+    end
+    return false
+end
+
+---@private 任务接取了
+---@param OwnerNpcChat NpcChatClass
+---@param CondConfig ChatCondConfig
+function ChatCondLib._QuestStart(OwnerNpcChat, CondConfig)
+    local ownerRole = OwnerNpcChat:GetChatOwner()
+    local questId = CondConfig.Params.QuestId
+    if questId and ownerRole and ownerRole.QuestComp then
+        local questInst = ownerRole.QuestComp:GetQuestInstById(questId)
+        if questInst then
             return true
         end
     end

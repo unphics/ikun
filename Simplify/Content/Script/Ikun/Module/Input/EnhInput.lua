@@ -27,6 +27,7 @@ local IADef = {
     IA_Interact = '/Game/Ikun/UI/Input/IA/IA_Interact.IA_Interact',
     IA_TalkNext = '/Game/Ikun/UI/Input/IA/IA_TalkNext.IA_TalkNext',
     IA_Wheel = '/Game/Ikun/UI/Input/IA/IA_Wheel.IA_Wheel',
+    IA_Tab = '/Game/Ikun/UI/Input/IA/IA_Tab.IA_Tab',
 }
 EnhInput.IADef = IADef
 
@@ -122,6 +123,10 @@ EnhInput.BindActions = function(pc)
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Wheel, EnhInput.TriggerEvent.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
             InputMgr.TriggerInputAction(IADef.IA_Wheel,EnhInput.TriggerEvent.Started,  ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        end, _)
+    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Tab, EnhInput.TriggerEvent.Started,
+        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Tab,EnhInput.TriggerEvent.Started,  ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end, _)
 
 end

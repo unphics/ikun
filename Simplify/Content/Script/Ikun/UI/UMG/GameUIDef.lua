@@ -10,6 +10,7 @@ local UIDef = {
     TalkList = '/Game/Ikun/UI/UMG/TalkList/UI_TalkList.UI_TalkList_C',
     Chat = '/Game/Ikun/UI/UMG/Chat/UI_Chat.UI_Chat_C',
     Gaze = '/Game/Ikun/UI/UMG/Gaze/UI_Gaze.UI_Gaze_C',
+    UI_QuestMsg = '/Game/Ikun/UI/UMG/QuestMsg/UI_QuestMsg.UI_QuestMsg_C'
 }
 
 return UIDef

@@ -38,9 +38,15 @@ function QuestInstClass:ctor(Owner, QuestId)
     self._Owner = Owner
     self.QuestId = QuestId
     self.QuestState = QuestStateType.InProgress
-    local config = MdMgr.QuestMgr:GetQuestConfigById(QuestId)
+    local config = self:GetQuestConfig()
     self._CurStep = config.BeginStep
     log.info('QuestInstClass:ctor()', '任务开始!', QuestId, config.Title)
+
+    local role = rolelib.role(self._Owner)
+    if role and role.Avatar and obj_util.is_valid(role.Avatar) then
+        local pc = role.Avatar:GetController()
+        pc.ChatComp:S2C_ShowQuestMsg(self:GetQuestConfig().Title, '任务开始')
+    end
 end
 
 ---@public
@@ -60,6 +66,12 @@ end
 function QuestInstClass:CompleteQuest()
     self.QuestState = QuestStateType.Completed
     log.info('QuestInstClass:CompleteCurStep()', '任务完成!', self.QuestId)
+
+        local role = rolelib.role(self._Owner)
+    if role and role.Avatar and obj_util.is_valid(role.Avatar) then
+        local pc = role.Avatar:GetController()
+        pc.ChatComp:S2C_ShowQuestMsg(self:GetQuestConfig().Title, '任务完成')
+    end
 end
 
 ---@public [Pure]
@@ -70,6 +82,13 @@ end
 ---@public [Pure]
 function QuestInstClass:IsInProgress()
     return self.QuestState == QuestStateType.InProgress
+end
+
+---@public [Pure]
+---@return QuestConfig | nil
+function QuestInstClass:GetQuestConfig()
+    local config = MdMgr.QuestMgr:GetQuestConfigById(self.QuestId)
+    return config
 end
 
 return QuestInstClass

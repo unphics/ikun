@@ -56,7 +56,7 @@ RoleConfig[4].BTCfg[BTType.Patrol] = 'Team_Patrol_Together_1'
 RoleConfig[4].BTCfg[BTType.Fight] = 'Team_Fight_2'
 
 RoleConfig[5] = {
-    DisplayName = '阿布噜布噜',
+    DisplayName = '布噜布噜布噜',
     BelongKingdomCfgId = 1,
     InitBT = nil,
     Color = -1,

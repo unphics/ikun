@@ -52,6 +52,7 @@ function GameUIMgr:ShowUI(UIDef)
     if UI.OnShow then
         UI:OnShow()
     end
+    return UI
 end
 
 ---@public

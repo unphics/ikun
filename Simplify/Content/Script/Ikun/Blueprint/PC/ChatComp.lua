@@ -9,8 +9,6 @@
 local ChatComp = UnLua.Class()
 
 function ChatComp:ReceiveBeginPlay()
-    self.CurChatId = nil
-    self.CurSelectList = nil
 end
 
 -- function ChatComp:ReceiveEndPlay()
@@ -32,9 +30,12 @@ function ChatComp:S2C_BeginChat_RPC()
 end
 
 ---@public [Server]
+function ChatComp:C2S_ReqEndChat_RPC()
+    self:EndChat()
+end
+
+---@public [Server]
 function ChatComp:EndChat()
-    self.CurChatId = nil
-    self.CurSelectList = nil
     self:S2C_EndChat()
     self:GetOwner().InteractComp:QuitInteract()
 end
@@ -78,6 +79,14 @@ function ChatComp:_GetNpcChat()
         return ownerRole.NpcChat
     end
     return nil
+end
+
+function ChatComp:S2C_ShowQuestMsg_RPC(QuestName, QuestState)
+    local ui = ui_util.uimgr:ShowUI(ui_util.uidef.UI_QuestMsg) ---@type UI_QuestMsg
+    log.dev('ui', ui)
+    if ui then
+        ui:SetQuestMsg(QuestName, QuestState)
+    end
 end
 
 return ChatComp

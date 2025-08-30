@@ -39,10 +39,11 @@ function UI_Chat:OnShow()
         EnhInput.TriggerEvent.Started, self.OnWhellScroll)
     InputMgr.RegisterInputAction(self.PowerInteract, EnhInput.IADef.IA_Interact,
         EnhInput.TriggerEvent.Started, self.OnSelectInteract)
+    InputMgr.RegisterInputAction(self.PowerInteract, EnhInput.IADef.IA_Tab,
+        EnhInput.TriggerEvent.Started, self.OnQuitClicked)
     
-
-    self:SetFocus()
-    self:SetKeyboardFocus()
+    -- self:SetFocus()
+    -- self:SetKeyboardFocus()
 
     self:ShowSelectPanel(false)
     self.TxtInteractName:SetText('')
@@ -87,6 +88,12 @@ function UI_Chat:UpdateSelectList()
     end
     ui_util.set_list_items(self.ListInteract, list)
     self:ShowSelectPanel(true)
+end
+
+---@private [Input]
+function UI_Chat:OnQuitClicked()
+    local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
+    pc.ChatComp:C2S_ReqEndChat()
 end
 
 ---@private [Input] [ItemSelect]
