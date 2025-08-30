@@ -10,7 +10,7 @@
 ---@field bBorrowInput boolean
 
 ---@class InputMgr
----@field _InputEvents table<UObject, table<IADef, table<TriggerEvent, fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction): boolean>>>
+---@field _InputEvents table<InputPower, table<IADef, table<TriggerEvent, fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction): boolean>>>
 ---@field _InputPowerStack InputPower[]
 ---@field _CachedInputPowerOwner UObject[]
 local InputMgr = {}
@@ -20,41 +20,41 @@ InputMgr._InputPowerStack = {}
 InputMgr._CachedInputPowerOwner = {}
 
 ---@public 获取输入监听权
+---@return InputPower
 InputMgr.ObtainInputPower = function(Object)
-    for _, item in ipairs(InputMgr._InputPowerStack) do
-        if item.Object == Object then
-            return log.error('InputMgr.ObtainInputPower() 重复获取所有权')
-        end
-    end
-    local item = {} ---@type InputPower
-    item.Object = Object
-    item.bBorrowInput = false
+    ---@type InputPower
+    local item = {
+        Object = Object,
+        bBorrowInput = false
+    }
     table.insert(InputMgr._InputPowerStack, item)
     InputMgr._RefreshCachedInputPowerOwner()
+    return item
 end
 
 ---@public 借出输入监听权
+---@return InputPower
 InputMgr.BorrowInputPower = function(Object)
-    for _, item in ipairs(InputMgr._InputPowerStack) do
-        if item.Object == Object then
-            return log.error('InputMgr.BorrowInputPower() 重复获取所有权')
-        end
-    end
-    local item = {} ---@type InputPower
-    item.Object = Object
-    item.bBorrowInput = true
+    ---@type InputPower
+    local item = {
+        Object = Object,
+        bBorrowInput = true
+    }
     table.insert(InputMgr._InputPowerStack, item)
     InputMgr._RefreshCachedInputPowerOwner()
+    return item
 end
 
 ---@public 放弃输入监听权
-InputMgr.ReliquishInputPower = function(Object)
+---@param Power InputPower
+InputMgr.ReliquishInputPower = function(Power)
     for i, item in ipairs(InputMgr._InputPowerStack) do
-        if item.Object == Object then
+        if item == Power then
             table.remove(InputMgr._InputPowerStack, i)
             break
         end
     end
+    InputMgr._InputEvents[Power] = nil
     InputMgr._RefreshCachedInputPowerOwner()
 end
 
@@ -63,7 +63,7 @@ InputMgr._RefreshCachedInputPowerOwner = function()
     InputMgr._CachedInputPowerOwner = {}
     for i = #InputMgr._InputPowerStack, 1, -1 do
         local inputPower = InputMgr._InputPowerStack[i] ---@type InputPower
-        table.insert(InputMgr._CachedInputPowerOwner, inputPower.Object)
+        table.insert(InputMgr._CachedInputPowerOwner, inputPower)
         if not inputPower.bBorrowInput then
             break
         end
@@ -71,35 +71,37 @@ InputMgr._RefreshCachedInputPowerOwner = function()
 end
 
 ---@public 注册监听输入事件
----@param Object UObject
+---@param Power InputPower
 ---@param IADef IADef
 ---@param TriggerEvent TriggerEvent
 ---@param fn fun(UObject, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction): boolean
-InputMgr.RegisterInputAction = function(Object, IADef, TriggerEvent, fn)
-    if not InputMgr._InputEvents[Object] then
-        InputMgr._InputEvents[Object] = {}
+InputMgr.RegisterInputAction = function(Power, IADef, TriggerEvent, fn)
+    if not InputMgr._InputEvents[Power] then
+        InputMgr._InputEvents[Power] = {}
     end
-    if not InputMgr._InputEvents[Object][IADef] then
-        InputMgr._InputEvents[Object][IADef] = {}    
+    if not InputMgr._InputEvents[Power][IADef] then
+        InputMgr._InputEvents[Power][IADef] = {}    
     end
-    if InputMgr._InputEvents[Object][IADef][TriggerEvent] then
+    if InputMgr._InputEvents[Power][IADef][TriggerEvent] then
         return log.error('InputMgr.RegisterInputAction() 重复的输入事件监听')
     end
-    InputMgr._InputEvents[Object][IADef][TriggerEvent] = fn
+    InputMgr._InputEvents[Power][IADef][TriggerEvent] = fn
 end
 
 ---@public 反注册监听输入
----@param Object UObject
-InputMgr.UnregisterInputAction = function(Object)
-    InputMgr._InputEvents[Object] = nil
+---@param Power InputPower
+InputMgr.UnregisterInputAction = function(Power)
+    InputMgr._InputEvents[Power] = nil
 end
 
 ---@public 触发输入事件
 ---@param IADef IADef
 InputMgr.TriggerInputAction = function(IADef, TriggerEvent, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-    for _, object in ipairs(InputMgr._CachedInputPowerOwner) do
-        if object and obj_util.is_valid(object) then
-            local fn = InputMgr._InputEvents[object][IADef][TriggerEvent]
+    ---@param power InputPower
+    for _, power in ipairs(InputMgr._CachedInputPowerOwner) do
+        local object = power.Object
+        if object and obj_util.is_valid(object) and InputMgr._InputEvents[power] then
+            local fn = InputMgr._InputEvents[power][IADef] and InputMgr._InputEvents[power][IADef][TriggerEvent]
             if fn then
                 if fn(object, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction) then
                     break

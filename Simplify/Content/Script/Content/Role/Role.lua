@@ -1,28 +1,33 @@
 
 ---
----@brief 角色的基类
----@author zys
----@data Mon Jan 27 2025 23:56:14 GMT+0800 (中国标准时间)
----@desc 对于摆放在场景中的Chr或者Spawn出的Chr, 分配给他们ConfigId, 在Chr里构造Role, 然后Role开始在游戏内容管理中注册, 成为世界的一员
+---@brief   角色的基类
+---@author  zys
+---@data    Mon Jan 27 2025 23:56:14 GMT+0800 (中国标准时间)
+---@desc    对于摆放在场景中的Chr或者Spawn出的Chr, 分配给他们ConfigId, 在Chr里构造Role, 然后Role开始在游戏内容管理中注册, 成为世界的一员
 ---
 
-local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTDef = require('Ikun/Module/AI/BT/BTDef')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
 local RoleInfoClass = require('Content/Role/RoleInfo')
+require('Content/Item/Bag')
+require('Content/Chat/NpcChat')
 
----@class RoleClass: MdBase
+---@class RoleClass
 ---@field RoleInfo RoleInfoClass * 角色基础信息
 ---@field Avatar BP_ChrBase * 角色在游戏场景中的AvatarActor
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
+---@field QuestGiver QuestGiverClass
+---@field Bag BagClass
+---@field NpcChat NpcChatClass
 ---@field bNpc boolean
-local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
+---@field QuestComp QuestCompClass
+local RoleClass = class.class 'RoleClass' {
 --[[public]]
     ctor = function()end,
-    Tick = function()end,
+    RoleTick = function()end,
     InitByAvatar = function()end,
     SwitchNewBT = function()end,
     IsFirend = function()end,
@@ -36,6 +41,10 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     GetRoleInstId = function()end,
     GetRoleDispName = function()end,
     IsRoleDead = function()end,
+    QuestGiver = nil,
+    QuestComp = nil,
+    Bag = nil,
+    NpcChat = nil,
 --[[private]]
     StartBT = function()end,
     RoleInfo = nil,
@@ -45,11 +54,13 @@ local RoleClass = class.class 'RoleClass' : extends 'MdBase' {
     bNpc = nil,
 }
 
+---@override
 function RoleClass:ctor()
     self.bNpc = false
 end
 
-function RoleClass:Tick(DeltaTime)
+---@override
+function RoleClass:RoleTick(DeltaTime)
     if self.BT then
         self.BT:Tick(DeltaTime)
         if self:GetRoleInstId() == debug_util.debugrole then
@@ -64,13 +75,18 @@ end
 
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
 function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
-    local Config = RoleConfig[CfgId] ---@type RoleConfig
+    local Config = MdMgr.RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
     if not Config then
         return log.error(log.key.roleinit,'投胎失败!!!')
     end
     self.RoleInfo = class.new 'RoleInfoClass' (self, CfgId)
     self.Avatar = Avatar
     self.bNpc = bNpc
+
+    self.QuestComp = class.new 'QuestCompClass'(self)
+    self.QuestGiver = class.new 'QuestGiverClass'(self)
+    self.Bag = class.new 'BagClass'(self)
+    self.NpcChat = class.new 'NpcChatClass'(self)
 
     local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
     self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(Config.BelongKingdomCfgId) ---@type Kingdom
@@ -79,7 +95,7 @@ function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     self:StartBT()
 end
 function RoleClass:StartBT()
-    local RoleCfg = RoleConfig[self:GetRoleCfgId()]
+    local RoleCfg = MdMgr.RoleMgr:GetRoleConfig(self:GetRoleCfgId())
     if RoleCfg then
         self:SwitchNewBT(RoleCfg.InitBT)
     end
@@ -135,8 +151,8 @@ function RoleClass:AddEnemyChecked(OtherRole)
     if not self:IsEnemy(OtherRole) then
         return false
     end
-    local OwnerRoleCfg = RoleConfig[self:GetRoleCfgId()]
-    local OtherRoleCfg = RoleConfig[OtherRole:GetRoleCfgId()]
+    local OwnerRoleCfg = MdMgr.RoleMgr:GetRoleConfig(self:GetRoleCfgId())
+    local OtherRoleCfg = MdMgr.RoleMgr:GetRoleConfig(OtherRole:GetRoleCfgId())
     if not OtherRoleCfg then
         return false
     end

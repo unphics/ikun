@@ -1,75 +1,119 @@
+
 ---
----@brief 行政区划管理器
+---@brief   一个星球的行政区划管理器
+---@author  zys
+---@data    Sat Dec 21 2024 00:51:53 GMT+0800 (中国标准时间)
+---@desc    行政区划管理器包含此星球所有国家(最大基本单位)
 ---
 
 require("Content/District/Kingdom")
 
-local CfgKingdom = require("Content/District/Config/KingdomConfig")
-local CfgSettlement = require("Content/District/Config/Settlement")
 local SettlementType = require('Content/District/Settlements/SettlemengType')
 
+---@class KingdomConfig
+---@field KingdomCfgId number 国家配置id
+---@field KingdomName string 国家名字
+---@field KingdomDesc string 国家描述
+
+---@class SettlementConfig
+---@field SettlementId number
+---@field SettlementName string
+---@field SettlementType SettlementType
+---@field BelongKingdomId number
+
 ---@class DistrictMgr: MdBase
----@field OwnerStar Star 行星
----@field tbKingdom Kingdom[] 此行星所有国家
+---@field OwnerStar Star 此星球
+---@field tbKingdom Kingdom[] 此星球上的所有国家
 local DistrictMgr = class.class"DistrictMgr" : extends "MdBase" {
 --[[public]]
     ctor = function() end,
-    Init = function() end,
-    Tick = function()end,
-    FindKingdomByInstId = function() end,
+    Tick = function(DeltaTime)end,
+    FindKingdomByInstId = function(KingdomInstId)end,
     OwnerStar = nil,
 --[[private]]
     InitAllKingdom = function()end,
-    CreateSettlementByConfig = function()end,
-    tbKingdom = {},
+    InitAllSettlement = function()end,
+    CreateSettlementByConfig = function(SettlementConfig)end,
+    tbKingdom = nil,
 }
+
+---@override 初始化所有国家
 function DistrictMgr:ctor(Star)
     self.OwnerStar = Star
+    self.tbKingdom = {}
     self:InitAllKingdom()
+    self:InitAllSettlement()
 end
+
+---@override Tick国家
 function DistrictMgr:Tick(DeltaTime)
-    for i, Kingdom in ipairs(self.tbKingdom) do
-        Kingdom:Tick(DeltaTime)
+    for _, kingdom in ipairs(self.tbKingdom) do
+        kingdom:TickKingdom(DeltaTime)
     end
 end
+
+---@public 通过国家的实例Id找到国家
 ---@param KingdomInstId number
+---@return Kingdom?
 function DistrictMgr:FindKingdomByInstId(KingdomInstId)
-    for _, Kingdom in ipairs(self.tbKingdom) do
-        if Kingdom.KingdomInstId == KingdomInstId then
-            return Kingdom
+    for _, kingdom in ipairs(self.tbKingdom) do
+        if kingdom.KingdomInstId == KingdomInstId then
+            return kingdom
         end
     end
-    log.error('DistrictMgr: Failed to find kingdom by instance id:' .. tostring(KingdomInstId))
+    log.error('DistrictMgr:FindKingdomByInstId', '没有找到此国家, instance id:', KingdomInstId)
 end
----@param KingdomCfgId number 
+
+---@public 通过国家的配置Id找到国家
+---@todo 找到多个
+---@param KingdomCfgId number
+---@return Kingdom?
 function DistrictMgr:FindKingdomByCfgId(KingdomCfgId)
-    for _, Kingdom in ipairs(self.tbKingdom) do
-        if Kingdom.KingdomConfig.KingdomConfigId == KingdomCfgId then
-            return Kingdom
+    for _, kingdom in ipairs(self.tbKingdom) do
+        if kingdom.KingdomConfig.KingdomConfigId == KingdomCfgId then
+            return kingdom
         end
     end
-    log.error('DistrictMgr: Failed to find kingdom by config id: ' .. tostring(KingdomCfgId))
+    log.error('DistrictMgr:FindKingdomByCfgId', '没有找到此国家, config id:', KingdomCfgId)
 end
--- 初始化此行星所有国家
+
+---@private 初始化此行星所有国家
 function DistrictMgr:InitAllKingdom()
-    for idx, ele in ipairs(CfgKingdom) do
-        local Id = self.OwnerStar.StarId * 100 + idx
-        local Kingdom = class.new "Kingdom" (Id, ele)
-        table.insert(self.tbKingdom, Kingdom)
-    end
-    for _, ele in ipairs(CfgSettlement) do
-        local Config = ele ---@type SettlementConfig
-        local Settlement = self:CreateSettlementByConfig(Config)
-        local Kingdom = self.tbKingdom[Config.BelongKingdom]
-        Kingdom:AddSettlement(Settlement)
+    local kingdomCfg = MdMgr.ConfigMgr:GetConfig('Kingdom') ---@type KingdomConfig[]
+    for id, kingdom in pairs(kingdomCfg) do
+        local instId = self.OwnerStar.StarId * 100 + id
+        local kingdomInst = class.new "Kingdom" (instId, kingdom)
+        table.insert(self.tbKingdom, kingdomInst)
     end
 end
----@param Config SettlementConfig
-function DistrictMgr:CreateSettlementByConfig(Config)
-    if Config.SettlementType == SettlementType.City then
-        return class.new "City" (Config.SettlementName)
-    elseif Config.SettlementType == SettlementType.Village then
-        return class.new "Village" (Config.SettlementName)
+
+---@public 初始化所有人类聚集地
+function DistrictMgr:InitAllSettlement()
+    local settlementCfg = MdMgr.ConfigMgr:GetConfig('Settlement') ---@type SettlementConfig[]
+    for _, settlement in pairs(settlementCfg) do
+        local settlementInst = self:CreateSettlementByConfig(settlement)
+        if not settlementInst then
+            goto continue
+        end
+        local kingdom = self:FindKingdomByCfgId(settlement.BelongKingdomId)
+        if not kingdom then
+            log.error('DistrictMgr:InitAllSettlement()', '发现未定义的BelongKingdom',
+                settlement.SettlementName, settlement.BelongKingdomId)
+            goto continue
+        end
+        kingdom:AddSettlement(settlementInst)
+        ::continue::
+    end
+end
+
+---@private 通过配置创建村庄/城市
+---@param SettlementConfig SettlementConfig
+---@return SettlementBaseClass?
+function DistrictMgr:CreateSettlementByConfig(SettlementConfig)
+    if SettlementConfig.SettlementType == SettlementType.City then
+        return class.new "CityClass" (SettlementConfig.SettlementName)
+    elseif SettlementConfig.SettlementType == SettlementType.Village then
+        return class.new "VillageClass" (SettlementConfig.SettlementName)
     else
         log.error('[DistrictMgr]:CreateSettlementByConfig Undefined SettlementType')
     end

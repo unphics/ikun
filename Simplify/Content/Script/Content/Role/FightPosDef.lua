@@ -7,8 +7,8 @@
 
 ---@enum FightPosDef
 local FightPosDef = {
-    Frontline   = 1, -- 前排
-    Backline    = 2, -- 后排
+    Frontline   = 'Frontline',  -- 前排
+    Backline    = 'Backline',   -- 后排
 }
 
 return FightPosDef

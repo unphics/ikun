@@ -6,31 +6,36 @@
 
 ---@class BP_BillBoardComp: BP_BillBoardComp_C
 ---@field BillboardContent table<string, string>
-local M = UnLua.Class()
+local BP_BillBoardComp = UnLua.Class()
 
--- function M:Initialize(Initializer)
--- end
-
-function M:ReceiveBeginPlay()
-    self:GetOwner().MsgBusComp:RegEvent('RoleName', self, self.OnRoleNameUpdate)
+---@override
+function BP_BillBoardComp:ReceiveBeginPlay()
+    if self:GetOwner().MsgBusComp then
+        self:GetOwner().MsgBusComp:RegEvent('RoleName', self, self.OnRoleNameUpdate)
+    end
     self.BillboardContent = {}
 end
 
--- function M:ReceiveEndPlay()
--- end
-
-function M:ReceiveTick(DeltaSeconds)
-    self:Face2Player()
-    self:OnTick()
+---@override
+function BP_BillBoardComp:ReceiveTick(DeltaSeconds)
+    if net_util.is_client(self:GetOwner()) then
+        self:Face2Player()
+    end
+    self:UpdateHealthBar()
 end
 
----@public [Client] [Server] 直接设置Billboard文本
-function M:Multicast_SetText_RPC(Text)
+---@public 直接设置Billboard文本
+function BP_BillBoardComp:S2C_SetText_RPC(Text)
     self:GetWidget().TxtDebug:SetText(Text)
 end
 
+---@public 
+function BP_BillBoardComp:S2C_ShowHealthBar_RPC(bShow)
+    self:GetWidget().HealthBar:SetVisibility(bShow and UE.ESlateVisibility.SelfHitTestInvisible or UE.ESlateVisibility.Collapsed)
+end
+
 ---@private [Tick] Billboard永远面向玩家
-function M:Face2Player()
+function BP_BillBoardComp:Face2Player()
     local PlayerPawn = UE.UGameplayStatics.GetPlayerPawn(self:GetOwner(), 0) ---@type APawn
     if not PlayerPawn then
         return
@@ -42,30 +47,20 @@ function M:Face2Player()
     self:K2_SetRelativeRotation(Rot, false, UE.FHitResult(), false)
 end
 
----@private [Init]
-function M:OnRoleNameUpdate(RoleName)
-    -- self:Multicast_SetText(RoleName .. '\n' .. self:GetOwner():GetRole():GetRoleInstId())
-
-    -- debug
-    -- self.BillboardContent.RoleName = RoleName
-    self.BillboardContent.RoleInst = self:GetOwner():GetRole():GetRoleInstId()
-    self:RefreshBillboardShowText()
+---@private [Init] [Role]
+function BP_BillBoardComp:OnRoleNameUpdate(RoleName)
+    self:S2C_SetText(self:GetOwner():GetRole():GetRoleInstId())
 end
+
 ---@private [Tick]
-function M:OnTick()
+function BP_BillBoardComp:UpdateHealthBar()
+    if not self:GetOwner().AttrSet then
+        return
+    end
     local CurHealth = self:GetOwner().AttrSet:GetAttrValueByName("Health")
     local MaxHealth = self:GetOwner().AttrSet:GetAttrValueByName("MaxHealth")
     local HP = CurHealth / MaxHealth
     self:GetWidget().HealthBar:SetPercent(HP)
 end
 
----@private [Debug] 刷新Debug文字, 每次修改后调用
-function M:RefreshBillboardShowText()
-    local str = ''
-    for key, text in pairs(self.BillboardContent) do
-        str = str .. text .. '\n'
-    end
-    self:Multicast_SetText(str)
-end
-
-return M
+return BP_BillBoardComp

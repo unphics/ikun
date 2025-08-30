@@ -5,8 +5,6 @@
 ---@data Sat Jun 14 2025 18:43:45 GMT+0800 (中国标准时间)
 ---
 
-local RoleConfig = require('Content/Role/Config/RoleConfig')
-
 ---@class RoleInfoClass
 ---@field OwnerRole RoleClass
 ---@field RoleInstId number 角色实例Id
@@ -28,10 +26,10 @@ local RoleInfoClass = class.class'RoleInfoClass' {
 
 ---@param Role RoleClass
 function RoleInfoClass:ctor(Role, CfgId)
-    local Config = RoleConfig[CfgId] ---@type RoleConfig
+    local Config = MdMgr.RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
     self.OwnerRole = Role
     self.RoleCfgId = CfgId
-    self.RoleDispName = Config.DisplayName
+    self.RoleDispName = Config.RoleName
     self.bDead = true
 end
 ---@param InstId number

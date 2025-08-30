@@ -7,6 +7,7 @@
 
 ---@class ui_util
 ---@field uidef UIDef
+---@field uimgr GameUIMgr
 local ui_util = {}
 
 ui_util.uidef = require('Ikun/UI/UMG/GameUIDef')
@@ -39,6 +40,20 @@ end
 ui_util.unrelease_mouse = function()
     local PC = UE.UGameplayStatics.GetPlayerController(world_util.World, 0)
     UE.UWidgetBlueprintLibrary.SetInputMode_GameOnly(PC, true)
+end
+
+---@public
+---@param World UObject
+ui_util.show_mouse = function(World)
+    local pc = UE.UGameplayStatics.GetPlayerController(World, 0)
+    pc.bShowMouseCursor = true
+end
+
+---@public
+---@param World UObject
+ui_util.hide_mouse = function(World)
+    local pc = UE.UGameplayStatics.GetPlayerController(World, 0)
+    pc.bShowMouseCursor = false
 end
 
 return ui_util

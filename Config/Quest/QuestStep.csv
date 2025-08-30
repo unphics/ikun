@@ -1,0 +1,7 @@
+QuestStepId|Desc|StepType|Target|NextStep|Count|ConditionId|Param
+|描述|类型(Talk/Kill/CollectReach/ Puzzle/Trigger/Branch)|目标对象(NpcId/MonsterId/ ItemId/AreaId)|下一个步骤|需要数量|完成条件|额外参数
+|||||||
+31001||Talk|Lucan|31002||32001|
+|||||||
+31010|来到祖安第一步|Talk|5||||
+|||||||
