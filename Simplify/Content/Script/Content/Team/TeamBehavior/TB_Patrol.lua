@@ -5,7 +5,6 @@
 ---@data    Thu Apr 24 2025 00:12:44 GMT+0800 (中国标准时间)
 ---
 
-local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTType = require('Ikun.Module.AI.BT.BTType')
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
@@ -22,7 +21,7 @@ function TB_Patrol:InitTB()
     for _, role in ipairs(AllMember) do
         ---@type RoleClass
         local Role = role
-        local NewBTKey = RoleConfig[Role:GetRoleCfgId()].BTCfg[BTType.Patrol]
+        local NewBTKey = MdMgr.RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).BTCfg[BTType.Patrol]
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
 end

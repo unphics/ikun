@@ -5,7 +5,6 @@
 ---@data Fri Apr 25 2025 22:27:17 GMT+0800 (中国标准时间)
 ---
 
-local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTType = require('Ikun.Module.AI.BT.BTType')
 local FightPosDef = require 'Content/Role/FightPosDef'
 local BBKeyDef = require('Ikun/Module/AI/BT/BBKeyDef')
@@ -73,7 +72,7 @@ function TB_Fight:AllMemberSwitchFightBT()
     for _, ele in ipairs(AllMember) do
         ---@type RoleClass
         local Role = ele
-        local NewBTKey = RoleConfig[Role:GetRoleCfgId()].BTCfg[BTType.Fight]
+        local NewBTKey = MdMgr.RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).BTCfg[BTType.Fight]
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
 end
@@ -126,7 +125,7 @@ function TB_Fight:AsgnFightPos()
     ---@todo 优先处理只能承担单一职业的角色; 此处略过
     for _, ele in ipairs(tbMultiFP) do
         local Role = ele ---@type RoleClass
-        local tbFP = RoleConfig[Role:GetRoleCfgId()].FightPosAssign
+        local tbFP = MdMgr.RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).FightPosAssign
         local FightPos = nil
         ---@todo (if 有得跑 or 有牧师)血量极少, 强制后排
         ---@todo 血量较少, 优先后排

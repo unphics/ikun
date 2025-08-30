@@ -6,7 +6,6 @@
 ---@desc    对于摆放在场景中的Chr或者Spawn出的Chr, 分配给他们ConfigId, 在Chr里构造Role, 然后Role开始在游戏内容管理中注册, 成为世界的一员
 ---
 
-local RoleConfig = require('Content/Role/Config/RoleConfig')
 local BTDef = require('Ikun/Module/AI/BT/BTDef')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
@@ -76,7 +75,7 @@ end
 
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
 function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
-    local Config = RoleConfig[CfgId] ---@type RoleConfig
+    local Config = MdMgr.RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
     if not Config then
         return log.error(log.key.roleinit,'投胎失败!!!')
     end
@@ -96,7 +95,7 @@ function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     self:StartBT()
 end
 function RoleClass:StartBT()
-    local RoleCfg = RoleConfig[self:GetRoleCfgId()]
+    local RoleCfg = MdMgr.RoleMgr:GetRoleConfig(self:GetRoleCfgId())
     if RoleCfg then
         self:SwitchNewBT(RoleCfg.InitBT)
     end
@@ -152,8 +151,8 @@ function RoleClass:AddEnemyChecked(OtherRole)
     if not self:IsEnemy(OtherRole) then
         return false
     end
-    local OwnerRoleCfg = RoleConfig[self:GetRoleCfgId()]
-    local OtherRoleCfg = RoleConfig[OtherRole:GetRoleCfgId()]
+    local OwnerRoleCfg = MdMgr.RoleMgr:GetRoleConfig(self:GetRoleCfgId())
+    local OtherRoleCfg = MdMgr.RoleMgr:GetRoleConfig(OtherRole:GetRoleCfgId())
     if not OtherRoleCfg then
         return false
     end

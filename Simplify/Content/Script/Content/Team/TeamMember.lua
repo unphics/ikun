@@ -4,8 +4,6 @@
 ---@data Wed Apr 23 2025 22:30:53 GMT+0800 (中国标准时间)
 ---
 
-local RoleConfig = require('Content/Role/Config/RoleConfig')
-
 ---@class TeamMemberClass
 ---@field OwnerTeam TeamClass
 ---@field TeamLeader RoleClass
@@ -83,7 +81,7 @@ function TeamMemberClass:GetAllMember_PosCount()
     local ArrSingle = {}
     local ArrMulti = {}
     for _, id, role in self.dpMember:diter() do
-        local tbFPAssign = RoleConfig[role:GetRoleCfgId()].FightPosAssign
+        local tbFPAssign = MdMgr.RoleMgr:GetRoleConfig(role:GetRoleCfgId()).FightPosAssign
         if not tbFPAssign or #tbFPAssign == 0 then
             log.error('TeamMemberClass:GetAllMember_PosCount() 发现不承担战场位置的角色', role:GetRoleCfgId())
         end
@@ -99,7 +97,7 @@ end
 function TeamMemberClass:CalcMaxCountPerPos()
     local MaxCountPerPos = {}
     for _, id, role in self.dpMember:diter() do
-        local tbFightPos = RoleConfig[role:GetRoleCfgId()].FightPosAssign
+        local tbFightPos = MdMgr.RoleMgr:GetRoleConfig(role:GetRoleCfgId()).FightPosAssign
         for _, pos in ipairs(tbFightPos) do
             if not MaxCountPerPos[pos] then
                 MaxCountPerPos[pos] = 0

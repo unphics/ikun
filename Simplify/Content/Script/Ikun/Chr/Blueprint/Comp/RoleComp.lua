@@ -4,8 +4,6 @@
 ---@data Sun Jan 19 2025 20:19:40 GMT+0800 (中国标准时间)
 ---
 
-local RoleConfig = require('Content/Role/Config/RoleConfig')
-
 ---@class RoleComp: RoleComp_C
 local M = UnLua.Class()
 
@@ -29,9 +27,10 @@ function M:OnChrInitData()
     if (net_util.is_client(self:GetOwner())) then
         return false
     end
+    local roleConfig = MdMgr.RoleMgr:GetRoleConfig(self.RoleConfigId)
     ---@step 如果有特化的角色模板则使用特化初始化
-    if RoleConfig[self.RoleConfigId].SpecialClass then
-        self.Role = class.new(RoleConfig[self.RoleConfigId].SpecialClass)()
+    if roleConfig.SpecialClass then
+        self.Role = class.new(roleConfig.SpecialClass)()
     else
         self.Role = class.new 'RoleClass'()
     end

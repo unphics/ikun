@@ -7,10 +7,10 @@
 
 ---@enum BTType
 local M = {
-    Special = 1, -- 特殊
-    Patrol  = 2, -- 巡逻
-    Fight   = 3, -- 战斗
-    Init    = 4, -- 初始
+    Special = 'Special',    -- 特殊
+    Patrol  = 'Patrol',     -- 巡逻
+    Fight   = 'Fight',      -- 战斗
+    Init    = 'Init',       -- 初始
 }
 
 return M

@@ -4,7 +4,6 @@
 ---@data Tue Jan 14 2025 13:56:55 GMT+0800 (中国标准时间)
 ---
 
-local RoleConfig = require('Content/Role/Config/RoleConfig')
 local LichColorCfg = require('Content/Role/Config/LichColorCfg')
 
 ---@class BP_Lich: BP_Lich_C
@@ -44,7 +43,7 @@ function BP_Lich:OnChrInitDisplay()
     if not role then
         return log.error('BP_Lich:OnChrInitDisplay() : Role未初始化 !!!', obj_util.dispname(self))
     end
-    local roleCfg = RoleConfig[role:GetRoleCfgId()]
+    local roleCfg = MdMgr.RoleMgr:GetRoleConfig(role:GetRoleCfgId())
     if not roleCfg then
         return log.error('BP_Lich:OnChrInitDisplay() : Role未定义 !!!', role:GetRoleCfgId())
     end
