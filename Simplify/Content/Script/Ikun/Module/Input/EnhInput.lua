@@ -25,9 +25,9 @@ local IADef = {
     IA_Look = '/Game/Ikun/Blueprint/Input/IA/IA_Look.IA_Look',
     IA_MouseLeftDown = '/Game/Ikun/Blueprint/Input/IA/IA_MouseLeftDown.IA_MouseLeftDown',
     IA_Interact = '/Game/Ikun/UI/Input/IA/IA_Interact.IA_Interact',
-    IA_TalkNext = '/Game/Ikun/UI/Input/IA/IA_TalkNext.IA_TalkNext',
     IA_Wheel = '/Game/Ikun/UI/Input/IA/IA_Wheel.IA_Wheel',
     IA_Tab = '/Game/Ikun/UI/Input/IA/IA_Tab.IA_Tab',
+    IA_BlankSpace = '/Game/Ikun/Blueprint/Input/IA/IA_BlankSpace.IA_BlankSpace',
 }
 EnhInput.IADef = IADef
 
@@ -111,14 +111,14 @@ EnhInput.BindActions = function(pc)
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
             InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown,EnhInput.TriggerEvent.Triggered,  ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
+    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_BlankSpace, EnhInput.TriggerEvent.Triggered,
+        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_BlankSpace,EnhInput.TriggerEvent.Started,  ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        end, _)
 
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Interact, EnhInput.TriggerEvent.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
             InputMgr.TriggerInputAction(IADef.IA_Interact,EnhInput.TriggerEvent.Started,  ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-        end, _)
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_TalkNext, EnhInput.TriggerEvent.Started,
-        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_TalkNext,EnhInput.TriggerEvent.Started,  ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end, _)
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Wheel, EnhInput.TriggerEvent.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)

@@ -102,4 +102,8 @@ function BP_ChrBase:MoveRightLeft(Fwd, Value)
     self:AddMovementInput(right, Value, false)
 end
 
+function BP_ChrBase:C2S_Jump()
+    self:Jump()
+end
+
 return BP_ChrBase

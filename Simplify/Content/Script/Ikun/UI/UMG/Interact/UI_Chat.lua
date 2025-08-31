@@ -33,7 +33,7 @@ function UI_Chat:OnShow()
     -- local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
     -- pc.InteractComp:C2S_ReqInteractBegin()
     self.PowerInteract = InputMgr.ObtainInputPower(self)
-    InputMgr.RegisterInputAction(self.PowerInteract, EnhInput.IADef.IA_TalkNext,
+    InputMgr.RegisterInputAction(self.PowerInteract, EnhInput.IADef.IA_BlankSpace,
         EnhInput.TriggerEvent.Started, self.OnBtnTalkNextClicked)
     InputMgr.RegisterInputAction(self.PowerInteract, EnhInput.IADef.IA_Wheel,
         EnhInput.TriggerEvent.Started, self.OnWhellScroll)

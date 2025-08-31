@@ -59,7 +59,7 @@ function GazeComp:C2S_ReqUpdateGazing_RPC(InteractActor)
         return
     end
     self.Rep_GazeName = ''
-    if obj_util.is_valid(InteractActor) then
+    if obj_util.is_valid(InteractActor) and (not self:GetOwner().OwnerChr == InteractActor) then
         self.Rep_InteractActor = InteractActor
         local role = rolelib.role(self.Rep_InteractActor)
         if role then

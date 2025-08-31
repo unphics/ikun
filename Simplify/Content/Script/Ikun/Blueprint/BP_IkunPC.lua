@@ -62,6 +62,7 @@ function BP_IkunPC:InitInputSystem()
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, self.OnMouseLeftStarted)
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftCompleted)
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_BlankSpace, EnhInput.TriggerEvent.Started, self.OnJumpStarted)
 end
 EnhInput.BindActions(BP_IkunPC)
 
@@ -80,6 +81,12 @@ end
 function BP_IkunPC:OnLookInput(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
     self:AddYawInput(-ActionValue.X)
     self:AddPitchInput(ActionValue.Y)
+end
+
+function BP_IkunPC:OnJumpStarted(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+    if obj_util.is_valid(self.OwnerChr) then
+        self.OwnerChr:C2S_Jump()
+    end
 end
 
 ---@private [Input]
