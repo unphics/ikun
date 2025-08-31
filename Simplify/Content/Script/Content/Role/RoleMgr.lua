@@ -9,7 +9,7 @@
 ---@field RoleId number
 ---@field RoleName string
 ---@field RoleDesc string
----@field BelongKingdomCfgId number
+---@field BelongKingdom number
 ---@field InitBT string
 ---@field Color number
 ---@field SpecialClass string

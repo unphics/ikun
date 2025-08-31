@@ -20,7 +20,7 @@ local AnimComp = UnLua.Class()
 function AnimComp:ReceiveTick(DeltaSeconds)
 end
 
-function AnimComp:UpdatetGroundRot()
+function AnimComp:IntoFight()
 end
 
 return AnimComp

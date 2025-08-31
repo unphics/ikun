@@ -89,9 +89,10 @@ function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     self.NpcChat = class.new 'NpcChatClass'(self)
 
     local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
-    self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(Config.BelongKingdomCfgId) ---@type Kingdom
+    self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(Config.BelongKingdom) ---@type Kingdom
     self.BelongKingdomLua:AddKingdomMember(self)
 
+    self.Avatar.SkillComp:InitRoleSkill()
     self:StartBT()
 end
 function RoleClass:StartBT()

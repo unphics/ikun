@@ -3,6 +3,9 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogIkun, Log, All)
+DEFINE_LOG_CATEGORY(LogIkun)
+
 class FUnLuaExModule : public IModuleInterface, private FSelfRegisteringExec {
 public:
 	virtual void StartupModule() override;

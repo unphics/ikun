@@ -31,9 +31,10 @@ end
 
 ---@public 入战调用
 function InFightComp:C2S_FallInFight_RPC()
+    self.OutFightTimeCount = OUT_FIGHT_TIME
     if not self:CheckInFight() then
         gas_util.add_loose_tag(self:GetOwner(), 'Role.State.InFight')
-        self.OutFightTimeCount = OUT_FIGHT_TIME
+        self:GetOwner().SkillComp:TryActiveSkillByTag(UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Cinematic.Equip'))
     end
 end
 
