@@ -8,6 +8,10 @@
 ---@class GA_Equip: GA_IkunBase
 local GA_Equip = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
 
+function GA_Equip:K2_ActivateAbilityFromEvent(payload)
+    log.dev('qqqqqqqqqqqqqqqqqqq', payload)
+end
+
 ---@override
 function GA_Equip:OnActivateAbility()
     self.Super.OnActivateAbility(self)

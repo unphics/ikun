@@ -15,38 +15,38 @@ log.lua_log_head = ' *******'
 
 ---@public 临时的通用print
 function log.log(...)
-    print( log.lua_log_head, ...)
+    IkunLog( log.lua_log_head, ...)
 end
 
 ---@public 临时的开发用红色print
 function log.dev(...)
-    UnLua.LogError(log.lua_log_head, '[DEV]', ...)
+    IkunError(log.lua_log_head, '[DEV]', ...)
 end
 
 ---@public 最详细的调试信息, 记录变量值, 方法调用链路等细节; 生产环境通常关闭, 仅用于开发阶段定位问题
 ---@rule ikun中可以提交debug到版本分支
 function log.debug(...)
-    print( log.lua_log_head, '[DEBUG]', ...)
+    IkunLog( log.lua_log_head, '[DEBUG]', ...)
 end
 
 ---@public 记录游戏运行的关键节点和正常状态(如登录, 场景加载完成, 系统启动等), 需保证信息对运维人员有意义且可读性强
 function log.info(...)
-    print( log.lua_log_head, '[INFO]', ...)
+    IkunLog( log.lua_log_head, '[INFO]', ...)
 end
 
 ---@public 潜在异常单微营销核心功能(如配置文件缺失使用默认值, 网络延迟超过阈值, 资源加载超时重试), 需要后续关注但无需立即处理
 function log.warn(...)
-    UnLua.LogWarn(log.lua_log_head, '[WARN]', ...)
+    IkunWarn(log.lua_log_head, '[WARN]', ...)
 end
 
 ---@public 功能异常但游戏仍可运行(如数据库查询失败, 协议解析错误, 支付验证失败), 必须及时修复以避免问题扩大
 function log.error(...)
-    UnLua.LogError(log.lua_log_head, '[ERROR]', ...)
+    IkunError(log.lua_log_head, '[ERROR]', ...)
 end
 
 ---@public 导致游戏崩溃或服务终止的致命错误(如内存泄漏达到临界值, 关键线程死锁, 服务器集群失联), 需立即触发警告并人工干预
 function log.fatal(...)
-    UnLua.LogError(log.lua_log_head, '[FATAL]', ..., debug.traceback())
+    IkunError(log.lua_log_head, '[FATAL]', ..., debug.traceback())
 end
 
 function log.fmt84(num)

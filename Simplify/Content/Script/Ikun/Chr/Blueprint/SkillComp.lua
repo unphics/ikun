@@ -7,6 +7,15 @@
 
 local AbilityPathHead = '/Game/Ikun/Blueprint/GAS/Ability/'
 
+---@class SkillConfig
+---@field SkillName string
+---@field SkillDesc string
+---@field AbilityTemplate string
+---@field SkillEffects number[]
+---@field TargetActors number[]
+---@field AbilityAnims string[]
+---@field Params table
+
 ---@class SkillComp: SkillComp_C
 ---@field AllSkill table
 local SkillComp = UnLua.Class()
@@ -25,8 +34,6 @@ local SkillComp = UnLua.Class()
 
 ---@public
 function SkillComp:InitRoleSkill()
-    IkunLog('qqqqqqqqqq')
-    IkunWarn('wwwwww')
     self.AllSkill = {}
     local role = rolelib.role(self:GetOwner())
     local roleCfg = MdMgr.RoleMgr:GetRoleConfig(role:GetRoleCfgId())
@@ -35,12 +42,13 @@ function SkillComp:InitRoleSkill()
         return
     end
     for _, skillId in ipairs(roleCfg.RoleSkills) do
-        local skillCfg = allSkillCfg[skillId]
+        local skillCfg = allSkillCfg[skillId] ---@type SkillConfig
         if skillCfg then
             local abilityPath = AbilityPathHead..skillCfg.AbilityTemplate..'.'..skillCfg.AbilityTemplate..'_C'
             local abilityClass = UE.UClass.Load(abilityPath)
             local handle = self:GetOwner().ASC:K2_GiveAbility(abilityClass, 0, 0)
             if handle and handle ~= -1 then
+                log.dev('www', skillId, skillCfg.SkillName)
                 table.insert(self.AllSkill, {Id = skillId, Handle = handle, Cfg = skillCfg})
             end
         end
@@ -54,16 +62,15 @@ function SkillComp:TryActiveSkillByTag(Tag)
         return
     end
     local asc = self:GetOwner().ASC
-    self:qqq()
-    -- for _, skillInfo in ipairs(self.AllSkill) do
-    --     local ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(asc, skillInfo.Handle, false)
-    --     if UE.UBlueprintGameplayTagLibrary.HasTag(ability.AbilityTags, Tag, true) then
-    --         -- asc:TryActivateAbility(skillInfo.Handle, true)
-    --         local payload = UE.FGameplayEventData()
-    --         UE.UAbilitySystemBlueprintLibrary.SendGameplayEventToActor(self:GetOwner(), Tag, payload)
-    --         break
-    --     end
-    -- end
+    for _, skillInfo in ipairs(self.AllSkill) do
+        local ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(asc, skillInfo.Handle, false)
+        if UE.UBlueprintGameplayTagLibrary.HasTag(ability.AbilityTags, Tag, true) then
+            -- asc:TryActivateAbility(skillInfo.Handle, true)
+            local payload = UE.FGameplayEventData()
+            UE.UAbilitySystemBlueprintLibrary.SendGameplayEventToActor(self:GetOwner(), Tag, payload)
+            break
+        end
+    end
 end
 
 return SkillComp
