@@ -8,23 +8,15 @@
 ---@class GA_Equip: GA_IkunBase
 local GA_Equip = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
 
-function GA_Equip:K2_ActivateAbilityFromEvent(payload)
-    log.dev('qqqqqqqqqqqqqqqqqqq', payload)
-end
-
 ---@override
-function GA_Equip:OnActivateAbility()
-    self.Super.OnActivateAbility(self)
-
-    ---@type UATPlayMtgAndWaitEvent
-    local at = UE.UATPlayMtgAndWaitEvent.PlayMtgAndWaitEvent(self, 'task name', 
-        self.MtgEquip, UE.FGameplayTagContainer(),  1 , '', false, 1.0)
-    at.OnBlendOut:Add(self, self.OnCompleted)
-    at.OnCompleted:Add(self, self.OnCompleted)
-    at.OnInterrupted:Add(self, self.OnCancelled)
-    at.OnCancelled:Add(self, self.OnCancelled)
-    at:ReadyForActivation()
-    self:RefTask(at)
+function GA_Equip:K2_ActivateAbilityFromEvent(payload)
+    self:GAInitData()
+    if net_util.is_server(self) then
+        local config = payload.OptionalObject.SkillConfig ---@type SkillConfig
+        local animKey = config.AbilityAnims[1]
+        self.MtgEquip = self.AvatarLua.AnimComp.AnimMtg:Find(animKey)
+        self:S2C_PlayEquipMtg(self.MtgEquip)
+    end
 end
 
 ---@override
@@ -32,6 +24,19 @@ function GA_Equip:K2_OnEndAbility(WasCancelled)
     local chr = self:GetAvatarActorFromActorInfo()
     chr.AnimComp:IntoFight()
     self.Super.K2_OnEndAbility(self, WasCancelled)
+end
+
+---@private
+function GA_Equip:S2C_PlayEquipMtg_RPC(Mtg)
+    ---@type UATPlayMtgAndWaitEvent
+    local at = UE.UATPlayMtgAndWaitEvent.PlayMtgAndWaitEvent(self, 'task name', 
+        Mtg, UE.FGameplayTagContainer(),  1 , '', false, 1.0)
+    at.OnBlendOut:Add(self, self.OnCompleted)
+    at.OnCompleted:Add(self, self.OnCompleted)
+    at.OnInterrupted:Add(self, self.OnCancelled)
+    at.OnCancelled:Add(self, self.OnCancelled)
+    at:ReadyForActivation()
+    self:RefTask(at)
 end
 
 ---@private

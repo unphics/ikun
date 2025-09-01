@@ -31,7 +31,7 @@ function GA_IkunBase:K2_OnEndAbility(WasCancelled)
     self.Overridden.K2_OnEndAbility(self, WasCancelled)
 end
 
----@private [Init] 初始化数据
+---@protected [Init] 初始化数据
 function GA_IkunBase:GAInitData()
     self.tbUStructRef = {}
     self.OnAbilityEnd = {}

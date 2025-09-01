@@ -20,7 +20,4 @@ local AnimComp = UnLua.Class()
 function AnimComp:ReceiveTick(DeltaSeconds)
 end
 
-function AnimComp:IntoFight()
-end
-
 return AnimComp
