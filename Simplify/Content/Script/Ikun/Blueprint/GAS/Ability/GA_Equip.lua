@@ -12,7 +12,6 @@ local GA_Equip = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
 function GA_Equip:K2_ActivateAbilityFromEvent(Payload)
     self:GAInitData()
     if net_util.is_server(self) then
-        log.dev('GA_Equip:K2_ActivateAbilityFromEvent')
         local config = Payload.OptionalObject.SkillConfig ---@type SkillConfig
         local animKey = config.AbilityAnims[1]
         self.MtgEquip = self.AvatarLua.AnimComp.AnimMtg:Find(animKey)
@@ -34,7 +33,7 @@ function GA_Equip:S2C_PlayEquipMtg_RPC(Mtg)
         Mtg, UE.FGameplayTagContainer(),  1 , '', false, 1.0)
     at.OnBlendOut:Add(self, self.OnCompleted)
     at.OnCompleted:Add(self, self.OnCompleted)
-    at.OnInterrupted:Add(self, self.OnInterrupted)
+    at.OnInterrupted:Add(self, self.OnCancelled)
     at.OnCancelled:Add(self, self.OnCancelled)
     at:ReadyForActivation()
     self:RefTask(at)
@@ -42,18 +41,11 @@ end
 
 ---@private
 function GA_Equip:OnCompleted()
-    log.dev('GA_Equip:OnCompleted', net_util.print(self))
     self:GASuccess()
-end
-
-function GA_Equip:OnInterrupted()
-    log.dev('GA_Equip:OnInterrupted', net_util.print(self))
-    self:GAFail()
 end
 
 ---@private
 function GA_Equip:OnCancelled()
-    log.dev('GA_Equip:OnCancelled', net_util.print(self))
     self:GAFail()
 end
 
