@@ -2,4 +2,5 @@ SkillId|SkillName|SkillDesc|AbilityTemplate|SkillEffects|TargetActors|AbilityAni
 |名字|描述|GA蓝图|GE的蓝图|TA的蓝图|动画|
 |||||||
 530001|入战|入战动画|GA_Equip|||Equip,|
+530002|出战|出战动画|GA_UnEquip|||UnEquip,|
 530101|射箭|拉弓射箭|||||

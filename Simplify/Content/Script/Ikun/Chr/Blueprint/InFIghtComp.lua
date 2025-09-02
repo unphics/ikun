@@ -25,6 +25,7 @@ function InFightComp:ReceiveTick(DeltaSeconds)
         if self.OutFightTimeCount < 0 then
             gas_util.remove_loose_tag(self:GetOwner(), 'Role.State.InFight')
             self.OutFightTimeCount = nil
+            self:GetOwner().SkillComp:TryActiveSkillByTag(UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Cinematic.UnEquip'))
         end
     end
 end

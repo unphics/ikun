@@ -48,6 +48,7 @@ function SkillComp:InitRoleSkill()
             local abilityClass = UE.UClass.Load(abilityPath)
             local handle = self:GetOwner().ASC:K2_GiveAbility(abilityClass, 0, 0)
             if handle and handle ~= -1 then
+                log.dev('SkillComp:InitRoleSkill()', skillId)
                 table.insert(self.AllSkill, {Id = skillId, Handle = handle, Cfg = skillCfg})
             end
         end
@@ -60,6 +61,7 @@ function SkillComp:TryActiveSkillByTag(Tag)
     if not Tag then
         return
     end
+    log.dev('SkillComp:TryActiveSkillByTag', Tag.TagName)
     local asc = self:GetOwner().ASC
     for _, skillInfo in ipairs(self.AllSkill) do
         local ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(asc, skillInfo.Handle, false)
