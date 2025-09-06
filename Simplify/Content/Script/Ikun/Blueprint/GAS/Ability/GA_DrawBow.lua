@@ -119,7 +119,8 @@ function GA_DrawBow:OnAnimShoot()
     local shootRot = self.AvatarLua:GetControlRotation()
     local shootTansform = UE.FTransform(shootRot:ToQuat(), shootLoc)
     local ArrowClass = UE.UClass.Load('/Game/Ikun/Chr/Archer/BP_Arrow.BP_Arrow_C')
-    actor_util.spawn_always(self.AvatarLua, ArrowClass, shootTansform)
+    local arrow = actor_util.spawn_always(self.AvatarLua, ArrowClass, shootTansform)
+    arrow:InitProjectile(self:GetAvatarActorFromActorInfo())
 end
 
 return GA_DrawBow

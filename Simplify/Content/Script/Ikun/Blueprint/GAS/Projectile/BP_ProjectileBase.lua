@@ -25,6 +25,11 @@ function BP_ProjectileBase:ReceiveTick(DeltaSeconds)
     -- self:DrawArrowPath(DeltaSeconds)
 end
 
+---@public 初始化投射物的发射者
+function BP_ProjectileBase:InitProjectile(Chr)
+    self.Shooter = Chr
+end
+
 ---@private [Draw] 绘制箭矢的路径
 function BP_ProjectileBase:DrawArrowPath(DeltaTime)
     if net_util.is_server(self) then
@@ -44,13 +49,22 @@ end
 
 ---@private
 function BP_ProjectileBase:OnCollisionEnvBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult)
-log.dev('BP_ProjectileBase:OnCollisionEnvBeginOverlap()', 'World')
     -- draw_util.draw_sphere(self:K2_GetActorLocation(), 50)
+    if self.Shooter == OtherActor then
+        return
+    end
+    log.dev('BP_ProjectileBase:OnCollisionEnvBeginOverlap()', 'World')
     self:StopAndStatic()
 end
 
 ---@private
 function BP_ProjectileBase:OnCollisionPawnBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult)
+    if not obj_util.is_valid(self.Shooter) then
+        return
+    end
+    if self.Shooter == OtherActor then
+        return
+    end
     log.dev('BP_ProjectileBase:OnCollisionPawnBeginOverlap()', '角色')
     self:StopAndStatic()
 end
