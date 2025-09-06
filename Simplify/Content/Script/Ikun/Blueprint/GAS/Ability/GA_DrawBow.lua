@@ -115,7 +115,7 @@ function GA_DrawBow:OnAnimShoot()
     end
     local shootLoc = self.AvatarLua.Bow:GetSocketLocation('Bow_String')
     local upDir = self.AvatarLua:GetActorUpVector()
-    shootLoc = shootLoc + upDir * 60
+    shootLoc = shootLoc + upDir * 10
     local shootRot = self.AvatarLua:GetControlRotation()
     local shootTansform = UE.FTransform(shootRot:ToQuat(), shootLoc)
     local ArrowClass = UE.UClass.Load('/Game/Ikun/Chr/Archer/BP_Arrow.BP_Arrow_C')
