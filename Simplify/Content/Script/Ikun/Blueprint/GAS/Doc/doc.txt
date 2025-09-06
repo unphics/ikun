@@ -34,20 +34,35 @@
     TargetActor分类:
         点目标(Point), 范围目标(Area), 投射物目标(Projectile), 链式目标(Chain), 复合目标(Composite)
     GameplayTag:
-        Skill
-            Type
-                Trigger
-                    Active
-                    Passive
-                Usage
-                    Combat
-                    Life
-                    Cinematic
-                        Equip
-                    System
-                Performance
+        Skill(技能)
+            Type(类型)
+                Trigger(触发)
+                    Active(主动技能)
+                    Passive(被动技能)
+                Usage(使用场景)
+                    Combat(战斗技能)
+                    Life(生活技能)
+                    Cinematic(表现技能)
+                        Equip(入战)
+                        UnEquip(出战)
+                    System(系统技能)
+                        Death(死亡)
+                        Revive(复活)
+                Performance(表现形式)
                     Melee
                     Ranged
                     Projectile
                     AOE
+            Action(动作, 技能的阶段与动作步骤)
+                Start(技能开始)
+                Cast(释放动作)
+                Charge(蓄力中)
+                    Hold(维持)
+                    Max(满蓄力)
+                Release(释放)
+                Fire(发射)
+                Hit(命中)
+                Finish(结束)
+                Cancel(被打断)
+            
             

@@ -11,9 +11,6 @@ local BP_Archer = UnLua.Class('Ikun/Chr/Blueprint/BP_ChrBase')
 ---@override
 function BP_Archer:ReceiveBeginPlay()
     self.Super.ReceiveBeginPlay(self)
-    -- self.ASC.OnTagChanged:Add(self,function(this, tag, bexist)
-    --     log.dev('[OnTagChanged]', tag.TagName, bexist)
-    -- end)
 end
 
 ---@override
@@ -24,13 +21,9 @@ end
 ---@public PC会调用此方法
 ---@todo 考虑其实PC不需要调用这个，而是直接执行
 function BP_Archer:C2S_LeftStart_RPC()
-    local _, handle = gas_util.get_all_active_abilities(self)
-    local result = self.ASC:TryActivateAbility(handle[1], true)
-end
-
----@public PC会调用此方法
-function BP_Archer:C2S_LeftEnd_RPC()
-    UE.UAbilitySystemBlueprintLibrary.SendGameplayEventToActor(self, UE.UIkunFnLib.RequestGameplayTag('Input.MouseLeft.Completed'), nil)
+    -- local _, handle = gas_util.get_all_active_abilities(self)
+    -- local result = self.ASC:TryActivateAbility(handle[1], true)
+    self.SkillComp:TryActiveSkillByTag(UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Trigger.Normal'))
 end
 
 return BP_Archer

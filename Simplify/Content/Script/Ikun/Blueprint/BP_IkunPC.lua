@@ -103,22 +103,4 @@ function BP_IkunPC:OnMouseLeftStarted(ActionValue, ElapsedSeconds, TriggeredSeco
     self.OwnerChr:C2S_LeftStart()
 end
 
-function BP_IkunPC:OnMouseLeftTriggered()
-    if not obj_util.is_valid(self.OwnerChr) then
-        return
-    end
-    self.OwnerChr.InFightComp:C2S_FallInFight()
-end
-
----@private [Input]
-function BP_IkunPC:OnMouseLeftCompleted()
-    if not obj_util.is_valid(self.OwnerChr) then
-        return
-    end
-    if not self.OwnerChr.InFightComp:CheckInFight() then
-        return
-    end
-    self.OwnerChr:C2S_LeftEnd()
-end
-
 return BP_IkunPC

@@ -5,7 +5,7 @@
 ---@data    Thu Jul 31 2025 23:32:46 GMT+0800 (中国标准时间)
 ---
 
-local OUT_FIGHT_TIME = 10 -- 出战时间
+local OUT_FIGHT_TIME = 30 -- 出战时间
 
 ---@class InFightComp: InFightComp_C
 local InFightComp = UnLua.Class()

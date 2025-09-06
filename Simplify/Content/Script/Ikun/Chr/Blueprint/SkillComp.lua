@@ -60,6 +60,7 @@ function SkillComp:TryActiveSkillByTag(Tag)
     if not Tag then
         return
     end
+    log.info('SkillComp:TryActiveSkillByTag', Tag.TagName)
     local asc = self:GetOwner().ASC
     for _, skillInfo in ipairs(self.AllSkill) do
         local ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(asc, skillInfo.Handle, false)

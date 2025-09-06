@@ -48,6 +48,9 @@ end
 ---@public 放弃输入监听权
 ---@param Power InputPower
 InputMgr.ReliquishInputPower = function(Power)
+    if not Power then
+        return
+    end
     for i, item in ipairs(InputMgr._InputPowerStack) do
         if item == Power then
             table.remove(InputMgr._InputPowerStack, i)
@@ -91,7 +94,9 @@ end
 ---@public 反注册监听输入
 ---@param Power InputPower
 InputMgr.UnregisterInputAction = function(Power)
-    InputMgr._InputEvents[Power] = nil
+    if InputMgr._InputEvents[Power] then
+        InputMgr._InputEvents[Power] = nil
+    end
 end
 
 ---@public 触发输入事件

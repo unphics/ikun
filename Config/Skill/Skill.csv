@@ -3,4 +3,4 @@ SkillId|SkillName|SkillDesc|AbilityTemplate|SkillEffects|TargetActors|AbilityAni
 |||||||
 530001|入战|入战动画|GA_Equip|||Equip,|
 530002|出战|出战动画|GA_UnEquip|||UnEquip,|
-530101|射箭|拉弓射箭|||||
+530101|射箭|拉弓射箭|GA_DrawBow|||DrawBow,|
