@@ -64,5 +64,12 @@
                 Hit(命中)
                 Finish(结束)
                 Cancel(被打断)
-            
+            State(状态, 技能的状态)
+                Charging
+                Casting
+                Cooldown
+                Active
+                ToggledOn
+                Diabled(被沉默)
+            Effect
             

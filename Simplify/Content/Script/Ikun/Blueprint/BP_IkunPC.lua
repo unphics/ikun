@@ -71,7 +71,7 @@ function BP_IkunPC:OnMoveInput(ActionValue, ElapsedSeconds, TriggeredSeconds, In
     local rot = self:GetControlRotation()
     local yawRot = UE.FRotator(0, rot.Yaw, 0)
     local forward = yawRot:GetForwardVector()
-    if self.OwnerChr then
+    if self.OwnerChr and not gas_util.has_loose_tag(self.OwnerChr, 'Role.State.CantMove') then
         self.OwnerChr:MoveForwardBack(forward, ActionValue.Y)
         self.OwnerChr:MoveRightLeft(forward, ActionValue.X)
     end

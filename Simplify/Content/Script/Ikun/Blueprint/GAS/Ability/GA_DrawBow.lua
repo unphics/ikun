@@ -41,6 +41,7 @@ function GA_DrawBow:K2_ActivateAbilityFromEvent(Payload)
         shootTask:ReadyForActivation()
         self:RefTask(shootTask)
     else
+        gas_util.add_loose_tag(self:GetAvatarActorFromActorInfo(), 'Role.State.CantMove')
         self.DrawPower = InputMgr.BorrowInputPower(self)
         InputMgr.RegisterInputAction(self.DrawPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftDownCompleted)
     end
@@ -49,6 +50,9 @@ end
 ---@override
 function GA_DrawBow:K2_OnEndAbility(WasCancelled)
     self:GetAvatarActorFromActorInfo().AnimComp:IntoFight()
+    if net_util.is_client(self) then
+        gas_util.remove_loose_tag(self:GetAvatarActorFromActorInfo(), 'Role.State.CantMove')
+    end
     InputMgr.UnregisterInputAction(self.DrawPower)
     InputMgr.ReliquishInputPower(self.DrawPower)
     self.Super.K2_OnEndAbility(self, WasCancelled)
