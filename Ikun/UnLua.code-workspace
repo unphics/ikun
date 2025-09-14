@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "Content/Script"
+		},
+		{
+			"path": "Plugins/UnLua/Intermediate/IntelliSense"
+		},
+		{
+			"path": "Plugins/UnLua/Content/Script/UnLua"
+		},
+		{
+			"path": "../Config"
+		}
+	],
+	"settings": {}
+}

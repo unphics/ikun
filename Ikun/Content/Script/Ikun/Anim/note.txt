@@ -1,0 +1,14 @@
+
+RootMoton没有位移的警告:
+    警告日志:LogAnimDistanceMatchingLibrary: Warning: Failed to advance any distance after 5 loops on anim sequence (AS_Run_F_0_Start_Seq). Aborting.
+    代码:AnimDistanceMatchingLibrary.cpp/GetTimeAfterDistanceTraveled()/if (!FMath::IsNearlyZero(AnimationDistanceThisStep))
+    个人解释: 有的Start动画即起步动画前5帧确实没有位移, 这个数值放大到30左右即可
+    不可解决的原因: 此警告的可接受阈值帧数是硬编码在代码里的
+    源码注释:
+        // Distance Matching expects the distance curve on the animation to increase monotonically. If the curve fails to increase in value
+        // after a certain number of iterations, we abandon the algorithm to avoid an infinite loop.
+    源码注释译:
+        // 距离匹配要求动画上的距离曲线单调增加。如果曲线的值没有增加
+        // 经过一定次数的迭代后，我们放弃了算法，以避免无限循环。
+    
+

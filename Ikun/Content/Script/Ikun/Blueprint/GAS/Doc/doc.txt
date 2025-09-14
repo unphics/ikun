@@ -1,0 +1,75 @@
+
+角色技能构建:(打算用AbilityTrigger所以需要互斥)
+    入战
+    出战
+    瞬移(Shift)
+    技能一(普攻)(左键)
+    技能二(右键)
+    受击
+
+技能系统设计构思:
+    框架使用:GAS仅
+    技能设计分类(偏配置或策划向):
+        按触发方式: 主动技能(Active), 被动技能(Passive)
+        按使用场景/功能性: 战斗技能(Combat), 生活技能(Life), 表现技能(Cinematic, 入战), 系统技能(System, 死亡处理/复活/切换职业)
+        按表现形式: 近战技能(Melee), 远程技能(Ranged), 投射物技能(Projectile), 范围技能(AOE), 持续技能(OverTime), 召唤技能(Summon),
+            位移技能(Movement), 控制技能(CrowdControl), 转换技能(Transform, 切换形态), 辅助技能(Auxiliary)
+        按目标对象: 自我(Self), 单体(SingleTarget), 群体(Multi), 环境(Env), 链式(Chain)
+        按逻辑特征/技术实现: 
+            即时技能(Instance)
+            引导技能(Channel): 需要持续施法
+            蓄力技能(Charged): 按住输入键充能, 释放后强度不同
+            组合技能(Combo): 按一定顺序释放形成连招
+            开关型技能(Toggle): 开启后持续, 手动关闭
+            被动触发技能(Proc):概率或条件触发
+        按资源消耗类型: 法力值(Mana), 体力值(Stamina), 冷却时间(CooldownOnly), 物品(Item), 无消耗(Free)
+        按技能归属: 职业技能(Class), 通用技能(Common), 种族/血统(Raical/Lineage), 装备技能(Equipment), 任务技能(Quest)
+    静态配置方式:
+        根据技能实现不同写具体的AbilityBase如GA_MeleeInstant
+        配置表为具体的实例如:
+            SkillId:1; Ability:GA_MeleeInstant; AbilityAnims;
+    动态赋予方式:
+        将技能配置添加到角色的配置表上, 初始化Role的时候执行将技能赋予角色
+    释放到结算流程:
+    TargetActor分类:
+        点目标(Point), 范围目标(Area), 投射物目标(Projectile), 链式目标(Chain), 复合目标(Composite)
+    GameplayTag:
+        Skill(技能)
+            Type(类型)
+                Trigger(触发)
+                    Active(主动技能)
+                    Passive(被动技能)
+                Usage(使用场景)
+                    Combat(战斗技能)
+                    Life(生活技能)
+                    Cinematic(表现技能)
+                        Equip(入战)
+                        UnEquip(出战)
+                    System(系统技能)
+                        Death(死亡)
+                        Revive(复活)
+                Performance(表现形式)
+                    Melee
+                    Ranged
+                    Projectile
+                    AOE
+            Action(动作, 技能的阶段与动作步骤)
+                Start(技能开始)
+                Cast(释放动作)
+                Charge(蓄力中)
+                    Hold(维持)
+                    Max(满蓄力)
+                Release(释放)
+                Fire(发射)
+                Hit(命中)
+                Finish(结束)
+                Cancel(被打断)
+            State(状态, 技能的状态)
+                Charging
+                Casting
+                Cooldown
+                Active
+                ToggledOn
+                Diabled(被沉默)
+            Effect
+            

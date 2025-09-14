@@ -1,0 +1,58 @@
+
+---------------Team主控-------------
+
+Team
+    OnInit():
+        self:NextState(Patrol)
+    NextState():
+        self:NextBehavior(Patrol)
+        self:SetNextBT(Patrol)
+    mBehavior_Patrol:
+        CalcMoveTarget(): 野外巡逻就随机找点, (待: 士兵驰道巡逻, 城防巡逻等)
+    mBehavior_Fight:
+        OnInit():
+            self:RefreshFightInfo
+            self:CalcAllFightPosition
+        思考-Team对每个成员的战斗分配: 暂时采取(3)
+            1. 分配战场位置, 然后自主寻找此位置最近的战斗目标
+            2. 分配战斗目标, 然后自主移动
+            3. 先分配一次战场位置(模糊可接受), 然后分配战斗目标, 然后自主移动
+        OnTick():
+            if 对面死完了 then self:NewState(Patrol) end
+    mMove:
+        tbMoveInfo{nRID,bArrived}
+        GetMoveTarget(): 如果没有tbMoveInfo就算一个(mBehavior:CalcMoveTarget), 有就直接取
+    Encounter():判断入战
+        self:NextState(Fight)
+
+BT_MakeTeam:
+    Wait 2
+    MakeTeam
+    Wait 1
+    WaitSwitchBT
+
+BT_Patrol:
+    Svc_Alert: if Enemy then Team:Encounter() end
+    Svc_NeedSwitchBT
+    Sequence:
+        Wait 1
+        GainMoveTarget Team.Move:GetMoveTarget()
+        Rotate
+        Wait 0.1
+        AIMove
+        WaitAllArrived
+
+BT_Fight:
+    Sequence:
+        Wait 1
+        CheckAndGoFightPosition
+        CheckOrGetSelfTarget
+        SelectAbility
+        Rotate
+        AIMove
+        Rotate
+        ActiveAbility
+        Wait
+        NeedSwitchBT
+
+---------------BT主控-------------

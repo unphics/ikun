@@ -1,0 +1,40 @@
+
+模块划分:
+    QuestInstClass:
+        单个任务的配置数据+基础逻辑
+        保持任务配置, 管理任务步骤
+        不保存玩家状态
+    QuestStepClass:
+        单个步骤的配置数据+基础逻辑
+        定义步骤类型, 定义步骤条件, 定义步骤之间的流转关系
+        配置层, 不保存玩家击杀进度
+    QuestMgr:
+        全局任务系统核心, 管理所有玩家于任务的关系
+        加载QuestClass/QuestStepClass的配置
+        提供查询接口(GetAvailableQuestList,GetQuestConfig)
+        监听全局事件(怪物死亡,物品拾取)并分发给玩家的QuestComp
+    QuestComp:
+        玩家的任务容器,保存所有进行中/已完成的任务实例
+        保存每个任务的步骤进度
+        相应QuestMgr的调用
+    QuestGiverClass:
+        NPC和任务系统的桥梁
+        绑定NPC可发放的任务Id, 可交付的任务Id
+        处理玩家交互
+关系图简化:
+    玩家 (Player)
+    └── QuestComp (玩家任务组件)
+            └── QuestInstance (任务运行时数据)
+                └── StepProgress (步骤运行时进度)
+
+    QuestMgr (全局任务系统)
+    ├── QuestClass (任务配置)
+    │       └── QuestStepClass (步骤配置)
+    └── 提供 Accept/Update/Complete 接口
+
+    NPC (NpcEntity)
+    └── QuestGiver (任务交互组件)
+
+
+第一个任务:简单的对话
+    QuestMgr初始化所有任务

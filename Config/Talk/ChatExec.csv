@@ -1,0 +1,7 @@
+Id|Desc|Code|Param
+||执行的功能|
+|||
+45001|退出对话|DoEndChat|
+|||
+45011|新手任务|QuestStart|QuestId=30010
+45012|新手任务|QuestStep|QuestStep=31010

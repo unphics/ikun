@@ -1,0 +1,48 @@
+
+任务系统的英文名
+    QuestSystem: RPG/MMO圈子里约定俗成的叫法, 带有剧情/冒险感
+    MissionSystem: 偏线性; 常见于射击、动作游戏, 偏线性流程
+    TaskSystem: 更技术化; 常见于更底层的设计, 指任务调度
+
+重要概念
+    Quest任务:一整个任务实例,玩家可以接取/执行/完成
+        属性:QuestId,Title,Desc,AcceptNPC,CompleteNPC,Reward,Requirements
+        状态:Locked,Available,InProgress,Completed,Failed
+    Objective/Step任务目标/步骤:任务的最小单元,定义玩家需要完成的某个行为
+        例如:Kill_10_Walves/Talk_to_NpcX/Reach_LocationA
+        类型:Kill/Collect/Talk/Reach/Puzzle/Trigger/Escort/Branch/Composite
+        状态:NotStarted/InProgress/Completed/Failed
+    Condition条件:用来控制什么时候能接取任务/什么时候能完成步骤/分支怎么走
+        例如:前置任务完成,玩家等级,玩家持有道具,玩家选择了某个对话选项
+        分类:可接条件(AcceptCondition),完成条件(CompleteCondition),分支条件(BranchCondition)
+    Trigger/Event触发事件:来自游戏世界的反馈,驱动任务系统推进
+        例如:OnKill("Wolf"),OnItemCollected("GoldenClaw"),OnTalk("Lucan"),OnEnterArea("BleakFallsBarrow")
+        系统监听这些事件->更新任务进度
+    Branch分支
+    Composite复合目标:一个Objective可以包含多个子目标,并规定逻辑关系
+        AND需要全部完成,OR需要完成其中一个,SEQ需要按顺序完成
+    Reward奖励:完成任务后的奖励内容
+        属性:Exp,Gold,Item,Reputation,UnlockFeature,Buff
+        一般独立表配置,任务只引用RewardId
+    QuestChain/Storyline任务链/剧情线:多个任务之间的依赖关系
+        用于表现大型主线任务or剧情任务
+    QuestStateMachine任务状态机
+        每个任务在玩家身上是一个状态机:不可接取->可接取->已接取->进行中->已完成/失败
+        每个Step也是小状态机:未开始->进行中->已完成/失败
+    PlayerQuestData玩家任务数据:存在玩家身上的数据,用来记录任务进度
+        包含:当前活跃任务列表,已完成任务列表,每个任务的步骤进度(如WolfKilled=7/10)
+    QuestGiver/NPCComponent任务提供者组件
+        NPC或物件身上的组件,负责:
+            显示任务可接取状态(头顶感叹号)
+            提供交互接口(对话->交接任务)
+            有时还提供分支选择
+    QuestScript/QuestLogic任务脚本层
+        用来补充配置表无法覆盖的复杂逻辑
+        例如:战斗过程要求/机关迷题/剧情演出
+        
+功能:
+    发布任务: 负责发布任务的Npc身上的QuestGiver显示头顶问号(如有),提供与任务系统的交互入口(对话等)
+        字段: AvailableQuestList(该Npc能发放的任务), TurnInQuestList(该Npc能交互的任务)
+        流程: 1.玩家交互Npc后QuestSystem->GetAvailableQuestList(NpcId, RoleId), 过滤掉不满足条件/已完成的任务
+              2.QuestSystem.AcceptQuest(RoleId, QuestId) -> 在Role中新建一个QuestData -> 更新任务状态为InProgress
+            **3.交任务时QuestSystem.CanCompleteQuest, 满足条件则发放奖励并标注任务Completed

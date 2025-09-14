@@ -1,0 +1,4 @@
+Define|Desc|Value
+CameraTransitionTime|相机切换时的过渡时间|0.2
+GazeInterval|玩家凝视一个物体的间隔|0.2
+GazeDistance|玩家凝视的距离(交互距离)|500

@@ -1,0 +1,11 @@
+简写查找表
+
+mgr -> Manager 管理器
+cfg -> config 配置
+def -> define 定义
+disp -> display 显示
+corr -> correct 系数
+dft -> default 默认, 缺省
+pos -> position 位置
+calc -> calculate 计算
+asgn -> assign 分配

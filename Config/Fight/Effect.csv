@@ -1,0 +1,7 @@
+EffectId|EffectDesc|EffectCorr|EffectVal
+|效果的说明描述|效果的应用修正系数|效果的应用值
+1|火球爆炸|0.4|
+2|治疗||5
+3|箭矢击中|0.7|
+|||
+|||

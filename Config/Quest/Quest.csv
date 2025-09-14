@@ -1,0 +1,8 @@
+QuestId|Title|Desc|BeginStep|AcceptNpc|CompleteNpc|PreQuest|NextQuest|Repeatable|ExpireTime|RewardId
+|标题|描述|开始的步骤|接任务的Npc|交任务的Npc|前置任务列表|后续任务列表|是否可重复(可以=0不可以=1)|有效期(天数，不限=0)|奖励表Id
+||||||||||
+30001|黄金龙爪||31001|Lucan|Lucan|||0|0|33001
+||||||||||
+30010|欢迎来到祖安||31010|5||||||
+||||||||||
+||||||||||

@@ -4,22 +4,26 @@
 # 忽略当前目录的.bat文件
 # /*.bat
 
-/ikun/*.sln
+# /ikun/*.sln
 
 # 忽略当前目录build文件夹下的所有内容
 # /build
+# **/Binaries/
+# **/Intermediate/
+# /ikun/.vs
+# /ikun/.idea
+# /ikun/Binaries
+# /ikun/Intermediate
+# /ikun/Saved
+# /ikun/Saved/.sln
+# /ikun/Typing
+# /ikun/Plugins/MVVMTemplateGenerate
+# /ikun/Plugins/Puerts/ThirdParty/v8/Lib
+# /ikun/Plugins/Puerts/ThirdParty/v8/Lib
+# /ikun/Plugins/UnLua/Source/UnLuaDefaultParamCollectorUbtPlugin
+# /ikun/Plugins/Puerts/Source/CSharpParamDefaultValueMetas
+
+
 **/Binaries/
 **/Intermediate/
-/ikun/.vs
-/ikun/.idea
-/ikun/Binaries
-/ikun/Intermediate
-/ikun/Saved
-/ikun/Saved/.sln
-/ikun/Typing
-/ikun/Plugins/MVVMTemplateGenerate
-/ikun/Plugins/Puerts/ThirdParty/v8/Lib
-/ikun/Plugins/Puerts/ThirdParty/v8/Lib
-/ikun/Plugins/UnLua/Source/UnLuaDefaultParamCollectorUbtPlugin
-
-/ikun/Plugins/Puerts/Source/CSharpParamDefaultValueMetas
+/References

@@ -1,0 +1,8 @@
+建议写明文件的题头注释, 书写原则--能最快回忆起该文件的作用
+
+时间格式转换工具: https://www.lddgo.net/convert/datetime-format-converter
+
+以AsClient模式运行, 需打开EditorPreferences的LaunchSeparateServer
+
+使用自带Rotate_to_face_BB_entry任务时需勾选Chr的UseControllerRotationYaw
+    同时开启Chr下的ChrMovementComp的UseControllerDesiredRotation
