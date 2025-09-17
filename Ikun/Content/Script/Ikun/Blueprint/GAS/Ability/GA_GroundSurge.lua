@@ -1,6 +1,6 @@
 
 ---
----@brief   地面浪涌
+---@brief   地面浪涌的Ability
 ---@author  zys
 ---@data    Sun Sep 14 2025 14:34:11 GMT+0800 (中国标准时间)
 ---
@@ -92,15 +92,17 @@ function GA_GroundSurge:OnChargeRepeat()
     local taKey = self.SkillConfig.TargetActors[1]
     local taName = MdMgr.ConfigMgr:GetConfig('TargetActor')[taKey].TargetActorTemplate
     local taClass = UE.UClass.Load('/Game/Ikun/Blueprint/GAS/TargetActor/'..taName..'.'..taName..'_C')
-    local ta = actor_util.spawn_always(avatar, taClass, avatar:GetTransform())
-    ta:InitTargetActor(self.SkillConfig)
+    local ta = actor_util.spawn_always(avatar, taClass, avatar:GetTransform()) ---@as TA_IkunBase
+    local context = self:MakeTargetActorContext()
+
+    local GEName = self.SkillConfig.SkillEffects[1]
+    local GEClass = gas_util.find_effect_class(GEName)
+    context.EffectSpecHandle = self:MakeOutgoingGameplayEffectSpec(GEClass)
+    ta:InitTargetActor(context)
     
-    -- log.dev('qqq', ta)
-    -- local name = 'qqq'..math.random()
-    -- local at = UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, name,
-    --     UE.EGameplayTargetingConfirmation.UserConfirmed, ta)
-    -- at:ReadyForActivation()
-    -- self:RefTask(at)
+    local at = UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, '', UE.EGameplayTargetingConfirmation.UserConfirmed, ta)
+    at:ReadyForActivation()
+    self:RefTask(at)
 end
 
 return GA_GroundSurge

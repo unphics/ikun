@@ -5,7 +5,16 @@
 ---@data Sun May 04 2025 14:20:00 GMT+0800 (中国标准时间)
 ---
 
+---@class gas_util
 local gas_util = {}
+
+local effect_path_head = '/Game/Ikun/Blueprint/GAS/Effect/'
+
+gas_util.find_effect_class = function(name)
+    local effect_path = effect_path_head..name..'.'..name..'_C'
+    local effect_class = UE.UClass.Load(effect_path)
+    return effect_class
+end
 
 local function find_active(ikun_chr, tag_container)
     local GA = nil

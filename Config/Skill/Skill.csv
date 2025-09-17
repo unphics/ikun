@@ -6,5 +6,5 @@ SkillId|SkillName|SkillDesc|AbilityTemplate|SkillEffects|TargetActors|AbilityAni
 |||||||
 530101|射箭|拉弓射箭，引导技能|GA_DrawBow|GE_PhyDmg,||DrawBow,|
 |||||||
-530201|冰川之刺||GA_GroundSurge||550011,|Beam_R,|
+530201|冰川之刺||GA_GroundSurge|GE_MagicDmg,|550011,|Beam_R,|
 |||||||

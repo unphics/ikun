@@ -1,9 +1,13 @@
+
 ---
----@brief Ability的基类
+---@brief   Ability的基类
+---@author  zys
+---@data    Wed Sep 17 2025 20:32:02 GMT+0800 (中国标准时间)
 ---
 
----@class GA_IkunBase: GA_IkunBase_C
+---@class GA_IkunBase: UIkunGABase
 ---@field AvatarLua BP_ChrBase
+---@field SkillConfig SkillConfig
 local GA_IkunBase = UnLua.Class()
 
 ---@override [ImplBP]
@@ -87,6 +91,19 @@ function GA_IkunBase:RegOnAbilityEnd(Lua, Fn)
         self.OnAbilityEnd = {}
     end
     table.insert(self.OnAbilityEnd, { Lua = Lua, Fn = Fn })
+end
+
+--------------------------------new--------------------------------
+
+---@protected
+---@return TargetActorContext
+function GA_IkunBase:MakeTargetActorContext()
+    ---@type TargetActorContext
+    local context = {
+        SkillConfig = self.SkillConfig,
+        OwnerAbility = self,
+    }
+    return context
 end
 
 return GA_IkunBase
