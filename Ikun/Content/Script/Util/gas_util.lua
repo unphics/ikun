@@ -10,10 +10,29 @@ local gas_util = {}
 
 local effect_path_head = '/Game/Ikun/Blueprint/GAS/Effect/'
 
+---@public
+---@return UClass
 gas_util.find_effect_class = function(name)
     local effect_path = effect_path_head..name..'.'..name..'_C'
     local effect_class = UE.UClass.Load(effect_path)
     return effect_class
+end
+
+---@public
+---@param Avatar BP_ChrBase
+---@return FGameplayEffectContextHandle?, UObject?
+gas_util.make_effect_context_ex = function(Avatar)
+    if not obj_util.is_valid(Avatar) then
+        return nil, nil
+    end
+    local asc = Avatar.GetAbilitySystemComponent and Avatar:GetAbilitySystemComponent()
+    if not asc then
+        return nil, nil
+    end
+    local effectContextHandle = asc:MakeEffectContext()
+    local optObj = obj_util.new_uobj()
+    UE.UIkunFnLib.SetEffectContextOpObj(effectContextHandle, optObj)
+    return effectContextHandle, optObj
 end
 
 local function find_active(ikun_chr, tag_container)

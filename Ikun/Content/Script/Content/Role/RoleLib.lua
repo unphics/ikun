@@ -18,6 +18,7 @@ rolelib.is_live_role = function(inRole)
     return false
 end
 
+---@public
 ---@param Chr RoleClass | BP_ChrBase
 rolelib.roleid = function(Chr)
     local role = rolelib.role(Chr)
@@ -28,18 +29,20 @@ rolelib.roleid = function(Chr)
     end
 end
 
+---@public
 ---@param Chr RoleClass | BP_ChrBase
 ---@return RoleClass?
 rolelib.role = function(Chr)
-    if class.instanceof(Chr, class.RoleClass) then
+    if class.instanceof(Chr, class.RoleClass) and obj_util.is_valid(Chr.Avatar) then
         return Chr ---@as RoleClass
     end
-    if Chr and Chr.GetRole then
+    if Chr and Chr.GetRole and obj_util.is_valid(Chr) then
         return Chr:GetRole()
     end
     return nil
 end
 
+---@public
 ---@param Chr RoleClass | BP_ChrBase
 ---@return BP_ChrBase?
 rolelib.chr = function(Chr)
@@ -50,6 +53,22 @@ rolelib.chr = function(Chr)
         return obj_util.is_valid(Chr) and Chr or nil
     end
     return nil
+end
+
+---@public
+rolelib.is_valid_enemy = function(target, owner)
+    local targetRole = rolelib.role(target)
+    if not targetRole then
+        return false
+    end
+    local ownerRole = rolelib.role(owner)
+    if not ownerRole then
+        return false
+    end
+    if not ownerRole:IsEnemy(targetRole) then
+        return false
+    end
+    return true
 end
 
 return rolelib

@@ -27,9 +27,18 @@ end
 ---@private
 ---@param Actors TArray<AActor>
 function TA_GroundSurge:ApplyEffect(Actors)
+    local context = self.TargetActorContext
     for i = 1, Actors:Length() do
-        local actor = Actors:Get(i)
-        ---@todo 回家写
+        local actor = Actors:Get(i) ---@as BP_ChrBase
+        if rolelib.is_valid_enemy(actor, context.OwnerAvatar) then
+            local handle, obj = gas_util.make_effect_context_ex(context.OwnerAvatar)
+            if handle and obj then
+                obj.OptEffectContext = {
+                    SkillConfig = context.SkillConfig
+                }
+                actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(context.EffectClass, 1, handle)
+            end
+        end
     end
 end
 

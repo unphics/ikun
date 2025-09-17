@@ -97,7 +97,8 @@ function GA_GroundSurge:OnChargeRepeat()
 
     local GEName = self.SkillConfig.SkillEffects[1]
     local GEClass = gas_util.find_effect_class(GEName)
-    context.EffectSpecHandle = self:MakeOutgoingGameplayEffectSpec(GEClass)
+    context.EffectClass = GEClass
+    -- context.EffectSpecHandle = self:MakeOutgoingGameplayEffectSpec(GEClass)
     ta:InitTargetActor(context)
     
     local at = UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, '', UE.EGameplayTargetingConfirmation.UserConfirmed, ta)

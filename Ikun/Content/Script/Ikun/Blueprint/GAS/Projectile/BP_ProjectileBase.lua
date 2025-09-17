@@ -120,9 +120,7 @@ function BP_ProjectileBase:TriggerProjectileHit(OverlappedComponent, OtherActor,
             }
             UE.UIkunFnLib.SetEffectContextOpObj(effectContextHandle, obj)
             local effectName = config.SkillEffects[1]
-            local effectPathHead = '/Game/Ikun/Blueprint/GAS/Effect/'
-            local effectPath = effectPathHead..effectName..'.'..effectName..'_C'
-            local effectClass = UE.UClass.Load(effectPath)
+            local effectClass = gas_util.find_effect_class(effectName)
             target:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(effectClass, 1, effectContextHandle)
         end
     end
