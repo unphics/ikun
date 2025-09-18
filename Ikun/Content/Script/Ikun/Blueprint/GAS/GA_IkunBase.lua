@@ -97,9 +97,12 @@ end
 
 ---@protected
 ---@return TargetActorContext
-function GA_IkunBase:MakeTargetActorContext()
+function GA_IkunBase:MakeTargetActorContext(TargetActorId)
+    local config = MdMgr.ConfigMgr:GetConfig('TargetActor')[TargetActorId]
     ---@type TargetActorContext
     local context = {
+        TargetActorId = TargetActorId,
+        TargetActorConfig = config,
         SkillConfig = self.SkillConfig,
         OwnerAbility = self,
         OwnerAvatar = self:GetAvatarActorFromActorInfo(),

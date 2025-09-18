@@ -5,10 +5,18 @@
 ---@data    Sun May 04 2025 14:20:00 GMT+0800 (中国标准时间)
 ---
 
+---@class TargetActorConfig
+---@field TargetActorId number
+---@field TargetActorDesc string
+---@field TargetActorTemplate string
+---@field Params table
+
 ---@class AbilityEffectInfo
 ---@field EffectClass UClass
 
 ---@class TargetActorContext
+---@field TargetActorId number
+---@field TargetActorConfig TargetActorConfig
 ---@field SkillConfig SkillConfig
 ---@field OwnerAvatar BP_ChrBase
 ---@field OwnerAbility GA_IkunBase

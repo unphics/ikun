@@ -9,8 +9,33 @@
 local TA_GroundSurge = UnLua.Class('Ikun/Blueprint/GAS/TargetActor/TA_IkunBase')
 
 ---@override
+function TA_GroundSurge:InitTargetActor(Context)
+    self.Super.InitTargetActor(self, Context)
+    
+    local config = self.TargetActorContext.TargetActorConfig
+    self.TotalDistance = config.Params.TotalDistance
+    self.StepLength = config.Params.StepLength
+    self.TotalTime = config.Params.TotalTime
+
+    local collision = self.Collision ---@as UBoxComponent
+    collision:K2_SetRelativeTransform(UE.FTransform(), false, UE.FHitResult(), false)
+    local boxExtent = collision.BoxExtent
+    collision:SetBoxExtent(UE.FVector(self.StepLength, boxExtent.Y, boxExtent.Z), true)
+
+    self.TotalStepNum = self.TotalDistance / self.StepLength
+    self.TimerInterval = self.TotalTime / self.TotalStepNum
+    self.StepCount = 0
+    self.TimerHandle = async_util.timer(self, self.OnSurgePass, self.TimerInterval, true)
+end
+
+---@override
+function TA_GroundSurge:ReceiveEndPlay()
+    async_util.clear_timer(self, self.TimerHandle)
+end
+
+---@override
 function TA_GroundSurge:OnPostStartTargeting(Ability)
-    self:ConfirmTargeting()
+    -- self:ConfirmTargeting()
 end
 
 ---@override
@@ -42,6 +67,23 @@ function TA_GroundSurge:ApplyEffect(Actors)
             end
         end
     end
+end
+
+---@private 浪涌渡过
+function TA_GroundSurge:OnSurgePass()
+    self.StepCount = self.StepCount + 1
+    if self.StepCount > self.TotalStepNum then
+        self:SurgeEnd()
+    end
+    local collision = self.Collision ---@as UBoxComponent
+    collision:K2_SetRelativeLocation(UE.FVector(self.StepLength * self.StepCount, 0, 0), false, UE.FHitResult(), true)
+    self:ConfirmTargeting()
+end
+
+---@private 浪涌结束
+function TA_GroundSurge:SurgeEnd()
+    async_util.clear_timer(self, self.TimerHandle)
+    self:K2_DestroyActor()
 end
 
 return TA_GroundSurge

@@ -89,11 +89,12 @@ end
 
 function GA_GroundSurge:OnChargeRepeat()
     local avatar = self:GetAvatarActorFromActorInfo()
-    local taKey = self.SkillConfig.TargetActors[1]
-    local taName = MdMgr.ConfigMgr:GetConfig('TargetActor')[taKey].TargetActorTemplate
+    local taId = self.SkillConfig.TargetActors[1]
+    local taConfig = MdMgr.ConfigMgr:GetConfig('TargetActor')[taId]
+    local taName = taConfig.TargetActorTemplate
     local taClass = gas_util.find_target_actor_class(taName)
     local ta = actor_util.spawn_always(avatar, taClass, avatar:GetTransform()) ---@as TA_IkunBase
-    local context = self:MakeTargetActorContext()
+    local context = self:MakeTargetActorContext(taId)
 
     local GEName = self.SkillConfig.SkillEffects[1]
     local GEClass = gas_util.find_effect_class(GEName)
@@ -105,7 +106,7 @@ function GA_GroundSurge:OnChargeRepeat()
     
     ta:InitTargetActor(context)
     
-    local at = UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, '', UE.EGameplayTargetingConfirmation.UserConfirmed, ta)
+    local at = UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, '', UE.EGameplayTargetingConfirmation.CustomMulti, ta)
     at:ReadyForActivation()
     self:RefTask(at)
 end
