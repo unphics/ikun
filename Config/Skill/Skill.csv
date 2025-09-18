@@ -1,10 +1,10 @@
 SkillId|SkillName|SkillDesc|AbilityTemplate|SkillEffects|TargetActors|AbilityAnims|Params
-|名字|描述|GA蓝图|GE的蓝图|TA的蓝图|动画|
+|名字|描述|GA模板|||动画|
 |||||||
 530001|入战|入战动画|GA_Equip|||Equip,|
 530002|出战|出战动画|GA_UnEquip|||UnEquip,|
 |||||||
 530101|射箭|拉弓射箭，引导技能|GA_DrawBow|GE_PhyDmg,||DrawBow,|
 |||||||
-530201|冰川之刺||GA_GroundSurge|GE_MagicDmg,|550011,|Beam_R,|
+530201|冰川之刺||GA_GroundSurge|570101,|550011,|Beam_R,|
 |||||||

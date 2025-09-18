@@ -12,7 +12,10 @@
 ---@field Params table
 
 ---@class AbilityEffectInfo
+---@field EffectId number
+---@field EffectName string
 ---@field EffectClass UClass
+---@field EffectConfig EffectConfig
 
 ---@class TargetActorContext
 ---@field TargetActorId number
@@ -22,12 +25,34 @@
 ---@field OwnerAbility GA_IkunBase
 ---@field AbilityEffectInfos AbilityEffectInfo[]
 
+---@class EffectContext
+---@field SkillConfig SkillConfig
+---@field EffectId number
+---@field EffectConfig EffectConfig
+
+---@class EffectConfig
+---@field EffectId number
+---@field EffectName string
+---@field EffectDesc string
+---@field EffectTemplate string
+---@field EffectValue number
+---@field EffectCorr number
+---@field Params table
+
 ---@class gas_util
 local gas_util = {}
 
 local ability_path_head = '/Game/Ikun/Blueprint/GAS/Ability/'
 local effect_path_head = '/Game/Ikun/Blueprint/GAS/Effect/'
 local target_actor_path_head = '/Game/Ikun/Blueprint/GAS/TargetActor/'
+local effect_calc_class = UE.UClass.Load('/Game/Ikun/Blueprint/GAS/EffectCalc/BP_CalcObj.BP_CalcObj_C')
+
+---@public
+---@return UIkunEffectCalc
+gas_util.new_calc_obj = function()
+    local calc_obj = UE.NewObject(effect_calc_class)
+    return calc_obj
+end
 
 ---@public
 ---@return UClass

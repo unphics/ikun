@@ -1,8 +1,8 @@
 
 ---
----@brief 物理伤害计算
----@author zys
----@data Sun Jun 08 2025 12:55:19 GMT+0800 (中国标准时间)
+---@brief   物理伤害
+---@author  zys
+---@data    Sun Jun 08 2025 12:55:19 GMT+0800 (中国标准时间)
 ---
 
 ---@class EC_PhyDmg : GE_EffectCalcBase

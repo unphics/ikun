@@ -58,12 +58,17 @@ function TA_GroundSurge:ApplyEffect(Actors)
     for i = 1, Actors:Length() do
         local actor = Actors:Get(i) ---@as BP_ChrBase
         if not self.IgnoreActor[actor] and rolelib.is_valid_enemy(actor, context.OwnerAvatar) then
+            ---@param effectInfo AbilityEffectInfo
             for i, effectInfo in ipairs(context.AbilityEffectInfos) do
                 local handle, obj = gas_util.make_effect_context_ex(context.OwnerAvatar)
                 if handle and obj then
-                    obj.OptEffectContext = {
-                        SkillConfig = context.SkillConfig
+                    ---@type EffectContext
+                    local effectContext = {
+                        SkillConfig = context.SkillConfig,
+                        EffectId = effectInfo.EffectId,
+                        EffectConfig = effectInfo.EffectConfig,
                     }
+                    obj.EffectContext = effectContext
                     actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(effectInfo.EffectClass, 1, handle)
                 end
             end
