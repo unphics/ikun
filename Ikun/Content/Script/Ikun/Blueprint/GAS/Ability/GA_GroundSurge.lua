@@ -40,7 +40,7 @@ function GA_GroundSurge:K2_OnEndAbility(WasCancelled)
     self.Super.K2_OnEndAbility(self, WasCancelled)
 end
 
----@private
+---@private 播放角色施法动作
 function GA_GroundSurge:S2C_PlayEquipMtg_RPC(Mtg)
     ---@type UATPlayMtgAndWaitEvent
     local at = UE.UATPlayMtgAndWaitEvent.PlayMtgAndWaitEvent(self, 'task name', 
@@ -63,7 +63,7 @@ function GA_GroundSurge:OnCancelled()
     self:GAFail()
 end
 
----@private [Server]
+---@private [Server] 蓄力达到最大后, 持续施法
 function GA_GroundSurge:OnChargeMax()
     local at = UE.UAbilityTask_Repeat.RepeatAction(self, 0.5, 99)
     at.OnPerformAction:Add(self, self.OnChargeRepeat)
@@ -80,6 +80,7 @@ function GA_GroundSurge:C2S_KeyRelease_RPC()
     self:S2C_OnKeyRelease()
 end
 
+---@private 松手后不在持续施法, 结束技能
 function GA_GroundSurge:S2C_OnKeyRelease_RPC()
     self:MontageJumpToSection('Anim_End')
     if self.BeamAT then
@@ -87,15 +88,17 @@ function GA_GroundSurge:S2C_OnKeyRelease_RPC()
     end
 end
 
+---@private 持续的每次施法
 function GA_GroundSurge:OnChargeRepeat()
     local avatar = self:GetAvatarActorFromActorInfo()
+
     local taId = self.SkillConfig.TargetActors[1]
     local taConfig = MdMgr.ConfigMgr:GetConfig('TargetActor')[taId]
     local taName = taConfig.TargetActorTemplate
     local taClass = gas_util.find_target_actor_class(taName)
     local ta = actor_util.spawn_always(avatar, taClass, avatar:GetTransform()) ---@as TA_IkunBase
-    local context = self:MakeTargetActorContext(taId)
 
+    local context = self:MakeTargetActorContext(taId)
     local effectId = self.SkillConfig.SkillEffects[1] ---@as number
     local effectConfig = MdMgr.ConfigMgr:GetConfig('Effect')[effectId] ---@as EffectConfig
     local GEClass = gas_util.find_effect_class(effectConfig.EffectTemplate)
@@ -107,7 +110,6 @@ function GA_GroundSurge:OnChargeRepeat()
         EffectConfig = effectConfig,
     }
     context.AbilityEffectInfos[1] = effectInfo
-    
     ta:InitTargetActor(context)
     
     local at = UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, '', UE.EGameplayTargetingConfirmation.CustomMulti, ta)
