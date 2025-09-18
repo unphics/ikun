@@ -5,8 +5,6 @@
 ---@data    Sun Aug 31 2025 21:49:36 GMT+0800 (中国标准时间)
 ---
 
-local AbilityPathHead = '/Game/Ikun/Blueprint/GAS/Ability/'
-
 ---@class SkillConfig
 ---@field SkillName string
 ---@field SkillDesc string
@@ -44,8 +42,7 @@ function SkillComp:InitRoleSkill()
     for _, skillId in ipairs(roleCfg.RoleSkills) do
         local skillCfg = allSkillCfg[skillId] ---@type SkillConfig
         if skillCfg then
-            local abilityPath = AbilityPathHead..skillCfg.AbilityTemplate..'.'..skillCfg.AbilityTemplate..'_C'
-            local abilityClass = UE.UClass.Load(abilityPath)
+            local abilityClass = gas_util.find_ability_class(skillCfg.AbilityTemplate)
             local handle = self:GetOwner().ASC:K2_GiveAbility(abilityClass, 0, 0)
             if handle and handle ~= -1 then
                 table.insert(self.AllSkill, {Id = skillId, Handle = handle, Cfg = skillCfg})

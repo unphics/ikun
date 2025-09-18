@@ -103,8 +103,7 @@ function GA_IkunBase:MakeTargetActorContext()
         SkillConfig = self.SkillConfig,
         OwnerAbility = self,
         OwnerAvatar = self:GetAvatarActorFromActorInfo(),
-        EffectSpecHandle = nil,
-        EffectClass = nil,
+        AbilityEffectInfos = {},
     }
     return context
 end

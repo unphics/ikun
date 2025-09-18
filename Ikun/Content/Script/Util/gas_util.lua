@@ -1,14 +1,33 @@
 
 ---
----@brief GameplayAbilitySystem的工具方法
----@author zys
----@data Sun May 04 2025 14:20:00 GMT+0800 (中国标准时间)
+---@brief   GameplayAbilitySystem的工具方法
+---@author  zys
+---@data    Sun May 04 2025 14:20:00 GMT+0800 (中国标准时间)
 ---
+
+---@class AbilityEffectInfo
+---@field EffectClass UClass
+
+---@class TargetActorContext
+---@field SkillConfig SkillConfig
+---@field OwnerAvatar BP_ChrBase
+---@field OwnerAbility GA_IkunBase
+---@field AbilityEffectInfos AbilityEffectInfo[]
 
 ---@class gas_util
 local gas_util = {}
 
+local ability_path_head = '/Game/Ikun/Blueprint/GAS/Ability/'
 local effect_path_head = '/Game/Ikun/Blueprint/GAS/Effect/'
+local target_actor_path_head = '/Game/Ikun/Blueprint/GAS/TargetActor/'
+
+---@public
+---@return UClass
+gas_util.find_ability_class = function(name)
+    local ability_path = ability_path_head..name..'.'..name..'_C'
+    local ability_class = UE.UClass.Load(ability_path)
+    return ability_class
+end
 
 ---@public
 ---@return UClass
@@ -16,6 +35,14 @@ gas_util.find_effect_class = function(name)
     local effect_path = effect_path_head..name..'.'..name..'_C'
     local effect_class = UE.UClass.Load(effect_path)
     return effect_class
+end
+
+---@public
+---@return UClass
+gas_util.find_target_actor_class = function(name)
+    local target_actor_path = target_actor_path_head..name..'.'..name..'_C'
+    local target_actor_class = UE.UClass.Load(target_actor_path)
+    return target_actor_class
 end
 
 ---@public

@@ -1,8 +1,8 @@
 
 ---
----@brief 魔法伤害计算
----@author zys
----@data Sun Jun 08 2025 12:55:19 GMT+0800 (中国标准时间)
+---@brief   魔法伤害计算
+---@author  zys
+---@data    Sun Jun 08 2025 12:55:19 GMT+0800 (中国标准时间)
 ---
 
 local EffectConfig = require('Ikun/Blueprint/GAS/Config/EffectConfig')
@@ -23,9 +23,9 @@ function EC_MagicDmg:OnExecute(CalcObj, Ability, Effect, OptionObj)
     local TarMgcDefVal = CalcObj:ReadAttrValue('MagicalDefense', false)
     local PercMgcDefVal = TarMgcDefVal / (TarMgcDefVal + 100) -- log的底数为nil的话默认是e
     local MgcDmgVal = SrcMagicPowerVal * MgcDmgCfgCorr * (1 - PercMgcDefVal)
-    -- log.dev('EC_MagicDmg:OnExecute ', SrcMagicPowerVal, MgcDmgCfgCorr, PercMgcDefVal, MgcDmgVal)
+    log.dev('EC_MagicDmg:OnExecute ', SrcMagicPowerVal, MgcDmgCfgCorr, PercMgcDefVal, MgcDmgVal)
     local TarHealthVal = CalcObj:ReadAttrValue('Health', false)
-    -- log.dev('EC_MagicDmg:OnExecute TarHealthVal', TarHealthVal)
+    log.dev('EC_MagicDmg:OnExecute TarHealthVal', TarHealthVal)
     CalcObj:ModiAttrValue('Health', -MgcDmgVal, UE.EGameplayModOp.Additive)
 end
 

@@ -37,13 +37,6 @@ end
 function TA_IkunBase:OnPostConfirmTargetingAndContinue()
 end
 
----@class TargetActorContext
----@field SkillConfig SkillConfig
----@field OwnerAvatar BP_ChrBase
----@field OwnerAbility GA_IkunBase
----@field EffectSpecHandle FGameplayEffectSpecHandle
----@field EffectClass UClass
-
 ---@public
 ---@param Context TargetActorContext
 function TA_IkunBase:InitTargetActor(Context)
