@@ -20,12 +20,14 @@ function TA_GroundSurge:InitTargetActor(Context)
     local collision = self.Collision ---@as UBoxComponent
     collision:K2_SetRelativeTransform(UE.FTransform(), false, UE.FHitResult(), false)
     local boxExtent = collision.BoxExtent
-    collision:SetBoxExtent(UE.FVector(self.StepLength, boxExtent.Y, boxExtent.Z), true)
+    self:S2C_SetBoxExtent(UE.FVector(self.StepLength, boxExtent.Y, boxExtent.Z))
 
     self.TotalStepNum = self.TotalDistance / self.StepLength
     self.TimerInterval = self.TotalTime / self.TotalStepNum
     self.StepCount = 0
     self.TimerHandle = async_util.timer(self, self.OnSurgePass, self.TimerInterval, true)
+
+    self.IgnoreActor = {}
 end
 
 ---@override
@@ -55,7 +57,7 @@ function TA_GroundSurge:ApplyEffect(Actors)
     local context = self.TargetActorContext
     for i = 1, Actors:Length() do
         local actor = Actors:Get(i) ---@as BP_ChrBase
-        if rolelib.is_valid_enemy(actor, context.OwnerAvatar) then
+        if not self.IgnoreActor[actor] and rolelib.is_valid_enemy(actor, context.OwnerAvatar) then
             for i, effectInfo in ipairs(context.AbilityEffectInfos) do
                 local handle, obj = gas_util.make_effect_context_ex(context.OwnerAvatar)
                 if handle and obj then
@@ -66,6 +68,7 @@ function TA_GroundSurge:ApplyEffect(Actors)
                 end
             end
         end
+        self.IgnoreActor[actor] = 1
     end
 end
 
@@ -84,6 +87,11 @@ end
 function TA_GroundSurge:SurgeEnd()
     async_util.clear_timer(self, self.TimerHandle)
     self:K2_DestroyActor()
+end
+
+---@private
+function TA_GroundSurge:S2C_SetBoxExtent_RPC(Extent)
+    self.Collision:SetBoxExtent(Extent, true)
 end
 
 return TA_GroundSurge

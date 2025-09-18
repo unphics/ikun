@@ -1,4 +1,4 @@
 TargetActorId|TargetActorDesc|TargetActorTemplate|Params
 |描述|TA的蓝图|
 |||
-550011||TA_GroundSurge|TotalDistance=800,TotalTime=0.5,StepLength=40
+550011||TA_GroundSurge|TotalDistance=800,TotalTime=0.5,StepLength=100
