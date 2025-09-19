@@ -111,7 +111,7 @@ EnhInput.BindActions = function(pc)
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
             InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown,EnhInput.TriggerEvent.Triggered,  ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_BlankSpace, EnhInput.TriggerEvent.Triggered,
+    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_BlankSpace, EnhInput.TriggerEvent.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
             InputMgr.TriggerInputAction(IADef.IA_BlankSpace,EnhInput.TriggerEvent.Started,  ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end, _)
