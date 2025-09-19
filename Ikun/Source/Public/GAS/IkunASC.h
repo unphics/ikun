@@ -34,4 +34,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnTagUpdated OnTagChanged;
+
+	UFUNCTION(BlueprintCallable)
+	FGameplayAbilitySpecHandle GiveAbilityWithTriggerEventTag(TSubclassOf<UGameplayAbility> AbilityClass, FGameplayTag TriggerTag, int32 Level = 0, int32 InputID = -1);
 };

@@ -3,8 +3,8 @@
 #include "GAS/IkunASC.h"
 
 #include "AbilitySystemGlobals.h"
-
 #include "GAS/IkunGABase.h"
+#include "ikun_cpp_utl.h"
 
 UIkunASC::UIkunASC() {
 	this->PrimaryComponentTick.bCanEverTick = true;
@@ -45,4 +45,18 @@ bool UIkunASC::HasGameplayTag(FGameplayTag TagToCheck) const
 
 void UIkunASC::OnTagUpdated(const FGameplayTag& Tag, bool TagExists) {
 	this->OnTagChanged.Broadcast(Tag, TagExists);
+}
+
+IKUN_STEAL_PRIVATE(UGameplayAbility, AbilityTriggers)
+FGameplayAbilitySpecHandle UIkunASC::GiveAbilityWithTriggerEventTag(TSubclassOf<UGameplayAbility> AbilityClass, FGameplayTag TriggerTag, int32 Level, int32 InputID) {
+	FGameplayAbilitySpec AbilitySpec = BuildAbilitySpecFromClass(AbilityClass, Level, InputID);
+	TArray<FAbilityTriggerData>& Triggers = ikun_steal_AbilityTriggers(*AbilitySpec.Ability);
+	FAbilityTriggerData trigger = FAbilityTriggerData();
+	trigger.TriggerTag = TriggerTag;
+	Triggers.Add(trigger);
+	if (!IsValid(AbilitySpec.Ability)) {
+		UE_LOG(LogTemp, Error, TEXT("K2_GiveAbility() called with an invalid Ability Class."));
+		return FGameplayAbilitySpecHandle();
+	}
+	return GiveAbility(AbilitySpec);
 }

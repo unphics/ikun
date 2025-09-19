@@ -39,11 +39,18 @@ function SkillComp:InitRoleSkill()
     if not roleCfg.RoleSkills then
         return
     end
+    local asc = self:GetOwner().ASC ---@as UIkunASC
     for _, skillId in ipairs(roleCfg.RoleSkills) do
         local skillCfg = allSkillCfg[skillId] ---@type SkillConfig
         if skillCfg then
             local abilityClass = gas_util.find_ability_class(skillCfg.AbilityTemplate)
-            local handle = self:GetOwner().ASC:K2_GiveAbility(abilityClass, 0, 0)
+            local handle = nil
+            if skillId == 530201 then
+                local triggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Trigger.Normal')
+                handle = asc:GiveAbilityWithTriggerEventTag(abilityClass, triggerTag, 0, 0)
+            else
+                handle = self:GetOwner().ASC:K2_GiveAbility(abilityClass, 0, 0)
+            end
             if handle and handle ~= -1 then
                 table.insert(self.AllSkill, {Id = skillId, Handle = handle, Cfg = skillCfg})
             end
