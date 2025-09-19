@@ -34,7 +34,10 @@ local SkillComp = UnLua.Class()
 function SkillComp:InitRoleSkill()
     self.AllSkill = {}
     local role = rolelib.role(self:GetOwner())
-    local roleCfg = MdMgr.RoleMgr:GetRoleConfig(role:GetRoleCfgId())
+    if not role then
+        return
+    end
+    local roleCfg = MdMgr.RoleMgr:GetRoleConfig(role:GetRoleCfgId()) ---@type RoleConfig
     local allSkillCfg = MdMgr.ConfigMgr:GetConfig('Skill')
     if not roleCfg.RoleSkills then
         return
@@ -42,18 +45,16 @@ function SkillComp:InitRoleSkill()
     local asc = self:GetOwner().ASC ---@as UIkunASC
     for _, skillId in ipairs(roleCfg.RoleSkills) do
         local skillCfg = allSkillCfg[skillId] ---@type SkillConfig
-        if skillCfg then
-            local abilityClass = gas_util.find_ability_class(skillCfg.AbilityTemplate)
-            local handle = nil
-            if skillId == 530201 then
-                local triggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Trigger.Normal')
-                handle = asc:GiveAbilityWithTriggerEventTag(abilityClass, triggerTag, 0, 0)
-            else
-                handle = self:GetOwner().ASC:K2_GiveAbility(abilityClass, 0, 0)
-            end
-            if handle and handle ~= -1 then
-                table.insert(self.AllSkill, {Id = skillId, Handle = handle, Cfg = skillCfg})
-            end
+        local abilityClass = gas_util.find_ability_class(skillCfg.AbilityTemplate)
+        local handle = nil
+        if skillId == 530201 then
+            local triggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Trigger.Normal')
+            handle = asc:GiveAbilityWithDynTriggerTag(abilityClass, triggerTag, 0, 0)
+        else
+            handle = asc:K2_GiveAbility(abilityClass, 0, 0)
+        end
+        if handle and handle ~= -1 then
+            table.insert(self.AllSkill, {Id = skillId, Handle = handle, Cfg = skillCfg})
         end
     end
 end

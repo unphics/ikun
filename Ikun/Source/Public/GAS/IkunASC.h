@@ -35,6 +35,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnTagUpdated OnTagChanged;
 
+	/***
+	 * @desc 此流程中在GameplayEventTriggeredAbilities中添加的Spec在ClearAbility时被CheckForClearedAbilities清除, 故结果正常
+	 */
 	UFUNCTION(BlueprintCallable)
-	FGameplayAbilitySpecHandle GiveAbilityWithTriggerEventTag(TSubclassOf<UGameplayAbility> AbilityClass, FGameplayTag TriggerTag, int32 Level = 0, int32 InputID = -1);
+	FGameplayAbilitySpecHandle GiveAbilityWithDynTriggerTag(TSubclassOf<UGameplayAbility> AbilityClass, FGameplayTag TriggerTag, int32 Level = 0, int32 InputID = -1);
 };

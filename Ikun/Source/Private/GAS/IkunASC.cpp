@@ -48,15 +48,29 @@ void UIkunASC::OnTagUpdated(const FGameplayTag& Tag, bool TagExists) {
 }
 
 IKUN_STEAL_PRIVATE(UGameplayAbility, AbilityTriggers)
-FGameplayAbilitySpecHandle UIkunASC::GiveAbilityWithTriggerEventTag(TSubclassOf<UGameplayAbility> AbilityClass, FGameplayTag TriggerTag, int32 Level, int32 InputID) {
-	FGameplayAbilitySpec AbilitySpec = BuildAbilitySpecFromClass(AbilityClass, Level, InputID);
-	TArray<FAbilityTriggerData>& Triggers = ikun_steal_AbilityTriggers(*AbilitySpec.Ability);
+FGameplayAbilitySpecHandle UIkunASC::GiveAbilityWithDynTriggerTag(TSubclassOf<UGameplayAbility> AbilityClass, FGameplayTag TriggerTag, int32 Level, int32 InputID) {
+	FGameplayAbilitySpec abilitySpec = BuildAbilitySpecFromClass(AbilityClass, Level, InputID);
+	
+	TArray<FAbilityTriggerData> abilityTriggers = TArray<FAbilityTriggerData>(); // ikun_steal_AbilityTriggers(*abilitySpec.Ability);
 	FAbilityTriggerData trigger = FAbilityTriggerData();
 	trigger.TriggerTag = TriggerTag;
-	Triggers.Add(trigger);
-	if (!IsValid(AbilitySpec.Ability)) {
+	abilityTriggers.Add(trigger);
+	
+	if (!IsValid(abilitySpec.Ability)) {
 		UE_LOG(LogTemp, Error, TEXT("K2_GiveAbility() called with an invalid Ability Class."));
 		return FGameplayAbilitySpecHandle();
 	}
-	return GiveAbility(AbilitySpec);
+	FGameplayAbilitySpecHandle SpecHandle = GiveAbility(abilitySpec);
+
+	auto& triggeredAbilityMap = (trigger.TriggerSource == EGameplayAbilityTriggerSource::GameplayEvent) ?
+	this->GameplayEventTriggeredAbilities : this->OwnedTagTriggeredAbilities;
+	if (triggeredAbilityMap.Contains(TriggerTag)) {
+		triggeredAbilityMap[TriggerTag].AddUnique(abilitySpec.Handle);	// Fixme: is this right? Do we want to trigger the ability directly of the spec?
+	} else {
+		TArray<FGameplayAbilitySpecHandle> Triggers;
+		Triggers.Add(abilitySpec.Handle);
+		triggeredAbilityMap.Add(TriggerTag, Triggers);
+	}
+
+	return SpecHandle;
 }

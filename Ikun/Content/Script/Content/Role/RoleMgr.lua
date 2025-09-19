@@ -10,6 +10,7 @@
 ---@field RoleName string
 ---@field RoleDesc string
 ---@field BelongKingdom number
+---@field RoleSkills number[]
 ---@field InitBT string
 ---@field Color number
 ---@field SpecialClass string
