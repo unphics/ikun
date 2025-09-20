@@ -64,7 +64,7 @@ DM_10:
         TargetActorContext携带Effect从单个转为数组 : 2025/9/18 -> 2025/9/18
         EffectCalc正式化 : 2025/9/18 -> 2025/9/19
         GroundSurge技能Review是否模板化 : 2025/9/18 -> 2025/9/19
-        角色的技能槽位(DynamicAbilityTriggers) : 2025/9/19 ->
+        角色的技能槽位(DynamicAbilityTriggers) : 2025/9/19 -> 2025/9/20
         冰川之刺特效 : 2025/9/19 -> 2025/9/20
 
 待分配:
