@@ -1,0 +1,7 @@
+EffectId|EffectName|EffectDesc|EffectTemplate|EffectValue|EffectCorr|Params
+|名字|描述|模板|值|修正|
+||||||
+570101|冰川伤害||GE_MagicDmg||0.7|
+570102|火球爆炸||||0.4|
+570103|治疗|||5||
+570104|箭矢击中||||0.7|

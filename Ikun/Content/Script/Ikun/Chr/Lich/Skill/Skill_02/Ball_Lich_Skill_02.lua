@@ -7,9 +7,9 @@
 ---@class Ball_Lich_Skill_02: Ball_Lich_Skill_02_C
 ---@field ConstAliveTime number 投射物最大存活时间
 ---@field CurLiveTime number 投射物当前存活时间
----@field OwnerAbility GA_IkunBase 所属技能
+---@field OwnerAbility BP_AbilityBase 所属技能
 ---@field OwnerAvatar BP_ChrBase 所属角色
----@field TriggerCB fun(GA_IkunBase, AActor, FTransform) 投射物碰撞回调
+---@field TriggerCB fun(BP_AbilityBase, AActor, FTransform) 投射物碰撞回调
 ---@field bDestroySelf boolean 需要销毁自己
 local M = UnLua.Class()
 
@@ -57,7 +57,7 @@ end
 ---@public
 ---@param OwnerAbility UGameplayAbility
 ---@param OwnerAvatar BP_ChrBase
----@param TriggerCB fun(GA_IkunBase, AActor, FTransform)
+---@param TriggerCB fun(BP_AbilityBase, AActor, FTransform)
 function M:InitBallByAbility(OwnerAbility, OwnerAvatar, TriggerCB, DestroyCB)
     -- log.dev('M:InitBallByAbility', OwnerAbility, self)
     self.OwnerAbility = OwnerAbility

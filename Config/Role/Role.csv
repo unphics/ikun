@@ -1,12 +1,12 @@
 RoleId|RoleName|RoleDesc|BelongKingdom|RoleSkills|InitBT|Color|SpecialClass|FightPosAssign|BTCfg|RoleChat
 ||||||||||
 ||||||||||
-20001|鸽鸽||1|530001,530002,530101||-1||||
+||||||||||
 20002|阿克巴鲁斯|常见的; 法师, 战士|2||Team_MakeTeam_1|||Frontline,Backline|Init=Team_MakeTeam_1, Patrol=Team_Patrol_Together_1, Fight=Team_Fight_2|
 20003|阿巴克|见人就砍; 法师, 战士|3||JungleMonsters_Burn_1|1|R_Lich_3|||
 20004|鲁鲁修|法师, 战士|3||Team_MakeTeam_1|2||Frontline,Backline|Init=Team_MakeTeam_1, Patrol=Team_Patrol_Together_1, Fight=Team_Fight_2|
 20005|布噜布噜布噜||1|||-1||||41011, 41021
 ||||||||||
-21001|大魔导师||1|530001,530002,530201||||||
+21001|刘秀||1|Equip=530001,UnEquip=530002,NormalOne=530201||||||
 21002|鸽鸽||1|530001,530002,530101||||||
 ||||||||||

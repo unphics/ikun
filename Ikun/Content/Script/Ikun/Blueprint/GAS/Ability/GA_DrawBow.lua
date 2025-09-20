@@ -8,10 +8,10 @@
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 
----@class GA_DrawBow: GA_IkunBase
+---@class GA_DrawBow: BP_AbilityBase
 ---@field bChargeMax boolean 是否满弓
 ---@field SkillConfig SkillConfig
-local GA_DrawBow = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
+local GA_DrawBow = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 ---@override
 function GA_DrawBow:K2_ActivateAbilityFromEvent(Payload)

@@ -1,31 +1,30 @@
 
 ---
----@brief 伤害计算基类
----@author zys
----@data Mon Jun 02 2025 01:42:51 GMT+0800 (中国标准时间)
+---@brief   伤害计算基类
+---@author  zys
+---@data    Mon Jun 02 2025 01:42:51 GMT+0800 (中国标准时间)
 ---
 
----@class GE_EffectCalcBase: GE_EffectCalcBase_C
+---@class GE_EffectCalcBase: UIkunGEExecCalc
 local GE_EffectCalcBase = UnLua.Class()
 
 ---@override
 ---@param InParams FGameplayEffectCustomExecutionParameters
 ---@param OutParams FGameplayEffectCustomExecutionOutput
 function GE_EffectCalcBase:Execute(InParams, OutParams)
-    local CalcObjClass = UE.UClass.Load('/Game/Ikun/Blueprint/GAS/ExecCalc/BP_EffectCalcObj.BP_EffectCalcObj_C')
-    local CalcObj = UE.NewObject(CalcObjClass, self) ---@type BP_EffectCalcObj_C
-    CalcObj:InitEffectCalcData(InParams)
-    local Ability = UE.UIkunFnLib.EffectContextGetAbility(CalcObj.Spec.EffectContext)
-    local opObj = UE.UIkunFnLib.GetEffectContextOpObj(CalcObj.Spec.EffectContext)
-    self:OnExecute(CalcObj, Ability, CalcObj.Spec.Def, opObj)
-    
+    local calcObj = gas_util.new_calc_obj()
+    calcObj:InitEffectCalcData(InParams)
+    local Ability = UE.UIkunFnLib.EffectContextGetAbility(calcObj.Spec.EffectContext)
+    local optObj = UE.UIkunFnLib.GetEffectContextOpObj(calcObj.Spec.EffectContext)
+    self:OnExecute(calcObj, Ability, calcObj.Spec.Def, optObj)
+
     -- OutParams = CalcObj.OutExecParams
-    OutParams.OutputModifiers:Append( CalcObj.OutExecParams.OutputModifiers)
+    OutParams.OutputModifiers:Append( calcObj.OutExecParams.OutputModifiers)
 end
 
 ---@protected
 ---@param CalcObj BP_EffectCalcObj_C
----@param Ability GA_IkunBase
+---@param Ability BP_AbilityBase
 ---@param Effect BP_GEBase
 ---@param OptionObj UObject
 function GE_EffectCalcBase:OnExecute(CalcObj, Ability, Effect, OptionObj)

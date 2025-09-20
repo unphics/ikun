@@ -7,7 +7,7 @@
 --
 
 ---@class TA_Lich_Skill_01: TA_Lich_Skill_01_C
-local M = UnLua.Class('Ikun/Blueprint/GAS/TA_IkunBase')
+local M = UnLua.Class('Ikun/Blueprint/GAS/TargetActor/TA_IkunBase')
 
 -- function M:Initialize(Initializer)
 -- end

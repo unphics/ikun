@@ -7,9 +7,9 @@
 
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
----@class GA_Lich_Skill_03: GA_IkunBase
+---@class GA_Lich_Skill_03: BP_AbilityBase
 ---@field HealedTime number
-local GA_Lich_Skill_03 = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
+local GA_Lich_Skill_03 = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 function GA_Lich_Skill_03:OnActivateAbility()
     self.Super.OnActivateAbility(self)

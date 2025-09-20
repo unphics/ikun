@@ -14,13 +14,13 @@ class = require("Util.Class.class2") ---@type class
 _ = require("Util.Class.test1")
 _ = require("Util.Class.test2")
 
-duplex = require("Util/Duplex‌/duplex") ---@type duplex
-_ = require("Util/Duplex‌/test")
+duplex = require("Util/Duplex/duplex") ---@type duplex
+_ = require("Util/Duplex/test")
 msg_bus = require("Util.msg_bus") ---@type msgbus
 
 table_util = require('Util/table_util')
 world_util = require("Util/world_util")
-gas_util = require('Util/gas_util')
+gas_util = require('Util/gas_util') ---@type gas_util
 actor_util = require('Util/actor_util')
 decision_util = require('Util/DecisionUtil')
 obj_util = require('Util/obj_util') ---@type obj_util

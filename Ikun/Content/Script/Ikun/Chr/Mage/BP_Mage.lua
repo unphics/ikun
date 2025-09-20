@@ -9,7 +9,7 @@
 local BP_Mage = UnLua.Class('Ikun/Chr/Blueprint/BP_ChrBase')
 
 function BP_Mage:C2S_LeftStart_RPC()
-    self.SkillComp:TryActiveSkillByTag(UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Trigger.Normal'))
+    self.SkillComp:TryActiveSlotSkill('NormalOne')
 end
 
 return BP_Mage

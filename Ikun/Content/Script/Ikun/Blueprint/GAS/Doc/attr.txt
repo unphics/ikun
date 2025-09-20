@@ -1,0 +1,27 @@
+
+属性:
+    Health:
+        Health 血量
+        MaxHealth 最大血量
+    Attack:
+        AttackPower 攻击力
+        Stamina 耐力值
+        MaxStamina 最大耐力值
+    Mana:
+        Mana 魔法值
+        MaxMana 最大魔法值
+        MagicPower 魔法攻击力
+    Regon:
+        HealthRegen 生命回复
+        ManaRegen 魔法回复
+        StaminaRegen 耐力回复
+    Defense:
+        PhysicalDefense 物理防御
+        MagicalDefense 魔法防御
+    Combat:
+        Accuracy 命中率
+        Evasion 闪避率
+        CriticalChance 暴击率
+        CriticalResist 暴击抗性
+    Move:
+        MoveSpeed 移动速度

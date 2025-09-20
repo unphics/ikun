@@ -5,8 +5,8 @@
 ---@data    Tue Sep 02 2025 23:47:54 GMT+0800 (中国标准时间)
 ---
 
----@class GA_UnEquip: GA_IkunBase
-local GA_UnEquip = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
+---@class GA_UnEquip: BP_AbilityBase
+local GA_UnEquip = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 ---@override
 ---@param Payload FGameplayEventData

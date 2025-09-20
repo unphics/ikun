@@ -1,6 +1,6 @@
 
 ---
----@brief   地面浪涌
+---@brief   地面浪涌的Ability
 ---@author  zys
 ---@data    Sun Sep 14 2025 14:34:11 GMT+0800 (中国标准时间)
 ---
@@ -8,8 +8,8 @@
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 
----@class GA_GroundSurge: GA_IkunBase
-local GA_GroundSurge = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
+---@class GA_GroundSurge: BP_AbilityBase
+local GA_GroundSurge = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 ---@override
 function GA_GroundSurge:K2_ActivateAbilityFromEvent(Payload)
@@ -40,7 +40,7 @@ function GA_GroundSurge:K2_OnEndAbility(WasCancelled)
     self.Super.K2_OnEndAbility(self, WasCancelled)
 end
 
----@private
+---@private 播放角色施法动作
 function GA_GroundSurge:S2C_PlayEquipMtg_RPC(Mtg)
     ---@type UATPlayMtgAndWaitEvent
     local at = UE.UATPlayMtgAndWaitEvent.PlayMtgAndWaitEvent(self, 'task name', 
@@ -63,7 +63,7 @@ function GA_GroundSurge:OnCancelled()
     self:GAFail()
 end
 
----@private [Server]
+---@private [Server] 蓄力达到最大后, 持续施法
 function GA_GroundSurge:OnChargeMax()
     local at = UE.UAbilityTask_Repeat.RepeatAction(self, 0.5, 99)
     at.OnPerformAction:Add(self, self.OnChargeRepeat)
@@ -80,6 +80,7 @@ function GA_GroundSurge:C2S_KeyRelease_RPC()
     self:S2C_OnKeyRelease()
 end
 
+---@private 松手后不在持续施法, 结束技能
 function GA_GroundSurge:S2C_OnKeyRelease_RPC()
     self:MontageJumpToSection('Anim_End')
     if self.BeamAT then
@@ -87,20 +88,38 @@ function GA_GroundSurge:S2C_OnKeyRelease_RPC()
     end
 end
 
+---@private 持续的每次施法
 function GA_GroundSurge:OnChargeRepeat()
     local avatar = self:GetAvatarActorFromActorInfo()
-    local taKey = self.SkillConfig.TargetActors[1]
-    local taName = MdMgr.ConfigMgr:GetConfig('TargetActor')[taKey].TargetActorTemplate
-    local taClass = UE.UClass.Load('/Game/Ikun/Blueprint/GAS/TargetActor/'..taName..'.'..taName..'_C')
-    local ta = actor_util.spawn_always(avatar, taClass, avatar:GetTransform())
-    ta:InitTargetActor(self.SkillConfig)
+
+    local taId = self.SkillConfig.TargetActors[1]
+    local taConfig = MdMgr.ConfigMgr:GetConfig('TargetActor')[taId]
+    local taName = taConfig.TargetActorTemplate
+    local taClass = gas_util.find_target_actor_class(taName)
+    local ta = actor_util.spawn_always(avatar, taClass, avatar:GetTransform()) ---@as TA_IkunBase
+
+    local context = self:MakeTargetActorContext(taId)
+    local effectId = self.SkillConfig.SkillEffects[1] ---@as number
+    local effectConfig = MdMgr.ConfigMgr:GetConfig('Effect')[effectId] ---@as EffectConfig
+    local GEClass = gas_util.find_effect_class(effectConfig.EffectTemplate)
+    ---@type AbilityEffectInfo
+    local effectInfo = {
+        EffectId = effectId,
+        EffectName = effectConfig.EffectName,
+        EffectClass = GEClass,
+        EffectConfig = effectConfig,
+    }
+    context.AbilityEffectInfos[1] = effectInfo
+    ta:InitTargetActor(context)
     
-    -- log.dev('qqq', ta)
-    -- local name = 'qqq'..math.random()
-    -- local at = UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, name,
-    --     UE.EGameplayTargetingConfirmation.UserConfirmed, ta)
-    -- at:ReadyForActivation()
-    -- self:RefTask(at)
+    local at = UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, '', UE.EGameplayTargetingConfirmation.CustomMulti, ta)
+    at:ReadyForActivation()
+    self:RefTask(at)
+
+    local gcTag = UE.UIkunFnLib.RequestGameplayTag('GameplayCue.GlacierThorn')
+    local param = UE.FGameplayCueParameters() ---@type FGameplayCueParameters
+    param.Instigator = self:GetAvatarActorFromActorInfo()
+    self:K2_AddGameplayCueWithParams(gcTag, param, true)
 end
 
 return GA_GroundSurge

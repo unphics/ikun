@@ -25,7 +25,7 @@ function InFightComp:ReceiveTick(DeltaSeconds)
         if self.OutFightTimeCount < 0 then
             gas_util.remove_loose_tag(self:GetOwner(), 'Role.State.InFight')
             self.OutFightTimeCount = nil
-            self:GetOwner().SkillComp:TryActiveSkillByTag(UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Cinematic.UnEquip'))
+            self:GetOwner().SkillComp:TryActiveSlotSkill('UnEquip')
         end
     end
 end
@@ -35,7 +35,7 @@ function InFightComp:C2S_FallInFight_RPC()
     self.OutFightTimeCount = OUT_FIGHT_TIME
     if not self:CheckInFight() then
         gas_util.add_loose_tag(self:GetOwner(), 'Role.State.InFight')
-        self:GetOwner().SkillComp:TryActiveSkillByTag(UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Cinematic.Equip'))
+        self:GetOwner().SkillComp:TryActiveSlotSkill('Equip')
     end
 end
 

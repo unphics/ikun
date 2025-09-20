@@ -7,8 +7,8 @@
 
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
----@class GA_Lich_Skill_02: GA_IkunBase
-local GA_Lich_Skill_02 = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
+---@class GA_Lich_Skill_02: BP_AbilityBase
+local GA_Lich_Skill_02 = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 function GA_Lich_Skill_02:OnActivateAbility()
     self.Super.OnActivateAbility(self)
