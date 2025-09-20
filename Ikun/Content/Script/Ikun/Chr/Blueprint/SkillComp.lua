@@ -22,7 +22,15 @@ local SkillComp = UnLua.Class()
 
 function SkillComp:ReceiveBeginPlay()
     if net_util.is_server(self:GetOwner()) then
-        self._SkillSlot = {}
+        self._SkillSlot = {
+            Equip = nil,
+            UnEquip = nil,
+            Dodge = nil,
+            NormalOne = nil,
+            NormalTow = nil,
+            Hit = nil,
+            Special = nil,
+        }
     end
 end
 

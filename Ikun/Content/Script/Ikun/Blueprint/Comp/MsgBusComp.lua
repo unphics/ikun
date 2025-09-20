@@ -20,7 +20,7 @@ local M = UnLua.Class()
 ---@public [Client] [Server] 触发事件
 function M:TriggerEvent(EventName, ...)
     if not self.Event[EventName] then
-        log.warn('Failed to trigger nil event')
+        log.warn('Failed to trigger nil event', EventName)
         return
     end
     for _, Listener in ipairs(self.Event[EventName]) do
