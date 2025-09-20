@@ -22,7 +22,7 @@
 ---@field TargetActorConfig TargetActorConfig
 ---@field SkillConfig SkillConfig
 ---@field OwnerAvatar BP_ChrBase
----@field OwnerAbility GA_IkunBase
+---@field OwnerAbility BP_AbilityBase
 ---@field AbilityEffectInfos AbilityEffectInfo[]
 
 ---@class EffectContext

@@ -30,7 +30,7 @@ function LTask_ActiveAbility:OnInit()
 
     local SelectAbility = self.Blackboard:GetBBValue(BBKeyDef.SelectAbility)
 
-    local Ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(self.Chr.ASC, SelectAbility.Handle) ---@type GA_IkunBase
+    local Ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(self.Chr.ASC, SelectAbility.Handle) ---@type BP_AbilityBase
 
     local result = self.Chr.ASC:TryActivateAbility(SelectAbility.Handle, true)
     -- log.debug('LTask_ActiveAbility:OnInit()', result)

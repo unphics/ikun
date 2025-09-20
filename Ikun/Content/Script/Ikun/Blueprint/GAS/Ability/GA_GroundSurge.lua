@@ -8,8 +8,8 @@
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 
----@class GA_GroundSurge: GA_IkunBase
-local GA_GroundSurge = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
+---@class GA_GroundSurge: BP_AbilityBase
+local GA_GroundSurge = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 ---@override
 function GA_GroundSurge:K2_ActivateAbilityFromEvent(Payload)

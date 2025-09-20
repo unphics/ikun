@@ -24,7 +24,7 @@ end
 
 ---@protected
 ---@param CalcObj BP_EffectCalcObj_C
----@param Ability GA_IkunBase
+---@param Ability BP_AbilityBase
 ---@param Effect BP_GEBase
 ---@param OptionObj UObject
 function GE_EffectCalcBase:OnExecute(CalcObj, Ability, Effect, OptionObj)

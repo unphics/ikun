@@ -5,29 +5,29 @@
 ---@data    Wed Sep 17 2025 20:32:02 GMT+0800 (中国标准时间)
 ---
 
----@class GA_IkunBase: UIkunGABase
+---@class BP_AbilityBase: UIkunGABase
 ---@field AvatarLua BP_ChrBase
 ---@field SkillConfig SkillConfig
-local GA_IkunBase = UnLua.Class()
+local BP_AbilityBase = UnLua.Class()
 
 ---@override [ImplBP]
 ---@notice 此方法需要子类Super调用
 ---@param Payload FGameplayEventData
-function GA_IkunBase:K2_ActivateAbilityFromEvent(Payload)
+function BP_AbilityBase:K2_ActivateAbilityFromEvent(Payload)
     self.Overridden.K2_ActivateAbilityFromEvent(self, Payload)
     -- self:GAInitData()
 end
 
 ---@override [ImplBP]
 ---@notice 此方法需要子类Super调用
-function GA_IkunBase:OnActivateAbility()
+function BP_AbilityBase:OnActivateAbility()
     self.Overridden.OnActivateAbility(self)
     self:GAInitData()
 end
 
 ---@override [ImplBP]
 ---@notice 此方法需要子类Super调用
-function GA_IkunBase:K2_OnEndAbility(WasCancelled)
+function BP_AbilityBase:K2_OnEndAbility(WasCancelled)
     if self.OnAbilityEnd then
         for _, ele in ipairs(self.OnAbilityEnd) do
             ele.Fn(ele.Lua, self)
@@ -44,7 +44,7 @@ function GA_IkunBase:K2_OnEndAbility(WasCancelled)
 end
 
 ---@protected [Init] 初始化数据
-function GA_IkunBase:GAInitData()
+function BP_AbilityBase:GAInitData()
     self.tbUStructRef = {}
     self.OnAbilityEnd = {}
     self.MapUObjectRef:Clear()
@@ -53,7 +53,7 @@ function GA_IkunBase:GAInitData()
 end
 
 ---@protected [Call] [End]
-function GA_IkunBase:GAFail()
+function BP_AbilityBase:GAFail()
     if not obj_util.is_valid(self) then
         return
     end
@@ -62,31 +62,31 @@ function GA_IkunBase:GAFail()
 end
 
 ---@protected [Call] [End]
-function GA_IkunBase:GASuccess()
+function BP_AbilityBase:GASuccess()
     self.Result = true
     self:K2_EndAbility()
 end
 
 ---@protected
-function GA_IkunBase:RefUObject(Key, UObject)
+function BP_AbilityBase:RefUObject(Key, UObject)
     self.MapUObjectRef:Add(Key, UObject)
 end
 
 ---@protected 为了解决TagetActor中构造的AbilityTargetDataFromActorArray的失效崩溃问题
-function GA_IkunBase:RefUStruct(Handle)
+function BP_AbilityBase:RefUStruct(Handle)
     table.insert(self.tbUStructRef, Handle)
 end
 
 ---@protected
 ---@param task UGameplayTask
-function GA_IkunBase:RefTask(task)
+function BP_AbilityBase:RefTask(task)
     self.ArrTaskRef:AddUnique(task)
 end
 
 ---@public 注册一个技能结束的回调
 ---@param Lua table
 ---@param Fn function
-function GA_IkunBase:RegOnAbilityEnd(Lua, Fn)
+function BP_AbilityBase:RegOnAbilityEnd(Lua, Fn)
     if not self.OnAbilityEnd then
         self.OnAbilityEnd = {}
     end
@@ -97,7 +97,7 @@ end
 
 ---@protected
 ---@return TargetActorContext
-function GA_IkunBase:MakeTargetActorContext(TargetActorId)
+function BP_AbilityBase:MakeTargetActorContext(TargetActorId)
     local config = MdMgr.ConfigMgr:GetConfig('TargetActor')[TargetActorId]
     ---@type TargetActorContext
     local context = {
@@ -111,4 +111,4 @@ function GA_IkunBase:MakeTargetActorContext(TargetActorId)
     return context
 end
 
-return GA_IkunBase
+return BP_AbilityBase

@@ -5,8 +5,8 @@
 ---@data Mon Apr 07 2025 01:09:03 GMT+0800 (中国标准时间)
 ---
 
----@class GA_Lich_Skill_01: GA_IkunBase
-local GA_Lich_Skill_01 = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
+---@class GA_Lich_Skill_01: BP_AbilityBase
+local GA_Lich_Skill_01 = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 function GA_Lich_Skill_01:OnActivateAbility()
     self.Super.OnActivateAbility(self)

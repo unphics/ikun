@@ -200,7 +200,6 @@ function TB_Fight:ReadDynaSuppressTarget(Id)
         self.OwnerTeam.TeamEnemy:CheckEnemyDead()
         local allEnemy = self.OwnerTeam.TeamEnemy:GetAllEnemy()
         if #allEnemy == 0 then
-            log.dev('qqqqqqqqqqqqqqqqqqqqqqqqq')
             self.OwnerTeam:NextTeamState(class.new 'TB_Patrol' (self.OwnerTeam))
             return
         end

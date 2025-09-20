@@ -35,7 +35,6 @@ function BP_IkunPC:ReceiveBeginPlay()
     else
         local trigger = UE.FAbilityTriggerData()
         trigger.TriggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Action.Charge.Max')
-        log.dev('qqq', trigger.TriggerTag)
     end
 end
 

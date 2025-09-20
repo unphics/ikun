@@ -5,8 +5,8 @@
 ---@data    Sun Aug 31 2025 12:17:18 GMT+0800 (中国标准时间)
 ---
 
----@class GA_Equip: GA_IkunBase
-local GA_Equip = UnLua.Class('Ikun/Blueprint/GAS/GA_IkunBase')
+---@class GA_Equip: BP_AbilityBase
+local GA_Equip = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 ---@override
 function GA_Equip:K2_ActivateAbilityFromEvent(Payload)
