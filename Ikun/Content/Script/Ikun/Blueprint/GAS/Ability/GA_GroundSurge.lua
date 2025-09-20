@@ -115,6 +115,11 @@ function GA_GroundSurge:OnChargeRepeat()
     local at = UE.UAbilityTask_WaitTargetData.WaitTargetDataUsingActor(self, '', UE.EGameplayTargetingConfirmation.CustomMulti, ta)
     at:ReadyForActivation()
     self:RefTask(at)
+
+    local gcTag = UE.UIkunFnLib.RequestGameplayTag('GameplayCue.GlacierThorn')
+    local param = UE.FGameplayCueParameters() ---@type FGameplayCueParameters
+    param.Instigator = self:GetAvatarActorFromActorInfo()
+    self:K2_AddGameplayCueWithParams(gcTag, param, true)
 end
 
 return GA_GroundSurge
