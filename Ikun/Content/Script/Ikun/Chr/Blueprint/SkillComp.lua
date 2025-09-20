@@ -5,6 +5,8 @@
 ---@data    Sun Aug 31 2025 21:49:36 GMT+0800 (中国标准时间)
 ---
 
+local SLOT_NAME_HEAD = 'Skill.Type.Trigger.'
+
 ---@class SkillConfig
 ---@field SkillName string
 ---@field SkillDesc string
@@ -15,14 +17,14 @@
 ---@field Params table
 
 ---@class SkillComp: SkillComp_C
----@field AllSkill table
+---@field _SkillSlot table
 local SkillComp = UnLua.Class()
 
--- function SkillComp:Initialize(Initializer)
--- end
-
--- function SkillComp:ReceiveBeginPlay()
--- end
+function SkillComp:ReceiveBeginPlay()
+    if net_util.is_server(self:GetOwner()) then
+        self._SkillSlot = {}
+    end
+end
 
 -- function SkillComp:ReceiveEndPlay()
 -- end
@@ -30,54 +32,91 @@ local SkillComp = UnLua.Class()
 -- function SkillComp:ReceiveTick(DeltaSeconds)
 -- end
 
----@public
+---@public 初始化角色的技能
 function SkillComp:InitRoleSkill()
-    self.AllSkill = {}
     local role = rolelib.role(self:GetOwner())
-    if not role then
-        return
-    end
+
     local roleCfg = MdMgr.RoleMgr:GetRoleConfig(role:GetRoleCfgId()) ---@type RoleConfig
-    local allSkillCfg = MdMgr.ConfigMgr:GetConfig('Skill')
     if not roleCfg.RoleSkills then
+        log.info('SkillComp:InitRoleSkill()', '无初始技能', role:GetRoleDispName())
         return
     end
+
+    for slot, skillId in pairs(roleCfg.RoleSkills) do
+        self:SetSlotSkill(slot, skillId)
+    end
+end
+
+---@public 激活技能 [Server]
+---@param SlotName string
+function SkillComp:TryActiveSlotSkill(SlotName)
+    if net_util.is_client(self:GetOwner()) then
+        log.error('SkillComp:TryActiveSlotSkill()', '只能在服务端调用')
+        return
+    end
+    log.info('SkillComp:TryActiveSlotSkill()', SlotName)
+    local skillInfo = self._SkillSlot[SlotName]
+    if not skillInfo then
+        log.warn('SkillComp:TryActiveSlotSkill()', '空槽位')
+        return
+    end
+
+    local Tag = UE.UIkunFnLib.RequestGameplayTag(SLOT_NAME_HEAD..SlotName)
+    if not Tag or not Tag.TagName then
+        log.error('SkillComp:TryActiveSlotSkill()', '无效的Tag')
+        return
+    end
+    
+    local payload = UE.FGameplayEventData() ---@type FGameplayEventData
+    local obj = obj_util.new_uobj()
+    obj.SkillConfig = skillInfo.Config
+    payload.OptionalObject = obj
+    UE.UAbilitySystemBlueprintLibrary.SendGameplayEventToActor(self:GetOwner(), Tag, payload)
+end
+
+---@public
+function SkillComp:SetSlotSkill(SlotName, SkillId)
+    if self._SkillSlot[SlotName] then
+        log.error('SkillComp:SetSlotSkill() 该槽位已经存在技能')
+        return
+    end
+
+    local allSkillCfg = MdMgr.ConfigMgr:GetConfig('Skill') ---@type table<number, SkillConfig>
+    local config = allSkillCfg[SkillId] ---@type SkillConfig
+    if not config then
+        log.error('SkillComp:SetSlotSkill() 无效的技能Id')
+        return
+    end
+
+    local slotTagName = SLOT_NAME_HEAD..SlotName
+    local slotTag = UE.UIkunFnLib.RequestGameplayTag(slotTagName)
+    if not slotTag or not slotTag.TagName then 
+        log.error('SkillComp:SetSlotSkill() 非法的技能槽位')
+        return
+    end
+    
+    local abilityClass = gas_util.find_ability_class(config.AbilityTemplate)
     local asc = self:GetOwner().ASC ---@as UIkunASC
-    for _, skillId in ipairs(roleCfg.RoleSkills) do
-        local skillCfg = allSkillCfg[skillId] ---@type SkillConfig
-        local abilityClass = gas_util.find_ability_class(skillCfg.AbilityTemplate)
-        local handle = nil
-        if skillId == 530201 then
-            local triggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Trigger.Normal')
-            handle = asc:GiveAbilityWithDynTriggerTag(abilityClass, triggerTag, 0, 0)
-        else
-            handle = asc:K2_GiveAbility(abilityClass, 0, 0)
-        end
-        if handle and handle ~= -1 then
-            table.insert(self.AllSkill, {Id = skillId, Handle = handle, Cfg = skillCfg})
-        end
+    local handle = asc:GiveAbilityWithDynTriggerTag(abilityClass, slotTag, 0, 0)
+
+    if handle and handle ~= -1 then
+        self._SkillSlot[SlotName] = {Id = SkillId, Handle = handle, Config = config, TagName = SlotName}
     end
 end
 
 ---@public
----@param Tag FGameplayTag
-function SkillComp:TryActiveSkillByTag(Tag)
-    if not Tag then
+function SkillComp:UnsetSlotSkill(SlotName)
+    local slotTagName = SLOT_NAME_HEAD..SlotName
+    local slotTag = UE.UIkunFnLib.RequestGameplayTag(slotTagName)
+    if not slotTag or not slotTag.TagName then 
+        log.error('SkillComp:UnsetSlotSkill() 非法的技能槽位')
         return
     end
-    log.info('SkillComp:TryActiveSkillByTag', Tag.TagName)
-    local asc = self:GetOwner().ASC
-    for _, skillInfo in ipairs(self.AllSkill) do
-        local ability = UE.UAbilitySystemBlueprintLibrary.GetGameplayAbilityFromSpecHandle(asc, skillInfo.Handle, false)
-        if UE.UBlueprintGameplayTagLibrary.HasTag(ability.AbilityTags, Tag, true) then
-            local payload = UE.FGameplayEventData() ---@type FGameplayEventData
-            local obj = obj_util.new_uobj()
-            obj.SkillConfig = skillInfo.Cfg
-            payload.OptionalObject = obj
-            UE.UAbilitySystemBlueprintLibrary.SendGameplayEventToActor(self:GetOwner(), Tag, payload)
-            break
-        end
-    end
+
+    local skillInfo = self._SkillSlot[SlotName]
+    local asc = self:GetOwner().ASC ---@as UIkunASC
+    asc:ClearAbility(skillInfo.Handle)
+    self._SkillSlot[SlotName] = nil
 end
 
 return SkillComp

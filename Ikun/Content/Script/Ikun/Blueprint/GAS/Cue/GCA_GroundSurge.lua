@@ -13,8 +13,8 @@ function GCA_GroundSurge:OnActive(MyTarget, Parameters)
     local sys = UE.UObject.Load('/Game/Ikun/Chr/Mage/Mesh/Ice.Ice')
     local loc = avatar:K2_GetActorLocation()
     local rot = UE.FRotator(0, avatar:K2_GetActorRotation().Yaw, 0) 
-    local niagara = UE.UNiagaraFunctionLibrary.SpawnSystemAtLocation(avatar, sys,
-        loc, rot, UE.FVector(1,1,1), true, true, UE.ENCPoolMethod.None, true)
+    -- local niagara = UE.UNiagaraFunctionLibrary.SpawnSystemAtLocation(avatar, sys,
+    --     loc, rot, UE.FVector(1,1,1), true, true, UE.ENCPoolMethod.None, true)
     -- niagara:SetDesiredAge(1)
     return true
 end

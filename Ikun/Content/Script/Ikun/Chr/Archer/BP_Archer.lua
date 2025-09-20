@@ -23,7 +23,7 @@ end
 function BP_Archer:C2S_LeftStart_RPC()
     -- local _, handle = gas_util.get_all_active_abilities(self)
     -- local result = self.ASC:TryActivateAbility(handle[1], true)
-    self.SkillComp:TryActiveSkillByTag(UE.UIkunFnLib.RequestGameplayTag('Skill.Type.Trigger.Normal'))
+    self.SkillComp:TryActiveSlotSkill('NormalOne')
 end
 
 return BP_Archer

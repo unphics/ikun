@@ -7,6 +7,6 @@ RoleId|RoleName|RoleDesc|BelongKingdom|RoleSkills|InitBT|Color|SpecialClass|Figh
 20004|鲁鲁修|法师, 战士|3||Team_MakeTeam_1|2||Frontline,Backline|Init=Team_MakeTeam_1, Patrol=Team_Patrol_Together_1, Fight=Team_Fight_2|
 20005|布噜布噜布噜||1|||-1||||41011, 41021
 ||||||||||
-21001|刘秀||1|530001,530002,530201||||||
+21001|刘秀||1|Equip=530001,UnEquip=530002,NormalOne=530201||||||
 21002|鸽鸽||1|530001,530002,530101||||||
 ||||||||||

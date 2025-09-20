@@ -1,11 +1,12 @@
 
 角色技能构建:(打算用AbilityTrigger所以需要互斥)
-    入战
-    出战
-    瞬移(Shift)
-    技能一(普攻)(左键)
-    技能二(右键)
-    受击
+    Equip:入战
+    UnEquip:出战
+    Dodge:瞬移(Shift)
+    NormalOne:技能一(左键)
+    NormalTow:技能二(右键)
+    Hit:受击
+    Special:特殊技能(Z)
 
 技能系统设计构思:
     框架使用:GAS仅
