@@ -2,11 +2,11 @@ RoleId|RoleName|RoleDesc|BelongKingdom|RoleSkills|InitBT|Color|SpecialClass|Figh
 ||||||||||
 ||||||||||
 ||||||||||
-20002|阿克巴鲁斯|常见的; 法师, 战士|2||Team_MakeTeam_1|||Frontline,Backline|Init=Team_MakeTeam_1, Patrol=Team_Patrol_Together_1, Fight=Team_Fight_2|
-20003|阿巴克|见人就砍; 法师, 战士|3||JungleMonsters_Burn_1|1|R_Lich_3|||
-20004|鲁鲁修|法师, 战士|3||Team_MakeTeam_1|2||Frontline,Backline|Init=Team_MakeTeam_1, Patrol=Team_Patrol_Together_1, Fight=Team_Fight_2|
-20005|布噜布噜布噜||1|||-1||||41011, 41021
+200002|阿克巴鲁斯|常见的; 法师, 战士|611002||Team_MakeTeam_1|||Frontline,Backline|Init=Team_MakeTeam_1, Patrol=Team_Patrol_Together_1, Fight=Team_Fight_2|
+20003|阿巴克|见人就砍; 法师, 战士|611003||JungleMonsters_Burn_1|1|R_Lich_3|||
+200004|鲁鲁修|法师, 战士|611003||Team_MakeTeam_1|2||Frontline,Backline|Init=Team_MakeTeam_1, Patrol=Team_Patrol_Together_1, Fight=Team_Fight_2|
+200005|布噜布噜布噜||611001|||-1||||410011, 410021
 ||||||||||
-21001|刘秀||1|Equip=530001,UnEquip=530002,NormalOne=530201||||||
-21002|鸽鸽||1|530001,530002,530101||||||
+210001|刘秀||611001|Equip=530001,UnEquip=530002,NormalOne=530201||||||
+210002|鸽鸽||611001|530001,530002,530101||||||
 ||||||||||

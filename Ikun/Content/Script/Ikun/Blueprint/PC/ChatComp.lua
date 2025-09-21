@@ -20,7 +20,7 @@ end
 ---@public [Server]
 function ChatComp:BeginChat()
     self:S2C_BeginChat()
-    self:_GetNpcChat():NewChat(40011, self:GetOwner().InteractComp.Rep_InteractActor)
+    self:_GetNpcChat():NewChat(400011, self:GetOwner().InteractComp.Rep_InteractActor)
     return true
 end
 
