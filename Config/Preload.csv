@@ -1,7 +1,8 @@
 Dir|Table1|Table2|Table3|Table4|Table5|Table6|Table|Table8|Table9|Table10
 ||||||||||
+Area|Location|||||||||
 Camera|CameraViewModel|||||||||
-District|Kingdom|Settlement|Location|||||||
+District|Kingdom|Settlement||||||||
 Talk|Talk|Chat|ChatExec|ChatCond||||||
 Quest|Quest|QuestStep|QuestCondition|QuestReward||||||
 Item|Item|||||||||

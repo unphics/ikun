@@ -2,8 +2,8 @@
 ---@brief 地点
 ---
 
----@class Locality: MdBase
-local Locality = class.class 'Locality' : extends 'MdBase' {
+---@class LocationClass: MdBase
+local LocationClass = class.class 'LocationClass' : extends 'MdBase' {
 --[[public]]
     ctor = function()end,
 --[[private]]
