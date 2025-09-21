@@ -71,6 +71,7 @@ DM_11:
     目标-一个小白盒和一些Npc
     过程:
         一个白盒村子 : 2025/9/20
+            房子属于Location, 房子的门是Site, 房子Location属于Village, 房子Location属于地貌某某河流平原
 
 待分配:
     技能-GameplayCue正式化
