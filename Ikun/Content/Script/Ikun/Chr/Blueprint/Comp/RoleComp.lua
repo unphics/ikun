@@ -1,33 +1,40 @@
 ---
----@brief Role组件, 作为游戏世界的一员, 需要此组件初始化数据
----@author zys
----@data Sun Jan 19 2025 20:19:40 GMT+0800 (中国标准时间)
+---@brief   Role组件, 作为游戏世界的一员, 需要此组件初始化数据
+---@author  zys
+---@data    Sun Jan 19 2025 20:19:40 GMT+0800 (中国标准时间)
 ---
 
 ---@class RoleComp: RoleComp_C
-local M = UnLua.Class()
+local RoleComp = UnLua.Class()
 
--- function M:Initialize(Initializer)
+-- function RoleComp:Initialize(Initializer)
 -- end
 
 ---@protected [ImplBP]
-function M:ReceiveBeginPlay()
-    self:GetOwner().MsgBusComp:RegEvent('ChrInitData', self, self.OnChrInitData)
-    self:GetOwner().MsgBusComp:RegEvent('ChrInitDisplay', self, self.OnChrInitDisplay)
+function RoleComp:ReceiveBeginPlay()
+    local msgBusComp = self:GetOwner().MsgBusComp ---@as MsgBusComp
+    msgBusComp:RegEvent('ChrInitData', self, self.OnChrInitData)
+    msgBusComp:RegEvent('ChrInitDisplay', self, self.OnChrInitDisplay)
 end
 
--- function M:ReceiveEndPlay()
+-- function RoleComp:ReceiveEndPlay()
 -- end
 
--- function M:ReceiveTick(DeltaSeconds)
+-- function RoleComp:ReceiveTick(DeltaSeconds)
 -- end
 
 ---@private [Server] [Init]
-function M:OnChrInitData()
+function RoleComp:OnChrInitData()
     if (net_util.is_client(self:GetOwner())) then
         return false
     end
+    
     local roleConfig = MdMgr.RoleMgr:GetRoleConfig(self.RoleConfigId)
+    if not roleConfig then
+        log.dev('RoleComp:OnChrInitData()', '无效的RoleConfigId')
+        return
+    end
+
     ---@step 如果有特化的角色模板则使用特化初始化
     if roleConfig.SpecialClass then
         self.Role = class.new(roleConfig.SpecialClass)()
@@ -42,14 +49,14 @@ function M:OnChrInitData()
     end
 end
 
-function M:OnChrInitDisplay()
+function RoleComp:OnChrInitDisplay()
     if net_util.is_client(self:GetOwner()) or (not self.bNpc) then
         return
     end
     self:GetOwner().MsgBusComp:TriggerEvent('RoleName', self.Role:GetRoleDispName())
 end
 
-function M:LogBT2UI_RPC(Text)
+function RoleComp:LogBT2UI_RPC(Text)
     if not ui_util.uimgr or not ui_util.uidef then
         return
     end
@@ -60,4 +67,4 @@ function M:LogBT2UI_RPC(Text)
     MainHud.TxtLog:SetText(Text)
 end
 
-return M
+return RoleComp
