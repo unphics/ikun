@@ -7,21 +7,29 @@
 
 ---@class SettlementBaseClass
 ---@field SettlementActor SettlementCenter 此聚集地的Avatar
----@field SettlementType SettlementType
----@field Name string
+---@field _SettlementType SettlementType
+---@field _SettlementName string
+---@field _tbLocation LocationClass[]
 local SettlementBaseClass = class.class "SettlementBaseClass" {
---[[public]]
     ctor = function(Name, SettlementType) end,
     SettlementActor = nil,
---[[private]]
-    SettlementType = nil,
-    Name = nil,
+    _tbLocation = nil,
+    _SettlementType = nil,
+    _SettlementName = nil,
 }
 
 ---@override
 function SettlementBaseClass:ctor(Name, SettlementType)
-    self.SettlementName = Name
-    self.SettlementType = SettlementType
+    self._tbLocation = {}
+    
+    self._SettlementName = Name
+    self._SettlementType = SettlementType
+end
+
+---@public 添加地点
+---@param Location LocationClass
+function SettlementBaseClass:AddLocation(Location)
+    table.insert(self._tbLocation, Location)
 end
 
 return SettlementBaseClass

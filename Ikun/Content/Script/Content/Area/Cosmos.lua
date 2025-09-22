@@ -1,42 +1,53 @@
+
 ---
----@brief 宇宙
+---@brief   宇宙
+---@author  zys
+---@data    Tue Sep 23 2025 00:57:01 GMT+0800 (中国标准时间)
 ---
 
+require('Content/Area/Site')
+require('Content/Area/Location')
+require('Content/Area/Landform')
 require("Content/Area/Star")
+
 local StarConfig = require("Content/Area/Config/StarConfig")
 
 ---@class Cosmos: MdBase
----@field tbStar Star[]
+---@field _tbStar StarClass[]
 local Cosmos = class.class "Cosmos" : extends "MdBase" {
---[[public]]
     ctor = function() end,
     Init = function() end,
-    Reincarnate = function() end, -- 玩家随机投胎
     Tick = function()end,
---[[private]]
-    InitAllStar = function() end, -- 初始化所有星球
-    tbStar = {},
+    _InitAllStar = function() end,
+    _tbStar = {},
 }
+
+---@override
 function Cosmos:ctor()
-    self:InitAllStar()
-end
-function Cosmos:Tick(DeltaTime)
-    for i, Star in ipairs(self.tbStar) do
-        Star:Tick(DeltaTime)
-    end
-end
-function Cosmos:InitAllStar()
-    for i, cfg in ipairs(StarConfig) do
-        local StarId = 100 + #self.tbStar + 1
-        local Star = class.new "Star" (StarId, cfg.Name) ---@type Star
-        table.insert(self.tbStar, Star)
-    end
-end
-function Cosmos:Reincarnate()
-    local random = math.random(1, #self.tbStar)
+    self._tbStar = {}
+
+    self:_InitAllStar()
 end
 
+---@override
+function Cosmos:Tick(DeltaTime)
+    for i, star in ipairs(self._tbStar) do
+        star:Tick(DeltaTime)
+    end
+end
+
+---@private 初始化所有星球
+function Cosmos:_InitAllStar()
+    for i, cfg in ipairs(StarConfig) do
+        local starId = 100 + #self._tbStar + 1
+        local star = class.new "StarClass" (starId, cfg.Name) ---@type StarClass
+        table.insert(self._tbStar, star)
+    end
+end
+
+---@public [Pure]
+---@return StarClass
 function Cosmos:GetStar()
     --- 现在只有一个星球
-    return self.tbStar[1]
+    return self._tbStar[1]
 end

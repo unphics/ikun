@@ -17,6 +17,7 @@
 ---@field FightPosAssign FightPosDef[]
 ---@field BTCfg table<BTType, string>
 ---@field RoleChat number[]
+---@field HoldLocations number[]
 
 ---@class RoleMgrClass : MdBase
 ---@field AllRoles table<number, RoleClass>

@@ -10,6 +10,7 @@ local BTDef = require('Ikun/Module/AI/BT/BTDef')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
 local RoleInfoClass = require('Content/Role/RoleInfo')
+require('Content/Role/RoleHoldLocation')
 require('Content/Item/Bag')
 require('Content/Chat/NpcChat')
 
@@ -19,11 +20,12 @@ require('Content/Chat/NpcChat')
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
+---@field QuestComp QuestCompClass * 角色的任务
+---@field Bag BagClass * 背包
+---@field HoldLocation RoleHoldLocationClass * 角色持有的地点
 ---@field QuestGiver QuestGiverClass
----@field Bag BagClass
 ---@field NpcChat NpcChatClass
 ---@field bNpc boolean
----@field QuestComp QuestCompClass
 local RoleClass = class.class 'RoleClass' {
 --[[public]]
     ctor = function()end,
@@ -33,18 +35,20 @@ local RoleClass = class.class 'RoleClass' {
     IsFirend = function()end,
     IsEnemy = function()end,
     AddEnemyChecked = function()end,
+    RoleBeginDeath = function()end,
     HasTarget = function()end,
     GetTarget = function()end,
     GetBelongKingdom = function()end,
-    Team = nil,
     GetRoleCfgId = function()end,
     GetRoleInstId = function()end,
     GetRoleDispName = function()end,
     IsRoleDead = function()end,
+    Team = nil,
     QuestGiver = nil,
     QuestComp = nil,
     Bag = nil,
     NpcChat = nil,
+    HoldLocation = nil,
 --[[private]]
     StartBT = function()end,
     RoleInfo = nil,
@@ -74,12 +78,13 @@ function RoleClass:RoleTick(DeltaTime)
 end
 
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
-function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
-    local Config = MdMgr.RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
-    if not Config then
+function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
+    local config = MdMgr.RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
+    if not config then
         return log.error(log.key.roleinit,'投胎失败!!!')
     end
-    self.RoleInfo = class.new 'RoleInfoClass' (self, CfgId)
+    
+    self.RoleInfo = class.new 'RoleInfoClass' (self, ConfigId)
     self.Avatar = Avatar
     self.bNpc = bNpc
 
@@ -87,11 +92,12 @@ function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     self.QuestGiver = class.new 'QuestGiverClass'(self)
     self.Bag = class.new 'BagClass'(self)
     self.NpcChat = class.new 'NpcChatClass'(self)
+    self.HoldLocation = class.new 'RoleHoldLocationClass'(self, ConfigId)
 
     local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
-    self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(Config.BelongKingdom) ---@type Kingdom
+    self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(config.BelongKingdom) ---@type Kingdom
     self.BelongKingdomLua:AddKingdomMember(self)
-
+    
     self.Avatar.SkillComp:InitRoleSkill()
     self:StartBT()
 end
@@ -176,16 +182,6 @@ end
 ---@return Kingdom
 function RoleClass:GetBelongKingdom()
     return self.BelongKingdomLua
-end
-
----@public [LBTCondition] [Pure]
-function RoleClass:No()
-    return false
-end
-
----@public [LBTCondition] [Pure]
-function RoleClass:Yes()
-    return true
 end
 
 ---@public [LBTCondition] [Pure] 角色此时有团队指导的移动目标

@@ -1,4 +1,4 @@
-LocationId|LocationName|LocationDesc|
-|地点名字||
-|||
-641001
+LocationId|LocationName|LocationDesc|BelongLandform|BelongSettlement
+|地点名字||属于哪个地貌|属于哪个行政区聚集地
+||||
+641001|杂货铺|||621001
