@@ -59,6 +59,7 @@ function GazeComp:C2S_ReqUpdateGazing_RPC(InteractActor)
     if self.bInteracting then
         return
     end
+    -- log.info('GazeComp:C2S_ReqUpdateGazing', obj_util.dispname(InteractActor))
     self.Rep_GazeName = ''
     if obj_util.is_valid(InteractActor) and (self:GetOwner().OwnerChr ~= InteractActor) then
         self.Rep_InteractActor = InteractActor
