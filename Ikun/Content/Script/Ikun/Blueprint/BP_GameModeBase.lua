@@ -15,10 +15,10 @@ end
 ---@override
 function BP_GameModeBase:ReceiveBeginPlay()
     log.info(log.key.ueinit..' BP_GameModeBase:ReceiveBeginPlay() svr:'..tostring(net_util.is_server(self)))
-    async_util.delay(self, 0.5, function()
+    async_util.delay(self, 0.1, function()
         gameinit.triggerinit(gameinit.ring.one)
     end)
-    async_util.delay(self, 0.6, function()
+    async_util.delay(self, 0.2, function()
         gameinit.triggerinit(gameinit.ring.two)
     end)
 end

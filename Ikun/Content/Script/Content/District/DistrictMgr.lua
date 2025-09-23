@@ -69,7 +69,6 @@ function DistrictMgr:FindKingdomByInstId(KingdomInstId)
 end
 
 ---@public 通过国家的配置Id找到国家
----@todo 找到多个
 ---@param KingdomCfgId number
 ---@return Kingdom?
 function DistrictMgr:FindKingdomByCfgId(KingdomCfgId)

@@ -1,8 +1,0 @@
-1.Lich蓝图在保存时, RoleComp的值会被恢复成默认值 --2024/12/29
-2.转身任务不对 --2025/01/06 Resolved
-3.Lich第一次放技能时会报错找不到Handle
-4.Role有概率初始化失败
-5.GiveAbility后取的Handle有概率无效, 可能是GiveAbility失败: GetGameplayAbilityFromSpecHandle() Ability Spec not found on passed Ability System Component
-6.停止游戏的时候崩溃, Play5次以内必崩 -- 2025/02/06 Resolved
-7.停止游戏的时候崩溃, 应该是投射物的TargetData问题 -- 2025/02/18
-8.Lich发射的Ball客户端和服务端轨迹不一致 2025/03/16->2025/03/16
