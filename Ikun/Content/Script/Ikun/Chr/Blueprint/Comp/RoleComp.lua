@@ -1,3 +1,4 @@
+
 ---
 ---@brief   Role组件, 作为游戏世界的一员, 需要此组件初始化数据
 ---@author  zys
@@ -5,6 +6,7 @@
 ---
 
 ---@class RoleComp: RoleComp_C
+---@field Role RoleClass
 local RoleComp = UnLua.Class()
 
 ---@protected [ImplBP]
@@ -22,20 +24,27 @@ function RoleComp:AvatarInitRole()
         return
     end
 
-    ---@step 如果有特化的角色模板则使用特化初始化
+    -- 如果有特化的角色模板则使用特化初始化
     if roleConfig.SpecialClass then
-        self.Role = class.new(roleConfig.SpecialClass)()
+        self.Role = class.new(roleConfig.SpecialClass)() ---@as RoleClass
     else
-        self.Role = class.new 'RoleClass'()
+        self.Role = class.new 'RoleClass'() ---@as RoleClass
     end
+
     self.Role:InitByAvatar(self:GetOwner(), self.RoleConfigId, self.bNpc)
 
-    ---@step 对于行为树, 如果有用户自定义, 则使用自定义的初始化行为树
+    -- 对于行为树, 如果有用户自定义, 则使用自定义的初始化行为树
     if self.CustomStartBT then
         self.Role:SwitchNewBT(self.StartBTKey)
     end
+
+    local home = self.Role.HoldLocation:GetHomeLocation()
+    if home then
+        log.dev('qqq', home.LocationAvatar:K2_GetActorLocation())
+    end
 end
 
+---@public [Debug]
 function RoleComp:LogBT2UI_RPC(Text)
     if not ui_util.uimgr or not ui_util.uidef then
         return

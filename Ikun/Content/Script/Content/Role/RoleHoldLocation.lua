@@ -10,6 +10,7 @@
 ---@field _tbHoldLocation LocationClass[]
 local RoleHoldLocationClass = class.class 'RoleHoldLocationClass' {
     ctor = function()end,
+    GetHomeLocation = function()end,
     _OwnerRole = nil,
     _tbHoldLocation = nil,
 }
@@ -28,6 +29,7 @@ function RoleHoldLocationClass:ctor(OwnerRole, ConfigId)
             local location = star:FindLocation(locationId)
             if location then
                 table.insert(self._tbHoldLocation, location)
+                log.dev('eee', self._OwnerRole:GetRoleDispName(), #self._tbHoldLocation)
             end
         end
     end

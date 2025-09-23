@@ -11,14 +11,16 @@
 ---@field _SettlementName string 聚集地名字
 ---@field _tbLocation LocationClass[] 聚集地的成员地点, 如村子里的所有房子
 local SettlementBaseClass = class.class "SettlementBaseClass" {
-    ctor = function(Name, SettlementType) end,
+    ctor = function() end,
+    AddLocation = function()end,
+    GetSettlementName = function()end,
     SettlementActor = nil,
     _tbLocation = nil,
     _SettlementType = nil,
     _SettlementName = nil,
 }
 
----@override
+---@public
 function SettlementBaseClass:ctor(Name, SettlementType)
     self._tbLocation = {}
     
@@ -30,6 +32,12 @@ end
 ---@param Location LocationClass
 function SettlementBaseClass:AddLocation(Location)
     table.insert(self._tbLocation, Location)
+end
+
+---@public
+---@return string
+function SettlementBaseClass:GetSettlementName()
+    return self._SettlementName
 end
 
 return SettlementBaseClass

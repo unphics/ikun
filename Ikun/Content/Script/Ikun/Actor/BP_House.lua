@@ -22,7 +22,7 @@ function BP_House:AvatarInitLocation()
         return
     end
     local house = class.new'LocationClass'() ---@as LocationClass
-    house:InitByLocationId(self.LocationId)
+    house:InitByLocationAvatar(self.LocationId, self)
 end
 
 return BP_House

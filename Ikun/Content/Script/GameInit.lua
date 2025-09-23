@@ -46,10 +46,12 @@ end
 ---@public
 ---@param enum ring
 gameinit.triggerinit = function(enum)
-    gameinit._initring[enum]._inited = true
     for _, tb in ipairs(gameinit._initring[enum]) do
         tb.callback(tb.obj)
+
     end
+    gameinit._initring[enum] = {}
+    gameinit._initring[enum]._inited = true
 end
 
 return gameinit

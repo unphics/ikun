@@ -13,35 +13,37 @@
 ---@field BelongSettlement number
 
 ---@class LocationClass
+---@field LocationAvatar AActor
 ---@field _LocationId number
 ---@field _Name string
 ---@field _OwnerRoles RoleClass[]
 local LocationClass = class.class 'LocationClass' {
     ctor = function()end,
-    InitByLocationId = function()end,
+    InitByLocationAvatar = function()end,
     GetBelongSettlement = function()end,
     _OwnerRoles = nil,
     _LocationId = nil,
     _Name = nil,
 }
 
----@override
+---@public
 function LocationClass:ctor()
     self._OwnerRoles = {}
 end
 
 ---@public [Init]
-function LocationClass:InitByLocationId(LocationId)
+function LocationClass:InitByLocationAvatar(LocationId, LocationAvatar)
     local allLocationConfig = ConfigMgr:GetConfig('Location')
     local locationConfig = allLocationConfig[LocationId] ---@type LocationConfig
     if not locationConfig then
-        log.error('LocationClass:InitByLocationId() ', LocationId)
+        log.error(log.key.sceneinit,'LocationClass:InitByLocationAvatar() ', LocationId)
         return
     end
 
     self._LocationId = LocationId
     self._Name = locationConfig.LocationName
-    log.info(log.key.sceneinit, 'InitByLocationId()', self._Name, self._LocationId)
+    self.LocationAvatar = LocationAvatar
+    log.info(log.key.sceneinit, 'InitByLocationAvatar()', self._Name, self._LocationId)
 
     ---@todo zys Location的所属Landform
 
@@ -50,7 +52,7 @@ function LocationClass:InitByLocationId(LocationId)
     Cosmos:GetStar():RegisterLocation(self)
 end
 
----@private [Pure]
+---@public [Pure] 获取所属聚集地
 ---@return SettlementBaseClass
 function LocationClass:GetBelongSettlement()
     local allLocationConfig = ConfigMgr:GetConfig('Location')
