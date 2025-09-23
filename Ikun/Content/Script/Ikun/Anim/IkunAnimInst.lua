@@ -96,7 +96,6 @@ function IkunAnimInst:BlueprintUpdateAnimation(DeltaTimeX)
             end
             self.ShouldMove = ShouldMove
         elseif self.MoveState == EMoveState.InAir then
-            -- TODO
         end
     end
 end
