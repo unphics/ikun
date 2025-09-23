@@ -31,7 +31,7 @@ function RoleComp:OnChrInitData()
     
     local roleConfig = MdMgr.RoleMgr:GetRoleConfig(self.RoleConfigId)
     if not roleConfig then
-        log.dev('RoleComp:OnChrInitData()', '无效的RoleConfigId')
+        log.error('RoleComp:OnChrInitData()', '无效的RoleConfigId')
         return
     end
 

@@ -52,7 +52,7 @@ function InfluenceMapClass:ctor(Center, ItemGridSize, HalfGridCount)
     if not Center or not ItemGridSize or not HalfGridCount then
         log.error('InfluenceMapClass:ctor() : not Center or not ItemGridSize or not HalfGridCount !')
     end
-    log.dev('影响力图初始化 !!!!!!')
+    log.info('影响力图初始化 !!!!!!')
     self.CenterV3 = Center
     self.CenterV3.X = self.CenterV3.X + 50
     self.CenterV3.Y = self.CenterV3.Y + 50

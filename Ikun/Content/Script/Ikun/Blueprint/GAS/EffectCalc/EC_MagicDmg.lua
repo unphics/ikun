@@ -19,9 +19,9 @@ function EC_MagicDmg:OnExecute(CalcObj, Ability, Effect, OptionObj)
     local magicDmgVal = srcMagicPowerVal * magicDmgCorr * (1 - percMgcDefVal) -- 最终修改量
 
     -- do -- log
-    --     log.dev('EC_MagicDmg:OnExecute ', srcMagicPowerVal, magicDmgCorr, percMgcDefVal, magicDmgVal)
+    --     log.info('EC_MagicDmg:OnExecute ', srcMagicPowerVal, magicDmgCorr, percMgcDefVal, magicDmgVal)
     --     local TarHealthVal = CalcObj:ReadAttrValue('Health', false)
-    --     log.dev('EC_MagicDmg:OnExecute TarHealthVal', TarHealthVal)
+    --     log.info('EC_MagicDmg:OnExecute TarHealthVal', TarHealthVal)
     -- end
     
     CalcObj:ModiAttrValue('Health', -magicDmgVal, UE.EGameplayModOp.Additive) -- 修改目标血量

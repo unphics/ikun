@@ -15,9 +15,9 @@ function EC_PhyDmg:OnExecute(CalcObj, Ability, Effect, OptionObj)
     local TarPhyDefVal = CalcObj:ReadAttrValue('PhysicalDefense', false)
     local PercPhyDefVal = math.log(TarPhyDefVal) -- log的底数为nil的话默认是e
     local PhyDmgVal = SrcAttackPowerVal * PhyDmgCfgCorr * (1 - PercPhyDefVal)
-    log.dev('EC_PhyDmg:OnExecute ', SrcAttackPowerVal, PhyDmgCfgCorr, PercPhyDefVal, PhyDmgVal)
+    log.info('EC_PhyDmg:OnExecute ', SrcAttackPowerVal, PhyDmgCfgCorr, PercPhyDefVal, PhyDmgVal)
     local TarHealthVal = CalcObj:ReadAttrValue('Health', false)
-    log.dev('EC_PhyDmg:OnExecute', TarHealthVal)
+    log.info('EC_PhyDmg:OnExecute', TarHealthVal)
     CalcObj:ModiAttrValue('Health', -3, UE.EGameplayModOp.Additive)
 end
 

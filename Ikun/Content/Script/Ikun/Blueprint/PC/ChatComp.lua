@@ -83,7 +83,6 @@ end
 
 function ChatComp:S2C_ShowQuestMsg_RPC(QuestName, QuestState)
     local ui = ui_util.uimgr:ShowUI(ui_util.uidef.UI_QuestMsg) ---@type UI_QuestMsg
-    log.dev('ui', ui)
     if ui then
         ui:SetQuestMsg(QuestName, QuestState)
     end

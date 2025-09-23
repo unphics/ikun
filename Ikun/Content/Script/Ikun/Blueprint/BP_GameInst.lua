@@ -28,7 +28,7 @@ function BP_GameInst:ReceiveOnWorldChanged(OldWorld, NewWorld)
     -- end
     local newWorldName = NewWorld and NewWorld:GetName()
     local type = NewWorld and UE.UIkunFnLib.GetWorldType(NewWorld)
-    log.dev('BP_GameInst:ReceiveOnWorldChanged()', OldWorld, NewWorld, newWorldName, type)
+    log.info('BP_GameInst:ReceiveOnWorldChanged()', OldWorld, NewWorld, newWorldName, type)
 end
 
 return BP_GameInst

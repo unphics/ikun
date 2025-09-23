@@ -28,7 +28,6 @@ function RoleHoldLocationClass:ctor(OwnerRole, ConfigId)
             local location = star:FindLocation(locationId)
             if location then
                 table.insert(self._tbHoldLocation, location)
-                log.dev('qqqqqqq', OwnerRole:GetRoleDispName(), location._Name)
             end
         end
     end

@@ -1,6 +1,10 @@
 {
 	"folders": [
 		{
+			"name": "Doc",
+			"path": "../Doc"
+		},
+		{
 			"name": "Config",
 			"path": "../Config"
 		},
