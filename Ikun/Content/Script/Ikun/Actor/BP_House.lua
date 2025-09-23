@@ -1,3 +1,4 @@
+local GameInit = require("GameInit")
 
 ---
 ---@brief   房子
