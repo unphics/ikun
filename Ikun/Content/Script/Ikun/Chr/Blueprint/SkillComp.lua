@@ -20,35 +20,25 @@ local SLOT_NAME_HEAD = 'Skill.Type.Trigger.'
 ---@field _SkillSlot table
 local SkillComp = UnLua.Class()
 
-function SkillComp:ReceiveBeginPlay()
-    if net_util.is_server(self:GetOwner()) then
-        self._SkillSlot = {
-            Equip = nil,
-            UnEquip = nil,
-            Dodge = nil,
-            NormalOne = nil,
-            NormalTow = nil,
-            Hit = nil,
-            Special = nil,
-        }
-    end
-end
-
--- function SkillComp:ReceiveEndPlay()
--- end
-
--- function SkillComp:ReceiveTick(DeltaSeconds)
--- end
-
 ---@public 初始化角色的技能
 function SkillComp:InitRoleSkill()
     local role = rolelib.role(self:GetOwner())
 
-    local roleCfg = MdMgr.RoleMgr:GetRoleConfig(role:GetRoleCfgId()) ---@type RoleConfig
+    local roleCfg = RoleMgr:GetRoleConfig(role:GetRoleCfgId()) ---@type RoleConfig
     if not roleCfg.RoleSkills then
         log.info('SkillComp:InitRoleSkill()', '无初始技能', role:GetRoleDispName())
         return
     end
+
+    self._SkillSlot = {
+        Equip = nil,
+        UnEquip = nil,
+        Dodge = nil,
+        NormalOne = nil,
+        NormalTow = nil,
+        Hit = nil,
+        Special = nil,
+    }
 
     for slot, skillId in pairs(roleCfg.RoleSkills) do
         self:SetSlotSkill(slot, skillId)
@@ -89,7 +79,7 @@ function SkillComp:SetSlotSkill(SlotName, SkillId)
         return
     end
 
-    local allSkillCfg = MdMgr.ConfigMgr:GetConfig('Skill') ---@type table<number, SkillConfig>
+    local allSkillCfg = ConfigMgr:GetConfig('Skill') ---@type table<number, SkillConfig>
     local config = allSkillCfg[SkillId] ---@type SkillConfig
     if not config then
         log.error('SkillComp:SetSlotSkill() 无效的技能Id')

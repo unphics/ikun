@@ -9,7 +9,7 @@ local SettlementType = require('Content/District/Settlements/SettlemengType')
 
 ---@class CityClass: SettlementBaseClass
 local CityClass = class.class "CityClass" : extends "SettlementBaseClass" {
-    ctor = function(Name) end
+    ctor = function() end
 }
 
 ---@override

@@ -79,7 +79,7 @@ end
 
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
 function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
-    local config = MdMgr.RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
+    local config = RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
     if not config then
         return log.error(log.key.roleinit,'投胎失败!!!')
     end
@@ -94,7 +94,7 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
     self.NpcChat = class.new 'NpcChatClass'(self)
     self.HoldLocation = class.new 'RoleHoldLocationClass'(self, ConfigId)
 
-    local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
+    local DistrictMgr = Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
     self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(config.BelongKingdom) ---@type Kingdom
     self.BelongKingdomLua:AddKingdomMember(self)
     
@@ -102,25 +102,25 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
     self:StartBT()
 end
 function RoleClass:StartBT()
-    local RoleCfg = MdMgr.RoleMgr:GetRoleConfig(self:GetRoleCfgId())
+    local RoleCfg = RoleMgr:GetRoleConfig(self:GetRoleCfgId())
     if RoleCfg then
         self:SwitchNewBT(RoleCfg.InitBT)
     end
 end
 
 function RoleClass:SwitchNewBT(NewBTKey)
-    log.info('RoleDisplayName = '..tostring(self:GetRoleDispName())..', switch new bt: '..tostring(NewBTKey))
+    log.info('RoleClass:SwitchNewBT()', self:GetRoleDispName(), NewBTKey)
     if self.Avatar.RoleComp.bCustomStartBT then
         return
     end
     local BTClass = BTDef[NewBTKey]
     if not BTClass then
-        log.error('Failed to index BTClass, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self:GetRoleDispName()))
+        log.error('RoleClass:SwitchNewBT()', 'no NewBTKey', NewBTKey, self:GetRoleDispName())
         return
     end
     self.BT = BTClass(self.Avatar)
         if not self.BT then
-        log.error('Failed to init bt, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self:GetRoleDispName()))
+            log.error('RoleClass:SwitchNewBT()', 'Failed to init BT', NewBTKey, self:GetRoleDispName())
         return
     end
 end
@@ -158,8 +158,8 @@ function RoleClass:AddEnemyChecked(OtherRole)
     if not self:IsEnemy(OtherRole) then
         return false
     end
-    local OwnerRoleCfg = MdMgr.RoleMgr:GetRoleConfig(self:GetRoleCfgId())
-    local OtherRoleCfg = MdMgr.RoleMgr:GetRoleConfig(OtherRole:GetRoleCfgId())
+    local OwnerRoleCfg = RoleMgr:GetRoleConfig(self:GetRoleCfgId())
+    local OtherRoleCfg = RoleMgr:GetRoleConfig(OtherRole:GetRoleCfgId())
     if not OtherRoleCfg then
         return false
     end

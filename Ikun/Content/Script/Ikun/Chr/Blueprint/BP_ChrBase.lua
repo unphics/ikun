@@ -8,24 +8,12 @@
 ---@field Role RoleClass
 local BP_ChrBase = UnLua.Class()
 
--- function BP_ChrBase:Initialize(Initializer)
--- end
-
--- function BP_ChrBase:UserConstructionScript()
--- end
-
----@override [ImplBP]
+---@override
 function BP_ChrBase:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
-    self.MsgBusComp:PrepareInitChrDataEvent()
-    self.MsgBusComp:PrepareInitChrDisplayEvent()
-    self.MsgBusComp:RegEvent('ChrInitData', self, self.OnChrInitData)
 end
 
--- function BP_ChrBase:ReceiveEndPlay()
--- end
-
----@override [ImplBP]
+---@override
 function BP_ChrBase:ReceiveTick(DeltaSeconds)
     self.Overridden.ReceiveTick(self, DeltaSeconds)
     if not self.bChrDead and net_util.is_server(self) then
@@ -35,15 +23,6 @@ function BP_ChrBase:ReceiveTick(DeltaSeconds)
         end
     end
 end
-
--- function BP_ChrBase:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
--- end
-
--- function BP_ChrBase:ReceiveActorBeginOverlap(OtherActor)
--- end
-
--- function BP_ChrBase:ReceiveActorEndOverlap(OtherActor)
--- end
 
 ---@public [Server] [Tool] [Pure] 获取当前Chr的Role
 ---@return RoleClass | nil
@@ -59,20 +38,6 @@ end
 function BP_ChrBase:PrintRoleInfo()
     local Role = self:GetRole()
     return ' [Actor='..obj_util.dispname(self)..', RoleName='..Role:GetRoleDispName()..', RoleId='..Role:GetRoleInstId()..'] '
-end
-
----@private 角色在数据初始化的时候给自己赋予所有的技能
-function BP_ChrBase:OnChrInitData()
-    if net_util.is_client(self) then
-        return
-    end
-    local ActiveAbilities = self.ActiveAbilities:ToTable()
-    for _, AbilityClass in ipairs(ActiveAbilities) do
-        local Handle = self.ASC:K2_GiveAbility(AbilityClass, 0, 0)
-        if not Handle or Handle.Handle == -1 then
-            log.error('BP_ChrBase:OnChrInitData()', 'Failed to Give Ability')
-        end
-    end
 end
 
 ---@private Chr开始死亡

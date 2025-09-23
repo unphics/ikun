@@ -23,14 +23,14 @@ debug_util.qqq = function(a, b)
 end
 
 debug_util.printrole = function(id)
-    local role = MdMgr.RoleMgr:FindRole(id)
+    local role = RoleMgr:FindRole(id)
     if role then
         log.error(role:PrintRole())
     end
 end
 
 debug_util.gamespeed = function(speed)
-    local time = MdMgr.TimeMgr ---@type TimeMgr
+    local time = TimeMgr ---@type TimeMgr
     time:SetGameSpeed(speed)
 end
 

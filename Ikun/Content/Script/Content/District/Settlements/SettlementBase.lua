@@ -7,9 +7,9 @@
 
 ---@class SettlementBaseClass
 ---@field SettlementActor SettlementCenter 此聚集地的Avatar
----@field _SettlementType SettlementType
----@field _SettlementName string
----@field _tbLocation LocationClass[]
+---@field _SettlementType SettlementType 聚集地类型:村庄/城市
+---@field _SettlementName string 聚集地名字
+---@field _tbLocation LocationClass[] 聚集地的成员地点, 如村子里的所有房子
 local SettlementBaseClass = class.class "SettlementBaseClass" {
     ctor = function(Name, SettlementType) end,
     SettlementActor = nil,

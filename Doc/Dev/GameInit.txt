@@ -1,0 +1,15 @@
+
+初始化需求:
+    ConfigMgr不需要初始化,构造即初始化,无其他依赖 
+    TimeMgr不需要初始化,构造即初始化,无其他依赖
+    RoleMgr不需要初始化,构造即初始化,无其他依赖
+    QuestMgr根据配置初始化自己的配置,依赖ConfigMgr构造
+    Cosmos依赖ConfigMgr初始化星球
+    RoleClass依赖RoleComp
+
+服务端模块初始化顺序指南:
+    PCH: Log注册, Lib注册, Util注册, Class注册, Tool注册
+    PCH: ConfigMgr构造, TimeMgr构造, ItemMgr构造, RoleMgr构造, TeamMgr构造, QuestMgr构造, Cosmos构造
+    ring0: QuestMgr:InitQuestMgr(依赖ConfigMgr), Cosmos:InitAllStar(依赖ConfigMgr), 
+    ring1: 场景物体初始化逻辑对象BP_Location:AvatarInitLocation(依赖ConfigMgr,Settlement)
+    ring2: 场景角色初始化逻辑对象BP_ChrBase.RoleComp:AvatarInitRole(依赖Location初始化)

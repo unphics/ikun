@@ -7,15 +7,13 @@
 
 require("Content.District.DistrictMgr")
 
----@class StarClass: MdBase
+---@class StarClass
 ---@field DistrictMgr DistrictMgr
 ---@field StarName string 星球的名字
 ---@field StarId number 星球的Id
 ---@field _tbLocationRef table<number, LocationClass>
-local StarClass = class.class "StarClass": extends 'MdBase' {
+local StarClass = class.class "StarClass"{
     ctor = function()end,
-    Init = function()end,
-    Tick = function()end,
     RegisterLocation = function()end,
     FindLocation = function()end,
     StarId = nil,
@@ -33,13 +31,9 @@ function StarClass:ctor(Id, Name)
     self.DistrictMgr = class.new "DistrictMgr" (self)
 end
 
----@override
-function StarClass:Init()
-end
-
----@override
-function StarClass:Tick(DeltaTime)
-    self.DistrictMgr:Tick(DeltaTime)
+---@public
+function StarClass:TickStar(DeltaTime)
+    self.DistrictMgr:TickDistrictMgr(DeltaTime)
 end
 
 ---@public 注册地点, 场景初始化相关
@@ -49,12 +43,12 @@ function StarClass:RegisterLocation(Location)
 end
 
 ---@public 查找地点
----@return LocationClass
+---@return LocationClass?
 function StarClass:FindLocation(LocationId)
     local location = self._tbLocationRef[LocationId]
     if not location then
         log.fatal('StarClass:FindLocation()', '不存在的Location', LocationId)
-        return
+        return nil
     end
     return location
 end

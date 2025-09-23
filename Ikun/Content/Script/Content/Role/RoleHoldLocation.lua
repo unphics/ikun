@@ -21,8 +21,8 @@ function RoleHoldLocationClass:ctor(OwnerRole, ConfigId)
     
     self._OwnerRole = OwnerRole
 
-    local config = MdMgr.RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
-    local star = MdMgr.Cosmos:GetStar()
+    local config = RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
+    local star = Cosmos:GetStar()
     if config.HoldLocations then
         for _, locationId in ipairs(config.HoldLocations) do
             local location = star:FindLocation(locationId)

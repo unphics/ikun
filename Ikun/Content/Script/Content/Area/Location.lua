@@ -12,7 +12,7 @@
 ---@field BelongLandform number
 ---@field BelongSettlement number
 
----@class LocationClass: MdBase
+---@class LocationClass
 ---@field _LocationId number
 ---@field _Name string
 ---@field _OwnerRoles RoleClass[]
@@ -32,10 +32,10 @@ end
 
 ---@public [Init]
 function LocationClass:InitByLocationId(LocationId)
-    local allLocationConfig = MdMgr.ConfigMgr:GetConfig('Location')
-    local locationConfig = allLocationConfig[self._LocationId] ---@type LocationConfig
+    local allLocationConfig = ConfigMgr:GetConfig('Location')
+    local locationConfig = allLocationConfig[LocationId] ---@type LocationConfig
     if not locationConfig then
-        log.error('LocationClass:InitByLocationId() ', self._LocationId)
+        log.error('LocationClass:InitByLocationId() ', LocationId)
         return
     end
 
@@ -47,15 +47,16 @@ function LocationClass:InitByLocationId(LocationId)
 
     local settlement = self:GetBelongSettlement()
     settlement:AddLocation(self)
+    Cosmos:GetStar():RegisterLocation(self)
 end
 
 ---@private [Pure]
 ---@return SettlementBaseClass
 function LocationClass:GetBelongSettlement()
-    local allLocationConfig = MdMgr.ConfigMgr:GetConfig('Location')
+    local allLocationConfig = ConfigMgr:GetConfig('Location')
     local locationConfig = allLocationConfig[self._LocationId] ---@type LocationConfig
     local settlementId = locationConfig.BelongSettlement
-    local districtMgr = MdMgr.Cosmos:GetStar().DistrictMgr
+    local districtMgr = Cosmos:GetStar().DistrictMgr
     local settlement = districtMgr:FindOrCreateSettlement(settlementId)
     return settlement
 end

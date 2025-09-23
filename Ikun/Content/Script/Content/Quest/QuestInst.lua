@@ -53,7 +53,7 @@ end
 function QuestInstClass:CompleteCurStep()
     -- complete
     -- next
-    local stepCfg = MdMgr.QuestMgr:GetQuestStepConfigById(self._CurStep)
+    local stepCfg = QuestMgr:GetQuestStepConfigById(self._CurStep)
     if stepCfg.NextStep then
         self._CurStep = stepCfg.NextStep
         log.info('QuestInstClass:CompleteCurStep()', '任务步骤完成, 进入下一步', self._CurStep)
@@ -87,7 +87,7 @@ end
 ---@public [Pure]
 ---@return QuestConfig | nil
 function QuestInstClass:GetQuestConfig()
-    local config = MdMgr.QuestMgr:GetQuestConfigById(self.QuestId)
+    local config = QuestMgr:GetQuestConfigById(self.QuestId)
     return config
 end
 

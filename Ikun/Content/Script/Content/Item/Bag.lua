@@ -36,7 +36,7 @@ end
 ---@public
 ---@param Item ItemBaseClass
 function BagClass:AddItem(Item)
-    local cfg = MdMgr.ConfigMgr:GetConfig('Item')[Item.ItemCfgId] ---@type ItemBaseConfig
+    local cfg = ConfigMgr:GetConfig('Item')[Item.ItemCfgId] ---@type ItemBaseConfig
     self._ItemContainer[Item.ItemId] = Item
     local count = Item.ItemCount or 1
     for _, ele in pairs(self._OnItemAdd) do

@@ -28,11 +28,7 @@ end
 
 ---@private
 function UI_MainHud:UpdateTimeInfo()
-    if MdMgr and MdMgr.TimeMgr then
-        self.TxtTime:SetText(MdMgr.TimeMgr:GetCurTimeDisplay())
-    else
-        log.error('UI_MainHud:UpdateTimeInfo() 客户端没有MdMgr')
-    end
+    self.TxtTime:SetText(TimeMgr:GetCurTimeDisplay())
 end
 
 ---@private [Debug] 更新动画蓝图的信息

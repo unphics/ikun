@@ -9,18 +9,15 @@ local GameInit = require("GameInit")
 ---@class BP_House: AActor
 local BP_House = UnLua.Class()
 
+---@override
 function BP_House:ReceiveBeginPlay()
-    self:InitHouse()
+    if net_util.is_server(self) then
+        gameinit.registerinit(gameinit.ring.one, self, self.AvatarInitLocation)
+    end
 end
 
--- function BP_House:ReceiveEndPlay()
--- end
-
--- function BP_House:ReceiveTick(DeltaSeconds)
--- end
-
----@private 房子初始化: 关门
-function BP_House:InitHouse()
+---@private [Init]
+function BP_House:AvatarInitLocation()
     if not self.LocationId then
         log.error('BP_House:InitHouse()', '未配置LocationId')
         return

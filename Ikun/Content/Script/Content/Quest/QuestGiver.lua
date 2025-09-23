@@ -18,13 +18,13 @@ function QuestGiverClass:ctor(Owenr)
 end
 
 function QuestGiverClass:GetAvailableQuest()
-    local quests = MdMgr.QuestMgr:GetQuestConfigByAcceptNpc(self._Owner:GetRoleCfgId())
+    local quests = QuestMgr:GetQuestConfigByAcceptNpc(self._Owner:GetRoleCfgId())
     return quests
 end
 
 ---@public
 function QuestGiverClass:HasAvailableQuest()
-    local quests = MdMgr.QuestMgr:GetQuestConfigByAcceptNpc(self._Owner:GetRoleCfgId())
+    local quests = QuestMgr:GetQuestConfigByAcceptNpc(self._Owner:GetRoleCfgId())
     return #quests > 0
 end
 

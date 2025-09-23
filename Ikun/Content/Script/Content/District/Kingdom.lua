@@ -88,7 +88,7 @@ function Kingdom:AddKingdomMember(inRole)
         local InstId = self.KingdomInstId * 1000 + #self.tbRoleBornRecord
         table.insert(self.tbRoleBornRecord, inRole:GetRoleDispName())
         inRole.RoleInfo:InitRoleInstId(InstId)
-        MdMgr.RoleMgr:NewRole(InstId, inRole)
+        RoleMgr:NewRole(InstId, inRole)
     end
     self.dpKingdomRoles:dinsert(inRole:GetRoleInstId(), inRole)
     log.info('zys AddKingdomMember', inRole:GetRoleDispName(), self.KingdomName, inRole:GetRoleInstId())

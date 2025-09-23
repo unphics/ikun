@@ -1,27 +1,16 @@
 ---
----@brief
+---@brief   消息分发
+---@author  zys
+---@data    Tue Sep 23 2025 15:06:52 GMT+0800 (中国标准时间)
 ---
 
 ---@class MsgBusComp: MsgBusComp_C
-local M = UnLua.Class()
-
--- function M:Initialize(Initializer)
--- end
-
--- function M:ReceiveBeginPlay()
--- end
-
--- function M:ReceiveEndPlay()
--- end
-
--- function M:ReceiveTick(DeltaSeconds)
--- end
+local MsgBusComp = UnLua.Class()
 
 ---@public [Client] [Server] 触发事件
-function M:TriggerEvent(EventName, ...)
+function MsgBusComp:TriggerMsg(EventName, ...)
     if not self.Event[EventName] then
-        log.warn('Failed to trigger nil event', EventName)
-        return
+        return log.warn('Failed to trigger nil event', EventName)
     end
     for _, Listener in ipairs(self.Event[EventName]) do
         if obj_util.is_valid(Listener.FnSelf) then
@@ -34,7 +23,7 @@ end
 ---@param EventName string
 ---@param FnSelf UObject
 ---@param Fn function
-function M:RegEvent(EventName, FnSelf, Fn)
+function MsgBusComp:RegMsg(EventName, FnSelf, Fn)
     if not self.Event then
         self.Event = {}
     end
@@ -48,22 +37,4 @@ function M:RegEvent(EventName, FnSelf, Fn)
     table.insert(self.Event[EventName], Listener)
 end
 
----@public [Client] [Server] 1秒后触发事件"ChrInitData", 角色的数据初始化流程开始
-function M:PrepareInitChrDataEvent()
-    self.InitChrDataEventTimerHandle = async_util.timer(self:GetOwner(),  function()
-        self:TriggerEvent('ChrInitData')
-        UE.UKismetSystemLibrary.K2_ClearAndInvalidateTimerHandle(self:GetOwner(), self.InitChrDataEventTimerHandle)
-        self.InitChrDataEventTimerHandle = nil
-    end, 1, false)
-end
-
----@public [Client] [Server] 2秒后触发事件"ChrInitDisplay", 角色的显示初始化流程开始
-function M:PrepareInitChrDisplayEvent()
-    self.InitChrDisplayEventTimerHandle = async_util.timer(self:GetOwner(),  function()
-        self:TriggerEvent('ChrInitDisplay')
-        UE.UKismetSystemLibrary.K2_ClearAndInvalidateTimerHandle(self:GetOwner(), self.InitChrDisplayEventTimerHandle)
-        self.InitChrDisplayEventTimerHandle = nil
-    end, 2, false)
-end
-
-return M
+return MsgBusComp

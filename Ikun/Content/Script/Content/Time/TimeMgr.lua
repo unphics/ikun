@@ -1,12 +1,13 @@
+
 ---
----@brief 游戏世界时间管理
----@author zys
----@data Sun May 04 2025 13:53:30 GMT+0800 (中国标准时间)
+---@brief   游戏世界时间管理
+---@author  zys
+---@data    Sun May 04 2025 13:53:30 GMT+0800 (中国标准时间)
 ---
 
 local TimeCfg = require('Content/Time/Config/TimeCfg')
 
----@class TimeMgr:MdBase
+---@class TimeMgr
 ---@field ConstTimeFlowRate number 游戏的时间流速
 ---@field GameSpeed number
 ---@field Year   number 年
@@ -15,10 +16,10 @@ local TimeCfg = require('Content/Time/Config/TimeCfg')
 ---@field Hour   number 时
 ---@field Minute number 分
 ---@field Second number 秒
-local TimeMgr = class.class'TimeMgr': extends 'MdBase' {
+local TimeMgr = class.class'TimeMgr' {
 --[[public]]
     ctor = function()end,
-    Tick = function()end,
+    TickTimeMgr = function()end,
     GetCurTimeDisplay = function()end,
     SetGameSpeed = function()end,
     GetGameSpeed = function()end,
@@ -42,7 +43,7 @@ function TimeMgr:ctor()
     self.Hour = 12
     self.Minute = 0
 end
-function TimeMgr:Tick(DeltaTime)
+function TimeMgr:TickTimeMgr(DeltaTime)
     self:UpdateGameTime(DeltaTime)
 end
 function TimeMgr:UpdateGameTime(DeltaTime)
@@ -90,3 +91,5 @@ function TimeMgr:GetCurTimeDisplay()
     str = str .. ':' .. FmtTime(self.Minute)
     return str
 end
+
+return TimeMgr

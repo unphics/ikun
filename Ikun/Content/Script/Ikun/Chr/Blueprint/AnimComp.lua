@@ -8,18 +8,10 @@
 ---@class AnimComp: AnimComp_C
 local AnimComp = UnLua.Class()
 
--- function AnimComp:Initialize(Initializer)
--- end
-
+---@override
 function AnimComp:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     self:LinkNewClassLayer('Init')
-end
-
--- function AnimComp:ReceiveEndPlay()
--- end
-
-function AnimComp:ReceiveTick(DeltaSeconds)
 end
 
 function AnimComp:LinkNewClassLayer(Name)

@@ -5,30 +5,23 @@
 ---@data    Sun Jul 06 2025 18:01:55 GMT+0800 (中国标准时间)
 ---
 
----@class TeamMgr: MdBase
----@field tbAllTeam TeamClass[]
-local TeamMgr = class.class 'TeamMgr' : extends 'MdBase' {
---[[public]]
+---@class TeamMgr
+---@field _tbAllTeam TeamClass[]
+local TeamMgr = class.class 'TeamMgr'{
     ctor = function()end,
-    Init = function()end,
-    Tick = function()end,
---[[private]]
-    tbAllTeam = nil,
+    CreateNewTeam = function()end,
+    TickTeamMgr = function()end,
+    _tbAllTeam = nil,
 }
 
 ---@override
 function TeamMgr:ctor()
-    
+    self._tbAllTeam = {}
 end
 
----@override
-function TeamMgr:Init()
-    self.tbAllTeam = {}
-end
-
----@override
-function TeamMgr:Tick(DeltaTime)
-    for _, team in ipairs(self.tbAllTeam) do
+---@public
+function TeamMgr:TickTeamMgr(DeltaTime)
+    for _, team in ipairs(self._tbAllTeam) do
         if team:IsTeamLive() then
             team:Tick(DeltaTime)
         end
@@ -38,9 +31,9 @@ end
 ---@public
 ---@return TeamClass
 function TeamMgr:CreateNewTeam()
-    local id = #self.tbAllTeam
+    local id = #self._tbAllTeam
     local newTeam = class.new 'TeamClass' () ---@type TeamClass
-    table.insert(self.tbAllTeam, newTeam)
+    table.insert(self._tbAllTeam, newTeam)
     newTeam.TeamInfo:TeamInfoInitOnCreate(id)
     return newTeam
 end

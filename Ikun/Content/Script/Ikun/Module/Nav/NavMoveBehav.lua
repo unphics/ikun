@@ -5,7 +5,7 @@
 ---@data    Wed Jun 18 2025 00:02:19 GMT+0800 (中国标准时间)
 ---
 
----@class NavMoveBehav : MdBase
+---@class NavMoveBehav
 ---@field Chr BP_ChrBase
 ---@field Role RoleClass
 ---@field MaxStuckTime number

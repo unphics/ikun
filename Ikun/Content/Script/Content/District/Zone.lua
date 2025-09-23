@@ -6,29 +6,26 @@
 ---@desc    大区有很多聚落(城市村庄等)
 ---
 
----@class ZoneClass: MdBase
+---@class ZoneClass
 ---@field ZoneName string
----@field tbSettlement SettlementBaseClass[] 所有城市/村庄
+---@field _tbSettlement SettlementBaseClass[] 所有城市/村庄
 local ZoneClass = class.class"ZoneClass"{
---[public]
     ctor = function(Name) end,
-    ZoneName = nil,
---[[private]]
-    Init = function() end,
     AddSettlement = function(Settlement) end,
-    tbSettlement = nil,
+    ZoneName = nil,
+    _tbSettlement = nil,
 }
 
 ---@override
 function ZoneClass:ctor(Name)
     self.ZoneName = Name
-    self.tbSettlement = {}
+    self._tbSettlement = {}
 end
 
 ---@public
 ---@param Settlement SettlementBaseClass
 function ZoneClass:AddSettlement(Settlement)
-    table.insert(self.tbSettlement, Settlement)
+    table.insert(self._tbSettlement, Settlement)
 end
 
 return ZoneClass

@@ -59,7 +59,7 @@ function NpcChatClass:UpdateChat()
     end
     log.info('NpcChatClass:UpdateChat() 当前ChatId', self._CurChatId)
     if data.PreExecId then
-        local execData = MdMgr.ConfigMgr:GetConfig('ChatExec')[data.PreExecId]
+        local execData = ConfigMgr:GetConfig('ChatExec')[data.PreExecId]
         ChatExecLib.TryExec(self, execData)
     end
     if data.Type == 1 or data.Type == 3 then
@@ -98,7 +98,7 @@ function NpcChatClass:DoSelectIndex(Index)
     local curSelectId = self._CurSelectList[Index]
     local data = self:GetChatData(curSelectId)
     if data.PostExecId then
-        local execData = MdMgr.ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
+        local execData = ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
         ChatExecLib.TryExec(self, execData)
     end
     self._CurChatId = data.NextId
@@ -110,7 +110,7 @@ function NpcChatClass:DoTalkNext()
     local data = self:GetChatData(self._CurChatId)
     if data then
         if data.PostExecId then
-            local execData = MdMgr.ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
+            local execData = ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
             ChatExecLib.TryExec(self, execData)
         end
         self._CurChatId = data.NextId
@@ -121,7 +121,7 @@ end
 ---@public [Pure]
 ---@return ChatConfig
 function NpcChatClass:GetChatData(ChatId)
-    local config = MdMgr.ConfigMgr:GetConfig('Chat')
+    local config = ConfigMgr:GetConfig('Chat')
     local data = config[ChatId]
     if not data then
         log.error('NpcChatClass:GetChatData()', '无效的ChatId', ChatId)

@@ -93,14 +93,14 @@ function GA_GroundSurge:OnChargeRepeat()
     local avatar = self:GetAvatarActorFromActorInfo()
 
     local taId = self.SkillConfig.TargetActors[1]
-    local taConfig = MdMgr.ConfigMgr:GetConfig('TargetActor')[taId]
+    local taConfig = ConfigMgr:GetConfig('TargetActor')[taId]
     local taName = taConfig.TargetActorTemplate
     local taClass = gas_util.find_target_actor_class(taName)
     local ta = actor_util.spawn_always(avatar, taClass, avatar:GetTransform()) ---@as TA_IkunBase
 
     local context = self:MakeTargetActorContext(taId)
     local effectId = self.SkillConfig.SkillEffects[1] ---@as number
-    local effectConfig = MdMgr.ConfigMgr:GetConfig('Effect')[effectId] ---@as EffectConfig
+    local effectConfig = ConfigMgr:GetConfig('Effect')[effectId] ---@as EffectConfig
     local GEClass = gas_util.find_effect_class(effectConfig.EffectTemplate)
     ---@type AbilityEffectInfo
     local effectInfo = {

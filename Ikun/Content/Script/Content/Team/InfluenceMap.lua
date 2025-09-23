@@ -61,7 +61,7 @@ function InfluenceMapClass:ctor(Center, ItemGridSize, HalfGridCount)
     self.CalcFns = {}
     self:InitGridItems()
 end
----@private [Init] 根据CenterPos构建所有GridItem
+---@private 根据CenterPos构建所有GridItem
 function InfluenceMapClass:InitGridItems()
     self.InfluenceItems = {}
     local Count = self.HalfGridCount * self.HalfGridCount * 2 * 2

@@ -26,7 +26,7 @@ local RoleInfoClass = class.class'RoleInfoClass' {
 
 ---@param Role RoleClass
 function RoleInfoClass:ctor(Role, CfgId)
-    local config = MdMgr.RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
+    local config = RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
     self.OwnerRole = Role
     self.RoleCfgId = CfgId
     self.RoleDispName = config.RoleName

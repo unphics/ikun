@@ -43,7 +43,7 @@ function BP_AbilityBase:K2_OnEndAbility(WasCancelled)
     self.Overridden.K2_OnEndAbility(self, WasCancelled)
 end
 
----@protected [Init] 初始化数据
+---@protected 初始化数据
 function BP_AbilityBase:GAInitData()
     self.tbUStructRef = {}
     self.OnAbilityEnd = {}
@@ -98,7 +98,7 @@ end
 ---@protected
 ---@return TargetActorContext
 function BP_AbilityBase:MakeTargetActorContext(TargetActorId)
-    local config = MdMgr.ConfigMgr:GetConfig('TargetActor')[TargetActorId]
+    local config = ConfigMgr:GetConfig('TargetActor')[TargetActorId]
     ---@type TargetActorContext
     local context = {
         TargetActorId = TargetActorId,

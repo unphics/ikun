@@ -7,31 +7,18 @@
 ---@class RoleComp: RoleComp_C
 local RoleComp = UnLua.Class()
 
--- function RoleComp:Initialize(Initializer)
--- end
-
 ---@protected [ImplBP]
 function RoleComp:ReceiveBeginPlay()
-    local msgBusComp = self:GetOwner().MsgBusComp ---@as MsgBusComp
-    msgBusComp:RegEvent('ChrInitData', self, self.OnChrInitData)
-    msgBusComp:RegEvent('ChrInitDisplay', self, self.OnChrInitDisplay)
+    if net_util.is_server(self:GetOwner()) then    
+        gameinit.registerinit(gameinit.ring.two, self, self.AvatarInitRole)
+    end
 end
 
--- function RoleComp:ReceiveEndPlay()
--- end
-
--- function RoleComp:ReceiveTick(DeltaSeconds)
--- end
-
----@private [Server] [Init]
-function RoleComp:OnChrInitData()
-    if (net_util.is_client(self:GetOwner())) then
-        return false
-    end
-    
-    local roleConfig = MdMgr.RoleMgr:GetRoleConfig(self.RoleConfigId)
+---@private [Server] [Init] 初始化逻辑角色
+function RoleComp:AvatarInitRole()
+    local roleConfig = RoleMgr:GetRoleConfig(self.RoleConfigId)
     if not roleConfig then
-        log.error('RoleComp:OnChrInitData()', '无效的RoleConfigId')
+        log.error('RoleComp:AvatarInitRole()', '无效的RoleConfigId')
         return
     end
 
@@ -47,13 +34,6 @@ function RoleComp:OnChrInitData()
     if self.CustomStartBT then
         self.Role:SwitchNewBT(self.StartBTKey)
     end
-end
-
-function RoleComp:OnChrInitDisplay()
-    if net_util.is_client(self:GetOwner()) or (not self.bNpc) then
-        return
-    end
-    self:GetOwner().MsgBusComp:TriggerEvent('RoleName', self.Role:GetRoleDispName())
 end
 
 function RoleComp:LogBT2UI_RPC(Text)

@@ -23,11 +23,11 @@ end
 ---@private [server] 初始化人类聚集地
 function SettlementCenter:InitSettlement()
     -- register settlement ue entity to content module
-    local config = MdMgr.ConfigMgr:GetConfig('Settlement')[self.SettlementId] ---@type SettlementConfig
+    local config = ConfigMgr:GetConfig('Settlement')[self.SettlementId] ---@type SettlementConfig
     if not config then
         return log.error('SettlementCenter:InitSettlement()', '无效的SettlementId', self.SettlementId)
     end
-    local districtMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
+    local districtMgr = Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
     local kingdom = districtMgr:FindKingdomByCfgId(config.BelongKingdomId) ---@type Kingdom
     if not kingdom then
         return log.error('SettlementCenter:InitSettlement()', '无效的BelongKingdomId', config.BelongKingdomId)
