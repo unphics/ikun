@@ -47,7 +47,7 @@ end
 ---@public 导致游戏崩溃或服务终止的致命错误(如内存泄漏达到临界值, 关键线程死锁, 服务器集群失联), 需立即触发警告并人工干预
 function log.fatal(...)
     IkunError(log.lua_log_head, '[FATAL]', ...)
-    IkunError(' ↑↑↑', debug.traceback())
+    IkunError(' ↑↑↑↑↑↑↑↑', debug.traceback())
 end
 
 function log.fmt84(num)
