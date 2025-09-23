@@ -37,11 +37,6 @@ function RoleComp:AvatarInitRole()
     if self.CustomStartBT then
         self.Role:SwitchNewBT(self.StartBTKey)
     end
-
-    local home = self.Role.HoldLocation:GetHomeLocation()
-    if home then
-        log.dev('qqq', home.LocationAvatar:K2_GetActorLocation())
-    end
 end
 
 ---@public [Debug]
