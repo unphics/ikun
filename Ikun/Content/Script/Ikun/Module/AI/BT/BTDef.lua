@@ -205,6 +205,7 @@ M['Stand'] = function(Avatar)
     LBT:CreateRoot()
         :AddSelector()
             :AddTask('LTask_Wait', 10)
+    return LBT
 end
 
 return M

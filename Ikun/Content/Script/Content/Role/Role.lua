@@ -50,7 +50,6 @@ local RoleClass = class.class 'RoleClass' {
     NpcChat = nil,
     HoldLocation = nil,
 --[[private]]
-    StartBT = function()end,
     RoleInfo = nil,
     Avatar = nil,
     BelongKingdomLua = nil,
@@ -99,12 +98,11 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
     self.BelongKingdomLua:AddKingdomMember(self)
     
     self.Avatar.SkillComp:InitRoleSkill()
-    self:StartBT()
-end
-function RoleClass:StartBT()
-    local RoleCfg = RoleMgr:GetRoleConfig(self:GetRoleCfgId())
-    if RoleCfg then
-        self:SwitchNewBT(RoleCfg.InitBT)
+    
+    if config.BTCfg and config.BTCfg.Init then
+        self:SwitchNewBT(config.BTCfg.Init)
+    else
+        log.error('RoleClass:InitByAvatar()', '没有初始BT', self:GetRoleDispName())
     end
 end
 
@@ -119,8 +117,9 @@ function RoleClass:SwitchNewBT(NewBTKey)
         return
     end
     self.BT = BTClass(self.Avatar)
-        if not self.BT then
-            log.error('RoleClass:SwitchNewBT()', 'Failed to init BT', NewBTKey, self:GetRoleDispName())
+    if not self.BT then
+        self.BT = BTClass(self.Avatar)
+        log.error('RoleClass:SwitchNewBT()', 'Failed to init BT', NewBTKey, self:GetRoleDispName())
         return
     end
 end
