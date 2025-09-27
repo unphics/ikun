@@ -1,13 +1,31 @@
 
+---
+---@brief   以目标为导向的行为规划
+---@author  zys
+---@ref     https://www.cnblogs.com/FlyingZiming/p/17274602.html#%E4%B8%96%E7%95%8C%E8%A1%A8%E8%BE%BE
+---@data    Sun Sep 28 2025 01:16:57 GMT+0800 (中国标准时间)
+---
 
-require('Ikun/Module/AI/Goap/Core/WorldState')
+-- require('Ikun/Module/AI/Goap/Core/WorldState')
+local goap_util = require('Ikun/Module/AI/Goap/Core/GoapUtil')
 require('Ikun/Module/AI/Goap/Core/Sensor')
 require('Ikun/Module/AI/Goap/Core/Memory')
 require('Ikun/Module/AI/Goap/Core/Action')
 require('Ikun/Module/AI/Goap/Core/Goal')
-require('Ikun/Module/AI/Goap/Core/Planner')
+local Planner = require('Ikun/Module/AI/Goap/Core/Planner')
 require('Ikun/Module/AI/Goap/Core/Agent')
 
-require('Ikun/Module/AI/Goap/Example')
+local test = function()
+    require('Ikun/Module/AI/Goap/Example')
+end
 
--- https://www.cnblogs.com/FlyingZiming/p/17274602.html#%E4%B8%96%E7%95%8C%E8%A1%A8%E8%BE%BE
+---@class goap
+---@field util goap_util
+---@field planner GPlanner
+local goap = {
+    util = goap_util,
+    planner = Planner,
+    test = test,
+}
+
+return goap

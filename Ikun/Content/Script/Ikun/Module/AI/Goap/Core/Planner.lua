@@ -103,3 +103,5 @@ end
 function GPlanner.IsInClosed(Closed, State)
 
 end
+
+return GPlanner

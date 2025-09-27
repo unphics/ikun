@@ -8,7 +8,7 @@
 
 ---@class GAgent
 ---@field _OwnerRole RoleClass
----@field WorldState GWorldState
+---@field Memory GMemory
 ---@field ActionList GAction[] 所有可用行为
 ---@field GoalList GGoal[] 所有可选目标
 ---@field CurGoal GGoal 当前设定的目标
@@ -17,7 +17,7 @@ local GAgent = class.class'GAgent' {}
 
 function GAgent:ctor(OwnerRole)
     self._OwnerRole = OwnerRole
-    self.WorldState = class.new 'GWorldState'()
+    self.Memory = class.new 'GMemory' ()
     self.ActionList = {}
     self.GoalList = {}
     self.CurGoal = nil
@@ -53,15 +53,13 @@ end
 function GAgent:Plan(bDebug)
     local validGoals = {} ---@type GGoal[]
     for _, goal in ipairs(self.GoalList) do
-        for name, expect in pairs(goal.States) do
-            if not self:CheckState(name, expect) then
-                table.insert(validGoals, goal)
-            end
+        -- 有效判定: 自己有这个状态
+        if goap.util.is_key_cover(self.Memory:GetStates(), goal.DesiredStates) then
+            table.insert(validGoals, goal)
         end
     end
-
     for _, goal in ipairs(validGoals) do
-        local plan = class.GPlanner.Plan(self.StateList, goal, self.ActionList)
+        local plan = goap.planner.Plan(self.Memory:GetStates(), goal, self.ActionList)
         if plan then
             self.CurGoal = goal
             self.CurPlan = plan

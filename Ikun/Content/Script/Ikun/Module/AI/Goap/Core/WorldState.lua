@@ -24,33 +24,6 @@ function GWorldState:ctor()
     self.TimeMask = 0
 end
 
----@public 检查BaseStates是否满足TargetStates的要求
----@param BaseStates table<string, boolean>
----@param TargetStates table<string, boolean>
----@return boolean
-function GWorldState.IsStateCover(BaseStates, TargetStates)
-    for name, value in pairs(TargetStates) do
-        if BaseStates[name] ~= value then
-            return false
-        end
-    end
-    return true
-end
-
----@public 计算未覆盖的数量
----@param BaseStates table<string, boolean>
----@param TargetStates table<string, boolean>
-function GWorldState.CalcNoCoverNum(BaseStates, TargetStates)
-    local num = 0
-    for name, value in pairs(TargetStates) do
-        if BaseStates[name] ~= value then
-            num = num + 1
-        end
-    end
-    return num
-end
-
-
 local _log = log.no
 local state = 0
 
