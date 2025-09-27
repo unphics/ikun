@@ -18,6 +18,10 @@ function log.log(...)
     IkunLog( log.lua_log_head, ...)
 end
 
+---@public 不打印
+function log.no(...)
+end
+
 ---@public 临时的开发用红色print
 function log.dev(...)
     IkunError(log.lua_log_head, '[DEV]', ...)

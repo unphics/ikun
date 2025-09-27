@@ -9,6 +9,7 @@
 do
     log = require('Util.Log') ---@type log
     debug_util = require('Util/debug_util')
+    table_util = require('Util/table_util') ---@type table_util
 end
 
 do
@@ -25,7 +26,6 @@ do
 end
 
 do
-    table_util = require('Util/table_util')
     world_util = require("Util/world_util")
     gas_util = require('Util/gas_util') ---@type gas_util
     actor_util = require('Util/actor_util')
@@ -67,7 +67,7 @@ end
 do
     require('Ikun/Module/AI/BT/LBT')
     require("Ikun/Module/AI/MLP")
-    require("Ikun/Module/AI/Goap")
+    require("Ikun/Module/AI/Goap/Goap")
 end
 
 gameinit.triggerinit(gameinit.ring.zero)
