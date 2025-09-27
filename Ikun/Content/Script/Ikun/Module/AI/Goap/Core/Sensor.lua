@@ -6,4 +6,14 @@
 ---
 
 ---@class GSensor
-local GSensor = class.class 'GSensor' {}
+local GSensor = class.class 'GSensor' {
+    
+}
+
+---@public
+function GSensor:ctor()
+end
+
+---@public
+function GSensor:TickSensor()
+end

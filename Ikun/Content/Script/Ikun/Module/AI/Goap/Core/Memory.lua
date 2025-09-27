@@ -6,4 +6,36 @@
 ---
 
 ---@class GMemory
-local GMemory = class.class'GMemory' {}
+---@field _State duplex<string, boolean>
+local GMemory = class.class'GMemory' {
+    _State = nil,
+}
+
+---@public
+function GMemory:ctor()
+    self._State = duplex.create()
+end
+
+---@public
+---@param State string
+---@param Value boolean
+function GMemory:SetState(State, Value)
+    self._State:dset(State, Value)
+end
+
+---@public
+---@param State string
+---@return boolean
+function GMemory:GetState(State)
+    return self._State:dfind(State)
+end
+
+---@public
+---@return table<string, boolean>
+function GMemory:GetStates()
+    local tb = {}
+    for _, k, v in self._State:diter() do
+        tb[k] = v
+    end
+    return tb
+end
