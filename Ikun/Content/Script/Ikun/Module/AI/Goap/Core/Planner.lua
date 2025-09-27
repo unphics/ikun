@@ -1,4 +1,9 @@
 
+---
+---@brief   规划器
+---@author  zys
+---@data    Sat Sep 27 2025 20:43:08 GMT+0800 (中国标准时间)
+---
 
 ---@class GPlanner
 local GPlanner = class.class'GPlanner' {}

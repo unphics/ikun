@@ -21,18 +21,6 @@ function GAction:ctor(Name, Preconditions, Effects, Cost)
 end
 
 ---@public
----@todo WorldState实现
----@return boolean
-function GAction:CanExecute_Mask(State)
-    return (State & self.Preconditions) == self.Preconditions
-end
-
----@public
-function GAction:ApplyEffect_Mask(State)
-    return State | self.Effects
-end
-
----@public
 ---@param BaseStates table<string, boolean>
 ---@return table<string, boolean>
 function GAction:ApplyEffect(BaseStates)

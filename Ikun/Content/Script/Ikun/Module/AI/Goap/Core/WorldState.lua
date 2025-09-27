@@ -1,6 +1,7 @@
 
 ---
 ---@brief   世界状态
+---@notice  将要废弃, 转而使用GMemory
 ---@author  zys
 ---@data    Thu Sep 25 2025 23:39:49 GMT+0800 (中国标准时间)
 ---

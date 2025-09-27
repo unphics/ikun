@@ -1,7 +1,14 @@
 
+---
+---@brief   进行决策的单位的代理, 外部设置目标
+---@todo    将AI委托给Goap中的Agent, 此处还缺少执行器或等效逻辑
+---@author  zys
+---@data    Sat Sep 27 2025 20:25:28 GMT+0800 (中国标准时间)
+---
+
 ---@class GAgent
 ---@field _OwnerRole RoleClass
----@field StateList table<string, fun(RoleClass)> <状态名, 查询状态值的函数>
+---@field WorldState GWorldState
 ---@field ActionList GAction[] 所有可用行为
 ---@field GoalList GGoal[] 所有可选目标
 ---@field CurGoal GGoal 当前设定的目标
@@ -10,7 +17,7 @@ local GAgent = class.class'GAgent' {}
 
 function GAgent:ctor(OwnerRole)
     self._OwnerRole = OwnerRole
-    self.StateList = {}
+    self.WorldState = class.new 'GWorldState'()
     self.ActionList = {}
     self.GoalList = {}
     self.CurGoal = nil
@@ -36,88 +43,10 @@ function GAgent:AddGoal(Goal, Priority)
     end
 end
 
----@public
----@param StateName string
-function GAgent:GetCurState(StateName)
-    assert(self.StateList[StateName])
-    return self.StateList[StateName](self._OwnerRole) or false
-end
-
----@public
----@return table<string, boolean>
-function GAgent:GetCurStates()
-    local result = {}
-    for name, checkerfn in pairs(self.StateList) do
-        result[name] = checkerfn(self._OwnerRole) or false
-    end
-    return result
-end
-
----@param StateName string
----@param Expect boolean
-function GAgent:CheckState(StateName, Expect)
-    assert(self.StateList[StateName])
-    return self.StateList[StateName](self._OwnerRole) == Expect
-end
-
----@param States table<string, fun(RoleClass)>
-function GAgent:SetStates(States)
-    self.StateList = States
-end
-
+---@public [Init] 赋予所有可用行动
 ---@param Actions GAction[]
 function GAgent:SetActions(Actions)
     self.ActionList = Actions
-end
-
----@private 检查BaseStates是否满足TargetStates的要求, 即BaseStates的状态完全覆盖TargetStates的状态
----@param BaseStates table<string, boolean>
----@param TargetStates table<string, boolean>
----@return boolean
-function GAgent:_IsStatesEqual(BaseStates, TargetStates)
-    for name, value in pairs(TargetStates) do
-        if BaseStates[name] ~= value then
-            return false
-        end
-    end
-    return true
-end
-
----@private 计算TargetStates与BaseStates之间有多少个状态未满足
----@param BaseStates table<string, boolean>
----@param TargetStates table<string, boolean>
----@return integer
-function GAgent:_GetDiffNum(BaseStates, TargetStates)
-    local num = 0
-    for name, value in pairs(TargetStates) do
-        if BaseStates[name] ~= value then
-            num = num + 1
-        end
-    end
-    return num
-end
-
----@private 检查CurStates是否满足Action的Preconditions
----@param Action GAction
----@param CurStates table<string, boolean>
-function GAgent:_CanPerform(Action, CurStates)
-    for name, expect in pairs(Action._Preconditions) do
-        if CurStates[name] ~= expect then
-            return false
-        end
-    end
-    return true
-end
-
----@private
----@param Action GAction
----@param BaseStates table<string, boolean>
----@return table<string, boolean>
-function GAgent:_ApplyEffects(Action, BaseStates)
-    for name, value in pairs(Action._Effects) do
-        BaseStates[name] = value
-    end
-    return BaseStates
 end
 
 ---@public 找出有效的目标列表, 从第一个目标开始找出一个有方法达到的目标
@@ -132,7 +61,7 @@ function GAgent:Plan(bDebug)
     end
 
     for _, goal in ipairs(validGoals) do
-        local plan = class.GPlanner.Plan(self.StateList, goal, error())
+        local plan = class.GPlanner.Plan(self.StateList, goal, self.ActionList)
         if plan then
             self.CurGoal = goal
             self.CurPlan = plan

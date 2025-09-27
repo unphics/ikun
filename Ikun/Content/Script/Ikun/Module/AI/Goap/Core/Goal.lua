@@ -1,4 +1,10 @@
 
+---
+---@brief   目标
+---@author  zys
+---@data    Sat Sep 27 2025 20:43:24 GMT+0800 (中国标准时间)
+---
+
 ---@class GGoal
 ---@field Name string
 ---@field DesiredStates table<string, boolean> <状态名,期望状态>
