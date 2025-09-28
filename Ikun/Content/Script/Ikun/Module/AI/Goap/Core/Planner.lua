@@ -44,6 +44,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
         h = 0, -- heuristic 预估代价
     }
     local closedList = {} -- 已扩展过的节点
+    openList[1] = open
 
     while #openList > 0 do
         -- 选择Open集合中代价最小的状态
@@ -62,7 +63,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
         end
 
         if not bInClosedList then
-            if class.GWorldState.IsStateCover(curNode.States, goalStates) then
+            if goap.util.is_state_cover(curNode.States, goalStates) then
                 return curNode.Actions
             end
             table.insert(closedList, curNode)
