@@ -46,7 +46,12 @@ function GPlanner.Plan(InStart, InGoal, InActions)
     local closedList = {} -- 已扩展过的节点
     openList[1] = open
 
+    local calc_limit = 100
     while #openList > 0 do
+        calc_limit = calc_limit - 1
+        if calc_limit < 0 then
+            return log.error('循环次数超过限制!!!')
+        end
         -- 选择Open集合中代价最小的状态
         table.sort(openList, function(a, b)
             return a.f < b.f -- ex: 再用h
@@ -63,7 +68,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
         end
 
         if not bInClosedList then
-            if goap.util.is_state_cover(curNode.States, goalStates) then
+            if goap.util.is_state_cover(curNode.States, goalStates.DesiredStates) then
                 return curNode.Actions
             end
             table.insert(closedList, curNode)
@@ -73,7 +78,8 @@ function GPlanner.Plan(InStart, InGoal, InActions)
                     local newStates = action:ApplyEffect(table_util.deep_copy(curNode.States))
 
                     local newNode = {} ---@type openNode
-                    newNode.h = class.GWorldState.CalcNoCoverNum(newStates, goalStates)
+                    newNode.States = newStates
+                    newNode.h = goap.util.calc_no_cover_num(newStates, goalStates)
                     newNode.g = curNode.g + action.ActionCost
                     newNode.f = newNode.h + newNode.g
                     newNode.Actions = table_util.deep_copy(curNode.Actions)

@@ -7,7 +7,7 @@ local goap_util = {}
 ---@param TargetStates table<string, boolean>
 ---@return boolean
 goap_util.is_key_cover = function(BaseStates, TargetStates)
-    for name, _ in pairs(TargetStates) do
+    for name, value in pairs(TargetStates) do
         if BaseStates[name] == nil then
             return false
         end
@@ -21,7 +21,8 @@ end
 ---@return boolean
 goap_util.is_state_cover = function(BaseStates, TargetStates)
     for name, value in pairs(TargetStates) do
-        if BaseStates[name] ~= value then
+        local v = BaseStates[name]
+        if v ~= value then
             return false
         end
     end
