@@ -43,8 +43,8 @@ function GPlanner.Plan(InStart, InGoal, InActions)
         g = 0, -- gained 当前代价
         h = 0, -- heuristic 预估代价
     }
-    local closedList = {} -- 已扩展过的节点
     openList[1] = open
+    local closedList = {} -- 已扩展过的节点
 
     local calc_limit = 100
     while #openList > 0 do
@@ -79,7 +79,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
 
                     local newNode = {} ---@type openNode
                     newNode.States = newStates
-                    newNode.h = goap.util.calc_no_cover_num(newStates, goalStates)
+                    newNode.h = goap.util.calc_no_cover_num(newStates, goalStates.DesiredStates)
                     newNode.g = curNode.g + action.ActionCost
                     newNode.f = newNode.h + newNode.g
                     newNode.Actions = table_util.deep_copy(curNode.Actions)

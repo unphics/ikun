@@ -25,7 +25,9 @@ end
 ---@return table<string, boolean>
 function GAction:ApplyEffect(BaseStates)
     for state, value in pairs(BaseStates) do
-        BaseStates[state] = value
+        if self.Effects[state] ~= nil then
+            BaseStates[state] = self.Effects[state]
+        end
     end
     return BaseStates
 end
