@@ -60,10 +60,6 @@ function GAgent:Plan(bDebug)
     end
     for _, goal in ipairs(validGoals) do
         local plan = goap.planner.Plan(self.Memory:GetStates(), goal, self.ActionList)
-        log.dev('plan:')
-        for _, actionName in pairs(plan) do
-            log.dev('   ', actionName)
-        end
         if plan then
             self.CurGoal = goal
             self.CurPlan = plan
