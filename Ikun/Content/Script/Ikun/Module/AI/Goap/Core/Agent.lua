@@ -10,6 +10,7 @@
 ---@field _OwnerRole RoleClass
 ---@field Memory GMemory
 ---@field ActionList GAction[] 所有可用行为
+---@field SensorList GSensor[]
 ---@field GoalList GGoal[] 所有可选目标
 ---@field CurGoal GGoal 当前设定的目标
 ---@field CurPlan string[] 当前设定的计划
@@ -18,16 +19,17 @@ local GAgent = class.class'GAgent' {}
 function GAgent:ctor(OwnerRole)
     self._OwnerRole = OwnerRole
     self.Memory = class.new 'GMemory' ()
+    self.SensorList = {}
     self.ActionList = {}
     self.GoalList = {}
     self.CurGoal = nil
     self.CurPlan = nil
 end
 
----@public 设置可选目标
----@param Goals GGoal[]
-function GAgent:SetGoals(Goals)
-    self.GoalList = Goals
+---@public
+---@param DeltaTime number
+function GAgent:TickAgent(DeltaTime)
+
 end
 
 ---@public 添加可选目标
@@ -50,7 +52,7 @@ function GAgent:SetActions(Actions)
 end
 
 ---@public 找出有效的目标列表, 从第一个目标开始找出一个有方法达到的目标
-function GAgent:Plan(bDebug)
+function GAgent:Plan()
     local validGoals = {} ---@type GGoal[]
     for _, goal in ipairs(self.GoalList) do
         -- 有效判定: 自己有这个状态

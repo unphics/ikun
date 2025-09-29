@@ -74,6 +74,9 @@ function RoleClass:RoleTick(DeltaTime)
             end
         end
     end
+    if self.GAgent then
+        self.GAgent:TickAgent(DeltaTime)
+    end
 end
 
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
@@ -99,10 +102,28 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
     
     self.Avatar.SkillComp:InitRoleSkill()
     
-    if config.BTCfg and config.BTCfg.Init then
-        self:SwitchNewBT(config.BTCfg.Init)
+    if config.RoleId == 210105 then
+        local agent = class.new 'GAgent' (self) ---@as GAgent
+        -- agent:AddGoal(class.new'GGoal'('起床', {Sleep = false}))
+        -- agent:AddGoal(class.new'GGoal'('散步', {}))
+        -- agent:AddGoal(class.new'GGoal'('吃饭', {}))
+
+        -- agent:AddGoal(class.new'GGoal'('去市场', {}))
+        -- agent:AddGoal(class.new'GGoal'('摆摊', {}))
+        -- agent:AddGoal(class.new'GGoal'('吆喝', {}))
+
+        -- agent:AddGoal(class.new'GGoal'('收摊', {}))
+        -- agent:AddGoal(class.new'GGoal'('休息', {}))
+
+        -- agent:AddGoal(class.new'GGoal'('散步', {}))
+        -- agent:AddGoal(class.new'GGoal'('睡觉', {}))
+        self.GAgent = agent
     else
-        log.error('RoleClass:InitByAvatar()', '没有初始BT', self:GetRoleDispName())
+        if config.BTCfg and config.BTCfg.Init then
+            self:SwitchNewBT(config.BTCfg.Init)
+        else
+            log.error('RoleClass:InitByAvatar()', '没有初始BT', self:GetRoleDispName())
+        end
     end
 end
 

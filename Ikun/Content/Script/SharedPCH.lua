@@ -68,7 +68,7 @@ do
     require('Ikun/Module/AI/BT/LBT')
     require("Ikun/Module/AI/MLP")
     goap = require("Ikun/Module/AI/Goap/Goap") ---@type goap
-    goap.test()
+    -- goap.test()
 end
 
 gameinit.triggerinit(gameinit.ring.zero)

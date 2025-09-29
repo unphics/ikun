@@ -8,7 +8,6 @@
 ---@class GPlanner
 local GPlanner = class.class'GPlanner' {}
 
-
 --[[
 OpenList = {StartState}
 ClosedList = {}
@@ -59,15 +58,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
         local curNode = table.remove(openList, 1) ---@type openNode
 
         -- 如果当前节点已经扩展, 则跳过
-        local bInClosedList = false
-        for _, node in ipairs(closedList) do
-            if node == curNode then
-                bInClosedList = true
-                break
-            end
-        end
-
-        if not bInClosedList then
+        if not GPlanner.IsNodeInClosedList(curNode, closedList) then
             if goap.util.is_state_cover(curNode.States, goalStates.DesiredStates) then
                 return curNode.Actions
             end
@@ -93,22 +84,15 @@ function GPlanner.Plan(InStart, InGoal, InActions)
 end
 
 ---@public
----@param State table<string, boolean>
----@param Goal GGoal
-function GPlanner.IsGoal(State, Goal)
-    for state, value in pairs(Goal) do
-        if not State[state] or not State[state] == value then
-            return false
+---@param Node openNode
+---@param ClosedList openNode[]
+function GPlanner.IsNodeInClosedList(Node, ClosedList)
+    for _, node in ipairs(ClosedList) do
+        if node == Node then
+            return true
         end
     end
-    return true
-end
-
----@public
----@todo
---@param Closed 
-function GPlanner.IsInClosed(Closed, State)
-
+    return false
 end
 
 return GPlanner

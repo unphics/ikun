@@ -1,0 +1,4 @@
+GoalDef|GoalName|GoalDesc|DesiredState
+|||
+Getup|起床||Morning=true,Sleep=false
+|||

@@ -40,7 +40,7 @@ function TimeMgr:ctor()
     self.Year = 2000
     self.Month = 7
     self.Day = 28
-    self.Hour = 12
+    self.Hour = 0
     self.Minute = 0
 end
 function TimeMgr:TickTimeMgr(DeltaTime)
