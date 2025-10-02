@@ -15,11 +15,16 @@ function WalkOnVillage:ActionStart(Agent)
     self.Agent = Agent
     local navMoveBehav = class.new 'NavMoveBehav' (Agent._OwnerRole.Avatar, 5) ---@as NavMoveBehav
     self.NavMoveBehav = navMoveBehav
+    self.WalkTime = 300
     self:_GoToVillageRandom()
 end
 
 ---@override
 function WalkOnVillage:ActionTick(Agent, DeltaTime)
+    self.WalkTime = self.WalkTime - DeltaTime
+    if self.WalkTime < 0 then
+        self:EndAction(true)
+    end
     if self.NavMoveBehav then
         self.NavMoveBehav:TickMove(DeltaTime)
     end
