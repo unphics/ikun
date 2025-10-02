@@ -66,9 +66,10 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
     -- 检查目标有效
     local TargetLoc = self:GetTaskTargetLoc()
     if not TargetLoc then
-        self.MoveToInfo.bLostTarget = true
-        self.MoveToInfo.CallbackInfo.OnNavMoveLostTarget(self.MoveToInfo.CallbackInfo.This)
-        self:TaskEnd()
+        local moveToInfo = self:_ClearData()
+        moveToInfo.bLostTarget = true
+        moveToInfo.CallbackInfo.OnNavMoveLostTarget(moveToInfo.CallbackInfo.This)
+        self:TaskEnd(moveToInfo)
         return
     end
     -- 检查是否已经可以判断抵达
@@ -81,8 +82,9 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
     self.MoveStuckMonitor = class.new'MoveStuckMonitor'(self.MaxStuckTime, OwnerAgentLoc)
     local Distance = UE.UKismetMathLibrary.Vector_Distance(OwnerAgentLoc, TargetLoc)
     if Distance < self.MoveToInfo.AcceptRadius then
-        self.MoveToInfo.bArrived = true
-        self.MoveToInfo.CallbackInfo.OnNavMoveArrived(self.MoveToInfo.CallbackInfo.This)
+        local moveToInfo = self:_ClearData()
+        moveToInfo.bArrived = true
+        moveToInfo.CallbackInfo.OnNavMoveArrived(moveToInfo.CallbackInfo.This)
         self:TaskEnd()
         return
     end
@@ -96,8 +98,9 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
                 self.NavMoveData:GenPathData(self.Chr, NearNavPoint, TargetLoc, OwnerAgentLoc)
             end
             if not self.NavMoveData:IsValid() then
-                self.MoveToInfo.bStuck = true
-                self.MoveToInfo.CallbackInfo.OnNavMoveStuck(self.MoveToInfo.CallbackInfo.This)
+                local moveToInfo = self:_ClearData()
+                moveToInfo.bStuck = true
+                moveToInfo.CallbackInfo.OnNavMoveStuck(moveToInfo.CallbackInfo.This)
                 self:TaskEnd()
                 return
             end
@@ -112,16 +115,18 @@ function NavMoveBehav:TickMove(DeltaTime)
     end
     -- 判断跑完了
     if self.NavMoveData:IsFinish() then    
-        self.MoveToInfo.bArrived = true
-        self.MoveToInfo.CallbackInfo.OnNavMoveArrived(self.MoveToInfo.CallbackInfo.This)
-        self:TaskEnd()
+        local moveToInfo = self:_ClearData()
+        moveToInfo.bArrived = true
+        moveToInfo.CallbackInfo.OnNavMoveArrived(moveToInfo.CallbackInfo.This)
+        self:TaskEnd(moveToInfo)
         return
     end
     -- 判断被阻挡
     local OwnerAgentLoc = self.Chr:GetNavAgentLocation()
     if self.MoveStuckMonitor:TickCheck(DeltaTime, OwnerAgentLoc) then
-        self.MoveToInfo.bStuck = true
-        self.MoveToInfo.CallbackInfo.OnNavMoveStuck(self.MoveToInfo.CallbackInfo.This)
+        local moveToInfo = self:_ClearData()
+        moveToInfo.bStuck = true
+        moveToInfo.CallbackInfo.OnNavMoveStuck(moveToInfo.CallbackInfo.This)
         self:TaskEnd()
         return
     end
@@ -179,11 +184,27 @@ function NavMoveBehav:GetTaskTargetLoc()
 end
 
 ---@private 移动任务结束, 清理数据
-function NavMoveBehav:TaskEnd()
-    if self.MoveToInfo.CallbackInfo.OnMoveTaskEnd then
-        self.MoveToInfo.CallbackInfo.OnMoveTaskEnd(self.MoveToInfo.CallbackInfo.This)
+function NavMoveBehav:TaskEnd(MoveToInfo)
+    -- self:_ClearData()
+    if MoveToInfo.CallbackInfo.OnMoveTaskEnd then
+        MoveToInfo.CallbackInfo.OnMoveTaskEnd(MoveToInfo.CallbackInfo.This)
     end
+end
+
+---@public 取消移动
+function NavMoveBehav:CancelMove()
     self.MoveToInfo = nil
     self.NavMoveData = nil
     self.MoveStuckMonitor = nil
+    self:_ClearData()
+end
+
+---@private
+---@return MoveToInfo
+function NavMoveBehav:_ClearData()
+    local moveToInfo = self.MoveToInfo
+    self.MoveToInfo = nil
+    self.NavMoveData = nil
+    self.MoveStuckMonitor = nil
+    return moveToInfo
 end

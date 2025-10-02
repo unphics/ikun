@@ -11,8 +11,8 @@ RoleId|RoleName|RoleDesc|BelongKingdom|RoleSkills|InitBT|Color|SpecialClass|Figh
 |||||||||||
 |||||||||||
 210101|村长|清瀑村npc|611001||||||Init=Stand,||
-210102|年轻的猎人|清瀑村npc|611001||||||Init=Stand,||
-210103|猎人的妹妹|清瀑村npc|611001||||||Init=Stand,||
+210102|年轻的猎人|清瀑村npc|611001||||||Init=Stand,||641002,
+210103|猎人的妹妹|清瀑村npc|611001||||||Init=Stand,||641002,
 210104|杂货铺老板|清瀑村npc|611001||||||Init=Stand,||641001,
 210105|杂货铺老板娘|清瀑村npc|611001||||||Init=Stand,||641001,
 |||||||||||

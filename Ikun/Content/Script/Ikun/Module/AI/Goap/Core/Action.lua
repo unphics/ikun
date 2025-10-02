@@ -16,12 +16,15 @@
 
 ---@class GAction
 ---@field _ActionName string 名字
----@field ActionCost number 花费
----@field Preconditions table<string, boolean>
----@field Effects table<string, boolean>
+---@field ActionCost number 花费 config
+---@field Preconditions table<string, boolean> config
+---@field Effects table<string, boolean> config
+---@field _ActionStart boolean
+---@field _ActionEnd boolean
+---@field _ActionSucceed boolean
 local GAction = class.class'GAction' {}
 
----@public
+---@public [Config]
 function GAction:ctor(Name, Preconditions, Effects, Cost)
     self._ActionName = Name or 'Action'
     self.Preconditions = Preconditions or {}
@@ -29,17 +32,17 @@ function GAction:ctor(Name, Preconditions, Effects, Cost)
     self.ActionCost = Cost or 1
 end
 
----@public
+---@public [Config]
 ---@param BaseStates table<string, boolean>
 ---@return table<string, boolean>
 function GAction:ApplyEffect(BaseStates)
     for state, value in pairs(self.Effects) do
-        BaseStates[state] = self.Effects[state]
+        BaseStates[state] = value
     end
     return BaseStates
 end
 
----@public
+---@public [Config]
 ---@param CurStates table<string, boolean>
 function GAction:CanPerform(CurStates)
     for state, expect in pairs(self.Preconditions) do
@@ -49,3 +52,32 @@ function GAction:CanPerform(CurStates)
     end
     return true
 end
+
+---@public [Runtime] 开始
+---@param Agent GAgent
+function GAction:ActionStart(Agent)
+end
+
+---@public [Runtime]
+---@param Agent GAgent
+function GAction:ActionTick(Agent, DeltaTime)
+end
+
+---@public [Runtime] 结束
+---@param Agent GAgent
+function GAction:ActionEnd(Agent, bSucceed)
+end
+
+---@protected [Runtime] do end
+---@param bSuccess boolean
+function GAction:EndAction(bSuccess)
+    self._ActionEnd = true
+    self._ActionSucceed = bSuccess
+end
+
+---@public [Runtime] 意外取消
+---@param Agent GAgent
+function GAction:ActionCancelled(Agent)
+end
+
+return GAction

@@ -25,4 +25,8 @@ function BP_House:AvatarInitLocation()
     house:InitByLocationAvatar(self.LocationId, self)
 end
 
+function BP_House:OpenDoor()
+    self.DoorActor:qqq()
+end
+
 return BP_House

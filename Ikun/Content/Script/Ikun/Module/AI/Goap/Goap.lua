@@ -7,13 +7,21 @@
 ---
 
 -- require('Ikun/Module/AI/Goap/Core/WorldState')
-local goap_util = require('Ikun/Module/AI/Goap/Core/GoapUtil')
+require('Ikun/Module/AI/Goap/Core/GoapUtil')
 require('Ikun/Module/AI/Goap/Core/Sensor')
 require('Ikun/Module/AI/Goap/Core/Memory')
 require('Ikun/Module/AI/Goap/Core/Action')
 require('Ikun/Module/AI/Goap/Core/Goal')
-local Planner = require('Ikun/Module/AI/Goap/Core/Planner')
+require('Ikun/Module/AI/Goap/Core/Planner')
+require('Ikun/Module/AI/Goap/Core/Executor')
 require('Ikun/Module/AI/Goap/Core/Agent')
+
+-- sensors
+require('Ikun/Module/AI/Goap/Sensors/Default')
+
+-- actions
+require('Ikun/Module/AI/Goap/Actions/Wait')
+require('Ikun/Module/AI/Goap/Actions/WalkOnVillage')
 
 local test = function()
     require('Ikun/Module/AI/Goap/Example')
@@ -23,8 +31,8 @@ end
 ---@field util goap_util
 ---@field planner GPlanner
 local goap = {
-    util = goap_util,
-    planner = Planner,
+    util = class.GoapUtil,
+    planner = class.GPlanner,
     test = test,
 }
 

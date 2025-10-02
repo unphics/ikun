@@ -34,7 +34,9 @@ end
 ---@param UObject UObject
 ---@param handle FTimerHandle
 async_util.clear_timer = function(UObject, handle)
-    UE.UKismetSystemLibrary.K2_ClearAndInvalidateTimerHandle(UObject, handle)
+    if handle then
+        UE.UKismetSystemLibrary.K2_ClearAndInvalidateTimerHandle(UObject, handle)
+    end
     handle = nil
 end
 

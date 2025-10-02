@@ -5,6 +5,7 @@
 ---
 
 ---@class class
+---@field NavMoveData NavMoveData
 local classes = {}
 
 local inherit_reserved_keyword = {

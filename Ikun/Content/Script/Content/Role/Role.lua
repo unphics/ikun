@@ -102,21 +102,8 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
     
     self.Avatar.SkillComp:InitRoleSkill()
     
-    if config.RoleId == 210105 then
+    if config.RoleId == 210103 then
         local agent = class.new 'GAgent' (self) ---@as GAgent
-        -- agent:AddGoal(class.new'GGoal'('起床', {Sleep = false}))
-        -- agent:AddGoal(class.new'GGoal'('散步', {}))
-        -- agent:AddGoal(class.new'GGoal'('吃饭', {}))
-
-        -- agent:AddGoal(class.new'GGoal'('去市场', {}))
-        -- agent:AddGoal(class.new'GGoal'('摆摊', {}))
-        -- agent:AddGoal(class.new'GGoal'('吆喝', {}))
-
-        -- agent:AddGoal(class.new'GGoal'('收摊', {}))
-        -- agent:AddGoal(class.new'GGoal'('休息', {}))
-
-        -- agent:AddGoal(class.new'GGoal'('散步', {}))
-        -- agent:AddGoal(class.new'GGoal'('睡觉', {}))
         self.Agent = agent
     else
         if config.BTCfg and config.BTCfg.Init then

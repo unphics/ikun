@@ -12,62 +12,42 @@
 ---@field ActionList GAction[] 所有可用行为
 ---@field SensorList GSensor[]
 ---@field GoalList GGoal[] 所有可选目标
----@field CurGoal GGoal 当前设定的目标
----@field CurPlan string[] 当前设定的计划
+---@field Executor GExecutor
 local GAgent = class.class'GAgent' {}
 
 function GAgent:ctor(OwnerRole)
     self._OwnerRole = OwnerRole
     self.Memory = class.new 'GMemory' () ---@as GMemory
+    self.Executor = class.new'GExecutor'(self)
     self.SensorList = {}
     self.ActionList = {}
     self.GoalList = {}
-    self.CurGoal = nil
-    self.CurPlan = nil
 
-    local allGoal = ConfigMgr:GetConfig('Goal')
-    do
+    async_util.delay(self._OwnerRole.Avatar, 1, function()
+        ---@todo zys 初始化RoleAction
+        local allAction = ConfigMgr:GetConfig('Action')
+        ---@param config ActionConfig
+        for key, config in pairs(allAction) do
+            local action = class.new(config.ActionTemplate)(config.ActionName, goap.util.make_states_from_config(config.Preconditions), goap.util.make_states_from_config(config.Effects), config.Cost)
+            table.insert(self.ActionList, action)
+        end
+
+        ---@todo zys 初始化RoleSensor
+        local default = class.new'DefaultSensor'(self)
+        table.insert(self.SensorList, default)
+
         self.Memory:SetState('IsSleeping', true)
-        self.Memory:SetState('Morning', true)
-        local config = allGoal['Getup']
-        local goal = class.new'GGoal'(config.GoalName, goap.util.make_states_from_config(config.DesiredState)) ---@as GGoal
-        self:AddGoal(goal)
-    end
-    do
         self.Memory:SetState('AtVillage', true)
-        local config = allGoal['MorningWalk']
-        local goal = class.new'GGoal'(config.GoalName, goap.util.make_states_from_config(config.DesiredState)) ---@as GGoal
-        self:AddGoal(goal)
-    end
-    do
-        self.Memory:SetState('IsHungry', true)
-        local config = allGoal['HaveBreakfast']
-        local goal = class.new'GGoal'(config.GoalName, goap.util.make_states_from_config(config.DesiredState)) ---@as GGoal
-        self:AddGoal(goal)
-    end
-    do
-        local config = allGoal['WorkAtStall']
-        local goal = class.new'GGoal'(config.GoalName, goap.util.make_states_from_config(config.DesiredState)) ---@as GGoal
-        self:AddGoal(goal)
-    end
-    do
-        local config = allGoal['ReturnHome']
-        local goal = class.new'GGoal'(config.GoalName, goap.util.make_states_from_config(config.DesiredState)) ---@as GGoal
-        self:AddGoal(goal)
-    end
-    
-    self.Memory:Print()
-
-    local allAction = ConfigMgr:GetConfig('Action')
-    ---@param config ActionConfig
-    for key, config in pairs(allAction) do
-        local action = class.new'GAction'(config.ActionName, goap.util.make_states_from_config(config.Preconditions), goap.util.make_states_from_config(config.Effects), config.Cost)
-        table.insert(self.ActionList, action)
-    end
-    
-    local sensor = class.new'GSensor'(self)
-    table.insert(self.SensorList, sensor)
-    self:Plan()
+        self.Memory:SetState('Morning', true)
+        local allGoal = ConfigMgr:GetConfig('Goal')
+        local config1 = allGoal['Getup']
+        local goal1 = class.new'GGoal'(config1.GoalName, goap.util.make_states_from_config(config1.DesiredState)) ---@as GGoal
+        -- self:AddGoal(goal1)
+        local config2 = allGoal['MorningWalk']
+        local goal2 = class.new'GGoal'(config2.GoalName, goap.util.make_states_from_config(config2.DesiredState)) ---@as GGoal
+        self:AddGoal(goal2)
+        self:Plan()
+    end)
 end
 
 ---@public
@@ -77,8 +57,7 @@ function GAgent:TickAgent(DeltaTime)
     for _, sensor in ipairs(self.SensorList) do
         sensor:TickSensor(DeltaTime)
     end
-
-    -- self.Memory:Print()
+    self.Executor:TickExecutor(DeltaTime)
 end
 
 ---@public 添加可选目标
@@ -104,7 +83,7 @@ end
 function GAgent:Plan()
     local validGoals = {} ---@type GGoal[]
     for _, goal in ipairs(self.GoalList) do
-        -- 有效判定: 自己有这个状态
+        ---@rule 有效判定: 自己有这个状态
         -- if goap.util.is_key_cover(self.Memory:GetStates(), goal.DesiredStates) then
             table.insert(validGoals, goal)
         -- end
@@ -113,24 +92,14 @@ function GAgent:Plan()
         log.dev('啥都干不了!!!')
     end
     for _, goal in ipairs(validGoals) do
-        -- local name = goal.Name
-        -- if name == '晨间散步' then
-        --     local a = 1
-        -- end
         local cur = self.Memory:GetStates()
         local plan = goap.planner.Plan(cur, goal, self.ActionList)
         if plan then
-            self.CurGoal = goal
-            self.CurPlan = plan
-            log.dev('得出plan-->', goal.Name)
-            for _, str in ipairs(self.CurPlan) do
-                log.dev('   ',str)
-            end
+            self.Executor:ExecNewPlan(goal, plan)
         else
             log.dev('该目标没有方法执行, 请检查配置表', goal.Name)
         end
     end
 end
-
 
 return GAgent
