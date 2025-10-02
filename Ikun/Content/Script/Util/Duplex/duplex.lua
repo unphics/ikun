@@ -88,10 +88,23 @@ end
 ---@param key K
 ---@param value V
 function duplex:dset(key, value)
-    if self:dfind(key) then
-        self:dremove(key)
+    local item = self._mapContainer[key]
+    if item then
+        if not item._valid then
+            item._valid = true
+            self._count = self._count + 1
+        end
+        item._value = value
+    else
+    local newItem = {
+        _key = key,
+        _value = value,
+        _valid = true,
+    }
+    table.insert(self._arrContainer, newItem)
+    self._mapContainer[key] = newItem
+    self._count = self._count + 1
     end
-    self:dinsert(key, value)
 end
 
 ---@public

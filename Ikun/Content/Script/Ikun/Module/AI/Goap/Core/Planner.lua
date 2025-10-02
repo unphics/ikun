@@ -45,7 +45,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
     openList[1] = open
     local closedList = {} -- 已扩展过的节点
 
-    local calc_limit = 100
+    local calc_limit = 30
     while #openList > 0 do
         calc_limit = calc_limit - 1
         if calc_limit < 0 then
@@ -65,6 +65,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
             table.insert(closedList, curNode)
             -- 扩展所有可行的行动
             for _, action in ipairs(InActions) do
+                -- local name = action._ActionName
                 if action:CanPerform(curNode.States) then
                     local newStates = action:ApplyEffect(table_util.deep_copy(curNode.States))
 

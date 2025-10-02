@@ -1,0 +1,10 @@
+ActionKey|ActionName|ActionDesc|ActionTemplate|Preconditions|Effects|Cost
+||||||
+Wakeup|起床|||IsSleeping=true,Morning=true|IsSleeping=false|1
+WalkAroundVillage|村庄散步|||Morning=true|MonringWalk=true,AtHome=false,AtVillage=true|2
+EatBreakfast|吃早餐|||AtHome=true,IsHungry=true|HasBreakfast=true,IsHungry=false|1
+SitAndRest|坐下休息|||IsTired=true|IsSitting=true,IsTired=false|1
+GoToStall|去摊位|||AtHome=true|AtHome=false,AtStall=true|1
+SetUpStall|摆好摊位|||AtStall=true|StallSetUp=true,IsWorking=true|1
+GoToSleep|睡觉|||AtHome=true,Evening=true|IsSleeping=true|1
+GoToHome|回家|||AtHome=false|AtHome=true|0

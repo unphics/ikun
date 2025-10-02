@@ -42,4 +42,15 @@ goap_util.calc_no_cover_num = function(BaseStates, TargetStates)
     return num
 end
 
+---@public
+---@param Config table<string, string>
+---@return table<string, boolean>
+goap_util.make_states_from_config = function(Config)
+    local tb = {}
+    for k, desc in pairs(Config) do
+        tb[k] = desc == 'true' and true or false
+    end
+    return tb
+end
+
 return goap_util

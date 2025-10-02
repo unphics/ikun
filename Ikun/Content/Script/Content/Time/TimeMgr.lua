@@ -17,14 +17,12 @@ local TimeCfg = require('Content/Time/Config/TimeCfg')
 ---@field Minute number 分
 ---@field Second number 秒
 local TimeMgr = class.class'TimeMgr' {
---[[public]]
     ctor = function()end,
     TickTimeMgr = function()end,
     GetCurTimeDisplay = function()end,
     SetGameSpeed = function()end,
     GetGameSpeed = function()end,
---[[private]]
-    UpdateGameTime = function()end,
+    _UpdateGameTime = function()end,
     ConstTimeFlowRate = nil,
     Year = nil,
     Month = nil,
@@ -33,6 +31,8 @@ local TimeMgr = class.class'TimeMgr' {
     Minute = nil,
     Second = nil,
 }
+
+---@public 初始化时间管理器的信息
 function TimeMgr:ctor()
     self.ConstTimeFlowRate = TimeCfg.TimeFlowRate
     self.GameSpeed = TimeCfg.GameSpeed
@@ -40,13 +40,17 @@ function TimeMgr:ctor()
     self.Year = 2000
     self.Month = 7
     self.Day = 28
-    self.Hour = 0
+    self.Hour = 7
     self.Minute = 0
 end
+
+---@public 运行时间管理器
 function TimeMgr:TickTimeMgr(DeltaTime)
-    self:UpdateGameTime(DeltaTime)
+    self:_UpdateGameTime(DeltaTime)
 end
-function TimeMgr:UpdateGameTime(DeltaTime)
+
+---@private 更新时间
+function TimeMgr:_UpdateGameTime(DeltaTime)
     self.Second = self.Second + (DeltaTime * self.ConstTimeFlowRate)
     while self.Second >= TimeCfg.SecondRadix do -- 秒级更新
         self.Second = self.Second - TimeCfg.SecondRadix
@@ -69,6 +73,8 @@ function TimeMgr:UpdateGameTime(DeltaTime)
         end
     end
 end
+
+---@public 设置游戏时间流速
 function TimeMgr:SetGameSpeed(Speed)
     if not Speed or type(Speed) ~= "number" or Speed < 0 then
         return log.error('TimeMgr:SetGameSpeed() : 参数错误', Speed)
@@ -77,12 +83,18 @@ function TimeMgr:SetGameSpeed(Speed)
     UE.UGameplayStatics.SetGlobalTimeDilation(world_util.World, Speed)
     log.info('游戏速度为'..tostring(Speed)..'倍')
 end
+
+---@public 获取当前的游戏时间流速
 function TimeMgr:GetGameSpeed()
     return self.GameSpeed
 end
+
+
 local function FmtTime(Number)
     return Number < 10 and ('0' .. tostring(Number)) or tostring(Number)
 end
+
+---@public 获取当前时间的显示信息
 function TimeMgr:GetCurTimeDisplay()
     local str = tostring(self.Year)
     str = str .. '/' .. FmtTime(self.Month)

@@ -8,4 +8,4 @@ Quest|Quest|QuestStep|QuestCondition|QuestReward||||||
 Item|Item|||||||||
 Role|Role|||||||||
 Skill|Skill|TargetActor|Effect|||||||
-Goap|State|Goal||||||||
+Goap|GoapConfig|State|Goal|Action||||||

@@ -39,3 +39,14 @@ function GMemory:GetStates()
     end
     return tb
 end
+
+function GMemory:Print()
+    local str = ''
+    for _, k, v in self._State:diter() do
+        local config = ConfigMgr:GetConfig('State')[k]
+        str = str..config.StateDesc..'='..(v and 'true' or 'false')..'|'
+    end
+    log.dev('qqq', str)
+end
+
+return GMemory

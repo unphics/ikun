@@ -74,8 +74,8 @@ function RoleClass:RoleTick(DeltaTime)
             end
         end
     end
-    if self.GAgent then
-        self.GAgent:TickAgent(DeltaTime)
+    if self.Agent then
+        self.Agent:TickAgent(DeltaTime)
     end
 end
 
@@ -117,7 +117,7 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
 
         -- agent:AddGoal(class.new'GGoal'('散步', {}))
         -- agent:AddGoal(class.new'GGoal'('睡觉', {}))
-        self.GAgent = agent
+        self.Agent = agent
     else
         if config.BTCfg and config.BTCfg.Init then
             self:SwitchNewBT(config.BTCfg.Init)

@@ -5,6 +5,15 @@
 ---@data    Thu Sep 25 2025 23:40:32 GMT+0800 (中国标准时间)
 ---
 
+---@class ActionConfig
+---@field ActionKey string
+---@field ActionName string
+---@field ActionDesc string
+---@field ActionTemplate string
+---@field Preconditions table<string, boolean>
+---@field Effects table<string, boolean>
+---@field Cost number
+
 ---@class GAction
 ---@field _ActionName string 名字
 ---@field ActionCost number 花费
@@ -24,10 +33,8 @@ end
 ---@param BaseStates table<string, boolean>
 ---@return table<string, boolean>
 function GAction:ApplyEffect(BaseStates)
-    for state, value in pairs(BaseStates) do
-        if self.Effects[state] ~= nil then
-            BaseStates[state] = self.Effects[state]
-        end
+    for state, value in pairs(self.Effects) do
+        BaseStates[state] = self.Effects[state]
     end
     return BaseStates
 end

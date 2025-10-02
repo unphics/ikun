@@ -5,6 +5,13 @@
 ---@data    Sat Sep 27 2025 20:43:24 GMT+0800 (中国标准时间)
 ---
 
+---@class GoalConfig
+---@field GoalKey string
+---@field GoalName string
+---@field GoalDesc string
+---@field DesiredState boolean
+---@field Priority integer
+
 ---@class GGoal
 ---@field Name string
 ---@field DesiredStates table<string, boolean> <状态名,期望状态>
