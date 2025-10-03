@@ -1,23 +1,23 @@
 
 ---
----@brief   回家
+---@brief   去摊位
 ---@author  zys
----@data    Fri Oct 03 2025 13:25:07 GMT+0800 (中国标准时间)
+---@data    
 ---
 
----@class GoHomeAction: GAction
-local GoHomeAction = class.class'GoHomeAction':extends'GAction'{}
+---@class GoStallAction: GAction
+local GoStallAction = class.class'GoStallAction':extends'GAction'{}
 
 ---@override
-function GoHomeAction:ActionStart(Agent)
+function GoStallAction:ActionStart(Agent)
     class.GAction.ActionStart(self, Agent)
     local navMoveBehav = class.new 'NavMoveBehav' (Agent._OwnerRole.Avatar, 5) ---@as NavMoveBehav
-    local home = Agent._OwnerRole.HoldLocation:GetHomeLocation()
+    local home = Agent._OwnerRole.HoldLocation:GetStallLocation()
     if not home then
-        log.error('无家可归!!!')
+        log.error('没有摊位!!!')
         return
     end
-    local loc = home.LocationAvatar:GetHousePosition()
+    local loc = home.LocationAvatar:GetStallPosition()
     local tb = {} ---@type NavMoveBehavCallbackInfo
     tb.This = self
     tb.OnNavMoveArrived = self._OnMoveSuceesss
@@ -29,19 +29,19 @@ function GoHomeAction:ActionStart(Agent)
 end
 
 ---@override
-function GoHomeAction:ActionTick(Agent, DeltaTime)
+function GoStallAction:ActionTick(Agent, DeltaTime)
     self.NavMoveBehav:TickMove(DeltaTime)
 end
 
 ---@private
-function GoHomeAction:_OnMoveSuceesss()
+function GoStallAction:_OnMoveSuceesss()
     self:EndAction(true)
 end
 
 ---@private
-function GoHomeAction:_OnMoveFailed()
+function GoStallAction:_OnMoveFailed()
     self:EndAction(false)
     log.dev('todo tp to home')
 end
 
-return GoHomeAction
+return GoStallAction

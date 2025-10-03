@@ -15,6 +15,12 @@ function BP_House:ReceiveBeginPlay()
     end
 end
 
+---@public
+---@return FVector
+function BP_House:GetHousePosition()
+    return self.HomeDoor:K2_GetComponentToWorld().Translation
+end
+
 ---@private [Init]
 function BP_House:AvatarInitLocation()
     if not self.LocationId then

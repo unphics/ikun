@@ -127,7 +127,7 @@ function NavMoveBehav:TickMove(DeltaTime)
         local moveToInfo = self:_ClearData()
         moveToInfo.bStuck = true
         moveToInfo.CallbackInfo.OnNavMoveStuck(moveToInfo.CallbackInfo.This)
-        self:TaskEnd()
+        self:TaskEnd(moveToInfo)
         return
     end
     -- 寻路移动

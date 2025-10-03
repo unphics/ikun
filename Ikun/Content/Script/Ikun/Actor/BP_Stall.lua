@@ -15,6 +15,12 @@ function BP_Stall:ReceiveBeginPlay()
     end
 end
 
+---@public 取得摊位的位置
+---@return FVector
+function BP_Stall:GetStallPosition()
+    return self.Stall:K2_GetComponentToWorld().Translation
+end
+
 ---@private [Init]
 function BP_Stall:AvatarInitLocation()
     if not self.LocationId then

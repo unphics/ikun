@@ -35,11 +35,25 @@ function RoleHoldLocationClass:ctor(OwnerRole, ConfigId)
     end
 end
 
----@public
+---@public 取到家
 ---@todo zys 这里的Location要分类
 ---@return LocationClass?
 function RoleHoldLocationClass:GetHomeLocation()
-    return self._tbHoldLocation[1]
+    for _, location in ipairs(self._tbHoldLocation) do
+        if location.LocationAvatar.GetHousePosition then
+            return location
+        end
+    end
+end
+
+---@public 取到摊位
+---@return LocationClass?
+function RoleHoldLocationClass:GetStallLocation()
+    for _, location in ipairs(self._tbHoldLocation) do
+        if location.LocationAvatar.GetStallPosition then
+            return location
+        end
+    end
 end
 
 return RoleHoldLocationClass

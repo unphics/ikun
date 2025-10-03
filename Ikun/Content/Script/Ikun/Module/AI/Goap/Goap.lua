@@ -23,10 +23,8 @@ require('Ikun/Module/AI/Goap/Sensors/Default')
 require('Ikun/Module/AI/Goap/Actions/Wait')
 require('Ikun/Module/AI/Goap/Actions/WalkOnVillage')
 require('Ikun/Module/AI/Goap/Actions/GoHome')
-
-local test = function()
-    require('Ikun/Module/AI/Goap/Example')
-end
+require('Ikun/Module/AI/Goap/Actions/GoStall')
+require('Ikun/Module/AI/Goap/Actions/SetupStall')
 
 ---@class goap
 ---@field util GoapUtil
@@ -34,7 +32,6 @@ end
 local goap = {
     util = class.GoapUtil,
     planner = class.GPlanner,
-    test = test,
 }
 
 return goap
