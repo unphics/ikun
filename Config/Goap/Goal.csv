@@ -7,6 +7,6 @@ TakeRest|休息一会|坐下休息|IsSitting=true,IsTired=false|4
 WorkAtStall|摆摊工作|在摊位工作|IsWorking=true,AtStall=true,StallSetup=true|5
 ReturnHome|回家|返回家中|AtHome=true|6
 HaveDinner|吃晚餐||HasDinner=true,IsHungry=false|7
-Sleep|睡觉||IsSleeping=true,AtHome=true|8
+Sleep|晚上睡觉||IsSleeping=true,AtHome=true|8
 ||||
 ||||

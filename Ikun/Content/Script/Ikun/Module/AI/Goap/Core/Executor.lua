@@ -36,11 +36,11 @@ function GExecutor:ExecNewPlan(Goal, Plan)
     end
 
     local str = ''
-    str = str..Goal.Name..' : '
+    str = str..'<'..Goal.Name..'> '
     for _, name in ipairs(Plan or {}) do
         str = str..name..', '
     end
-    log.dev('执行器:新计划', str)
+    log.dev('执行器执行新计划 '.. str)
 end
 
 ---@public

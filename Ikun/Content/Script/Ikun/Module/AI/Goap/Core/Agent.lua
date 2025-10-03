@@ -41,6 +41,8 @@ function GAgent:ctor(OwnerRole)
         self.Memory:SetState('AtHome', true)
         self.Memory:SetState('AtVillage', true)
         self.Memory:SetState('Morning', true)
+        self.Memory:SetState('IsHungry', true)
+
         local allGoal = ConfigMgr:GetConfig('Goal')
 
         local config1 = allGoal['Getup']
@@ -58,6 +60,14 @@ function GAgent:ctor(OwnerRole)
         local config4 = allGoal['ReturnHome']
         local goal4 = class.new'GGoal'(config4.GoalName, goap.util.make_states_from_config(config4.DesiredState)) ---@as GGoal
         self:AddGoal(goal4)
+        
+        local config5 = allGoal['HaveDinner']
+        local goal5 = class.new'GGoal'(config5.GoalName, goap.util.make_states_from_config(config5.DesiredState)) ---@as GGoal
+        self:AddGoal(goal5)
+        
+        local config6 = allGoal['Sleep']
+        local goal6 = class.new'GGoal'(config6.GoalName, goap.util.make_states_from_config(config6.DesiredState)) ---@as GGoal
+        self:AddGoal(goal6)
 
         self:MakePlan()
     end)
@@ -114,6 +124,7 @@ function GAgent:MakePlan()
     end
     if #validGoals == 0 then
         log.dev('啥都干不了!!!')
+        self.Memory:Print()
     end
     for _, goal in ipairs(validGoals) do
         local cur = self.Memory:GetStates()
