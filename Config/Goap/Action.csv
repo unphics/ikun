@@ -4,9 +4,9 @@ Wakeup|起床||WaitAction|IsSleeping=true,Morning=true|IsSleeping=false|1
 WalkAroundVillage|村庄散步||WalkOnVillage|Morning=true,IsSleeping=false|MonringWalk=true,AtHome=false,AtVillage=true|2
 EatBreakfast|吃早餐||WaitAction|AtHome=true,IsHungry=true|HasBreakfast=true,IsHungry=false|1
 SitAndRest|坐下休息||WaitAction|IsTired=true|IsSitting=true,IsTired=false|1
-GoToStall|去摊位||WaitAction|AtHome=true|AtHome=false,AtStall=true|1
+GoToStall|去摊位摆摊||WaitAction|AtHome=true|AtHome=false,AtStall=true,StallSetUp=true|1
 SetUpStall|摆好摊位||WaitAction|AtStall=true|StallSetUp=true,IsWorking=true|1
 GoToSleep|睡觉||WaitAction|AtHome=true,Evening=true|IsSleeping=true|1
-GoToHome|回家||WaitAction|AtHome=false|AtHome=true|0
+GoToHome|回家||GoHomeAction|AtHome=false|AtHome=true|0
 ||||||
 ||||||

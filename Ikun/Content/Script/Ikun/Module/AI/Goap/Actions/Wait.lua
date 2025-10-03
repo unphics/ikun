@@ -9,6 +9,7 @@
 local WaitAction = class.class'WaitAction': extends 'GAction' {}
 
 function WaitAction:ActionStart(Agent)
+    class.GAction.ActionStart(self, Agent)
     self.WaitTime = 3
 end
 

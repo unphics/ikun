@@ -8,21 +8,24 @@
 local NavMoveBehav = require('Ikun/Module/Nav/NavMoveBehav')
 
 ---@class WalkOnVillage: GAction
+---@field NavMoveBehav NavMoveBehav
+---@field OwnerAgent GAgent
 local WalkOnVillage = class.class'WalkOnVillage' : extends 'GAction'{}
 
 ---@override
 function WalkOnVillage:ActionStart(Agent)
-    self.Agent = Agent
+    class.GAction.ActionStart(self, Agent)
+    self.OwnerAgent = Agent
     local navMoveBehav = class.new 'NavMoveBehav' (Agent._OwnerRole.Avatar, 5) ---@as NavMoveBehav
     self.NavMoveBehav = navMoveBehav
-    self.WalkTime = 300
+    
     self:_GoToVillageRandom()
+    self.EndHour = TimeMgr.Hour + 2
 end
 
 ---@override
-function WalkOnVillage:ActionTick(Agent, DeltaTime)
-    self.WalkTime = self.WalkTime - DeltaTime
-    if self.WalkTime < 0 then
+function WalkOnVillage:ActionTick(_, DeltaTime)
+    if TimeMgr.Hour == self.EndHour then
         self:EndAction(true)
     end
     if self.NavMoveBehav then
@@ -34,6 +37,7 @@ end
 function WalkOnVillage:ActionEnd()
     if self.NavMoveBehav then
         self.NavMoveBehav:CancelMove()
+        self.NavMoveBehav = nil
     end
 end
 
@@ -42,7 +46,7 @@ function WalkOnVillage:_GoToVillageRandom()
     if not self.NavMoveBehav then
         return
     end
-    local avatar = self.Agent._OwnerRole.Avatar
+    local avatar = self.OwnerAgent._OwnerRole.Avatar
     local bresult, loc = class.NavMoveData.RandomNavPointInRadius(avatar, avatar:K2_GetActorLocation(), 3000)
     if bresult then
         local tb = {} ---@type NavMoveBehavCallbackInfo
@@ -56,11 +60,11 @@ function WalkOnVillage:_GoToVillageRandom()
 end
 
 function WalkOnVillage:_OnMoveFailed()
-    async_util.delay(self.Agent._OwnerRole.Avatar, 3, self._GoToVillageRandom, self)
+    async_util.delay(self.OwnerAgent._OwnerRole.Avatar, 3, self._GoToVillageRandom, self)
 end
 
 function WalkOnVillage:_OnMoveSuceesss()
-    async_util.delay(self.Agent._OwnerRole.Avatar, 3, self._GoToVillageRandom, self)
+    async_util.delay(self.OwnerAgent._OwnerRole.Avatar, 3, self._GoToVillageRandom, self)
 end
 
 return WalkOnVillage

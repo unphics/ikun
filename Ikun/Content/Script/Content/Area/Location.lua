@@ -31,7 +31,9 @@ function LocationClass:ctor()
     self._OwnerRoles = {}
 end
 
----@public [Init]
+---@public [Init] 场景对象初始化逻辑对象
+---@param LocationId integer
+---@param LocationAvatar AActor
 function LocationClass:InitByLocationAvatar(LocationId, LocationAvatar)
     local allLocationConfig = ConfigMgr:GetConfig('Location')
     local locationConfig = allLocationConfig[LocationId] ---@type LocationConfig

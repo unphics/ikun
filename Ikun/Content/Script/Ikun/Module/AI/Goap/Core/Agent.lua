@@ -37,16 +37,24 @@ function GAgent:ctor(OwnerRole)
         table.insert(self.SensorList, default)
 
         self.Memory:SetState('IsSleeping', true)
+        self.Memory:SetState('AtHome', true)
         self.Memory:SetState('AtVillage', true)
         self.Memory:SetState('Morning', true)
         local allGoal = ConfigMgr:GetConfig('Goal')
+
         local config1 = allGoal['Getup']
         local goal1 = class.new'GGoal'(config1.GoalName, goap.util.make_states_from_config(config1.DesiredState)) ---@as GGoal
         -- self:AddGoal(goal1)
+
         local config2 = allGoal['MorningWalk']
         local goal2 = class.new'GGoal'(config2.GoalName, goap.util.make_states_from_config(config2.DesiredState)) ---@as GGoal
         self:AddGoal(goal2)
-        self:Plan()
+        
+        local config3 = allGoal['WorkAtStall']
+        local goal3 = class.new'GGoal'(config3.GoalName, goap.util.make_states_from_config(config3.DesiredState)) ---@as GGoal
+        self:AddGoal(goal3)
+
+        self:MakePlan()
     end)
 end
 
@@ -79,8 +87,19 @@ function GAgent:SetActions(Actions)
     self.ActionList = Actions
 end
 
+---@param Goal GGoal
+function GAgent:FinishPlan(Goal, Plan)
+    for i = 1, #self.GoalList do
+        if self.GoalList[i] == Goal then
+            table.remove(self.GoalList, i)
+            break
+        end
+    end
+    self:MakePlan()
+end
+
 ---@public 找出有效的目标列表, 从第一个目标开始找出一个有方法达到的目标
-function GAgent:Plan()
+function GAgent:MakePlan()
     local validGoals = {} ---@type GGoal[]
     for _, goal in ipairs(self.GoalList) do
         ---@rule 有效判定: 自己有这个状态
@@ -95,9 +114,12 @@ function GAgent:Plan()
         local cur = self.Memory:GetStates()
         local plan = goap.planner.Plan(cur, goal, self.ActionList)
         if plan then
+            self.Memory:Print()
             self.Executor:ExecNewPlan(goal, plan)
+            break
         else
             log.dev('该目标没有方法执行, 请检查配置表', goal.Name)
+            self.Memory:Print()
         end
     end
 end

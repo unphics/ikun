@@ -6,7 +6,7 @@
 ---
 
 ---@class GExecutor
----@field _Agent GAgent
+---@field _OwnerAgent GAgent
 ---@field CurPlan string[]
 ---@field CurGoal GGoal
 ---@field CurAction GAction
@@ -15,7 +15,7 @@ local GExecutor = class.class'GExecutor'{}
 
 ---@public
 function GExecutor:ctor(Agent)
-    self._Agent = Agent
+    self._OwnerAgent = Agent
 end
 
 ---@public
@@ -25,12 +25,12 @@ function GExecutor:ExecNewPlan(Goal, Plan)
     self.CurPlan = Plan
 
     if self.CurAction then
-        self.CurAction:ActionCancelled(self._Agent)
-        self.CurAction:ActionEnd(self._Agent, false)
+        self.CurAction:ActionCancelled(self._OwnerAgent)
+        self.CurAction:ActionEnd(self._OwnerAgent, false)
     end
     self._CurActionIdx = 1
-    for _, action in ipairs(self._Agent.ActionList) do
-        if action._ActionName == self.CurPlan[self._CurActionIdx] then
+    for _, action in ipairs(self._OwnerAgent.ActionList) do
+        if action:GetActionName() == self.CurPlan[self._CurActionIdx] then
             self.CurAction = action
         end
     end
@@ -46,33 +46,31 @@ end
 ---@public
 function GExecutor:TickExecutor(DeltaTime)
     if self.CurAction then
-        if self.CurAction._ActionEnd then
-            if self.CurAction._ActionSucceed then
+        if self.CurAction:IsActionEnd() then
+            if self.CurAction:IsActionSucceed() then
                 for state, value in pairs(self.CurAction.Effects) do
-                    self._Agent.Memory._State[state] = value
+                    self._OwnerAgent.Memory:SetState(state, value)
                 end
             end
-            log.dev('动作完成:', self.CurAction._ActionName)
-            self.CurAction:ActionEnd(self._Agent, self.CurAction._ActionSucceed)
-            self.CurAction._ActionSucceed = false
-            self.CurAction._ActionStart = false
-            self.CurAction._ActionEnd = false
+            log.dev('动作完成:', self.CurAction:GetActionName())
+            self.CurAction:ActionEnd(self._OwnerAgent, self.CurAction:IsActionSucceed())
+            self.CurAction:ResetActionState()
             
             self.CurAction = nil
             self._CurActionIdx = self._CurActionIdx + 1
-            for _, action in ipairs(self._Agent.ActionList) do
-                if action._ActionName == self.CurPlan[self._CurActionIdx] then
+            for _, action in ipairs(self._OwnerAgent.ActionList) do
+                if action:GetActionName() == self.CurPlan[self._CurActionIdx] then
                     self.CurAction = action
                 end
             end
             if not self.CurAction then
                 log.error('Executor: 缺少后续动作')
+                self._OwnerAgent:FinishPlan(self.CurGoal, self.CurPlan)
             end
-        elseif not self.CurAction._ActionStart then
-            self.CurAction:ActionStart(self._Agent)
-            self.CurAction._ActionStart = true
+        elseif not self.CurAction:IsActionStart() then
+            self.CurAction:ActionStart(self._OwnerAgent)
         else
-            self.CurAction:ActionTick(self._Agent, DeltaTime)
+            self.CurAction:ActionTick(self._OwnerAgent, DeltaTime)
         end
     end
 end

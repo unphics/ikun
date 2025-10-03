@@ -56,6 +56,7 @@ end
 ---@public [Runtime] 开始
 ---@param Agent GAgent
 function GAction:ActionStart(Agent)
+    self._ActionStart = true
 end
 
 ---@public [Runtime]
@@ -65,6 +66,7 @@ end
 
 ---@public [Runtime] 结束
 ---@param Agent GAgent
+---@param bSucceed boolean
 function GAction:ActionEnd(Agent, bSucceed)
 end
 
@@ -78,6 +80,37 @@ end
 ---@public [Runtime] 意外取消
 ---@param Agent GAgent
 function GAction:ActionCancelled(Agent)
+end
+
+---@public [Runtime]
+function GAction:ResetActionState()
+    self._ActionSucceed = false
+    self._ActionStart = false
+    self._ActionEnd = false
+end
+
+---@public [Pure]
+---@return boolean
+function GAction:IsActionSucceed()
+    return self._ActionSucceed
+end
+
+---@public [Pure]
+---@return boolean
+function GAction:IsActionEnd()
+    return self._ActionEnd
+end
+
+---@public [Pure]
+---@return boolean
+function GAction:IsActionStart()
+    return self._ActionStart
+end
+
+---@public [Pure]
+---@return string
+function GAction:GetActionName()
+    return self._ActionName
 end
 
 return GAction
