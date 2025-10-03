@@ -28,7 +28,7 @@ function GAgent:ctor(OwnerRole)
         local allAction = ConfigMgr:GetConfig('Action')
         ---@param config ActionConfig
         for key, config in pairs(allAction) do
-            local action = class.new(config.ActionTemplate)(config.ActionName, goap.util.make_states_from_config(config.Preconditions), goap.util.make_states_from_config(config.Effects), config.Cost)
+            local action = class.new(config.ActionTemplate)(config.ActionName, goap.util.make_states_from_config(config.Preconditions), goap.util.make_states_from_config(config.Effects), config.Cost) ---@as GAction
             table.insert(self.ActionList, action)
         end
 
@@ -37,6 +37,7 @@ function GAgent:ctor(OwnerRole)
         table.insert(self.SensorList, default)
 
         self.Memory:SetState('IsSleeping', true)
+        self.Memory:SetState('IsWorking', false)
         self.Memory:SetState('AtHome', true)
         self.Memory:SetState('AtVillage', true)
         self.Memory:SetState('Morning', true)
@@ -53,6 +54,10 @@ function GAgent:ctor(OwnerRole)
         local config3 = allGoal['WorkAtStall']
         local goal3 = class.new'GGoal'(config3.GoalName, goap.util.make_states_from_config(config3.DesiredState)) ---@as GGoal
         self:AddGoal(goal3)
+
+        local config4 = allGoal['ReturnHome']
+        local goal4 = class.new'GGoal'(config4.GoalName, goap.util.make_states_from_config(config4.DesiredState)) ---@as GGoal
+        self:AddGoal(goal4)
 
         self:MakePlan()
     end)

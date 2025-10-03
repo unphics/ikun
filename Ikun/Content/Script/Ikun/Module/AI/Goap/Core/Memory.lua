@@ -40,13 +40,19 @@ function GMemory:GetStates()
     return tb
 end
 
-function GMemory:Print()
+---@public
+function GMemory:Print(bPrintAll)
     local str = ''
     for _, k, v in self._State:diter() do
         local config = ConfigMgr:GetConfig('State')[k]
-        str = str..config.StateDesc..'='..(v and 'true' or 'false')..'|'
+        if not config then
+            log.dev('GMemory:Print()', '未配置的状态', k)
+        end
+        if bPrintAll or v then
+            str = str..config.StateDesc..'='..(v and 'true' or 'false')..'|'
+        end
     end
-    log.dev('qqq', str)
+    log.dev('打印当前记忆::', str)
 end
 
 return GMemory

@@ -31,7 +31,6 @@ end
 ---@return string[]?
 function GPlanner.Plan(InStart, InGoal, InActions)
     local startStates = InStart
-    local goalStates = InGoal
 
     local openList = {} ---@type openNode[] 待扩展节点
     ---@class openNode
@@ -59,7 +58,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
 
         -- 如果当前节点已经扩展, 则跳过
         if not GPlanner.IsNodeInClosedList(curNode, closedList) then
-            if goap.util.is_state_cover(curNode.States, goalStates.DesiredStates) then
+            if goap.util.is_state_cover(curNode.States, InGoal.DesiredStates) then
                 return curNode.Actions
             end
             table.insert(closedList, curNode)
@@ -71,7 +70,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
 
                     local newNode = {} ---@type openNode
                     newNode.States = newStates
-                    newNode.h = goap.util.calc_no_cover_num(newStates, goalStates.DesiredStates)
+                    newNode.h = goap.util.calc_no_cover_num(newStates, InGoal.DesiredStates)
                     newNode.g = curNode.g + action.ActionCost
                     newNode.f = newNode.h + newNode.g
                     newNode.Actions = table_util.deep_copy(curNode.Actions)
