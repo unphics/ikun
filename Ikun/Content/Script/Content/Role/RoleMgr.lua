@@ -12,6 +12,7 @@
 ---@field BelongKingdom number
 ---@field RoleSkills number[]
 ---@field InitBT string
+---@field GoapKey string
 ---@field Color number
 ---@field SpecialClass string
 ---@field FightPosAssign FightPosDef[]
@@ -58,6 +59,13 @@ end
 function RoleMgrClass:GetRoleConfig(RoleCfgId)
     local config = ConfigMgr:GetConfig('Role')[RoleCfgId] ---@type RoleConfig
     return config
+end
+
+---@public 半夜更新角色信息
+function RoleMgrClass:LateAtNight()
+    for id, role in pairs(self._AllRoles) do
+        role:LateAtNight()
+    end
 end
 
 return

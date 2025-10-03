@@ -6,6 +6,22 @@
 ---@data    Sat Sep 27 2025 20:25:28 GMT+0800 (中国标准时间)
 ---
 
+local initState = {
+    IsSleeping = true,
+    AtHome = true,
+    AtVillage = true,
+    Morning = true,
+    IsWorking = false,
+    IsHungry = true, ---@todo zys
+}
+
+---@class GoapConfig
+---@field GoapKey string
+---@field Desc string
+---@field Sensors string[]
+---@field DailyGoals string[]
+---@field InitActions string[]
+
 ---@class GAgent
 ---@field _OwnerRole RoleClass
 ---@field Memory GMemory
@@ -23,54 +39,48 @@ function GAgent:ctor(OwnerRole)
     self.ActionList = {}
     self.GoalList = {}
 
-    async_util.delay(self._OwnerRole.Avatar, 1, function()
-        ---@todo zys 初始化RoleAction
-        local allAction = ConfigMgr:GetConfig('Action')
-        ---@param config ActionConfig
-        for key, config in pairs(allAction) do
-            local action = class.new(config.ActionTemplate)(config.ActionName, goap.util.make_states_from_config(config.Preconditions), goap.util.make_states_from_config(config.Effects), config.Cost) ---@as GAction
-            table.insert(self.ActionList, action)
-        end
+    -- goap key
+    local goapKey = RoleMgr:GetRoleConfig(self._OwnerRole:GetRoleCfgId()).GoapKey
+    local goapConfig = ConfigMgr:GetConfig('GoapConfig')[goapKey] ---@as GoapConfig
 
-        ---@todo zys 初始化RoleSensor
-        local default = class.new'DefaultSensor'(self)
-        table.insert(self.SensorList, default)
+    -- init state
+    for state, value in pairs(initState) do
+        self.Memory:SetState(state, value)
+    end
 
-        self.Memory:SetState('IsSleeping', true)
-        self.Memory:SetState('IsWorking', false)
-        self.Memory:SetState('AtHome', true)
-        self.Memory:SetState('AtVillage', true)
-        self.Memory:SetState('Morning', true)
-        self.Memory:SetState('IsHungry', true)
+    -- init sensor
+    for _, sensorName in ipairs(goapConfig.Sensors) do
+        local sensor = class.new(sensorName)(self)
+        table.insert(self.SensorList, sensor)
+    end
+    
+    -- init action
+    local allAction = ConfigMgr:GetConfig('Action') ---@as table<string, ActionConfig>
+    for _, action in ipairs(goapConfig.InitActions) do
+        local config = allAction[action]
+        local preconditions = goap.util.make_states_from_config(config.Preconditions)
+        local effects = goap.util.make_states_from_config(config.Effects)
+        local action = class.new(config.ActionTemplate)(config.ActionName, preconditions, effects, config.Cost) ---@as GAction
+        table.insert(self.ActionList, action)
+    end
+end
 
-        local allGoal = ConfigMgr:GetConfig('Goal')
-
-        local config1 = allGoal['Getup']
-        local goal1 = class.new'GGoal'(config1.GoalName, goap.util.make_states_from_config(config1.DesiredState)) ---@as GGoal
-        -- self:AddGoal(goal1)
-
-        local config2 = allGoal['MorningWalk']
-        local goal2 = class.new'GGoal'(config2.GoalName, goap.util.make_states_from_config(config2.DesiredState)) ---@as GGoal
-        self:AddGoal(goal2)
-        
-        local config3 = allGoal['WorkAtStall']
-        local goal3 = class.new'GGoal'(config3.GoalName, goap.util.make_states_from_config(config3.DesiredState)) ---@as GGoal
-        self:AddGoal(goal3)
-
-        local config4 = allGoal['ReturnHome']
-        local goal4 = class.new'GGoal'(config4.GoalName, goap.util.make_states_from_config(config4.DesiredState)) ---@as GGoal
-        self:AddGoal(goal4)
-        
-        local config5 = allGoal['HaveDinner']
-        local goal5 = class.new'GGoal'(config5.GoalName, goap.util.make_states_from_config(config5.DesiredState)) ---@as GGoal
-        self:AddGoal(goal5)
-        
-        local config6 = allGoal['Sleep']
-        local goal6 = class.new'GGoal'(config6.GoalName, goap.util.make_states_from_config(config6.DesiredState)) ---@as GGoal
-        self:AddGoal(goal6)
-
+function GAgent:LateAtNight()
+    self.Memory:SetState('MonringWalk', false)
+    self.Memory:SetState('HasDinner', false)
+    
+    local goapKey = RoleMgr:GetRoleConfig(self._OwnerRole:GetRoleCfgId()).GoapKey
+    local goapConfig = ConfigMgr:GetConfig('GoapConfig')[goapKey] ---@as GoapConfig
+    local allGoal = ConfigMgr:GetConfig('Goal')
+    for i, name in ipairs(goapConfig.DailyGoals) do
+        local config = allGoal[name] ---@as GoalConfig
+        local desiredStates = goap.util.make_states_from_config(config.DesiredState)
+        local goal = class.new'GGoal'(config.GoalName, desiredStates) ---@as GGoal
+        self:AddGoal(goal)
+    end
+    if not self.Executor:IsExecuting() then
         self:MakePlan()
-    end)
+    end
 end
 
 ---@public
@@ -134,7 +144,7 @@ function GAgent:MakePlan()
             self.Executor:ExecNewPlan(goal, plan)
             break
         else
-            log.dev('该目标没有方法执行, 请检查配置表', goal.Name)
+            log.dev('该目标没有方法执行, 请检查配置表', goal.Name, TimeMgr:GetCurTimeDisplay())
             self.Memory:Print()
         end
     end

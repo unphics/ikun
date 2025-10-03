@@ -25,6 +25,7 @@ require('Ikun/Module/AI/Goap/Actions/WalkOnVillage')
 require('Ikun/Module/AI/Goap/Actions/GoHome')
 require('Ikun/Module/AI/Goap/Actions/GoStall')
 require('Ikun/Module/AI/Goap/Actions/SetupStall')
+require('Ikun/Module/AI/Goap/Actions/Sleep')
 
 ---@class goap
 ---@field util GoapUtil

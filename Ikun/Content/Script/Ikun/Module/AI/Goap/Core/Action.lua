@@ -10,8 +10,8 @@
 ---@field ActionName string
 ---@field ActionDesc string
 ---@field ActionTemplate string
----@field Preconditions table<string, boolean>
----@field Effects table<string, boolean>
+---@field Preconditions table<string, string>
+---@field Effects table<string, string>
 ---@field Cost number
 
 ---@class GAction

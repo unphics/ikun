@@ -9,7 +9,7 @@
 ---@field GoalKey string
 ---@field GoalName string
 ---@field GoalDesc string
----@field DesiredState boolean
+---@field DesiredState table<string, string>
 ---@field Priority integer
 
 ---@class GGoal

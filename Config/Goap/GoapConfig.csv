@@ -1,2 +1,4 @@
-GoapKey|Desc|Sensor|
-Market|市场小贩|Defaut|
+GoapKey|Desc|Sensors|DailyGoals|InitActions|InitStates
+|||||
+|||||
+Marketer|市场小贩|DefaultSensor,|Getup,MorningWalk,WorkAtStall,ReturnHome,HaveDinner,Sleep|Wakeup,WalkAroundVillage,EatDinner,GoToStall,SetupStall,CloseStall,GoToSleep,GoToHome|

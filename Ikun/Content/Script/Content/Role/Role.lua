@@ -114,6 +114,12 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
     end
 end
 
+function RoleClass:LateAtNight()
+    if self.Agent then
+        self.Agent:LateAtNight()
+    end
+end
+
 function RoleClass:SwitchNewBT(NewBTKey)
     log.info('RoleClass:SwitchNewBT()', self:GetRoleDispName(), NewBTKey)
     if self.Avatar.RoleComp.bCustomStartBT then

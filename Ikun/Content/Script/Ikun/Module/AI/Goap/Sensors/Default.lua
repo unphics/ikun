@@ -18,7 +18,7 @@ function DefaultSensor:TickSensor(DeltaTime)
     class.GSensor.TickSensor(self, DeltaTime)
 
     local time = TimeMgr.Hour
-    if time > 7 and time < 9 then -- 早晨
+    if time >= 7 and time < 9 then -- 早晨
         self._Agent.Memory:SetState('Morning', true)
         self._Agent.Memory:SetState('Forenoon', false)
         self._Agent.Memory:SetState('Noon', false)

@@ -75,4 +75,10 @@ function GExecutor:TickExecutor(DeltaTime)
     end
 end
 
+---@public
+---@return boolean
+function GExecutor:IsExecuting()
+    return self.CurAction and true or false
+end
+
 return GExecutor
