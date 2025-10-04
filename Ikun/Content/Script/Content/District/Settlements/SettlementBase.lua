@@ -53,7 +53,7 @@ end
 function SettlementBaseClass:GetRandomWalkPos()
     local idx = math.floor(math.random() * #self._OwnerLocation._Sites)
     local site = self._OwnerLocation._Sites[idx]
-    return site:GetSitePos()
+    return site and site:GetSitePos()
 end
 
 ---@public

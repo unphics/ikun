@@ -102,7 +102,7 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
     
     self.Avatar.SkillComp:InitRoleSkill()
     
-    if config.RoleId == 210103 then
+    if config.GoapKey then
         local agent = class.new 'GAgent' (self) ---@as GAgent
         self.Agent = agent
     else

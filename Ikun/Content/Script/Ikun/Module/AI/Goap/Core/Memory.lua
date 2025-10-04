@@ -47,7 +47,7 @@ function GMemory:Print(bPrintAll)
     for _, k, v in self._State:diter() do
         local config = ConfigMgr:GetConfig('State')[k]
         if not config then
-            log.error('GMemory:Print()', '未配置的状态', k)
+            log.error('GMemory:Print()', '未配置的状态', '\''..k..'\'')
         end
         if bPrintAll or v then
             str = str..config.StateDesc..'='..(v and 'true' or 'false')..'|'

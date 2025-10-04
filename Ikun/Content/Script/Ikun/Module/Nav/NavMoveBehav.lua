@@ -40,11 +40,11 @@ end
 
 ---@class NavMoveBehavCallbackInfo
 ---@field This table
----@field OnNavMoveArrived function 抵达时
----@field OnNavMoveLostTarget function 失去目标时
----@field OnNavMoveCancelled function 取消时
----@field OnNavMoveStuck function 阻挡被时
----@field OnMoveTaskEnd function 移动任务结束时
+---@field OnNavMoveArrived fun()? 抵达时
+---@field OnNavMoveLostTarget fun()? 失去目标时
+---@field OnNavMoveCancelled fun()? 取消时
+---@field OnNavMoveStuck fun()? 阻挡被时
+---@field OnMoveTaskEnd fun()? 移动任务结束时
 
 ---@public 移动到一个新地方
 ---@param Target BP_ChrBase|FVector

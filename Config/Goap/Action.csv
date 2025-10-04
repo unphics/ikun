@@ -11,4 +11,4 @@ CloseStall|收摊||WaitAction|AtStall=true,StallSetup=true,IsWorking=true|AtStal
 GoToSleep|睡觉||SleepAction|AtHome=true,Evening=true|IsSleeping=true|1
 GoToHome|回家||GoHomeAction|AtHome=false,IsWorking=false|AtHome=true|0
 ||||||
-||||||
+Hunt|打猎||HuntingAction|AtHome=true,|GainResourceDaily=true,AtHome=false|1

@@ -30,3 +30,5 @@ AtStall|在摊位|
 ||
 StallSetup|摊位已经摆好|
 StallPacked|摊位已经收起|
+||
+GainResourceDaily|每天获取生存资源|

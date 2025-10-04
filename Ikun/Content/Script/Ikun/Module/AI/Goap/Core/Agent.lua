@@ -66,11 +66,14 @@ function GAgent:ctor(OwnerRole)
         local action = class.new(config.ActionTemplate)(config.ActionName, preconditions, effects, config.Cost) ---@as GAction
         table.insert(self.ActionList, action)
     end
+
+    log.info('Agent:ctor', rolelib.role(self):RoleName())
 end
 
 function GAgent:LateAtNight()
     self.Memory:SetState('MonringWalk', false)
     self.Memory:SetState('HasDinner', false)
+    self.Memory:SetState('GainResourceDaily', false)
     
     local goapKey = RoleMgr:GetRoleConfig(self._OwnerRole:GetRoleCfgId()).GoapKey
     local goapConfig = ConfigMgr:GetConfig('GoapConfig')[goapKey] ---@as GoapConfig

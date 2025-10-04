@@ -19,6 +19,7 @@ end
 function BP_SiteRegisterComp:AvatarInitSite()
     local site = class.new'SiteClass'() ---@as SiteClass
     site:InitSite(self:K2_GetComponentToWorld().Translation, self.SiteId)
+    self:K2_DestroyComponent(self)
 end
 
 return BP_SiteRegisterComp

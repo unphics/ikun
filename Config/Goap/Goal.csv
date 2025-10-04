@@ -9,4 +9,4 @@ ReturnHome|回家|返回家中|AtHome=true|6
 HaveDinner|吃晚餐||HasDinner=true,IsHungry=false|7
 Sleep|晚上睡觉||IsSleeping=true,AtHome=true|8
 ||||
-||||
+GainResource|获取生存资源||GainResourceDaily=true|

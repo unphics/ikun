@@ -2,7 +2,7 @@
 ---
 ---@brief   去摊位
 ---@author  zys
----@data    
+---@data    Sat Oct 04 2025 15:03:32 GMT+0800 (中国标准时间)
 ---
 
 ---@class GoStallAction: GAction
@@ -15,6 +15,7 @@ function GoStallAction:ActionStart(Agent)
     local home = Agent:GetAgentRole().HoldLocation:GetStallLocation()
     if not home then
         log.error('没有摊位!!!')
+        self:EndAction(false)
         return
     end
     local loc = home.LocationAvatar:GetStallPosition()
