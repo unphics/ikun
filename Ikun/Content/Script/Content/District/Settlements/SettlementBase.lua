@@ -52,7 +52,7 @@ end
 ---@return FVector
 function SettlementBaseClass:GetRandomWalkPos()
     local idx = math.floor(math.random() * #self._OwnerLocation._Sites)
-    local site = self._OwnerLocation._Sites[idx]
+    local site = self._OwnerLocation._Sites[idx + 1]
     return site and site:GetSitePos()
 end
 

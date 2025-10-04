@@ -51,6 +51,9 @@ end
 ---@param AcceptRadius number 可接受的半径
 ---@param CallbackInfo NavMoveBehavCallbackInfo
 function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
+    if not Target then
+        return log.error('NavMoveBehav:NewMoveToTask() 无效的Target')
+    end
     ---@class MoveToInfo
     local Info = {
         MoveTarget = Target, -- 主索引
