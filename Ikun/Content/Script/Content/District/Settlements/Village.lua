@@ -13,6 +13,6 @@ local VillageClass = class.class "VillageClass" : extends "SettlementBaseClass" 
 }
 
 ---@override
-function VillageClass:ctor(Name)
-    class.SettlementBaseClass.ctor(self, Name, SettlementType.Village)
+function VillageClass:ctor(Name, Id)
+    class.SettlementBaseClass.ctor(self, Name, SettlementType.Village, Id)
 end

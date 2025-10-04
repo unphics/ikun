@@ -8,27 +8,10 @@
 ---@class BP_House: BP_House_C
 local BP_House = UnLua.Class()
 
----@override
-function BP_House:ReceiveBeginPlay()
-    if net_util.is_server(self) then
-        gameinit.registerinit(gameinit.ring.one, self, self.AvatarInitLocation)
-    end
-end
-
 ---@public
 ---@return FVector
 function BP_House:GetHousePosition()
     return self.HomeDoor:K2_GetComponentToWorld().Translation
-end
-
----@private [Init]
-function BP_House:AvatarInitLocation()
-    if not self.LocationId then
-        log.error('BP_House:AvatarInitLocation()', '未配置LocationId')
-        return
-    end
-    local house = class.new'LocationClass'() ---@as LocationClass
-    house:InitByLocationAvatar(self.LocationId, self)
 end
 
 return BP_House

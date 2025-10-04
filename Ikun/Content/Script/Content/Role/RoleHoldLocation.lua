@@ -1,6 +1,7 @@
 
 ---
 ---@brief   角色持有的地点
+---@todo    HoldLocation -> Location
 ---@author  zys
 ---@data    Tue Sep 23 2025 01:03:41 GMT+0800 (中国标准时间)
 ---
@@ -54,6 +55,17 @@ function RoleHoldLocationClass:GetStallLocation()
             return location
         end
     end
+end
+
+---@public
+---@return SettlementBaseClass?
+function RoleHoldLocationClass:GetBelongSettlement()
+    local home = self:GetHomeLocation()
+    if not home then
+        log.error('RoleHoldLocationClass:GetBelongSettlement() 无家可归')
+        return
+    end
+    return home:GetBelongSettlement()
 end
 
 return RoleHoldLocationClass

@@ -21,6 +21,9 @@ function BP_GameModeBase:ReceiveBeginPlay()
     async_util.delay(self, 0.2, function()
         gameinit.triggerinit(gameinit.ring.two)
     end)
+    async_util.delay(self, 0.2, function()
+        gameinit.triggerinit(gameinit.ring.three)
+    end)
 end
 
 ---@override

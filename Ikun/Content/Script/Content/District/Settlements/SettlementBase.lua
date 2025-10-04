@@ -10,6 +10,8 @@
 ---@field _SettlementType SettlementType 聚集地类型:村庄/城市
 ---@field _SettlementName string 聚集地名字
 ---@field _tbLocation LocationClass[] 聚集地的成员地点, 如村子里的所有房子
+---@field _SettlementId integer
+---@field _OwnerLocation LocationClass
 local SettlementBaseClass = class.class "SettlementBaseClass" {
     ctor = function() end,
     AddLocation = function()end,
@@ -21,8 +23,9 @@ local SettlementBaseClass = class.class "SettlementBaseClass" {
 }
 
 ---@public
-function SettlementBaseClass:ctor(Name, SettlementType)
+function SettlementBaseClass:ctor(Name, SettlementType, Id)
     self._tbLocation = {}
+    self._SettlementId = Id
     
     self._SettlementName = Name
     self._SettlementType = SettlementType
@@ -31,7 +34,26 @@ end
 ---@public 添加地点
 ---@param Location LocationClass
 function SettlementBaseClass:AddLocation(Location)
-    table.insert(self._tbLocation, Location)
+    local config = ConfigMgr:GetConfig('Settlement')[self._SettlementId] ---@as SettlementConfig
+    if Location._LocationId == config.SettlementLocation then
+        self._OwnerLocation = Location
+    else
+        table.insert(self._tbLocation, Location)
+    end
+end
+
+---@public 获取聚集地自己的Location
+---@return LocationClass?
+function SettlementBaseClass:GetSettlementLocation()
+    return self._OwnerLocation
+end
+
+---@public 获取一个随机的散步地点
+---@return FVector
+function SettlementBaseClass:GetRandomWalkPos()
+    local idx = math.floor(math.random() * #self._OwnerLocation._Sites)
+    local site = self._OwnerLocation._Sites[idx]
+    return site:GetSitePos()
 end
 
 ---@public

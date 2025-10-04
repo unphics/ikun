@@ -14,6 +14,7 @@
 
 ---@class LocationClass
 ---@field LocationAvatar AActor
+---@field _Sites SiteClass[]
 ---@field _LocationId number
 ---@field _Name string
 ---@field _OwnerRoles RoleClass[]
@@ -28,6 +29,7 @@ local LocationClass = class.class 'LocationClass' {
 
 ---@public
 function LocationClass:ctor()
+    self._Sites = {}
     self._OwnerRoles = {}
 end
 
@@ -35,6 +37,10 @@ end
 ---@param LocationId integer
 ---@param LocationAvatar AActor
 function LocationClass:InitByLocationAvatar(LocationId, LocationAvatar)
+    if not LocationAvatar:IsA(UE.AActor) then
+        log.dev('LocationClass:InitByLocationAvatar 状态不对', LocationId, LocationAvatar, obj_util.dispname(LocationAvatar))
+        return
+    end
     local allLocationConfig = ConfigMgr:GetConfig('Location')
     local locationConfig = allLocationConfig[LocationId] ---@type LocationConfig
     if not locationConfig then
@@ -63,6 +69,17 @@ function LocationClass:GetBelongSettlement()
     local districtMgr = Cosmos:GetStar().DistrictMgr
     local settlement = districtMgr:FindOrCreateSettlement(settlementId)
     return settlement
+end
+
+---@public
+---@param InSite SiteClass
+function LocationClass:RegisterSite(InSite)
+    for _, site in ipairs(self._Sites) do
+        if site == InSite then
+            return
+        end
+    end
+    table.insert(self._Sites, InSite)
 end
 
 return LocationClass

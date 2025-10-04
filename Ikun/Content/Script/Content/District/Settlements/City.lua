@@ -13,8 +13,8 @@ local CityClass = class.class "CityClass" : extends "SettlementBaseClass" {
 }
 
 ---@override
-function CityClass:ctor(Name)
-    class.SettlementBaseClass.ctor(self, Name, SettlementType.City)
+function CityClass:ctor(Name, Id)
+    class.SettlementBaseClass.ctor(self, Name, SettlementType.City, Id)
 end
 
 return CityClass

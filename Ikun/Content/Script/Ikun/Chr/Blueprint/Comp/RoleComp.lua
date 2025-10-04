@@ -12,7 +12,7 @@ local RoleComp = UnLua.Class()
 ---@protected [ImplBP]
 function RoleComp:ReceiveBeginPlay()
     if net_util.is_server(self:GetOwner()) then    
-        gameinit.registerinit(gameinit.ring.two, self, self.AvatarInitRole)
+        gameinit.registerinit(gameinit.ring.three, self, self.AvatarInitRole)
     end
 end
 

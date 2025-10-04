@@ -3,7 +3,7 @@
 local TimeCfg = {}
 
 -- 游戏时间流速倍率(比现实)
-TimeCfg.TimeFlowRate = 1200
+TimeCfg.TimeFlowRate = 800
 
 -- 游戏速度
 TimeCfg.GameSpeed = 1

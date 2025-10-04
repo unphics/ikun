@@ -44,19 +44,29 @@ end
 ---@private
 function WalkOnVillage:_GoToVillageRandom()
     if not self.NavMoveBehav then
+        self:EndAction(false)
+    end
+    
+    local role = rolelib.role(self.OwnerAgent)
+    if not role then
+        self:EndAction(false)
         return
     end
-    local avatar = self.OwnerAgent:GetAgentRole().Avatar
-    local bresult, loc = class.NavMoveData.RandomNavPointInRadius(avatar, avatar:K2_GetActorLocation(), 3000)
-    if bresult then
-        local tb = {} ---@type NavMoveBehavCallbackInfo
-        tb.This = self
-        tb.OnNavMoveArrived = self._OnMoveSuceesss
-        tb.OnNavMoveCancelled = self._OnMoveFailed
-        tb.OnNavMoveLostTarget = self._OnMoveFailed
-        tb.OnNavMoveStuck = self._OnMoveFailed
-        self.NavMoveBehav:NewMoveToTask(loc, 300, tb)
+
+    local settlement = role.HoldLocation:GetBelongSettlement()
+    if not settlement then
+        self:EndAction(false)
+        return
     end
+    
+    local pos = settlement:GetRandomWalkPos()
+    local tb = {} ---@type NavMoveBehavCallbackInfo
+    tb.This = self
+    tb.OnNavMoveArrived = self._OnMoveSuceesss
+    tb.OnNavMoveCancelled = self._OnMoveFailed
+    tb.OnNavMoveLostTarget = self._OnMoveFailed
+    tb.OnNavMoveStuck = self._OnMoveFailed
+    self.NavMoveBehav:NewMoveToTask(pos, 300, tb)
 end
 
 function WalkOnVillage:_OnMoveFailed()

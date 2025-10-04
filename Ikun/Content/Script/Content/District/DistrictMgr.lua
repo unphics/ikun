@@ -122,9 +122,9 @@ function DistrictMgr:FindOrCreateSettlement(SettlementId)
     end
     local settlement = nil
     if settlementConfig.SettlementType == SettlementType.City then
-        settlement = class.new "CityClass" (settlementConfig.SettlementName) ---@type CityClass
+        settlement = class.new "CityClass" (settlementConfig.SettlementName, SettlementId) ---@type CityClass
     elseif settlementConfig.SettlementType == SettlementType.Village then
-        settlement = class.new "VillageClass" (settlementConfig.SettlementName) ---@type VillageClass
+        settlement = class.new "VillageClass" (settlementConfig.SettlementName, SettlementId) ---@type VillageClass
     end
     self._tbSettlementRef[SettlementId] = settlement
     return settlement

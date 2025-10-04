@@ -136,7 +136,7 @@ function GAgent:MakePlan()
         -- end
     end
     if #validGoals == 0 then
-        log.dev('啥都干不了!!!')
+        log.warn(rolelib.role(self):RoleName(), '啥都干不了!!!')
         self.Memory:Print()
     end
     for _, goal in ipairs(validGoals) do
@@ -147,7 +147,7 @@ function GAgent:MakePlan()
             self.Executor:ExecNewPlan(goal, plan)
             break
         else
-            log.dev('该目标没有方法执行, 请检查配置表', goal.Name, TimeMgr:GetCurTimeDisplay())
+            log.error(rolelib.role(self):RoleName(), '该目标没有方法执行', goal.Name, TimeMgr:GetCurTimeDisplay())
             self.Memory:Print()
         end
     end
