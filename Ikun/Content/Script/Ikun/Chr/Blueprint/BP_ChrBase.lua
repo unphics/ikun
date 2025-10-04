@@ -37,7 +37,7 @@ end
 ---@return string
 function BP_ChrBase:PrintRoleInfo()
     local Role = self:GetRole()
-    return ' [Actor='..obj_util.dispname(self)..', RoleName='..Role:GetRoleDispName()..', RoleId='..Role:GetRoleInstId()..'] '
+    return ' [Actor='..obj_util.dispname(self)..', RoleName='..Role:RoleName()..', RoleId='..Role:GetRoleInstId()..'] '
 end
 
 ---@private Chr开始死亡

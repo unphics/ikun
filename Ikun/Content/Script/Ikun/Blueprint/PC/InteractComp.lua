@@ -65,7 +65,7 @@ function GazeComp:C2S_ReqUpdateGazing_RPC(InteractActor)
         self.Rep_InteractActor = InteractActor
         local role = rolelib.role(self.Rep_InteractActor)
         if role then
-            self.Rep_GazeName = role:GetRoleDispName()
+            self.Rep_GazeName = role:RoleName()
         end
     end
 end

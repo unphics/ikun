@@ -5,14 +5,15 @@
 ---@data    Sat Sep 27 2025 20:41:12 GMT+0800 (中国标准时间)
 ---
 
----@class GMemory
+---@class GMemory: AgentPartInterface
 ---@field _State duplex<string, boolean>
 local GMemory = class.class'GMemory' {
     _State = nil,
 }
 
 ---@public
-function GMemory:ctor()
+function GMemory:ctor(OwnerAgent)
+    self._OwnerAgent = OwnerAgent
     self._State = duplex.create()
 end
 
@@ -46,13 +47,13 @@ function GMemory:Print(bPrintAll)
     for _, k, v in self._State:diter() do
         local config = ConfigMgr:GetConfig('State')[k]
         if not config then
-            log.dev('GMemory:Print()', '未配置的状态', k)
+            log.error('GMemory:Print()', '未配置的状态', k)
         end
         if bPrintAll or v then
             str = str..config.StateDesc..'='..(v and 'true' or 'false')..'|'
         end
     end
-    log.dev('打印当前记忆::', str)
+    log.info(rolelib.role(self):RoleName(), '打印当前记忆::'..str)
 end
 
 return GMemory

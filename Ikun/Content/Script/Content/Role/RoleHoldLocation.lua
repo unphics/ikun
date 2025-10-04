@@ -28,7 +28,7 @@ function RoleHoldLocationClass:ctor(OwnerRole, ConfigId)
         for _, locationId in ipairs(config.HoldLocations) do
             local location = star:FindLocation(locationId)
             if location then
-                log.info('角色获得Location', self._OwnerRole:GetRoleDispName(),locationId)
+                log.info('角色获得Location', self._OwnerRole:RoleName(),locationId)
                 table.insert(self._tbHoldLocation, location)
             end
         end

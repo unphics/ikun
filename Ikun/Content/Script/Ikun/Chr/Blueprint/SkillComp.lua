@@ -26,7 +26,7 @@ function SkillComp:InitRoleSkill()
 
     local roleCfg = RoleMgr:GetRoleConfig(role:GetRoleCfgId()) ---@type RoleConfig
     if not roleCfg.RoleSkills then
-        log.info('SkillComp:InitRoleSkill()', '无初始技能', role:GetRoleDispName())
+        log.info('SkillComp:InitRoleSkill()', '无初始技能', role:RoleName())
         return
     end
 

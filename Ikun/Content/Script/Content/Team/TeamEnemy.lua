@@ -116,7 +116,7 @@ end
 ---@param Role RoleClass
 function TeamEnemyClass:RemoveEnemyRole(Role)
     self.dpEnemyPerception:dremove(Role:GetRoleInstId())
-    log.dev('TeamEnemyClass:RemoveEnemyRole() : ', Role:GetRoleDispName())
+    log.dev('TeamEnemyClass:RemoveEnemyRole() : ', Role:RoleName())
 end
 
 ---@public

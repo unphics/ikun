@@ -15,6 +15,9 @@ local initState = {
     IsHungry = true, ---@todo zys
 }
 
+---@class AgentPartInterface
+---@field _OwnerAgent GAgent
+
 ---@class GoapConfig
 ---@field GoapKey string
 ---@field Desc string
@@ -33,7 +36,7 @@ local GAgent = class.class'GAgent' {}
 
 function GAgent:ctor(OwnerRole)
     self._OwnerRole = OwnerRole
-    self.Memory = class.new 'GMemory' () ---@as GMemory
+    self.Memory = class.new 'GMemory' (self) ---@as GMemory
     self.Executor = class.new'GExecutor'(self)
     self.SensorList = {}
     self.ActionList = {}
@@ -148,6 +151,12 @@ function GAgent:MakePlan()
             self.Memory:Print()
         end
     end
+end
+
+---@public
+---@return RoleClass
+function GAgent:GetAgentRole()
+    return self._OwnerRole
 end
 
 return GAgent

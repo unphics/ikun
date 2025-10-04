@@ -41,7 +41,7 @@ local RoleClass = class.class 'RoleClass' {
     GetBelongKingdom = function()end,
     GetRoleCfgId = function()end,
     GetRoleInstId = function()end,
-    GetRoleDispName = function()end,
+    RoleName = function()end,
     IsRoleDead = function()end,
     Team = nil,
     QuestGiver = nil,
@@ -109,7 +109,7 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
         if config.BTCfg and config.BTCfg.Init then
             self:SwitchNewBT(config.BTCfg.Init)
         else
-            log.error('RoleClass:InitByAvatar()', '没有初始BT', self:GetRoleDispName())
+            log.error('RoleClass:InitByAvatar()', '没有初始BT', self:RoleName())
         end
     end
 end
@@ -121,19 +121,19 @@ function RoleClass:LateAtNight()
 end
 
 function RoleClass:SwitchNewBT(NewBTKey)
-    log.info('RoleClass:SwitchNewBT()', self:GetRoleDispName(), NewBTKey)
+    log.info('RoleClass:SwitchNewBT()', self:RoleName(), NewBTKey)
     if self.Avatar.RoleComp.bCustomStartBT then
         return
     end
     local BTClass = BTDef[NewBTKey]
     if not BTClass then
-        log.error('RoleClass:SwitchNewBT()', 'no NewBTKey', NewBTKey, self:GetRoleDispName())
+        log.error('RoleClass:SwitchNewBT()', 'no NewBTKey', NewBTKey, self:RoleName())
         return
     end
     self.BT = BTClass(self.Avatar)
     if not self.BT then
         self.BT = BTClass(self.Avatar)
-        log.error('RoleClass:SwitchNewBT()', 'Failed to init BT', NewBTKey, self:GetRoleDispName())
+        log.error('RoleClass:SwitchNewBT()', 'Failed to init BT', NewBTKey, self:RoleName())
         return
     end
 end
@@ -176,7 +176,7 @@ function RoleClass:AddEnemyChecked(OtherRole)
     if not OtherRoleCfg then
         return false
     end
-    log.info('RoleClass:AddEnemyChecked; self =', OwnerRoleCfg:GetRoleDispName(), '; enemy =', OtherRoleCfg:GetRoleDispName())
+    log.info('RoleClass:AddEnemyChecked; self =', OwnerRoleCfg:RoleName(), '; enemy =', OtherRoleCfg:RoleName())
     self.FightTarget:SetTarget(OtherRole)
     return true
 end
@@ -204,10 +204,7 @@ end
 
 ---@public [Debug] [Pure] 打印这个角色的信息
 function RoleClass:PrintRole()
-    local str = ''
-    local hp = obj_util.is_valid(self.Avatar) and self.Avatar.AttrSet:GetAttrValueByName("Health")
-    str = str..'{ Id:'..self:GetRoleInstId()..', Dead:'..tostring(self:IsRoleDead())..', hp:'..tostring(hp)..' }'
-    return str
+    return string.format('{Id:%i, name:%s}', self:GetRoleInstId(), self:RoleName())
 end
 
 ---@public [Pure] 获取角色配置Id
@@ -221,7 +218,7 @@ function RoleClass:GetRoleInstId()
 end
 
 ---@public [Pure] 获取角色显示名称
-function RoleClass:GetRoleDispName()
+function RoleClass:RoleName()
     return self.RoleInfo.RoleDispName
 end
 

@@ -11,8 +11,8 @@ local GoHomeAction = class.class'GoHomeAction':extends'GAction'{}
 ---@override
 function GoHomeAction:ActionStart(Agent)
     class.GAction.ActionStart(self, Agent)
-    local navMoveBehav = class.new 'NavMoveBehav' (Agent._OwnerRole.Avatar, 5) ---@as NavMoveBehav
-    local home = Agent._OwnerRole.HoldLocation:GetHomeLocation()
+    local navMoveBehav = class.new 'NavMoveBehav' (Agent:GetAgentRole().Avatar, 5) ---@as NavMoveBehav
+    local home = Agent:GetAgentRole().HoldLocation:GetHomeLocation()
     if not home then
         log.error('无家可归!!!')
         return

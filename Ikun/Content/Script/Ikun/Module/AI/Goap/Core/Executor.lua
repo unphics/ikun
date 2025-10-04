@@ -5,8 +5,7 @@
 ---@data    Thu Oct 02 2025 21:10:28 GMT+0800 (中国标准时间)
 ---
 
----@class GExecutor
----@field _OwnerAgent GAgent
+---@class GExecutor: AgentPartInterface
 ---@field CurPlan string[]
 ---@field CurGoal GGoal
 ---@field CurAction GAction
@@ -40,7 +39,7 @@ function GExecutor:ExecNewPlan(Goal, Plan)
     for _, name in ipairs(Plan or {}) do
         str = str..name..', '
     end
-    log.dev('执行器执行新计划 '.. str)
+    log.info(rolelib.role(self):RoleName(),'执行器执行新计划 '.. str)
 end
 
 ---@public
@@ -52,7 +51,7 @@ function GExecutor:TickExecutor(DeltaTime)
                     self._OwnerAgent.Memory:SetState(state, value)
                 end
             end
-            log.dev('动作完成:', self.CurAction:GetActionName())
+            log.info(rolelib.role(self):RoleName(), '动作完成:', self.CurAction:GetActionName())
             self.CurAction:ActionEnd(self._OwnerAgent, self.CurAction:IsActionSucceed())
             self.CurAction:ResetActionState()
             
@@ -64,7 +63,7 @@ function GExecutor:TickExecutor(DeltaTime)
                 end
             end
             if not self.CurAction then
-                log.error('Executor: 缺少后续动作')
+                log.info(rolelib.role(self):RoleName(), 'Executor: 缺少后续动作')
                 self._OwnerAgent:FinishPlan(self.CurGoal, self.CurPlan)
             end
         elseif not self.CurAction:IsActionStart() then

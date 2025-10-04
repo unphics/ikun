@@ -11,8 +11,8 @@ local GoStallAction = class.class'GoStallAction':extends'GAction'{}
 ---@override
 function GoStallAction:ActionStart(Agent)
     class.GAction.ActionStart(self, Agent)
-    local navMoveBehav = class.new 'NavMoveBehav' (Agent._OwnerRole.Avatar, 5) ---@as NavMoveBehav
-    local home = Agent._OwnerRole.HoldLocation:GetStallLocation()
+    local navMoveBehav = class.new 'NavMoveBehav' (Agent:GetAgentRole().Avatar, 5) ---@as NavMoveBehav
+    local home = Agent:GetAgentRole().HoldLocation:GetStallLocation()
     if not home then
         log.error('没有摊位!!!')
         return

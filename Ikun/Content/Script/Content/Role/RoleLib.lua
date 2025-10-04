@@ -19,7 +19,7 @@ rolelib.is_live_role = function(inRole)
 end
 
 ---@public
----@param Chr RoleClass | BP_ChrBase
+---@param Chr RoleClass | BP_ChrBase | GAgent | GMemory
 rolelib.roleid = function(Chr)
     local role = rolelib.role(Chr)
     if role then
@@ -30,14 +30,20 @@ rolelib.roleid = function(Chr)
 end
 
 ---@public
----@param Chr RoleClass | BP_ChrBase
+---@param Obj RoleClass | BP_ChrBase | GAgent | AgentPartInterface
 ---@return RoleClass?
-rolelib.role = function(Chr)
-    if class.instanceof(Chr, class.RoleClass) and obj_util.is_valid(Chr.Avatar) then
-        return Chr ---@as RoleClass
+rolelib.role = function(Obj)
+    if class.instanceof(Obj, class.RoleClass) and obj_util.is_valid(Obj.Avatar) then
+        return Obj ---@as RoleClass
     end
-    if Chr and Chr.GetRole and obj_util.is_valid(Chr) then
-        return Chr:GetRole()
+    if Obj and Obj.GetRole and obj_util.is_valid(Obj) then
+        return Obj:GetRole()
+    end
+    if class.instanceof(Obj, class.GAgent) then
+        return Obj._OwnerRole
+    end
+    if Obj._OwnerAgent then
+        return Obj._OwnerAgent._OwnerRole
     end
     return nil
 end

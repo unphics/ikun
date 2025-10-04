@@ -6,7 +6,6 @@
 ---@data    Sun Sep 28 2025 01:16:57 GMT+0800 (中国标准时间)
 ---
 
--- require('Ikun/Module/AI/Goap/Core/WorldState')
 require('Ikun/Module/AI/Goap/Core/GoapUtil')
 require('Ikun/Module/AI/Goap/Core/Sensor')
 require('Ikun/Module/AI/Goap/Core/Memory')

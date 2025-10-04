@@ -16,7 +16,7 @@ local WalkOnVillage = class.class'WalkOnVillage' : extends 'GAction'{}
 function WalkOnVillage:ActionStart(Agent)
     class.GAction.ActionStart(self, Agent)
     self.OwnerAgent = Agent
-    local navMoveBehav = class.new 'NavMoveBehav' (Agent._OwnerRole.Avatar, 5) ---@as NavMoveBehav
+    local navMoveBehav = class.new 'NavMoveBehav' (Agent:GetAgentRole().Avatar, 5) ---@as NavMoveBehav
     self.NavMoveBehav = navMoveBehav
     
     self:_GoToVillageRandom()
@@ -46,7 +46,7 @@ function WalkOnVillage:_GoToVillageRandom()
     if not self.NavMoveBehav then
         return
     end
-    local avatar = self.OwnerAgent._OwnerRole.Avatar
+    local avatar = self.OwnerAgent:GetAgentRole().Avatar
     local bresult, loc = class.NavMoveData.RandomNavPointInRadius(avatar, avatar:K2_GetActorLocation(), 3000)
     if bresult then
         local tb = {} ---@type NavMoveBehavCallbackInfo
@@ -60,11 +60,11 @@ function WalkOnVillage:_GoToVillageRandom()
 end
 
 function WalkOnVillage:_OnMoveFailed()
-    async_util.delay(self.OwnerAgent._OwnerRole.Avatar, 3, self._GoToVillageRandom, self)
+    async_util.delay(self.OwnerAgent:GetAgentRole().Avatar, 3, self._GoToVillageRandom, self)
 end
 
 function WalkOnVillage:_OnMoveSuceesss()
-    async_util.delay(self.OwnerAgent._OwnerRole.Avatar, 3, self._GoToVillageRandom, self)
+    async_util.delay(self.OwnerAgent:GetAgentRole().Avatar, 3, self._GoToVillageRandom, self)
 end
 
 return WalkOnVillage

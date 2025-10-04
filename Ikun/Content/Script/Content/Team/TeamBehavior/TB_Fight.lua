@@ -195,7 +195,7 @@ end
 function TB_Fight:ReadDynaSuppressTarget(Id)
     local Role = self.DynaSuppressTarget[Id]
     if not Role or Role:IsRoleDead() then
-        log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Id or 'nil', Role and Role:GetRoleDispName() or 'nil')
+        log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Id or 'nil', Role and Role:RoleName() or 'nil')
         -- self.OwnerTeam.TeamEnemy:RemoveEnemyRole(Role)
         self.OwnerTeam.TeamEnemy:CheckEnemyDead()
         local allEnemy = self.OwnerTeam.TeamEnemy:GetAllEnemy()
