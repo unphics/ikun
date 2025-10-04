@@ -85,7 +85,7 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
         local moveToInfo = self:_ClearData()
         moveToInfo.bArrived = true
         moveToInfo.CallbackInfo.OnNavMoveArrived(moveToInfo.CallbackInfo.This)
-        self:TaskEnd()
+        self:TaskEnd(moveToInfo)
         return
     end
     -- 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
@@ -101,7 +101,7 @@ function NavMoveBehav:NewMoveToTask(Target, AcceptRadius, CallbackInfo)
                 local moveToInfo = self:_ClearData()
                 moveToInfo.bStuck = true
                 moveToInfo.CallbackInfo.OnNavMoveStuck(moveToInfo.CallbackInfo.This)
-                self:TaskEnd()
+                self:TaskEnd(moveToInfo)
                 return
             end
         end
