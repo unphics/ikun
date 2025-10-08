@@ -34,8 +34,10 @@ local initState = {
 ---@field Executor GExecutor
 local GAgent = class.class'GAgent' {}
 
-function GAgent:ctor(OwnerRole)
-    self._OwnerRole = OwnerRole
+---@public
+---@param InOwnerRole RoleClass
+function GAgent:ctor(InOwnerRole)
+    self._OwnerRole = InOwnerRole
     self.Memory = class.new 'GMemory' (self) ---@as GMemory
     self.Executor = class.new'GExecutor'(self)
     self.SensorList = {}
@@ -61,13 +63,20 @@ function GAgent:ctor(OwnerRole)
     local allAction = ConfigMgr:GetConfig('Action') ---@as table<string, ActionConfig>
     for _, action in ipairs(goapConfig.InitActions) do
         local config = allAction[action]
+        if not class[config.ActionTemplate] then
+            log.error('存在未实现的ActionTemplate', config.ActionTemplate)
+            goto continue
+        end
         local preconditions = goap.util.make_states_from_config(config.Preconditions)
         local effects = goap.util.make_states_from_config(config.Effects)
-        local action = class.new(config.ActionTemplate)(config.ActionName, preconditions, effects, config.Cost) ---@as GAction
+        local action = class.new(config.ActionTemplate)(self, config.ActionName, preconditions, effects, config.Cost) ---@as GAction
         table.insert(self.ActionList, action)
+        ::continue::
     end
 
-    log.info('Agent:ctor', rolelib.role(self):RoleName())
+    -- GoapConfig环节的log
+    log.info('角色Agent初始化', InOwnerRole:RoleName(), goapKey,
+        obj_util.dispname(rolelib.chr(InOwnerRole)), InOwnerRole:GetRoleInstId())
 end
 
 function GAgent:LateAtNight()

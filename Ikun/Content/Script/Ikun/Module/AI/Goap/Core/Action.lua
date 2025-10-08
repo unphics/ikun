@@ -25,11 +25,12 @@
 local GAction = class.class'GAction' {}
 
 ---@public [Config]
-function GAction:ctor(Name, Preconditions, Effects, Cost)
+function GAction:ctor(Agent, Name, Preconditions, Effects, Cost)
     self._ActionName = Name or 'Action'
     self.Preconditions = Preconditions or {}
     self.Effects = Effects or {}
     self.ActionCost = Cost or 1
+    log.info('赋予Action', Name, rolelib.role(Agent):RoleName())
 end
 
 ---@public [Config]

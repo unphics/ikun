@@ -52,11 +52,9 @@ end
 ---@param Chr RoleClass | BP_ChrBase
 ---@return BP_ChrBase?
 rolelib.chr = function(Chr)
-    if class.instanceof(Chr, class.RoleClass) then
-        return obj_util.is_valid(Chr.Avatar) and Chr.Avatar or nil
-    end
-    if Chr.GetRole then
-        return obj_util.is_valid(Chr) and Chr or nil
+    local role = rolelib.role(Chr)
+    if role and obj_util.is_valid(role.Avatar) then
+        return role.Avatar
     end
     return nil
 end

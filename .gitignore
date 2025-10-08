@@ -26,4 +26,9 @@
 
 **/Binaries/
 **/Intermediate/
+
+# ctags的tag索引文件
+**/tags
+
+# 游戏设计参考, 其他游戏的内容截图等, 不能私自分发
 /References
