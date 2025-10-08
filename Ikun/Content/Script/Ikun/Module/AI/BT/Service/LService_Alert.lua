@@ -57,8 +57,8 @@ function LService_Alert:MakeFindRangeActorsFilterFn()
 end
 ---@private [Debug]
 function LService_Alert:DrawAlertResult(Actor)
-    local Color = UE.FLinearColor(1, 1, 0)
+    local color = UE.FLinearColor(1, 1, 0)
     local Duration = 2
-    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, Actor:K2_GetActorLocation(), 40, 12, Color, Duration, 4)
-    UE.UKismetSystemLibrary.DrawDebugLine(self.Chr, self.Chr:K2_GetActorLocation(), Actor:K2_GetActorLocation(), Color, Duration, 4)
+    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, Actor:K2_GetActorLocation(), 40, 12, color, Duration, 4)
+    UE.UKismetSystemLibrary.DrawDebugLine(self.Chr, self.Chr:K2_GetActorLocation(), Actor:K2_GetActorLocation(), color, Duration, 4)
 end

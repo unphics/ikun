@@ -149,10 +149,10 @@ function InfluenceMapClass:FindTheMostItemByFn(Fn)
     
 end
 ---@private [Debug]
-function InfluenceMapClass:DrawDebugSphere(Pos, Color)
-    Color = Color or {1, 0, 0}
+function InfluenceMapClass:DrawDebugSphere(Pos, InColor)
+    InColor = InColor or {1, 0, 0}
     UE.UKismetSystemLibrary.DrawDebugSphere(world_util.GameWorld, UE.FVector(Pos[1], Pos[2], 100),
-        self.ItemGridSize / 2, 8, UE.FLinearColor(Color[1], Color[2], Color[3]), 5, 2)
+        self.ItemGridSize / 2, 8, UE.FLinearColor(InColor[1], InColor[2], InColor[3]), 5, 2)
 end
 
 return InfluenceMapClass

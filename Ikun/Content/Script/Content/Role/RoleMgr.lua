@@ -13,7 +13,6 @@
 ---@field RoleSkills number[]
 ---@field InitBT string
 ---@field GoapKey string
----@field Color number
 ---@field SpecialClass string
 ---@field FightPosAssign FightPosDef[]
 ---@field BTCfg table<BTType, string>

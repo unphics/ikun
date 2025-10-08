@@ -58,8 +58,8 @@ function LTask_RandNavTarget:OnUpdate(DeltaTime)
 end
 
 function LTask_RandNavTarget:DrawTargetLoc()
-    local Color = UE.FLinearColor(1, 0, 0)
+    local color = UE.FLinearColor(1, 0, 0)
     local Duration = 2
-    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, self.ResultLoc, 40, 12, Color, Duration, 2)
-    UE.UKismetSystemLibrary.DrawDebugLine(self.Chr, self.Chr:K2_GetActorLocation(), self.ResultLoc, Color, Duration, 2)
+    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, self.ResultLoc, 40, 12, color, Duration, 2)
+    UE.UKismetSystemLibrary.DrawDebugLine(self.Chr, self.Chr:K2_GetActorLocation(), self.ResultLoc, color, Duration, 2)
 end

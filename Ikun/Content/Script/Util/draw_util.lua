@@ -24,10 +24,10 @@ end
 draw_util.draw_dir_sphere = function(pos1, pos2, color)
     local loc1 = pos1.IsA and pos1:K2_GetActorLocation() or pos1
     local loc2 = pos2.IsA and pos2:K2_GetActorLocation() or pos2
-    local Color = color or UE.FLinearColor(1, 0, 0)
+    color = color or UE.FLinearColor(1, 0, 0)
     local Duration = 2
-    UE.UKismetSystemLibrary.DrawDebugSphere(world_util.World, loc2, 40, 12, Color, Duration, 5)
-    UE.UKismetSystemLibrary.DrawDebugLine(world_util.World, loc1, loc2, Color, Duration, 5)
+    UE.UKismetSystemLibrary.DrawDebugSphere(world_util.World, loc2, 40, 12, color, Duration, 5)
+    UE.UKismetSystemLibrary.DrawDebugLine(world_util.World, loc1, loc2, color, Duration, 5)
 end
 
 return draw_util

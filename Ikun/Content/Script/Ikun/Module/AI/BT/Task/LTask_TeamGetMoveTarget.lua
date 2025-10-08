@@ -33,9 +33,9 @@ function LTask_TeamGetMoveTarget:DrawTargetLoc(MoveTarget)
     if not MoveTarget then
         return
     end
-    local Color = UE.FLinearColor(1, 0, 0)
+    local color = UE.FLinearColor(1, 0, 0)
     local Duration = 2
-    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, MoveTarget, 40, 12, Color, Duration, 2)
-    UE.UKismetSystemLibrary.DrawDebugLine(self.Chr, self.Chr:K2_GetActorLocation(), MoveTarget, Color, Duration, 2)
+    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, MoveTarget, 40, 12, color, Duration, 2)
+    UE.UKismetSystemLibrary.DrawDebugLine(self.Chr, self.Chr:K2_GetActorLocation(), MoveTarget, color, Duration, 2)
 end
 return LTask_TeamGetMoveTarget
