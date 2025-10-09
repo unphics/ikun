@@ -82,4 +82,10 @@ function LocationClass:RegisterSite(InSite)
     table.insert(self._Sites, InSite)
 end
 
+---@public 取到所有Site
+---@return SiteClass[]
+function LocationClass:GetAllSites()
+    return self._Sites
+end
+
 return LocationClass

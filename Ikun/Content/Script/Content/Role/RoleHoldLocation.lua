@@ -56,4 +56,27 @@ function RoleHoldLocationClass:GetStallLocation()
     end
 end
 
+---@public 取到柜台
+---@return SiteClass?, LocationClass?
+function RoleHoldLocationClass:GetCounter()
+    ---@param Site SiteClass
+    ---@return boolean
+    local isCounter = function(Site)
+        -- 临时处理
+        if Site._SiteId == 661006 then
+            return true
+        end
+        return false
+    end
+    for _, location in ipairs(self._tbHoldLocation) do
+        local sites = location:GetAllSites()
+        for _, site in ipairs(sites) do
+            if isCounter(site) then
+                return site, location
+            end
+        end
+    end
+    return nil, nil
+end
+
 return RoleHoldLocationClass

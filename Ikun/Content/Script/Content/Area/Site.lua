@@ -29,7 +29,7 @@ function SiteClass:InitSite(Position, SiteId)
     end
     local belongLocation = Cosmos:GetStar():FindLocation(config.BelongLocationId)
     if not belongLocation then
-        log.error('无效的BelongLocationId', config.BelongLocationId, SiteId, obj_util.dispname(SiteAvatar))
+        log.error('无效的BelongLocationId', config.BelongLocationId, SiteId, Position)
         return
     end
     self._SiteId = SiteId

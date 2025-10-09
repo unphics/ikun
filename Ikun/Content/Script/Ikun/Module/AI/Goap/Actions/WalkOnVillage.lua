@@ -53,7 +53,7 @@ function WalkOnVillage:_GoToVillageRandom()
         return
     end
 
-    local home = role.HoldLocation:GetHomeLocation() ---@type LocationClass
+    local home = role.HoldLocation:GetHomeLocation() ---@type LocationClass?
     if not home then
         self:EndAction(false)
         return
