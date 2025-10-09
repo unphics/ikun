@@ -171,7 +171,7 @@ function NavMoveBehav:GetTaskTargetLoc()
         if bSuccess then
             return FixedLoc
         else
-            log.error('tmp')
+            log.error('NavMoveBehav:GetTaskTargetLoc() IsA tmp')
         end
     elseif self.MoveToInfo.CacheTargetLoc then
         return self.MoveToInfo.CacheTargetLoc
@@ -181,7 +181,7 @@ function NavMoveBehav:GetTaskTargetLoc()
             self.MoveToInfo.CacheTargetLoc = FixedLoc
             return FixedLoc
         else
-            log.error('tmp')
+            log.error('NavMoveBehav:GetTaskTargetLoc() Loc tmp')
         end
     end
 end

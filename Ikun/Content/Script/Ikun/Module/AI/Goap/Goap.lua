@@ -27,7 +27,9 @@ require('Ikun/Module/AI/Goap/Actions/GoStall')
 require('Ikun/Module/AI/Goap/Actions/SetupStall')
 require('Ikun/Module/AI/Goap/Actions/Sleep')
 require('Ikun/Module/AI/Goap/Actions/Hunting')
-require('Ikun/Module/AI/Goap/Actions/GoCounter')
+require('Ikun/Module/AI/Goap/Actions/Counter/GoCounter')
+require('Ikun/Module/AI/Goap/Actions/WaitDusk')
+require('Ikun/Module/AI/Goap/Actions/WaitEvening')
 
 
 

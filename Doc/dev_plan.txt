@@ -85,13 +85,14 @@ DM_11:
         村子地点配置Site : 2025/10/3 -> 2025/10/4
         猎人的AI,狩猎行为简单占位 : 2025/10/4 -> 2025/10/4
         更多村民 : 2025/10/8 ->
-            杂货铺老板 : 2025/10/8 ->
+            杂货铺老板 : 2025/10/8 -> 2025/10/10
                 行为设计 done
                 Goal done
                 Action done
                 ActionTemplate
                 GoapConfig done
-                柜台Site的Blueprint
+                柜台Site的Blueprint done
+            社会闲散人员 : 2025/10/10 ->
 
 展望:
     团队AI重写

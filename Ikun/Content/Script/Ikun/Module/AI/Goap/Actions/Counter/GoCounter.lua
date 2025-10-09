@@ -14,12 +14,14 @@ function GoCounterAction:ActionStart(InAgent)
 
     local role = rolelib.role(InAgent)
     if not role then
+        log.error('GoCounterAction:ActionStart()', '无效的Role')
         self:EndAction(false)
         return
     end
 
     local counter, location = role.HoldLocation:GetCounter()
     if not counter then
+        log.error('GoCounterAction:ActionStart()', '没有柜台')
         self:EndAction(false)
         return
     end
@@ -43,10 +45,6 @@ function GoCounterAction:ActionTick(Agent, DeltaTime)
     self.NavMoveBehav:TickMove(DeltaTime)
 end
 
----@override
-function GoCounterAction:ActionEnd(Agent, bSuccess)
-end
-
 ---@private
 function GoCounterAction:_OnMoveSuceesss()
     self:EndAction(true)
@@ -54,8 +52,9 @@ end
 
 ---@private
 function GoCounterAction:_OnMoveFailed()
+    self:EndAction(false)
 
-    log.error('zys: todo tp to home')
+    log.error('zys: todo tp to counter')
 end
 
 return GoCounterAction

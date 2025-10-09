@@ -153,6 +153,11 @@ function GAgent:MakePlan()
     end
     for _, goal in ipairs(validGoals) do
         local cur = self.Memory:GetStates()
+        do -- debug
+            if rolelib.role(self):RoleName() == '杂货铺老板' and goal.Name == '晚上睡觉' then
+                local a = 1
+            end
+        end
         local plan = goap.planner.Plan(cur, goal, self.ActionList)
         if plan then
             self.Memory:Print()
@@ -160,7 +165,8 @@ function GAgent:MakePlan()
             break
         else
             log.error(rolelib.role(self):RoleName(), '该目标没有方法执行', goal.Name, TimeMgr:GetCurTimeDisplay())
-            self.Memory:Print()
+            self:PrintAllAction()
+            self.Memory:Print(true)
         end
     end
 end
@@ -169,6 +175,15 @@ end
 ---@return RoleClass
 function GAgent:GetAgentRole()
     return self._OwnerRole
+end
+
+---@public
+function GAgent:PrintAllAction()
+    local str = '所有可用行动: '
+    for _, action in ipairs(self.ActionList) do
+        str = str..action:GetActionName()..'|'
+    end
+    log.info(rolelib.role(self):RoleName(), str)
 end
 
 return GAgent

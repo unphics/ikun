@@ -64,7 +64,7 @@ function GPlanner.Plan(InStart, InGoal, InActions)
             table.insert(closedList, curNode)
             -- 扩展所有可行的行动
             for _, action in ipairs(InActions) do
-                -- local name = action._ActionName
+                local name = action._ActionName
                 if action:CanPerform(curNode.States) then
                     local newStates = action:ApplyEffect(table_util.deep_copy(curNode.States))
 

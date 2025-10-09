@@ -47,8 +47,14 @@ end
 ---@param CurStates table<string, boolean>
 function GAction:CanPerform(CurStates)
     for state, expect in pairs(self.Preconditions) do
-        if CurStates[state] ~= expect then
-            return false
+        if self.Preconditions[state] == true then
+            if not CurStates[state] or CurStates[state] ~= expect then
+                return false
+            end
+        else
+            if CurStates[state] ~= nil and CurStates[state] ~= expect then
+                return false
+            end
         end
     end
     return true

@@ -17,8 +17,13 @@ function WalkOnVillage:ActionStart(Agent)
     class.GAction.ActionStart(self, Agent)
 
     self.OwnerAgent = Agent
-    self.NavMoveBehav = class.new 'NavMoveBehav' (Agent:GetAgentRole().Avatar, 5) ---@as NavMoveBehav
     self.EndHour = TimeMgr.Hour + 2
+    self.NavMoveBehav = class.new 'NavMoveBehav' (Agent:GetAgentRole().Avatar, 5) ---@as NavMoveBehav
+    if not self.NavMoveBehav then
+        log.error('WalkOnVillage:ActionStart() 创建NavMoveBehav失败!!')
+        self:EndAction(false)
+        return
+    end
     
     self:_GoToVillageRandom()
 end
