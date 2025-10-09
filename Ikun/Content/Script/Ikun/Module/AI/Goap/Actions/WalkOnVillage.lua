@@ -15,12 +15,12 @@ local WalkOnVillage = class.class'WalkOnVillage' : extends 'GAction'{}
 ---@override
 function WalkOnVillage:ActionStart(Agent)
     class.GAction.ActionStart(self, Agent)
+
     self.OwnerAgent = Agent
-    local navMoveBehav = class.new 'NavMoveBehav' (Agent:GetAgentRole().Avatar, 5) ---@as NavMoveBehav
-    self.NavMoveBehav = navMoveBehav
+    self.NavMoveBehav = class.new 'NavMoveBehav' (Agent:GetAgentRole().Avatar, 5) ---@as NavMoveBehav
+    self.EndHour = TimeMgr.Hour + 2
     
     self:_GoToVillageRandom()
-    self.EndHour = TimeMgr.Hour + 2
 end
 
 ---@override
@@ -53,26 +53,36 @@ function WalkOnVillage:_GoToVillageRandom()
         return
     end
 
-    local settlement = role.HoldLocation:GetBelongSettlement()
+    local home = role.HoldLocation:GetHomeLocation() ---@type LocationClass
+    if not home then
+        self:EndAction(false)
+        return
+    end
+    
+    local settlement = home:GetBelongSettlement()
     if not settlement then
         self:EndAction(false)
         return
     end
     
+    ---@type NavMoveBehavCallbackInfo
+    local tb = {
+        This = self,
+        OnNavMoveArrived = self._OnMoveSuceesss,
+        OnNavMoveCancelled = self._OnMoveFailed,
+        OnNavMoveLostTarget = self._OnMoveFailed,
+        OnNavMoveStuck = self._OnMoveFailed,
+    }
     local pos = settlement:GetRandomWalkPos()
-    local tb = {} ---@type NavMoveBehavCallbackInfo
-    tb.This = self
-    tb.OnNavMoveArrived = self._OnMoveSuceesss
-    tb.OnNavMoveCancelled = self._OnMoveFailed
-    tb.OnNavMoveLostTarget = self._OnMoveFailed
-    tb.OnNavMoveStuck = self._OnMoveFailed
     self.NavMoveBehav:NewMoveToTask(pos, 300, tb)
 end
 
+---@private
 function WalkOnVillage:_OnMoveFailed()
     async_util.delay(self.OwnerAgent:GetAgentRole().Avatar, 3, self._GoToVillageRandom, self)
 end
 
+---@private
 function WalkOnVillage:_OnMoveSuceesss()
     async_util.delay(self.OwnerAgent:GetAgentRole().Avatar, 3, self._GoToVillageRandom, self)
 end

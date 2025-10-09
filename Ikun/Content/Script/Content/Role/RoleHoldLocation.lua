@@ -1,7 +1,7 @@
 
 ---
 ---@brief   角色持有的地点
----@todo    HoldLocation -> Location
+---@todo    name: HoldLocation -> RoleLocation
 ---@author  zys
 ---@data    Tue Sep 23 2025 01:03:41 GMT+0800 (中国标准时间)
 ---
@@ -17,20 +17,19 @@ local RoleHoldLocationClass = class.class 'RoleHoldLocationClass' {
 }
 
 ---@override
----@param OwnerRole RoleClass
-function RoleHoldLocationClass:ctor(OwnerRole, ConfigId)
+---@param InOwnerRole RoleClass
+function RoleHoldLocationClass:ctor(InOwnerRole, InConfigId)
     self._tbHoldLocation = {}
-    
-    self._OwnerRole = OwnerRole
+    self._OwnerRole = InOwnerRole
 
-    local config = RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
-    local star = Cosmos:GetStar()
+    local config = RoleMgr:GetRoleConfig(InConfigId) ---@type RoleConfig
     if config.HoldLocations then
+        local star = Cosmos:GetStar()
         for _, locationId in ipairs(config.HoldLocations) do
             local location = star:FindLocation(locationId)
             if location then
-                log.info('角色获得Location', self._OwnerRole:RoleName(),locationId)
                 table.insert(self._tbHoldLocation, location)
+                log.info('角色获得Location', self._OwnerRole:RoleName(),locationId)
             end
         end
     end
@@ -55,17 +54,6 @@ function RoleHoldLocationClass:GetStallLocation()
             return location
         end
     end
-end
-
----@public
----@return SettlementBaseClass?
-function RoleHoldLocationClass:GetBelongSettlement()
-    local home = self:GetHomeLocation()
-    if not home then
-        log.error('RoleHoldLocationClass:GetBelongSettlement() 无家可归')
-        return
-    end
-    return home:GetBelongSettlement()
 end
 
 return RoleHoldLocationClass
