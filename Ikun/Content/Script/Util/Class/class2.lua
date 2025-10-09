@@ -11,6 +11,8 @@
 ---@field extends fun(_Class, base:string):table
 
 ---@class class
+---@field GPlanner GPlanner
+---@field GoapUtil GoapUtil
 ---@field NavMoveData NavMoveData
 local classes = {}
 

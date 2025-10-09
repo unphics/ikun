@@ -30,9 +30,11 @@ require('Ikun/Module/AI/Goap/Actions/Hunting')
 ---@class goap
 ---@field util GoapUtil
 ---@field planner GPlanner
-local goap = {
-    util = class.GoapUtil,
-    planner = class.GPlanner,
-}
+local goap = {}
+
+goap.util = class.GoapUtil
+goap.planner = class.GPlanner
+
+
 
 return goap
