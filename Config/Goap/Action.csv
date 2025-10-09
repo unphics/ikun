@@ -16,4 +16,6 @@ CloseStall|收摊||WaitAction|AtStall=true,StallSetup=true,IsWorking=true|AtStal
 ||||||
 Hunt|打猎|待扩展|HuntingAction|AtHome=true,|GainResourceDaily=true,AtHome=false|1
 ||||||
-GoToCounter|去柜台||GoCounterAction|HasShop=true,AtCounter=false,IsWorking=false,|AtCounter=true,IsWorking=true,|1
+GoToCounter|去柜台||GoCounterAction|HasShop=true,AtCounter=false,IsWorking=false,|AtCounter=true,|1
+StayOnCounter|在柜台坐班|待扩展|StayOnCounterAction|AtCounter=true,|IsWorking=true,|
+LeaveCounter|离开柜台||LeaveCounterAction|AtCounter=true,IsWorking=true,|IsWorking=false,|

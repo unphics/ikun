@@ -87,10 +87,10 @@ DM_11:
         更多村民 : 2025/10/8 ->
             杂货铺老板 : 2025/10/8 ->
                 行为设计 done
-                Goal
-                Action
+                Goal done
+                Action done
                 ActionTemplate
-                GoapConfig
+                GoapConfig done
                 柜台Site的Blueprint
 
 展望:
