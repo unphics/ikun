@@ -67,8 +67,8 @@ end
 
 ---@public [Runtime] 结束
 ---@param Agent GAgent
----@param bSucceed boolean
-function GAction:ActionEnd(Agent, bSucceed)
+---@param bSuccess boolean
+function GAction:ActionEnd(Agent, bSuccess)
 end
 
 ---@protected [Runtime] do end

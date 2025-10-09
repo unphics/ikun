@@ -11,19 +11,23 @@ local GoHomeAction = class.class'GoHomeAction':extends'GAction'{}
 ---@override
 function GoHomeAction:ActionStart(Agent)
     class.GAction.ActionStart(self, Agent)
-    local navMoveBehav = class.new 'NavMoveBehav' (Agent:GetAgentRole().Avatar, 5) ---@as NavMoveBehav
+
     local home = Agent:GetAgentRole().HoldLocation:GetHomeLocation()
     if not home then
-        log.error('无家可归!!!')
+        log.error('GoHomeAction:ActionStart()', '无家可归!!!')
         return
     end
+
+    ---@type NavMoveBehavCallbackInfo
+    local tb = {
+        This = self,
+        OnNavMoveArrived = self._OnMoveSuceesss,
+        OnNavMoveCancelled = self._OnMoveFailed,
+        OnNavMoveLostTarget = self._OnMoveFailed,
+        OnNavMoveStuck = self._OnMoveFailed,
+    }
     local loc = home.LocationAvatar:GetHousePosition()
-    local tb = {} ---@type NavMoveBehavCallbackInfo
-    tb.This = self
-    tb.OnNavMoveArrived = self._OnMoveSuceesss
-    tb.OnNavMoveCancelled = self._OnMoveFailed
-    tb.OnNavMoveLostTarget = self._OnMoveFailed
-    tb.OnNavMoveStuck = self._OnMoveFailed
+    local navMoveBehav = class.new 'NavMoveBehav' (Agent:GetAgentRole().Avatar, 5) ---@as NavMoveBehav
     navMoveBehav:NewMoveToTask(loc, 600, tb)
     self.NavMoveBehav = navMoveBehav
 end
@@ -41,7 +45,8 @@ end
 ---@private
 function GoHomeAction:_OnMoveFailed()
     self:EndAction(false)
-    log.dev('todo tp to home')
+
+    log.error('zys: todo tp to home')
 end
 
 return GoHomeAction
