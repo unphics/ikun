@@ -37,6 +37,16 @@ function BP_IkunPC:ReceiveBeginPlay()
         local trigger = UE.FAbilityTriggerData()
         trigger.TriggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Action.Charge.Max')
     end
+
+
+    if net_util.is_client(self) then
+        local EnhancedInput = require("UnLua.EnhancedInput")
+        local actionPath = '/Game/Developers/zys/EnhancedInput/IA_Test.IA_Test'
+        EnhancedInput.BindAction(self, actionPath, 'Started', function()
+            log.error('qqqqqqqqqqq')
+        end)
+        UE.UIkunFnLib.ReplaceInputs(self, self.InputComponent)
+    end
 end
 
 -- function BP_IkunPC:ReceiveEndPlay()

@@ -19,7 +19,8 @@ public class Ikun : ModuleRules
 			"SlateCore",
 			"GameplayAbilities",
             "GameplayTags",
-			"UMG"
+			"UMG",
+			"UnLua",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
