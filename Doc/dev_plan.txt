@@ -93,6 +93,11 @@ DM_11:
                 GoapConfig done
                 柜台Site的Blueprint done
             社会闲散人员 : 2025/10/10 ->
+                行为设计 done
+                Goal
+                Action
+                ActionTemplate
+                GoapConfig
 
 展望:
     团队AI重写
