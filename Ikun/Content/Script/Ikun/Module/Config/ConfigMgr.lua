@@ -40,9 +40,6 @@ end
 ---@param FileName string
 function ConfigMgr:LoadConfigTable(Drs, FileName)
     -- local brs = class.DirBrowser.create_cfg_dir() ---@as DirBrowser
-    if FileName == 'Role' then
-        local a = 1
-    end
     local content = Drs:read_file(FileName .. '.csv')
     local cfg = self:_ParsePipeTable(content)
     self._CachedConfigTable[FileName] = cfg
@@ -92,103 +89,57 @@ end
 ---@return table
 function ConfigMgr:_ParsePipeTable(InData, InMajorKeyColIdx)
     InMajorKeyColIdx = InMajorKeyColIdx or 1
-    local parseResult = {}
-    local header = nil -- 表头数组
-    
-    local allLineData = {} -- 所有的行
-    for line in InData:gmatch("[^\r\n]+") do
-        table.insert(allLineData, line)
-    end
-    local rowCount = #allLineData
-
-    for line in InData:gmatch("[^\r\n]+") do
-        local row = {}
-        local start = 1
-        local len = #line
-        local col = 1
-        local skip = false
-
-        if not header then
-            -- 读取表头，按管道符分割
-            header = {}
-            while start <= len do
-                local next_pipe = line:find("|", start, true)
-                local field
-                if not next_pipe then
-                    field = line:sub(start)
-                    start = len + 1
-                else
-                    field = line:sub(start, next_pipe - 1)
-                    start = next_pipe + 1
-                end
-                table.insert(header, field)
-            end
-        else
-            -- 读取数据行
-            while start <= len do
-                local next_pipe = line:find("|", start, true)
-                local field
-                if not next_pipe then
-                    field = line:sub(start)
-                    start = len + 1
-                else
-                    field = line:sub(start, next_pipe - 1)
-                    start = next_pipe + 1
-                end
-
-                -- 用表头的字段名做 key
-                local key = header[col] or ("unknown_col_" .. col)
-
-                -- 尝试解析为数组或字典
-                if field and field ~= "" then
-                    if field:find(",") then
-                        -- 如果有逗号，尝试解析为数组或字典
-                        if field:find("=") then
-                            -- 如果有等号，解析为字典
-                            row[key] = str_util.parse_dict_by_comma(field)
-                        else
-                            -- 没有等号，解析为数组
-                            row[key] = str_util.parse_array_by_comma(field)
-                        end
-                    else
-                        -- 没有逗号，尝试解析为键值对或普通值
-                        if field:find("=") then
-                            local k, v = field:match("^([^=]+)=([^=]+)$")
-                            if k and v then
-                                row[key] = { [k] = tonumber(v) or v }
-                            else
-                                row[key] = field
-                            end
-                        else
-                            -- 尝试转数字
-                            local num = tonumber(field)
-                            row[key] = num or field
-                        end
-                    end
-                else
-                    row[key] = nil
-                end
-
-                -- 判断主键列是否为空，空则跳过整行
-                if col == InMajorKeyColIdx and (row[key] == nil or row[key] == "") then
-                    skip = true
-                end
-
-                col = col + 1
-            end
-
-            if not skip then
-                local mainKey = header[InMajorKeyColIdx]
-                local mainKeyVal = row[mainKey]
-                if mainKeyVal then
-                    parseResult[mainKeyVal] = row
-                end
-                -- table.insert(parseResult, row)
-            end
+    local allLineData = str_util.split_simple(InData, '\r\n') -- 所有的行
+    local result = {}
+    local headerData = str_util.split_exact(allLineData[1], "|") -- 表头数组
+    for rowNum, rowStr in ipairs(allLineData) do
+        rowStr = str_util.trim(rowStr)
+        if rowNum == 1 then
+            goto next_row
         end
-    end
+        
+        local rowData = str_util.split_exact(rowStr, '|')
+        
+        local majorKeyContent = rowData[InMajorKeyColIdx]
+        if not majorKeyContent or majorKeyContent == '' or majorKeyContent:find(',') then
+            goto next_row
+        end
 
-    return parseResult
+        local rowResult = {}
+        for headerNum, headerName in ipairs(headerData) do
+            local itemStr = rowData[headerNum]
+            if not itemStr or itemStr == '' then
+                goto  next_item
+            end
+            headerName = str_util.trim(headerName)
+            if itemStr:find(',') and itemStr:find('=') then -- 字典
+                local arr = str_util.split_simple(itemStr, ',')
+                rowResult[headerName] = {}
+                for _, pair in ipairs(arr) do
+                    local key, value = pair:match("^([^=]+)=([^=]+)$")
+                    key = str_util.trim(key)
+                    value = str_util.trim(value)
+                    rowResult[headerName][key] = tonumber(value) or value
+                end
+            elseif itemStr:find(',') then -- 数组
+                rowResult[headerName] = {}
+                local arr = str_util.split_simple(itemStr, ',')
+                for _, item in ipairs(arr) do
+                    table.insert(rowResult[headerName], str_util.trim(item))
+                end
+            elseif itemStr:find('=') then -- 单键值对
+                local key, value = itemStr:match("^([^=]+)=([^=]+)$")
+                rowResult[headerName] = { [key] = tonumber(value) or value }
+            else -- 普通的值
+                rowResult[headerName] = tonumber(itemStr) or itemStr
+            end
+            ::next_item::
+        end
+        local majorKey = tonumber(majorKeyContent) or majorKeyContent
+        result[majorKey] = rowResult
+        ::next_row::
+    end
+    return result
 end
 
 return ConfigMgr
