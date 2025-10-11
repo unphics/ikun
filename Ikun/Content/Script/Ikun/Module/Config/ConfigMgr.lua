@@ -40,6 +40,9 @@ end
 ---@param FileName string
 function ConfigMgr:LoadConfigTable(Drs, FileName)
     -- local brs = class.DirBrowser.create_cfg_dir() ---@as DirBrowser
+    if FileName == 'Role' then
+        local a = 1
+    end
     local content = Drs:read_file(FileName .. '.csv')
     local cfg = self:_ParsePipeTable(content)
     self._CachedConfigTable[FileName] = cfg
@@ -84,44 +87,21 @@ function ConfigMgr:_PreloadConfigTable()
 end
 
 ---@private 解析以"|"为分隔符的csv表格内容
----@param data string
----@param key_col_index number
+---@param InData string
+---@param InMajorKeyColIdx number 主键所在的列
 ---@return table
-function ConfigMgr:_ParsePipeTable(data, key_col_index)
-    key_col_index = key_col_index or 1
+function ConfigMgr:_ParsePipeTable(InData, InMajorKeyColIdx)
+    InMajorKeyColIdx = InMajorKeyColIdx or 1
     local parseResult = {}
     local header = nil -- 表头数组
-    local line_num = 0
-
-    -- 辅助函数：解析逗号分隔的值为数组
-    local function parse_array(str)
-        if not str or str == "" then return nil end
-        local arr = {}
-        for item in str:gmatch("([^,]+)") do
-            -- 尝试转数字
-            local num = tonumber(item)
-            table.insert(arr, num or item)
-        end
-        return #arr > 0 and arr or nil
+    
+    local allLineData = {} -- 所有的行
+    for line in InData:gmatch("[^\r\n]+") do
+        table.insert(allLineData, line)
     end
+    local rowCount = #allLineData
 
-    -- 辅助函数：解析键值对为字典
-    local function parse_dict(str)
-        if not str or str == "" then return nil end
-        local dict = {}
-        for pair in str:gmatch("([^,]+)") do
-            local key, value = pair:match("^([^=]+)=([^=]+)$")
-            if key and value then
-                -- 尝试转数字
-                local num = tonumber(value)
-                dict[key] = num or value
-            end
-        end
-        return next(dict) and dict or nil
-    end
-
-    for line in data:gmatch("[^\r\n]+") do
-        line_num = line_num + 1
+    for line in InData:gmatch("[^\r\n]+") do
         local row = {}
         local start = 1
         local len = #line
@@ -165,10 +145,10 @@ function ConfigMgr:_ParsePipeTable(data, key_col_index)
                         -- 如果有逗号，尝试解析为数组或字典
                         if field:find("=") then
                             -- 如果有等号，解析为字典
-                            row[key] = parse_dict(field)
+                            row[key] = str_util.parse_dict_by_comma(field)
                         else
                             -- 没有等号，解析为数组
-                            row[key] = parse_array(field)
+                            row[key] = str_util.parse_array_by_comma(field)
                         end
                     else
                         -- 没有逗号，尝试解析为键值对或普通值
@@ -190,7 +170,7 @@ function ConfigMgr:_ParsePipeTable(data, key_col_index)
                 end
 
                 -- 判断主键列是否为空，空则跳过整行
-                if col == key_col_index and (row[key] == nil or row[key] == "") then
+                if col == InMajorKeyColIdx and (row[key] == nil or row[key] == "") then
                     skip = true
                 end
 
@@ -198,7 +178,7 @@ function ConfigMgr:_ParsePipeTable(data, key_col_index)
             end
 
             if not skip then
-                local mainKey = header[key_col_index]
+                local mainKey = header[InMajorKeyColIdx]
                 local mainKeyVal = row[mainKey]
                 if mainKeyVal then
                     parseResult[mainKeyVal] = row

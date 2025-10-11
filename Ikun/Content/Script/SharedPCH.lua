@@ -10,6 +10,7 @@ do
     log = require('Util.Log') ---@type log
     debug_util = require('Util/debug_util')
     table_util = require('Util/table_util') ---@type table_util
+    str_util = require("Util.str_util") ---@type str_util
 end
 
 do
