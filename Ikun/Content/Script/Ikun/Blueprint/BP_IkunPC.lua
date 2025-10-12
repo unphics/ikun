@@ -32,7 +32,8 @@ function BP_IkunPC:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     if net_util.is_client(self) then
         self:InitInputSystem()
-        async_util.delay(self, 1, self.InitPlayerInput, self)
+        self:InitPlayerInput()
+        -- async_util.delay(self, 1, self.InitPlayerInput, self)
     else
         local trigger = UE.FAbilityTriggerData()
         trigger.TriggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Action.Charge.Max')
