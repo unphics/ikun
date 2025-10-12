@@ -83,6 +83,7 @@ function GAgent:LateAtNight()
     self.Memory:SetState('MonringWalk', false)
     self.Memory:SetState('HasDinner', false)
     self.Memory:SetState('GainResourceDaily', false)
+    self.Memory:SetState('IsHungry', true)
     
     local goapKey = RoleMgr:GetRoleConfig(self._OwnerRole:GetRoleCfgId()).GoapKey
     local goapConfig = ConfigMgr:GetConfig('GoapConfig')[goapKey] ---@as GoapConfig
