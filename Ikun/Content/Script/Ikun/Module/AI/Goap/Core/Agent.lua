@@ -87,12 +87,15 @@ function GAgent:LateAtNight()
     local goapKey = RoleMgr:GetRoleConfig(self._OwnerRole:GetRoleCfgId()).GoapKey
     local goapConfig = ConfigMgr:GetConfig('GoapConfig')[goapKey] ---@as GoapConfig
     local allGoal = ConfigMgr:GetConfig('Goal')
+    local strGoal = ''
     for i, name in ipairs(goapConfig.DailyGoals) do
         local config = allGoal[name] ---@as GoalConfig
         local desiredStates = goap.util.make_states_from_config(config.DesiredState)
         local goal = class.new'GGoal'(config.GoalName, desiredStates) ---@as GGoal
         self:AddGoal(goal)
+        strGoal = strGoal..config.GoalName..'|'
     end
+    log.info('角色晚上更新', rolelib.role(self):RoleName(), strGoal)
     if not self.Executor:IsExecuting() then
         self:MakePlan()
     end

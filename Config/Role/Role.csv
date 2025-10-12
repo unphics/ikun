@@ -16,3 +16,12 @@ RoleId|RoleName|RoleDesc|BelongKingdom|RoleSkills|InitBT|GoapKey|SpecialClass|Fi
 210104|杂货铺老板|清瀑村npc|611001|||Shopkeeper|||Init=Stand,||641001,
 210105|杂货铺老板娘|清瀑村npc|611001||||||Init=Stand,||641001,
 |||||||||||
+210111|该溜子A|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
+210112|该溜子B|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
+210113|该溜子C|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
+210114|该溜子D|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
+210115|该溜子E|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
+|||||||||||
+|||||||||||
+|||||||||||
+|||||||||||

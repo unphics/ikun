@@ -72,4 +72,8 @@ do
     -- goap.test()
 end
 
+do
+    local NavMoveBehav = require('Ikun/Module/Nav/NavMoveBehav')
+end
+
 gameinit.triggerinit(gameinit.ring.zero)

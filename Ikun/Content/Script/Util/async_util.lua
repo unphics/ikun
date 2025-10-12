@@ -13,6 +13,10 @@ local async_util = {}
 ---@param Time number
 ---@param Fn function
 async_util.delay = function (GameWorld, Time, Fn, ...)
+    if not GameWorld or not Time or not Fn then
+        log.fatal('async_util.delay() 无效的参数', GameWorld, Time, Fn)
+        return
+    end
     local co = coroutine.create(function (GameWorld, Time, ...)
         UE.UKismetSystemLibrary.Delay(GameWorld, Time)
         Fn(...)

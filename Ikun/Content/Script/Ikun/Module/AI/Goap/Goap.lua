@@ -30,6 +30,7 @@ require('Ikun/Module/AI/Goap/Actions/Hunting')
 require('Ikun/Module/AI/Goap/Actions/Counter/GoCounter')
 require('Ikun/Module/AI/Goap/Actions/WaitDusk')
 require('Ikun/Module/AI/Goap/Actions/WaitEvening')
+require('Ikun/Module/AI/Goap/Actions/SaunterDay')
 
 
 

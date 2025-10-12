@@ -1,11 +1,9 @@
 
 ---
----@brief   在村子里走走
+---@brief   早晨在村子里走走
 ---@author  zys
 ---@data    Fri Oct 03 2025 00:02:20 GMT+0800 (中国标准时间)
 ---
-
-local NavMoveBehav = require('Ikun/Module/Nav/NavMoveBehav')
 
 ---@class WalkOnVillage: GAction
 ---@field NavMoveBehav NavMoveBehav

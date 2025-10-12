@@ -21,3 +21,4 @@ GoToCounter|去柜台||GoCounterAction|AtCounter=false,IsWorking=false,|AtCounte
 StayOnCounter|在柜台坐班|待扩展|WaitDuskAction|AtCounter=true,|IsWorking=true,GainResourceDaily=true|
 LeaveCounter|离开柜台||WaitAction|AtCounter=true,IsWorking=true,|IsWorking=false,|
 ||||||
+SaunterDay|闲逛一整天||SaunterDayAction|IsWorking=false|IsResting=true,|
