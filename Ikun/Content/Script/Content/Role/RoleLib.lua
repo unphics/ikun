@@ -42,7 +42,7 @@ rolelib.role = function(Obj)
     if class.instanceof(Obj, class.GAgent) then
         return Obj._OwnerRole
     end
-    if Obj._OwnerAgent then
+    if Obj and Obj._OwnerAgent then
         return Obj._OwnerAgent._OwnerRole
     end
     return nil
