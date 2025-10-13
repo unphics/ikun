@@ -32,10 +32,22 @@ function BP_IkunPC:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     if net_util.is_client(self) then
         self:InitInputSystem()
+        self:InitPlayerInput()
+        -- async_util.delay(self, 1, self.InitPlayerInput, self)
     else
         local trigger = UE.FAbilityTriggerData()
         trigger.TriggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Action.Charge.Max')
     end
+
+
+    -- if net_util.is_client(self) then
+    --     local EnhancedInput = require("UnLua.EnhancedInput")
+    --     local actionPath = '/Game/Developers/zys/EnhancedInput/IA_Test.IA_Test'
+    --     EnhancedInput.BindAction(self, actionPath, 'Started', function()
+    --         log.error('qqqqqqqqqqq')
+    --     end)
+    --     UE.UIkunFnLib.ReplaceInputs(self, self.InputComponent)
+    -- end
 end
 
 -- function BP_IkunPC:ReceiveEndPlay()
@@ -59,6 +71,11 @@ function BP_IkunPC:InitInputSystem()
     EnhInput.InitByPlayerController(self)
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
 
+end
+EnhInput.BindActions(BP_IkunPC)
+
+---@private [Input]
+function BP_IkunPC:InitPlayerInput()
     local inputPower = InputMgr.ObtainInputPower(self)
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered, self.OnMoveInput)
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered, self.OnLookInput)
@@ -67,7 +84,6 @@ function BP_IkunPC:InitInputSystem()
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_BlankSpace, EnhInput.TriggerEvent.Started, self.OnJumpStarted)
 end
-EnhInput.BindActions(BP_IkunPC)
 
 ---@private [Input]
 function BP_IkunPC:OnMoveInput(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)

@@ -18,7 +18,7 @@ require('Content/Team/TeamBehavior/TeamBehaviorBase')
 require('Content/Team/TeamBehavior/TB_Patrol')
 require('Content/Team/TeamBehavior/TB_Fight')
 
----@class TeamClass : MdBase
+---@class TeamClass
 ---@field TeamInfo TeamInfoClass
 ---@field TeamMember TeamMemberClass * 团队成员
 ---@field TeamEnemy TeamEnemyClass * 团队敌人
@@ -29,11 +29,11 @@ require('Content/Team/TeamBehavior/TB_Fight')
 ---@field DecisionInterval number 决策间隔
 ---@field DecisionTimeCount number 决策间隔计时
 ---@field bFight boolean
-local TeamClass = class.class 'TeamClass': extends 'MdBase' {
+local TeamClass = class.class 'TeamClass'{
 --[[public]]
     ctor = function()end,
     TeamInit = function()end,
-    Tick = function()end,
+    TeamTick = function()end,
     Encounter = function()end,
     NextTeamState = function()end,
     IsInfight = function()end,
@@ -67,7 +67,7 @@ function TeamClass:TeamInit()
 end
 
 ---@public
-function TeamClass:Tick(DeltaTime)
+function TeamClass:TeamTick(DeltaTime)
     self.DecisionTimeCount = self.DecisionTimeCount + DeltaTime
     if self.DecisionTimeCount > self.DecisionInterval then
         self.DecisionTimeCount = self.DecisionTimeCount - self.DecisionInterval

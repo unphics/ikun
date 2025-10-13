@@ -2,4 +2,4 @@ ItemId|ItemName|ItemDesc|ItemType|StackNum|ItemSubtype|SpecialId|
 |||分类|0为不可堆叠|根据Subtype查找子属性表|子属性表的Id|
 |||||||
 |||||||
-10001|葡萄牙金币|||9999999|||
+100001|葡萄牙金币|||9999999|||

@@ -1,8 +1,8 @@
 
 ---
----@brief 基于UE的一些异步工具方法
----@author zys
----@data Sun May 04 2025 14:21:36 GMT+0800 (中国标准时间)
+---@brief   基于UE的一些异步工具方法
+---@author  zys
+---@data    Sun May 04 2025 14:21:36 GMT+0800 (中国标准时间)
 ---
 
 ---@class async_util
@@ -13,6 +13,10 @@ local async_util = {}
 ---@param Time number
 ---@param Fn function
 async_util.delay = function (GameWorld, Time, Fn, ...)
+    if not GameWorld or not Time or not Fn then
+        log.fatal('async_util.delay() 无效的参数', GameWorld, Time, Fn)
+        return
+    end
     local co = coroutine.create(function (GameWorld, Time, ...)
         UE.UKismetSystemLibrary.Delay(GameWorld, Time)
         Fn(...)
@@ -34,7 +38,9 @@ end
 ---@param UObject UObject
 ---@param handle FTimerHandle
 async_util.clear_timer = function(UObject, handle)
-    UE.UKismetSystemLibrary.K2_ClearAndInvalidateTimerHandle(UObject, handle)
+    if handle then
+        UE.UKismetSystemLibrary.K2_ClearAndInvalidateTimerHandle(UObject, handle)
+    end
     handle = nil
 end
 

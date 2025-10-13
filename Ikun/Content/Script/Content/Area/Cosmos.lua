@@ -1,42 +1,52 @@
+
 ---
----@brief 宇宙
+---@brief   宇宙
+---@author  zys
+---@data    Tue Sep 23 2025 00:57:01 GMT+0800 (中国标准时间)
 ---
 
+require('Content/Area/Site')
+require('Content/Area/Location')
+require('Content/Area/Landform')
 require("Content/Area/Star")
-local StarConfig = require("Content/Area/Config/StarConfig")
 
----@class Cosmos: MdBase
----@field tbStar Star[]
-local Cosmos = class.class "Cosmos" : extends "MdBase" {
---[[public]]
-    ctor = function() end,
-    Init = function() end,
-    Reincarnate = function() end, -- 玩家随机投胎
-    Tick = function()end,
---[[private]]
-    InitAllStar = function() end, -- 初始化所有星球
-    tbStar = {},
+---@class CosmosClass
+---@field _tbStar StarClass[]
+local CosmosClass = class.class "CosmosClass" {
+    ctor = function()end,
+    TickCosmos = function()end,
+    InitAllStar = function() end,
+    _tbStar = {},
 }
-function Cosmos:ctor()
-    self:InitAllStar()
-end
-function Cosmos:Tick(DeltaTime)
-    for i, Star in ipairs(self.tbStar) do
-        Star:Tick(DeltaTime)
-    end
-end
-function Cosmos:InitAllStar()
-    for i, cfg in ipairs(StarConfig) do
-        local StarId = 100 + #self.tbStar + 1
-        local Star = class.new "Star" (StarId, cfg.Name) ---@type Star
-        table.insert(self.tbStar, Star)
-    end
-end
-function Cosmos:Reincarnate()
-    local random = math.random(1, #self.tbStar)
+
+---@override
+function CosmosClass:ctor()
+    self._tbStar = {}
+
+    gameinit.registerinit(gameinit.ring.zero, self, self.InitAllStar)
 end
 
-function Cosmos:GetStar()
-    --- 现在只有一个星球
-    return self.tbStar[1]
+---@override
+function CosmosClass:TickCosmos(DeltaTime)
+    for _, star in ipairs(self._tbStar) do
+        star:TickStar(DeltaTime)
+    end
 end
+
+---@public [Init] 初始化所有星球
+function CosmosClass:InitAllStar()
+    local allStarConfig = ConfigMgr:GetConfig('Star')
+    for id, config in pairs(allStarConfig) do
+        local star = class.new'StarClass'(id, config.StarName) ---@as StarClass
+        table.insert(self._tbStar, star)
+    end
+end
+
+---@public [Pure]
+---@return StarClass
+function CosmosClass:GetStar()
+    --- 现在只有一个星球
+    return self._tbStar[1]
+end
+
+return CosmosClass

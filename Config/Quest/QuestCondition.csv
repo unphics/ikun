@@ -1,4 +1,4 @@
 QuestCondId|QuestCondDesc|QuestCondType|CondItem|Opertator|Value|Param
 |描述|条件类型(Level/ItemOwned/ DialogChoice)|判断的项(如金币,单位Id,对话Id)|判断方式(=、<、>、包含)|对比值|额外参数
 ||||||
-32001|对话|DialogChoice||||
+320001|对话|DialogChoice||||

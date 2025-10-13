@@ -11,7 +11,13 @@
 ```plaintext
 Ikun/
 ├── Config                  # 游戏工程的配置表
-├── Ikun/                   # 主要维护开发的游戏工程
+├── Ikun/                   # 主要维护开发的Unreal游戏工程
+|  ├── ···                  # 其他Unreal工程的制式目录
+|  ├── Content/             # Unreal工程的内容资产目录
+|  |  ├── ···               # 其他美术资产
+|  |  ├── Ikun              # 主要开发内容的资产目录 *
+|  |  └── Script            # 游戏工程的lua脚本文件, 大部分的游戏逻辑在这里存放 *
+|  └── Source               # Unreal工程的cpp代码目录
 ├── LICENSE                 # MIT License
 ├── Resource                # 美术资产源文件
 └── README.md

@@ -72,7 +72,7 @@ function TB_Fight:AllMemberSwitchFightBT()
     for _, ele in ipairs(AllMember) do
         ---@type RoleClass
         local Role = ele
-        local NewBTKey = MdMgr.RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).BTCfg[BTType.Fight]
+        local NewBTKey = RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).BTCfg[BTType.Fight]
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
     end
 end
@@ -125,7 +125,7 @@ function TB_Fight:AsgnFightPos()
     ---@todo 优先处理只能承担单一职业的角色; 此处略过
     for _, ele in ipairs(tbMultiFP) do
         local Role = ele ---@type RoleClass
-        local tbFP = MdMgr.RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).FightPosAssign
+        local tbFP = RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).FightPosAssign
         local FightPos = nil
         ---@todo (if 有得跑 or 有牧师)血量极少, 强制后排
         ---@todo 血量较少, 优先后排
@@ -195,7 +195,7 @@ end
 function TB_Fight:ReadDynaSuppressTarget(Id)
     local Role = self.DynaSuppressTarget[Id]
     if not Role or Role:IsRoleDead() then
-        log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Id or 'nil', Role and Role:GetRoleDispName() or 'nil')
+        log.dev('TB_Fight:ReadDynaSuppressTarget 发现已经死亡的角色', Role and Id or 'nil', Role and Role:RoleName() or 'nil')
         -- self.OwnerTeam.TeamEnemy:RemoveEnemyRole(Role)
         self.OwnerTeam.TeamEnemy:CheckEnemyDead()
         local allEnemy = self.OwnerTeam.TeamEnemy:GetAllEnemy()

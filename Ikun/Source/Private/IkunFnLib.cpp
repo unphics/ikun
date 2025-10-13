@@ -12,7 +12,11 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "ikun_cpp_utl.h"
+#include "LuaEnv.h"
 #include "GAS/IkunAbilityTypes.h"
+
+#include "UnLuaBase.h"
+#include "Lua/lua-5.4.4/src/lua.h"
 
 
 UUserWidget* UIkunFnLib::CreateWidget(UWorld* World, UClass* Class) {
@@ -104,3 +108,10 @@ void UIkunFnLib::SetFloderColor(FString Path, FLinearColor Color) {
 //		Module.RenderCustomPass(RT);
 //	}
 //}
+
+
+bool UIkunFnLib::ReplaceInputs(AActor* Actor, UInputComponent* InputComponent) {
+	lua_State* L = UnLua::GetState();
+	UnLua::FLuaEnv* Env = UnLua::FLuaEnv::FindEnv(L);
+	return Env->GetManager()->ReplaceInputs(Actor, InputComponent);
+}

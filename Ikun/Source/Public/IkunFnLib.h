@@ -73,4 +73,6 @@ public:
 	static void SetFloderColor(FString Path, FLinearColor Color);
 #pragma endregion
 
+	UFUNCTION(BlueprintCallable)
+	static bool ReplaceInputs(AActor* Actor, UInputComponent* InputComponent);
 };

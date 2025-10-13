@@ -1,8 +1,8 @@
 
 ---
----@brief UE的Actor相关的工具方法
----@author zys
----@data Sun May 04 2025 14:21:59 GMT+0800 (中国标准时间)
+---@brief   UE的Actor相关的工具方法
+---@author  zys
+---@data    Sun May 04 2025 14:21:59 GMT+0800 (中国标准时间)
 ---
 
 local actor_util = {}
@@ -104,7 +104,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         end
         local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
         if role then
-            -- log.log(log.key.repos..rolelib.roleid(pos1)..'has_obstacles_box: Hit Actor '..role:GetRoleInstId() ..','..role:GetRoleDispName())
+            -- log.log(log.key.repos..rolelib.roleid(pos1)..'has_obstacles_box: Hit Actor '..role:GetRoleInstId() ..','..role:RoleName())
         end
         if not Actor.GetMovementComponent then
             goto continue
@@ -149,10 +149,10 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
             return false
         end
         if OwnerRole:IsFirend(HitRole) then
-            -- log.log(log.key.repos..rolelib.roleid(OwnerRole)..'filter firend = [firend] '..OwnerRole:GetRoleDispName()..','..HitRole:GetRoleDispName())
+            -- log.log(log.key.repos..rolelib.roleid(OwnerRole)..'filter firend = [firend] '..OwnerRole:RoleName()..','..HitRole:RoleName())
             return true
         end
-        -- log.log(log.key.repos..rolelib.roleid(OwnerRole)..'filter firend = [enemy] '..OwnerRole:GetRoleDispName()..','..HitRole:GetRoleDispName())
+        -- log.log(log.key.repos..rolelib.roleid(OwnerRole)..'filter firend = [enemy] '..OwnerRole:RoleName()..','..HitRole:RoleName())
         return false
     end
     return filter

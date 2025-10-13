@@ -5,9 +5,6 @@
 ---@data    Sat Aug 23 2025 11:23:32 GMT+0800 (中国标准时间)
 ---
 
-local EnhInput = require('Ikun/Module/Input/EnhInput')
-local InputMgr = require("Ikun/Module/Input/InputMgr")
-
 ---@class GazeComp: GazeComp_C
 ---@field GazeIntervalConst number 凝视间隔
 ---@field GazeDistanceConst number 凝视距离
@@ -16,8 +13,8 @@ local GazeComp = UnLua.Class()
 
 ---@override
 function GazeComp:ReceiveBeginPlay()
-    self.GazeIntervalConst = MdMgr.ConfigMgr:GetGlobalConst('GazeInterval')
-    self.GazeDistanceConst = MdMgr.ConfigMgr:GetGlobalConst('GazeDistance')
+    self.GazeIntervalConst = ConfigMgr:GetGlobalConst('GazeInterval')
+    self.GazeDistanceConst = ConfigMgr:GetGlobalConst('GazeDistance')
     self.CurGazeCountTime = 0
 end
 
@@ -59,12 +56,13 @@ function GazeComp:C2S_ReqUpdateGazing_RPC(InteractActor)
     if self.bInteracting then
         return
     end
+    -- log.info('GazeComp:C2S_ReqUpdateGazing', obj_util.dispname(InteractActor))
     self.Rep_GazeName = ''
     if obj_util.is_valid(InteractActor) and (self:GetOwner().OwnerChr ~= InteractActor) then
         self.Rep_InteractActor = InteractActor
         local role = rolelib.role(self.Rep_InteractActor)
         if role then
-            self.Rep_GazeName = role:GetRoleDispName()
+            self.Rep_GazeName = role:RoleName()
         end
     end
 end

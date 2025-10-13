@@ -1,6 +1,7 @@
 
 ---
 ---@brief   双容器优化
+---@todo    成员方法名字有点歧义, 需要改一版
 ---@author  zys
 ---@data    Sat Jun 28 2025 17:46:41 GMT+0800 (中国标准时间)
 ---
@@ -30,17 +31,20 @@ local duplex = class.class 'duplex' {
     _arrContainer = nil,
     _count = 0
 }
+
 ---@public
 ---@return duplex<K, V>
 function duplex.create()
     return class.new'duplex'()
 end
----@private
+
+---@public
 function duplex:ctor()
     self._mapContainer = {}
     self._arrContainer = {}
     self._count = 0
 end
+
 ---@public
 ---@param key K
 ---@param value V
@@ -70,13 +74,39 @@ function duplex:dinsert(key, value)
     self._count = self._count + 1
     self:_autoCompact()
 end
+
 ---@public
 ---@param key K
 ---@return V
 function duplex:dfind(key)
     local item = self._mapContainer[key] ---@type duplex_item
-    return item and item._valid and item._value or nil
+    return (item and item._valid) and item._value or nil
 end
+
+---@public
+---@todo 待优化
+---@param key K
+---@param value V
+function duplex:dset(key, value)
+    local item = self._mapContainer[key]
+    if item then
+        if not item._valid then
+            item._valid = true
+            self._count = self._count + 1
+        end
+        item._value = value
+    else
+    local newItem = {
+        _key = key,
+        _value = value,
+        _valid = true,
+    }
+    table.insert(self._arrContainer, newItem)
+    self._mapContainer[key] = newItem
+    self._count = self._count + 1
+    end
+end
+
 ---@public
 ---@param idx number
 ---@return V
@@ -93,6 +123,7 @@ function duplex:dget(idx)
     end
     return nil
 end
+
 ---@public
 ---@param key K
 ---@return boolean
@@ -107,6 +138,7 @@ function duplex:dremove(key)
     self:_autoCompact()
     return true
 end
+
 ---@public
 ---@param fnCompare fun(a: V, b: V):boolean
 function duplex:dsort(fnCompare)
@@ -118,16 +150,19 @@ function duplex:dsort(fnCompare)
         return fnCompare(a._value, b._value)
     end)
 end
+
 ---@public
 function duplex:dclear()
     self._mapContainer = {}
     self._arrContainer = {}
     self._count = 0
 end
+
 ---@public
 function duplex:dlength()
     return self._count
 end
+
 ---@public
 ---@return fun(t:table, i:number):(number, K, V)
 function duplex:diter()

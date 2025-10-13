@@ -4,7 +4,17 @@
 ---@author zys
 ---
 
+
+
+---@class _Class
+---@field super table
+---@field extends fun(_Class, base:string):table
+
 ---@class class
+---@field GAction GAction
+---@field GPlanner GPlanner
+---@field GoapUtil GoapUtil
+---@field NavMoveData NavMoveData
 local classes = {}
 
 local inherit_reserved_keyword = {
@@ -64,9 +74,10 @@ local internal_name = {
 
 -- 以上, 单元测试1
 
+---@return _Class
 function classes.class(class_name)
     if internal_name[class_name] then
-        return log.error('class error: invalid class_name --- internal_name : ' .. class_name)
+        return log.error('class error: invalid class_name --- internal_name : ' .. class_name) ---@as _Class
     end
     local new_class = {}
     local modifiers = {
@@ -96,7 +107,7 @@ function classes.class(class_name)
             return new_inst
         end
     })
-    return new_class
+    return new_class ---@as _Class
 end
 
 -- 以上, 单元测试2

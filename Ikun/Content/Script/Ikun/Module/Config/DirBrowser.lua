@@ -70,7 +70,7 @@ function DirBrowser:cd(dir_name)
     end
     local new_path = self:normalize_path(self.cur_path .. '/' .. dir_name)
     if not UE.UBlueprintPathsLibrary.DirectoryExists(new_path) then
-        log.error('DirBrowser:cd() directory not exist:', dir_name)
+        log.error('DirBrowser:cd() directory not exist: \''..dir_name..'\'')
         return false
     end
     

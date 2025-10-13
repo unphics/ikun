@@ -10,6 +10,7 @@ local BTDef = require('Ikun/Module/AI/BT/BTDef')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
 local RoleInfoClass = require('Content/Role/RoleInfo')
+require('Content/Role/RoleHoldLocation')
 require('Content/Item/Bag')
 require('Content/Chat/NpcChat')
 
@@ -19,11 +20,12 @@ require('Content/Chat/NpcChat')
 ---@field Team TeamClass * 战斗团队
 ---@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
+---@field QuestComp QuestCompClass * 角色的任务
+---@field Bag BagClass * 背包
+---@field HoldLocation RoleHoldLocationClass * 角色持有的地点
 ---@field QuestGiver QuestGiverClass
----@field Bag BagClass
 ---@field NpcChat NpcChatClass
 ---@field bNpc boolean
----@field QuestComp QuestCompClass
 local RoleClass = class.class 'RoleClass' {
 --[[public]]
     ctor = function()end,
@@ -33,20 +35,21 @@ local RoleClass = class.class 'RoleClass' {
     IsFirend = function()end,
     IsEnemy = function()end,
     AddEnemyChecked = function()end,
+    RoleBeginDeath = function()end,
     HasTarget = function()end,
     GetTarget = function()end,
     GetBelongKingdom = function()end,
-    Team = nil,
     GetRoleCfgId = function()end,
     GetRoleInstId = function()end,
-    GetRoleDispName = function()end,
+    RoleName = function()end,
     IsRoleDead = function()end,
+    Team = nil,
     QuestGiver = nil,
     QuestComp = nil,
     Bag = nil,
     NpcChat = nil,
+    HoldLocation = nil,
 --[[private]]
-    StartBT = function()end,
     RoleInfo = nil,
     Avatar = nil,
     BelongKingdomLua = nil,
@@ -71,15 +74,19 @@ function RoleClass:RoleTick(DeltaTime)
             end
         end
     end
+    if self.Agent then
+        self.Agent:TickAgent(DeltaTime)
+    end
 end
 
 ---@public Chr以身上的RoleId初始化, 并且将自己挂靠到所属国家里
-function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
-    local Config = MdMgr.RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
-    if not Config then
+function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
+    local config = RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
+    if not config then
         return log.error(log.key.roleinit,'投胎失败!!!')
     end
-    self.RoleInfo = class.new 'RoleInfoClass' (self, CfgId)
+    
+    self.RoleInfo = class.new 'RoleInfoClass' (self, ConfigId)
     self.Avatar = Avatar
     self.bNpc = bNpc
 
@@ -87,34 +94,46 @@ function RoleClass:InitByAvatar(Avatar, CfgId, bNpc)
     self.QuestGiver = class.new 'QuestGiverClass'(self)
     self.Bag = class.new 'BagClass'(self)
     self.NpcChat = class.new 'NpcChatClass'(self)
+    self.HoldLocation = class.new 'RoleHoldLocationClass'(self, ConfigId)
 
-    local DistrictMgr = MdMgr.Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
-    self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(Config.BelongKingdom) ---@type Kingdom
+    local DistrictMgr = Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
+    self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(config.BelongKingdom) ---@type Kingdom
     self.BelongKingdomLua:AddKingdomMember(self)
-
+    
     self.Avatar.SkillComp:InitRoleSkill()
-    self:StartBT()
+    
+    if config.GoapKey then
+        local agent = class.new 'GAgent' (self) ---@as GAgent
+        self.Agent = agent
+    else
+        if config.BTCfg and config.BTCfg.Init then
+            self:SwitchNewBT(config.BTCfg.Init)
+        else
+            log.error('RoleClass:InitByAvatar()', '没有初始BT', self:RoleName())
+        end
+    end
 end
-function RoleClass:StartBT()
-    local RoleCfg = MdMgr.RoleMgr:GetRoleConfig(self:GetRoleCfgId())
-    if RoleCfg then
-        self:SwitchNewBT(RoleCfg.InitBT)
+
+function RoleClass:LateAtNight()
+    if self.Agent then
+        self.Agent:LateAtNight()
     end
 end
 
 function RoleClass:SwitchNewBT(NewBTKey)
-    log.info('RoleDisplayName = '..tostring(self:GetRoleDispName())..', switch new bt: '..tostring(NewBTKey))
+    log.info('RoleClass:SwitchNewBT()', self:RoleName(), NewBTKey)
     if self.Avatar.RoleComp.bCustomStartBT then
         return
     end
     local BTClass = BTDef[NewBTKey]
     if not BTClass then
-        log.error('Failed to index BTClass, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self:GetRoleDispName()))
+        log.error('RoleClass:SwitchNewBT()', 'no NewBTKey', NewBTKey, self:RoleName())
         return
     end
     self.BT = BTClass(self.Avatar)
-        if not self.BT then
-        log.error('Failed to init bt, bt key = '..tostring(NewBTKey)..', RoleDisplayName = '..tostring(self:GetRoleDispName()))
+    if not self.BT then
+        self.BT = BTClass(self.Avatar)
+        log.error('RoleClass:SwitchNewBT()', 'Failed to init BT', NewBTKey, self:RoleName())
         return
     end
 end
@@ -152,12 +171,12 @@ function RoleClass:AddEnemyChecked(OtherRole)
     if not self:IsEnemy(OtherRole) then
         return false
     end
-    local OwnerRoleCfg = MdMgr.RoleMgr:GetRoleConfig(self:GetRoleCfgId())
-    local OtherRoleCfg = MdMgr.RoleMgr:GetRoleConfig(OtherRole:GetRoleCfgId())
+    local OwnerRoleCfg = RoleMgr:GetRoleConfig(self:GetRoleCfgId())
+    local OtherRoleCfg = RoleMgr:GetRoleConfig(OtherRole:GetRoleCfgId())
     if not OtherRoleCfg then
         return false
     end
-    log.info('RoleClass:AddEnemyChecked; self =', OwnerRoleCfg:GetRoleDispName(), '; enemy =', OtherRoleCfg:GetRoleDispName())
+    log.info('RoleClass:AddEnemyChecked; self =', OwnerRoleCfg:RoleName(), '; enemy =', OtherRoleCfg:RoleName())
     self.FightTarget:SetTarget(OtherRole)
     return true
 end
@@ -178,16 +197,6 @@ function RoleClass:GetBelongKingdom()
     return self.BelongKingdomLua
 end
 
----@public [LBTCondition] [Pure]
-function RoleClass:No()
-    return false
-end
-
----@public [LBTCondition] [Pure]
-function RoleClass:Yes()
-    return true
-end
-
 ---@public [LBTCondition] [Pure] 角色此时有团队指导的移动目标
 function RoleClass:HasTeamMoveTarget()
     return self.Team.TeamMove.mapMemberMoveTarget and self.Team.TeamMove.mapMemberMoveTarget[self:GetRoleInstId()] or nil
@@ -195,10 +204,7 @@ end
 
 ---@public [Debug] [Pure] 打印这个角色的信息
 function RoleClass:PrintRole()
-    local str = ''
-    local hp = obj_util.is_valid(self.Avatar) and self.Avatar.AttrSet:GetAttrValueByName("Health")
-    str = str..'{ Id:'..self:GetRoleInstId()..', Dead:'..tostring(self:IsRoleDead())..', hp:'..tostring(hp)..' }'
-    return str
+    return string.format('{Id:%i, name:%s}', self:GetRoleInstId(), self:RoleName())
 end
 
 ---@public [Pure] 获取角色配置Id
@@ -212,7 +218,7 @@ function RoleClass:GetRoleInstId()
 end
 
 ---@public [Pure] 获取角色显示名称
-function RoleClass:GetRoleDispName()
+function RoleClass:RoleName()
     return self.RoleInfo.RoleDispName
 end
 

@@ -60,14 +60,14 @@ function BP_CameraMgr:NewCameraViewModel(NewModelName)
         return log.error('BP_CameraMgr:NewCameraViewModel() 使用了未定义的模式', NewModelName)
     end
     self.TargetCameraLoc = UE.FVector(cfg.Forward, cfg.Right, cfg.Up)
-    self.CameraTransitionTotalTime = MdMgr.ConfigMgr:GetGlobalConst('CameraTransitionTime')
+    self.CameraTransitionTotalTime = ConfigMgr:GetGlobalConst('CameraTransitionTime')
     self.bCameraFading = true
 end
 
 ---@private 根据模式名字获取该模式的配置信息
 ---@return CameraViewConfig
 function BP_CameraMgr:GetModelCfg(ModelName)
-    local config = MdMgr.ConfigMgr:GetConfig('CameraViewModel')
+    local config = ConfigMgr:GetConfig('CameraViewModel')
     return config[ModelName]
 end
 

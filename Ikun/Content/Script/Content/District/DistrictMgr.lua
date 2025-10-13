@@ -21,32 +21,36 @@ local SettlementType = require('Content/District/Settlements/SettlemengType')
 ---@field SettlementType SettlementType
 ---@field BelongKingdomId number
 
----@class DistrictMgr: MdBase
----@field OwnerStar Star 此星球
+---@class DistrictMgr
+---@field OwnerStar StarClass 此星球
 ---@field tbKingdom Kingdom[] 此星球上的所有国家
-local DistrictMgr = class.class"DistrictMgr" : extends "MdBase" {
+---@field _tbSettlementRef table<number, SettlementBaseClass> 此星球上所有聚集地
+local DistrictMgr = class.class"DistrictMgr" {
 --[[public]]
     ctor = function() end,
-    Tick = function(DeltaTime)end,
+    TickDistrictMgr = function(DeltaTime)end,
     FindKingdomByInstId = function(KingdomInstId)end,
+    FindOrCreateSettlement = function()end,
+    InitAllKingdom = function()end,
     OwnerStar = nil,
 --[[private]]
-    InitAllKingdom = function()end,
     InitAllSettlement = function()end,
-    CreateSettlementByConfig = function(SettlementConfig)end,
     tbKingdom = nil,
+    _tbSettlementRef = nil,
 }
 
 ---@override 初始化所有国家
-function DistrictMgr:ctor(Star)
-    self.OwnerStar = Star
+---@param OwnerStar StarClass
+function DistrictMgr:ctor(OwnerStar)
+    self.OwnerStar = OwnerStar
     self.tbKingdom = {}
+    self._tbSettlementRef = {}
     self:InitAllKingdom()
     self:InitAllSettlement()
 end
 
----@override Tick国家
-function DistrictMgr:Tick(DeltaTime)
+---@public Tick国家
+function DistrictMgr:TickDistrictMgr(DeltaTime)
     for _, kingdom in ipairs(self.tbKingdom) do
         kingdom:TickKingdom(DeltaTime)
     end
@@ -65,7 +69,6 @@ function DistrictMgr:FindKingdomByInstId(KingdomInstId)
 end
 
 ---@public 通过国家的配置Id找到国家
----@todo 找到多个
 ---@param KingdomCfgId number
 ---@return Kingdom?
 function DistrictMgr:FindKingdomByCfgId(KingdomCfgId)
@@ -77,9 +80,9 @@ function DistrictMgr:FindKingdomByCfgId(KingdomCfgId)
     log.error('DistrictMgr:FindKingdomByCfgId', '没有找到此国家, config id:', KingdomCfgId)
 end
 
----@private 初始化此行星所有国家
+---@public [Init] 初始化此行星所有国家
 function DistrictMgr:InitAllKingdom()
-    local kingdomCfg = MdMgr.ConfigMgr:GetConfig('Kingdom') ---@type KingdomConfig[]
+    local kingdomCfg = ConfigMgr:GetConfig('Kingdom') ---@type KingdomConfig[]
     for id, kingdom in pairs(kingdomCfg) do
         local instId = self.OwnerStar.StarId * 100 + id
         local kingdomInst = class.new "Kingdom" (instId, kingdom)
@@ -87,11 +90,11 @@ function DistrictMgr:InitAllKingdom()
     end
 end
 
----@public 初始化所有人类聚集地
+---@public [Init] 初始化所有人类聚集地
 function DistrictMgr:InitAllSettlement()
-    local settlementCfg = MdMgr.ConfigMgr:GetConfig('Settlement') ---@type SettlementConfig[]
-    for _, settlement in pairs(settlementCfg) do
-        local settlementInst = self:CreateSettlementByConfig(settlement)
+    local settlementCfg = ConfigMgr:GetConfig('Settlement') ---@type SettlementConfig[]
+    for id, settlement in pairs(settlementCfg) do
+        local settlementInst = self:FindOrCreateSettlement(id)
         if not settlementInst then
             goto continue
         end
@@ -106,16 +109,25 @@ function DistrictMgr:InitAllSettlement()
     end
 end
 
----@private 通过配置创建村庄/城市
----@param SettlementConfig SettlementConfig
----@return SettlementBaseClass?
-function DistrictMgr:CreateSettlementByConfig(SettlementConfig)
-    if SettlementConfig.SettlementType == SettlementType.City then
-        return class.new "CityClass" (SettlementConfig.SettlementName)
-    elseif SettlementConfig.SettlementType == SettlementType.Village then
-        return class.new "VillageClass" (SettlementConfig.SettlementName)
-    else
-        log.error('[DistrictMgr]:CreateSettlementByConfig Undefined SettlementType')
+---@public 通过Id获取聚集地
+---@return SettlementBaseClass
+function DistrictMgr:FindOrCreateSettlement(SettlementId)
+    local allSettlementConfig = ConfigMgr:GetConfig('Settlement')
+    local settlementConfig = allSettlementConfig[SettlementId] ---@type SettlementConfig
+    if not settlementConfig then
+        return log.error('DistrictMgr:FindSettlement()', '无效的SettlementId', SettlementId)
     end
-    return nil
+    if self._tbSettlementRef[SettlementId] then
+        return self._tbSettlementRef[SettlementId]
+    end
+    local settlement = nil
+    if settlementConfig.SettlementType == SettlementType.City then
+        settlement = class.new "CityClass" (settlementConfig.SettlementName, SettlementId) ---@type CityClass
+    elseif settlementConfig.SettlementType == SettlementType.Village then
+        settlement = class.new "VillageClass" (settlementConfig.SettlementName, SettlementId) ---@type VillageClass
+    end
+    self._tbSettlementRef[SettlementId] = settlement
+    return settlement
 end
+
+return DistrictMgr

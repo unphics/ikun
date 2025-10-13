@@ -1,8 +1,8 @@
 
 ---
----@brief 植入UECmd的Lua调试转发
----@author zys
----@data Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
+---@brief   植入UECmd的Lua调试转发
+---@author  zys
+---@data    Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
 ---
 
 log.info("debug_util Loaded")
@@ -23,14 +23,14 @@ debug_util.qqq = function(a, b)
 end
 
 debug_util.printrole = function(id)
-    local role = MdMgr.RoleMgr:FindRole(id)
+    local role = RoleMgr:FindRole(id)
     if role then
         log.error(role:PrintRole())
     end
 end
 
 debug_util.gamespeed = function(speed)
-    local time = MdMgr.TimeMgr ---@type TimeMgr
+    local time = TimeMgr ---@type TimeMgr
     time:SetGameSpeed(speed)
 end
 

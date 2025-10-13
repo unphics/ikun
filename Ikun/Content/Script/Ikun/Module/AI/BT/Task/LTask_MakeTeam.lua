@@ -25,7 +25,7 @@ function LTask_MakeTeam:OnInit()
     end
 
     -- 查找1000码以内的复合条件的单位, 再遍历查找从而进行递归查找出所有互相距离1000码以内的复合条件的单位
-    local newTeam = MdMgr.TeamMgr:CreateNewTeam()
+    local newTeam = TeamMgr:CreateNewTeam()
     OwnerRole.Team = newTeam
 
     OwnerRole.Team.TeamMember:AddMember(self.Chr:GetRole())

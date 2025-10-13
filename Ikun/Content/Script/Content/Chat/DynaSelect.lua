@@ -20,7 +20,7 @@ DynaSelect.CalcSelectInfo = function(NpcChat, SelectData)
         local targetRole = rolelib.role(target)
         if targetRole then
             local id = targetRole:GetRoleCfgId()
-            local config = MdMgr.RoleMgr:GetRoleConfig(id)
+            local config = RoleMgr:GetRoleConfig(id)
             if config and config.RoleChat then
                 local outSelects = {}
                 for _, chatId in ipairs(config.RoleChat) do

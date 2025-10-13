@@ -20,14 +20,16 @@ require('Content/Quest/QuestComp')
 ---@field ConditionId number
 ---@field Param table
 
----@class QuestMgr : MdBase
+---@class QuestMgr
 ---@field _QuestConfig_AcceptNpc table<number, QuestConfig[]>
 ---@field _QuestConfig_QuestId table<number, QuestConfig>
 ---@field _QuestStepConfig_QuestId table<number, QuestStepConfig>
-local QuestMgr = class.class 'QuestMgr' : extends 'MdBase' {
+local QuestMgr = class.class 'QuestMgr'{
     ctor = function()end,
-    Init = function()end,
+    InitQuestMgr = function()end,
     GetQuestConfigByAcceptNpc = function()end,
+    GetQuestConfigById = function()end,
+    GetQuestStepConfigById = function()end,
     _LoadAllQuestConfig = function()end,
     _QuestConfig_AcceptNpc = nil,
     _QuestConfig_QuestId = nil,
@@ -39,34 +41,36 @@ function QuestMgr:ctor()
     self._QuestConfig_AcceptNpc = {}
     self._QuestConfig_QuestId = {}
     self._QuestStepConfig_QuestId = {}
+
+    gameinit.registerinit(gameinit.ring.zero, self, self.InitQuestMgr)
 end
 
----@overide
-function QuestMgr:Init()
+---@overide [Init]
+function QuestMgr:InitQuestMgr()
     self:_LoadAllQuestConfig()
 end
 
----@public
+---@public 根据接任务的NpcConfigId获取任务配置
 ---@return QuestConfig[]
 function QuestMgr:GetQuestConfigByAcceptNpc(NpcCfgId)
     return self._QuestConfig_AcceptNpc[NpcCfgId] or {}
 end
 
----@public
+---@public 根据任务Id获取配置
 ---@return QuestConfig
 function QuestMgr:GetQuestConfigById(QuestId)
     return self._QuestConfig_QuestId[QuestId]
 end
 
----@public
+---@public 根据任务步骤Id获取配置
 ---@return QuestStepConfig
 function QuestMgr:GetQuestStepConfigById(StepId)
     return self._QuestStepConfig_QuestId[StepId]
 end
 
----@private
+---@private 根据配置表初始化所有任务配置
 function QuestMgr:_LoadAllQuestConfig()
-    local allQuest = MdMgr.ConfigMgr:GetConfig('Quest') ---@type QuestConfig[]
+    local allQuest = ConfigMgr:GetConfig('Quest') ---@type QuestConfig[]
     for _, quest in pairs(allQuest) do
         local acceptNpcId = quest.AcceptNpc
         if not self._QuestConfig_AcceptNpc[acceptNpcId] then
@@ -76,7 +80,7 @@ function QuestMgr:_LoadAllQuestConfig()
 
         self._QuestConfig_QuestId[quest.QuestId] = quest
     end
-    local allStep = MdMgr.ConfigMgr:GetConfig('QuestStep') ---@type QuestStepConfig[]
+    local allStep = ConfigMgr:GetConfig('QuestStep') ---@type QuestStepConfig[]
     for _, step in pairs(allStep) do
         self._QuestStepConfig_QuestId[step.QuestStepId] = step
     end

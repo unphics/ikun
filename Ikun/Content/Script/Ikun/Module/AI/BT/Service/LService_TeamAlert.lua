@@ -57,7 +57,7 @@ function LService_TeamAlert:MakeFindRangeActorsFilterFn()
 end
 ---@private [Debug]
 function LService_TeamAlert:DrawRange()
-    local Color = UE.FLinearColor(1, 1, 0)
+    local color = UE.FLinearColor(1, 1, 0)
     local Duration = 2
-    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, self.Chr:K2_GetActorLocation(), self.StaticRange, 12, Color, Duration, 4)
+    UE.UKismetSystemLibrary.DrawDebugSphere(self.Chr, self.Chr:K2_GetActorLocation(), self.StaticRange, 12, color, Duration, 4)
 end

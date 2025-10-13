@@ -20,7 +20,7 @@ end
 ---@public [Server]
 function ChatComp:BeginChat()
     self:S2C_BeginChat()
-    self:_GetNpcChat():NewChat(40011, self:GetOwner().InteractComp.Rep_InteractActor)
+    self:_GetNpcChat():NewChat(400011, self:GetOwner().InteractComp.Rep_InteractActor)
     return true
 end
 
@@ -83,7 +83,6 @@ end
 
 function ChatComp:S2C_ShowQuestMsg_RPC(QuestName, QuestState)
     local ui = ui_util.uimgr:ShowUI(ui_util.uidef.UI_QuestMsg) ---@type UI_QuestMsg
-    log.dev('ui', ui)
     if ui then
         ui:SetQuestMsg(QuestName, QuestState)
     end

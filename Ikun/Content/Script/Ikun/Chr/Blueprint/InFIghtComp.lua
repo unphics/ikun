@@ -42,7 +42,7 @@ end
 ---@public is chr in fight
 function InFightComp:CheckInFight()
     local bResult = gas_util.has_loose_tag(self:GetOwner(), 'Role.State.InFight')
-    -- log.dev('InFightComp:CheckInFight() ', net_util.is_server(self:GetOwner()), bResult)
+    -- log.debug('InFightComp:CheckInFight() ', net_util.is_server(self:GetOwner()), bResult)
     return bResult
 end
 

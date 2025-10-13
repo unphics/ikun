@@ -52,7 +52,7 @@ function InfluenceMapClass:ctor(Center, ItemGridSize, HalfGridCount)
     if not Center or not ItemGridSize or not HalfGridCount then
         log.error('InfluenceMapClass:ctor() : not Center or not ItemGridSize or not HalfGridCount !')
     end
-    log.dev('影响力图初始化 !!!!!!')
+    log.info('影响力图初始化 !!!!!!')
     self.CenterV3 = Center
     self.CenterV3.X = self.CenterV3.X + 50
     self.CenterV3.Y = self.CenterV3.Y + 50
@@ -61,7 +61,7 @@ function InfluenceMapClass:ctor(Center, ItemGridSize, HalfGridCount)
     self.CalcFns = {}
     self:InitGridItems()
 end
----@private [Init] 根据CenterPos构建所有GridItem
+---@private 根据CenterPos构建所有GridItem
 function InfluenceMapClass:InitGridItems()
     self.InfluenceItems = {}
     local Count = self.HalfGridCount * self.HalfGridCount * 2 * 2
@@ -149,10 +149,10 @@ function InfluenceMapClass:FindTheMostItemByFn(Fn)
     
 end
 ---@private [Debug]
-function InfluenceMapClass:DrawDebugSphere(Pos, Color)
-    Color = Color or {1, 0, 0}
+function InfluenceMapClass:DrawDebugSphere(Pos, InColor)
+    InColor = InColor or {1, 0, 0}
     UE.UKismetSystemLibrary.DrawDebugSphere(world_util.GameWorld, UE.FVector(Pos[1], Pos[2], 100),
-        self.ItemGridSize / 2, 8, UE.FLinearColor(Color[1], Color[2], Color[3]), 5, 2)
+        self.ItemGridSize / 2, 8, UE.FLinearColor(InColor[1], InColor[2], InColor[3]), 5, 2)
 end
 
 return InfluenceMapClass

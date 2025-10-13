@@ -1,0 +1,17 @@
+GoalKey|GoalName|GoalDesc|DesiredState|Priority
+|||达成目标需要的状态|暂时没用
+||||
+Getup|早晨起床|主要日常目标|Morning=true,IsSleeping=false|0
+GainResource|获取生存资源|主要日常目标，角色可以有各种方式达成此目标|GainResourceDaily=true|
+Sleep|晚上睡觉|主要日常目标|IsSleeping=true,AtHome=true|0
+||||
+MorningWalk|晨间散步|常用日常目标|Morning=true,AtVillage=true,MonringWalk=true|0
+HaveBreakfast|吃早餐|常用日常目标|HasBreakfast=true,IsHungry=false|0
+TakeRest|休息一会|常用日常目标，坐下休息|IsSitting=true,IsTired=false|0
+HaveDinner|吃晚餐||HasDinner=true,IsHungry=false|0
+||||
+||||
+WorkAtStall|摆摊工作|在摊位工作|IsWorking=true,AtStall=true,StallSetup=true|0
+ReturnHome|回家|返回家中|AtHome=true|0
+||||
+RestDay|休息一天||IsWorking=false,IsResting=true|0

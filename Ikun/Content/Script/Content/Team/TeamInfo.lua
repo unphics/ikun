@@ -5,33 +5,34 @@
 ---@data    Sun Jul 06 2025 18:32:37 GMT+0800 (中国标准时间)
 ---
 
----@class TeamInfoClass: MdBase
----@field OwnerTeam TeamClass
----@field TeamId number
+---@class TeamInfoClass
+---@field _OwnerTeam TeamClass
+---@field _TeamId number
 ---@field bTeamLive boolean
----@field TeamMsgBus msgbus
-local TeamInfoClass = class.class 'TeamInfoClass' : extends 'MdBase' {
---[[public]]
+---@field _TeamMsgBus msgbus
+local TeamInfoClass = class.class 'TeamInfoClass' {
     ctor = function()end,
-    Init = function()end,
     TeamInfoInitOnCreate = function()end,
---[[private]]
-    OwnerTeam = nil,
-    TeamId = nil,
-    TeamMsgBus = nil
+    TeamDestory = function()end,
+    TriggerTeamEvent = function()end,
+    RegTeamEvent = function()end,
+    UnregTeamEvent = function()end,
+    bTeamLive = nil,
+    _OwnerTeam = nil,
+    _TeamId = nil,
+    _TeamMsgBus = nil
 }
 
+---@public
+---@param OwnerTeam TeamClass
 function TeamInfoClass:ctor(OwnerTeam)
-    self.OwnerTeam = OwnerTeam
-    self.TeamMsgBus = msg_bus.create()
-end
-
-function TeamInfoClass:Init()
+    self._OwnerTeam = OwnerTeam
+    self._TeamMsgBus = msg_bus.create()
 end
 
 ---@public 创建时初始化一些信息
 function TeamInfoClass:TeamInfoInitOnCreate(TeamId)
-    self.TeamId = TeamId
+    self._TeamId = TeamId
     self.bTeamLive = true
 end
 
@@ -42,7 +43,7 @@ end
 
 ---@public
 function TeamInfoClass:TriggerTeamEvent(name, ...)
-    self.TeamMsgBus:mtrigger(name, ...)
+    self._TeamMsgBus:mtrigger(name, ...)
 end
 
 ---@public
@@ -50,14 +51,14 @@ end
 ---@param obj any
 ---@param fn fun()
 function TeamInfoClass:RegTeamEvent(name, obj, fn)
-    self.TeamMsgBus:mreg(name, obj, fn)
+    self._TeamMsgBus:mreg(name, obj, fn)
 end
 
 ---@public
 ---@param name string
 ---@param obj any
 function TeamInfoClass:UnregTeamEvent(name, obj)
-    self.TeamMsgBus:munreg(name, obj)
+    self._TeamMsgBus:munreg(name, obj)
 end
 
 return TeamInfoClass

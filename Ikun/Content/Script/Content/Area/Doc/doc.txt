@@ -1,0 +1,10 @@
+
+Cosmos < Star < Plate < Landform < Location < Site
+[地域, Area, 自然地域]地域管理:
+    宇宙: Cosmos
+    星球: Star, 宇宙所管理的基本单位
+    板块: Plate, 星球地貌的大单位; 大陆板块, 海洋板块; 大洲大洋
+    地貌: Landform, 长江流域
+    地点: Location, 村长的房子
+    地点的小位置: Site, 房子的门, 房子的地下室
+    1.以后可能会将星球以星系管理, 再归属宇宙

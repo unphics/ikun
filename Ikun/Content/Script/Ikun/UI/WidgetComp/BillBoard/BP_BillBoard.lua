@@ -10,9 +10,6 @@ local BP_BillBoardComp = UnLua.Class()
 
 ---@override
 function BP_BillBoardComp:ReceiveBeginPlay()
-    if self:GetOwner().MsgBusComp then
-        self:GetOwner().MsgBusComp:RegEvent('RoleName', self, self.OnRoleNameUpdate)
-    end
     self.BillboardContent = {}
 end
 
@@ -47,7 +44,7 @@ function BP_BillBoardComp:Face2Player()
     self:K2_SetRelativeRotation(Rot, false, UE.FHitResult(), false)
 end
 
----@private [Init] [Role]
+---@private [Role]
 function BP_BillBoardComp:OnRoleNameUpdate(RoleName)
     self:S2C_SetText(self:GetOwner():GetRole():GetRoleInstId())
 end

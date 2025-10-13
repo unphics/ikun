@@ -26,10 +26,10 @@ local RoleInfoClass = class.class'RoleInfoClass' {
 
 ---@param Role RoleClass
 function RoleInfoClass:ctor(Role, CfgId)
-    local Config = MdMgr.RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
+    local config = RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
     self.OwnerRole = Role
     self.RoleCfgId = CfgId
-    self.RoleDispName = Config.RoleName
+    self.RoleDispName = config.RoleName
     self.bDead = true
 end
 ---@param InstId number

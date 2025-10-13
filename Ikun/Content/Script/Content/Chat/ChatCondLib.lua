@@ -18,7 +18,7 @@ local ChatCondLib = {}
 ---@param OwnerNpcChat NpcChatClass
 ---@param Cond number
 function ChatCondLib.TryCheckCond(OwnerNpcChat, Cond)
-    local data = MdMgr.ConfigMgr:GetConfig('ChatCond')[Cond] ---@type ChatCondConfig
+    local data = ConfigMgr:GetConfig('ChatCond')[Cond] ---@type ChatCondConfig
     if data then
         if ChatCondLib['_'..data.Code] then
             return ChatCondLib['_'..data.Code](OwnerNpcChat, data)
