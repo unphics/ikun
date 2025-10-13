@@ -1,8 +1,8 @@
 
 ---
----@brief Lua开发中常用的数学工具方法
----@author zys
----@data Sun May 04 2025 14:18:42 GMT+0800 (中国标准时间)
+---@brief   Lua开发中常用的数学工具方法
+---@author  zys
+---@data    Sun May 04 2025 14:18:42 GMT+0800 (中国标准时间)
 ---
 
 ---@class math_util 数学库

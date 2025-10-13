@@ -3,6 +3,7 @@
 ---@brief   服务端初始化顺序管理
 ---@author  zys
 ---@data    Tue Sep 23 2025 11:13:55 GMT+0800 (中国标准时间)
+---@todo    将外部写入ringnum枚举换成写入功能描述枚举, 然后内部维护功能与环数的关系
 ---
 
 ---@class gameinit
