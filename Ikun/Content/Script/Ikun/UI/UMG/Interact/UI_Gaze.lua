@@ -3,6 +3,7 @@
 ---@brief   注视Hud
 ---@author  zys
 ---@data    Wed Aug 27 2025 13:58:38 GMT+0800 (中国标准时间)
+---@todo    初始化和反初始化补全
 ---
 
 local EnhInput = require('Ikun/Module/Input/EnhInput')
@@ -31,7 +32,7 @@ end
 
 ---@private [Show]
 function UI_Gaze:UpdateGazeInfo()
-    local name = self:GetPC().InteractComp:GetGazeName()
+    local name = self:_GetPC().InteractComp:GetGazeName()
     self.TxtGazeName:SetText(name)
 end
 
@@ -43,10 +44,11 @@ end
 
 ---@private [Op] 玩家想要交互当前注视的物体
 function UI_Gaze:OnInteractGaze()
-    self:GetPC().InteractComp:C2S_ReqInteractGaze()
+    self:_GetPC().InteractComp:C2S_ReqInteractGaze()
 end
 
-function UI_Gaze:GetPC()
+---@private [Tool] [Pure]
+function UI_Gaze:_GetPC()
     if not obj_util.is_valid(self._PC) then
         self._PC = UE.UGameplayStatics.GetPlayerController(self, 0)
     end

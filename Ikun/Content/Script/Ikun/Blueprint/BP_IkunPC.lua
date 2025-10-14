@@ -77,12 +77,16 @@ EnhInput.BindActions(BP_IkunPC)
 ---@private [Input]
 function BP_IkunPC:InitPlayerInput()
     local inputPower = InputMgr.ObtainInputPower(self)
+    -- 基础的移动, 转向, 跳跃
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered, self.OnMoveInput)
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered, self.OnLookInput)
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_BlankSpace, EnhInput.TriggerEvent.Started, self.OnJumpStarted)
+    -- 打开背包
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Bag, EnhInput.TriggerEvent.Completed, self._OnBagCompleted)
+    -- 战斗
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, self.OnMouseLeftStarted)
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftCompleted)
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
-    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_BlankSpace, EnhInput.TriggerEvent.Started, self.OnJumpStarted)
 end
 
 ---@private [Input]
@@ -120,6 +124,12 @@ function BP_IkunPC:OnMouseLeftStarted(ActionValue, ElapsedSeconds, TriggeredSeco
     end
     self.OwnerChr.InFightComp:C2S_FallInFight()
     self.OwnerChr:C2S_LeftStart()
+end
+
+---@private [Input] 按键B按下后打开背包
+function BP_IkunPC:_OnBagCompleted()
+    log.info('打开背包界面')
+    ui_util.uimgr:ShowUI(ui_util.uidef.UI_Bag)
 end
 
 return BP_IkunPC

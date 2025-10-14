@@ -63,14 +63,17 @@ end
 
 ---@private 刷新缓存的当前所有权拥有者
 InputMgr._RefreshCachedInputPowerOwner = function()
+    local strCacheInputPower = ''
     InputMgr._CachedInputPowerOwner = {}
     for i = #InputMgr._InputPowerStack, 1, -1 do
         local inputPower = InputMgr._InputPowerStack[i] ---@type InputPower
         table.insert(InputMgr._CachedInputPowerOwner, inputPower)
+        strCacheInputPower = strCacheInputPower..obj_util.dispname(inputPower.Object)..'|'
         if not inputPower.bBorrowInput then
             break
         end
     end
+    log.info('InputMgr._RefreshCachedInputPowerOwner', strCacheInputPower)
 end
 
 ---@public 注册监听输入事件
