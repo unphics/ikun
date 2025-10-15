@@ -8,7 +8,8 @@
 ---@alias ItemChangeCallback fun(table:table, ItemCfgId: id, Count: count, ItemId: id)
 
 ---@class BagClass
----@field private _ItemContainer table<id, ItemBaseClass> @物品容器<ItemId,物品对象>
+---@field private _ItemContainer table<id, ItemBaseClass> 物品容器<ItemId,物品对象>
+---@field private __ItemRefByCfg table<id, ItemBaseClass[]> 根据配置id建立索引的物品容器
 ---@field private _Owner RoleClass 拥有者
 ---@field private _OnItemAdd table[] 添加物品
 ---@field private _OnItemRemove table[] 移除物品
@@ -19,6 +20,7 @@ local BagClass = class.class 'BagClass' {}
 function BagClass:ctor(Owner)
     self._Owner = Owner
     self._ItemContainer = {}
+    self.__ItemRefByCfg = {}
     self._OnItemAdd = {}
     self._OnItemRemove = {}
 end
@@ -27,7 +29,18 @@ end
 ---@param Item ItemBaseClass
 function BagClass:AddItem(Item)
     -- local cfg = ConfigMgr:GetConfig('Item')[Item.ItemCfgId] ---@type ItemBaseConfig
+    if self._ItemContainer[Item.ItemId] then
+        log.error('BagClass:AddItem() 重复添加')
+        return
+    end
+    
     self._ItemContainer[Item.ItemId] = Item
+    
+    if not self.__ItemRefByCfg[Item.ItemCfgId] then
+        self.__ItemRefByCfg[Item.ItemCfgId] = {}
+    end
+    table.insert(self.__ItemRefByCfg[Item.ItemCfgId], Item)
+
     local count = Item.ItemCount or 1
     for _, ele in pairs(self._OnItemAdd) do
         if ele.Obj and ele.Fn then
@@ -43,12 +56,21 @@ function BagClass:RemoveItem(ItemId)
     if not self._ItemContainer[ItemId] then
         return false
     end
-    local item = self._ItemContainer[ItemId]
+
+    local itemRemove = self._ItemContainer[ItemId]
     self._ItemContainer[ItemId] = nil
+
+    for i, item in ipairs(self.__ItemRefByCfg[itemRemove.ItemCfgId]) do
+        if item.ItemId == ItemId then
+            table.remove(self.__ItemRefByCfg[itemRemove.ItemCfgId], i)
+            break
+        end
+    end
+    
     -- 回调通知
     for _, ele in pairs(self._OnItemRemove) do
         if ele.Obj and ele.Fn then
-            ele.Fn(ele.Obj, item.ItemCfgId, item.ItemCount, item.ItemId)
+            ele.Fn(ele.Obj, itemRemove.ItemCfgId, itemRemove.ItemCount, itemRemove.ItemId)
         end
     end
     return true
@@ -67,21 +89,21 @@ function BagClass:RemoveItems(ItemCfgId, Count)
 
     local removed = 0 ---@type count
     ---@param item ItemBaseClass
-    for _, item in pairs(self._ItemContainer)do
-        if item.ItemCfgId == ItemCfgId and removed < Count then
-            local removeCount = math.min(item.ItemCount, Count - removed)
-    
-            if item.ItemCount == removeCount then
-                self._ItemContainer[item.ItemId] = nil
-            else
-                item.ItemCount = item.ItemCount - removeCount
-            end
-    
-            removed = removed + removeCount
-        end
+    local index = 1
+    while index <= #self.__ItemRefByCfg[ItemCfgId] do
         if removed >= Count then
             break
         end
+        local item = self.__ItemRefByCfg[ItemCfgId][index]
+        local removeCount = math.min(item.ItemCount, Count - removed)
+        if item.ItemCount == removeCount then
+            self._ItemContainer[item.ItemId] = nil
+            table.remove(self.__ItemRefByCfg[ItemCfgId], index)
+        else
+            item.ItemCount = item.ItemCount - removeCount
+            index = index + 1
+        end
+        removed = removed + removeCount
     end
     -- 回调通知
     for _, ele in pairs(self._OnItemRemove) do
@@ -97,13 +119,14 @@ end
 ---@param Count count
 ---@return boolean
 function BagClass:CanRemoveItems(ItemCfgId, Count)
+    if not self.__ItemRefByCfg[ItemCfgId] then
+        return false
+    end
     local total = 0
-    for _, item in pairs(self._ItemContainer) do
-        if item.ItemCfgId == ItemCfgId then
-            total = total + (item.ItemCount or 1)
-            if total >= Count then
-                return true
-            end
+    for _, item in ipairs(self.__ItemRefByCfg[ItemCfgId]) do
+        total = total + (item.ItemCount or 1)
+        if total >= Count then
+            return true
         end
     end
     return false
@@ -114,10 +137,8 @@ end
 ---@return count
 function BagClass:GetItemCount(ItemCfgId)
     local total = 0
-    for _, item in pairs(self._ItemContainer) do
-        if item.ItemCfgId == ItemCfgId then
-            total = total + (item.ItemCount or 1)
-        end
+    for _, item in pairs(self.__ItemRefByCfg[ItemCfgId]) do
+        total = total + (item.ItemCount or 1)
     end
     return total
 end
@@ -128,29 +149,28 @@ end
 ---@return boolean
 function BagClass:TransferItems(ItemCfgId, Count, TargetBag)
     ---@todo 提供更多预检查, 如CanRemove和CanAccept
-    if not TargetBag or Count <= 0 then
+    if not TargetBag or (Count <= 0) or not self:CanRemoveItems(ItemCfgId, Count) then
         return false
     end
     local moved = 0
-    for ItemId, item in pairs(self._ItemContainer) do
-        if item.ItemCfgId == ItemCfgId and moved < Count then
-            local moveCount = math.min(item.ItemCount, Count - moved)
-
-            if item.ItemCount == moveCount then
-                -- 移动整个物品
-                self._ItemContainer[ItemId] = nil
-                TargetBag:AddItem(item)
-            else
-                -- 分割物品
-                item.ItemCount = item.ItemCount - moveCount
-                local movedItem = ItemMgr:CreateItem(item.ItemCfgId, moveCount) -- 移动时创建新Id
-                TargetBag:AddItem(movedItem)
-            end
-            moved = moved + moveCount
-        end
+    local index = 1
+    while index <= #self.__ItemRefByCfg[ItemCfgId] do
         if moved >= Count then
             break
         end
+        local item = self.__ItemRefByCfg[ItemCfgId][index]
+        local moveCount = math.min(item.ItemCount, Count - moved)
+        if item.ItemCount == moveCount then
+            self._ItemContainer[item.ItemId] = nil
+            table.remove(self.__ItemRefByCfg[ItemCfgId], index)
+            TargetBag:AddItem(item)
+        else
+            item.ItemCount = item.ItemCount - moveCount
+            local movedItem = ItemMgr:CreateItem(item.ItemCfgId, moveCount) -- 移动时创建新Id
+            TargetBag:AddItem(movedItem)
+            index = index + 1
+        end
+        moved = moved + moveCount
     end
     -- 回调通知
     for _, ele in pairs(self._OnItemRemove) do
