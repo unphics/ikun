@@ -88,7 +88,6 @@ function BagClass:RemoveItems(ItemCfgId, Count)
     end
 
     local removed = 0 ---@type count
-    ---@param item ItemBaseClass
     local index = 1
     while index <= #self.__ItemRefByCfg[ItemCfgId] do
         if removed >= Count then
