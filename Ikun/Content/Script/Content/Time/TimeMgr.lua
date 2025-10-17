@@ -45,15 +45,15 @@ function TimeMgr:ctor()
     self.ConstMonthRadix = ConfigMgr:GetGlobalConst('MonthRadix') or 12
     
     self.GameSpeed = ConfigMgr:GetGlobalConst('GameSpeed') or 1
-    self.Second = 0
     self.Year = 2000
     self.Month = 7
     self.Day = 28
     self.Hour = 3
     self.Minute = 0
+    self.Second = 0
 end
 
----@public 运行时间管理器
+---@public [Tick] 运行时间管理器
 function TimeMgr:TickTimeMgr(DeltaTime)
     self:_UpdateGameTime(DeltaTime)
 end
