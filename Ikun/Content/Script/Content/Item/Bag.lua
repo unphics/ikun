@@ -3,6 +3,7 @@
 ---@brief   物品背包
 ---@author  zys
 ---@data    Wed Aug 27 2025 00:45:13 GMT+0800 (中国标准时间)
+---@todo    重写委托, 有逻辑错误, 参数没法用
 ---
 
 ---@alias ItemChangeCallback fun(table:table, ItemCfgId: id, Count: count, ItemId: id)
@@ -23,6 +24,13 @@ function BagClass:ctor(Owner)
     self.__ItemRefByCfg = {}
     self._OnItemAdd = {}
     self._OnItemRemove = {}
+
+    local item1 = ItemMgr:CreateItem(110001, 1000)
+    self:AddItem(item1)
+    local item2 = ItemMgr:CreateItem(110001, 1000)
+    self:AddItem(item2)
+    local item3 = ItemMgr:CreateItem(110001, 1000)
+    self:AddItem(item3)
 end
 
 ---@public 添加物品
@@ -136,8 +144,10 @@ end
 ---@return count
 function BagClass:GetItemCount(ItemCfgId)
     local total = 0
-    for _, item in pairs(self.__ItemRefByCfg[ItemCfgId]) do
-        total = total + (item.ItemCount or 1)
+    if self.__ItemRefByCfg[ItemCfgId] then
+        for _, item in pairs(self.__ItemRefByCfg[ItemCfgId]) do
+            total = total + (item.ItemCount or 1)
+        end
     end
     return total
 end
@@ -228,6 +238,16 @@ function BagClass:UnRegItemRemove(Obj)
             end
         end
     end
+end
+
+---@public 获取背包里所有物品
+---@return ItemBaseClass[]
+function BagClass:GetAllItems()
+    local tb = {}
+    for id, item in pairs(self._ItemContainer) do
+        table.insert(tb, item)
+    end
+    return tb
 end
 
 return BagClass

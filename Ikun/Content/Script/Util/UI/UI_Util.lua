@@ -57,3 +57,51 @@ ui_util.hide_mouse = function(World)
 end
 
 return ui_util
+
+--[[
+
+---@override
+-- function M:Construct()
+-- end
+
+---@override
+-- function M:Destruct()
+-- end
+
+---@override
+-- function M:OnShow()
+-- end
+
+---@override
+-- function M:OnHide()
+-- end
+
+---@override
+--function M:Tick(MyGeometry, InDeltaTime)
+--end
+
+]]
+
+--[[
+
+---@override
+-- function M:Construct()
+-- end
+
+---@override
+-- function M:Destruct()
+-- end
+
+---@override
+--function M:Tick(MyGeometry, InDeltaTime)
+--end
+
+---@override
+--function M:OnListItemObjectSet(ListItemObject)
+--end
+
+---@override
+--function M:BP_OnEntryReleased()
+--end
+
+]]

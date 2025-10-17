@@ -1,8 +1,8 @@
 # 游戏配置相关
 
 ```
-author: zys
-data:   Fri Oct 17 2025 16:56:02 GMT+0800 (中国标准时间)
+@author: zys
+@data: Sun Aug 10 2025 01:30:39 GMT+0800 (中国标准时间)
 ```
 
 ### 全局配置表主键Id分配

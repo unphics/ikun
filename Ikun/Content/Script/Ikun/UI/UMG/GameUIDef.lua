@@ -15,27 +15,3 @@ local UIDef = {
 }
 
 return UIDef
-
---[[
-
----@override
--- function M:Construct()
--- end
-
----@override
--- function M:Destruct()
--- end
-
----@override
--- function M:OnShow()
--- end
-
----@override
--- function M:OnHide()
--- end
-
----@override
---function M:Tick(MyGeometry, InDeltaTime)
---end
-
-]]

@@ -22,6 +22,8 @@ local UI_Bag = UnLua.Class()
 
 ---@override
 function UI_Bag:OnShow()
+    log.dev('打开背包界面')
+
     -- input
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Bag))
     local power = InputMgr.ObtainInputPower(self)
@@ -31,6 +33,8 @@ function UI_Bag:OnShow()
     -- cursor
     local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
     pc.bShowMouseCursor = true
+
+    self:_UpdateTabPanel()
 end
 
 ---@override
@@ -53,6 +57,44 @@ end
 function UI_Bag:_OnBagCompleted()
     log.info('关闭背包界面')
     ui_util.uimgr:HideUI(ui_util.uidef.UI_Bag)
+end
+
+---@private
+function UI_Bag:_UpdateTabPanel()
+    local tabInfos = {}
+    table.insert(tabInfos, {BagTabName = '玩家名字'})
+    local allItemType = ConfigMgr:GetConfig('ItemType')
+    for _, typeInfo in pairs(allItemType) do
+        table.insert(tabInfos, {
+            BagTabId = typeInfo.ItemTypeId,
+            BagTabName = typeInfo.ItemTypeName,
+            OwnerUI = self,
+        })
+    end
+    ui_util.set_list_items(self.ListTab, tabInfos)
+    self:_UpdateItems()
+end
+
+function UI_Bag:_UpdateItems()
+    local player = UE.UGameplayStatics.GetPlayerPawn(self, 0)
+    local comp = player.BP_BagComp ---@as BP_BagComp
+    if comp then
+        local items = {}
+        for i = 1, comp.BagItems:Length() do
+            local item = comp.BagItems:Get(i)
+            table.insert(items, {
+                ItemCfgId = item.ItemCfgId,
+                ItemCount = item.ItemCount,
+            })
+        end
+        ui_util.set_list_items(self.ListItem, items)
+    end
+end
+
+---@private
+function UI_Bag:_OnTabClicked(BagTabId)
+    self.BagTabId = BagTabId
+    self:_UpdateTabPanel()
 end
 
 return UI_Bag
