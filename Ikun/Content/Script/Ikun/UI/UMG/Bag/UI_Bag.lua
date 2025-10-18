@@ -112,6 +112,9 @@ end
 function UI_Bag:_OnItemClicked(ItemCfgId)
     log.dev('UI_Bag:_OnItemClicked', ItemCfgId)
     self:_UpdateDetail(ItemCfgId)
+    local player = UE.UGameplayStatics.GetPlayerPawn(self, 0)
+    local comp = player.BP_BagComp ---@as BP_BagComp
+    comp:UseItem(ItemCfgId)
 end
 
 ---@private [ItemCall] [Show]

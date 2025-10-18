@@ -13,8 +13,14 @@ local InputMgr = require("Ikun/Module/Input/InputMgr")
 ---@field _PC BP_IkunPC
 local UI_Gaze = UnLua.Class()
 
+---@override
 function UI_Gaze:Construct()
-    self:InitInput()
+    EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Interact))
+end
+
+---@override
+function UI_Gaze:Destruct()
+    EnhInput.RemoveIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Interact))
 end
 
 ---@override
@@ -23,6 +29,10 @@ function UI_Gaze:OnShow()
     InputMgr.RegisterInputAction(powerGaze, EnhInput.IADef.IA_Interact, EnhInput.TriggerEvent.Started, self.OnInteractGaze)
     
     self.TxtGazeName:SetText('')
+end
+
+---@override
+function UI_Gaze:OnHide()
 end
 
 ---@override
@@ -38,7 +48,6 @@ end
 
 ---@private [Input]
 function UI_Gaze:InitInput()
-    EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Interact))
 end
 
 

@@ -74,4 +74,8 @@ function BP_BagComp:_SyncBagData()
     end
 end
 
+---@public
+function BP_BagComp:UseItem(Id)
+end
+
 return BP_BagComp
