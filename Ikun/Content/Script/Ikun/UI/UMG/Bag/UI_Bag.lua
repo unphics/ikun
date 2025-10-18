@@ -23,6 +23,8 @@ local UI_Bag = UnLua.Class()
 ---@override
 function UI_Bag:OnShow()
     log.dev('打开背包界面')
+    self:SetFocus()
+    self:SetKeyboardFocus()
 
     -- input
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Bag))
@@ -35,6 +37,7 @@ function UI_Bag:OnShow()
     pc.bShowMouseCursor = true
 
     self:_UpdateTabPanel()
+    self:_UpdateDetail()
 end
 
 ---@override
@@ -48,10 +51,6 @@ function UI_Bag:OnHide()
     local pc = UE.UGameplayStatics.GetPlayerController(self, 0)
     pc.bShowMouseCursor = false
 end
-
----@override
---function UI_Bag:Tick(MyGeometry, InDeltaTime)
---end
 
 ---@private [Input] [Op] 当B键按下后关闭背包界面
 function UI_Bag:_OnBagCompleted()
@@ -79,22 +78,57 @@ function UI_Bag:_UpdateItems()
     local player = UE.UGameplayStatics.GetPlayerPawn(self, 0)
     local comp = player.BP_BagComp ---@as BP_BagComp
     if comp then
-        local items = {}
+        local itemMap = {}
         for i = 1, comp.BagItems:Length() do
             local item = comp.BagItems:Get(i)
-            table.insert(items, {
-                ItemCfgId = item.ItemCfgId,
-                ItemCount = item.ItemCount,
-            })
+            local config = ConfigMgr:GetConfig('Item')[item.ItemCfgId]
+            if config.ItemType == self.BagTabId then
+                if not itemMap[item.ItemCfgId] then
+                    itemMap[item.ItemCfgId] = {
+                        ItemCfgId = item.ItemCfgId,
+                        ItemCount = 0,
+                        OwnerUI = self,
+                    }
+                end
+                itemMap[item.ItemCfgId].ItemCount = itemMap[item.ItemCfgId].ItemCount + item.ItemCount
+            end
+        end
+        local items = {}
+        for k, item in pairs(itemMap) do
+            table.insert(items, item)
         end
         ui_util.set_list_items(self.ListItem, items)
     end
 end
 
----@private
+---@private [ItemCall]
 function UI_Bag:_OnTabClicked(BagTabId)
     self.BagTabId = BagTabId
     self:_UpdateTabPanel()
+    self:_UpdateDetail()
+end
+
+---@private [ItemCall]
+function UI_Bag:_OnItemClicked(ItemCfgId)
+    log.dev('UI_Bag:_OnItemClicked', ItemCfgId)
+    self:_UpdateDetail(ItemCfgId)
+end
+
+---@private [ItemCall] [Show]
+function UI_Bag:_OnItemHovered(ItemCfgId)
+    self:_UpdateDetail(ItemCfgId)
+end
+
+---@private [Show]
+---@param ItemCfgId id
+function UI_Bag:_UpdateDetail(ItemCfgId)
+    local config = ConfigMgr:GetConfig('Item')[ItemCfgId]
+    if config then
+        self.CvsItemDetail:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
+        self.TxtItemName:SetText(config.ItemName)
+    else
+        self.CvsItemDetail:SetVisibility(UE.ESlateVisibility.Hidden)
+    end
 end
 
 return UI_Bag
