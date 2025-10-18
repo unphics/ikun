@@ -8,7 +8,6 @@
 local ChatExecLib = require('Content/Chat/ChatExecLib')
 local DynaSelect = require('Content/Chat/DynaSelect')
 
-
 ---@class ChatConfig
 ---@field Id number
 ---@field Type number
@@ -20,24 +19,11 @@ local DynaSelect = require('Content/Chat/DynaSelect')
 ---@field PostExecId number
 
 ---@class NpcChatClass
----@field _Owner RoleClass
----@field _CurChatId number
----@field _CurSelectList number[]
----@field ChatTarget RoleClass
-local NpcChatClass = class.class 'NpcChatClass' {
-    ctor = function()end,
-    NewChat = function()end,
-    UpdateChat = function()end,
-    DoSelectIndex = function()end,
-    DoTalkNext = function()end,
-    GetChatOwner = function()end,
-    GetChatData = function()end,
-    GetChatComp = function()end,
-    _Owner = nil,
-    _CurChatId = nil,
-    _CurSelectList = nil,
-    ChatTarget = nil,
-}
+---@field _Owner RoleClass 对话对象的Owner
+---@field _CurChatId number 当前的对话Id
+---@field _CurSelectList number[] 当前对话的对话列表
+---@field ChatTarget RoleClass 当前对话的对方
+local NpcChatClass = class.class 'NpcChatClass' {}
 
 function NpcChatClass:ctor(Owner)
     self._Owner = Owner
@@ -45,19 +31,69 @@ end
 
 ---@public
 function NpcChatClass:NewChat(ChatId, Target)
+    log.info(log.key.Chat, '对话模块开始新对话', ChatId, rolelib.roleid(Target))
     self._CurChatId = ChatId
     self._CurSelectList = nil
     self.ChatTarget = rolelib.role(Target)
-    self:UpdateChat()
+    self:_UpdateChat()
 end
 
 ---@public
-function NpcChatClass:UpdateChat()
+function NpcChatClass:DoSelectIndex(Index)
+    log.info(log.key.Chat, '对话模块选择对话项', Index)
+    local curSelectId = self._CurSelectList[Index]
+    local data = self:GetChatData(curSelectId)
+    if data.PostExecId then
+        local execData = ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
+        ChatExecLib.TryExec(self, execData)
+    end
+    self._CurChatId = data.NextId
+    self:_UpdateChat()
+end
+
+---@public
+function NpcChatClass:DoTalkNext()
+    local data = self:GetChatData(self._CurChatId)
+    if data then
+        log.info(log.key.chat, '对话模块下一个对话')
+        if data.PostExecId then
+            local execData = ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
+            ChatExecLib.TryExec(self, execData)
+        end
+        self._CurChatId = data.NextId
+        self:_UpdateChat()
+    end
+end
+
+---@public [Pure]
+---@return ChatConfig
+function NpcChatClass:GetChatData(ChatId)
+    local config = ConfigMgr:GetConfig('Chat')
+    local data = config[ChatId]
+    if not data then
+        log.error('NpcChatClass:GetChatData()', '无效的ChatId', ChatId)
+    end
+    return data
+end
+
+---@public [Pure] [Comp]
+function NpcChatClass:GetChatComp()
+    return self._Owner.Avatar:GetController().ChatComp
+end
+
+---@public [Pure]
+---@return RoleClass
+function NpcChatClass:GetChatOwner()
+    return self._Owner
+end
+
+---@private
+function NpcChatClass:_UpdateChat()
     local data = self:GetChatData(self._CurChatId)
         if not data then
-        return log.error('NpcChatClass:UpdateChat()', '无效的ChatId', self._CurChatId)
+        return log.error('NpcChatClass:_UpdateChat()', '无效的ChatId', self._CurChatId)
     end
-    log.info('NpcChatClass:UpdateChat() 当前ChatId', self._CurChatId)
+    log.info('NpcChatClass:_UpdateChat() 当前ChatId', self._CurChatId)
     if data.PreExecId then
         local execData = ConfigMgr:GetConfig('ChatExec')[data.PreExecId]
         ChatExecLib.TryExec(self, execData)
@@ -91,53 +127,6 @@ function NpcChatClass:UpdateChat()
         end
         self:GetChatComp():S2C_ShowSelectList(selectList)
     end
-end
-
----@public
-function NpcChatClass:DoSelectIndex(Index)
-    local curSelectId = self._CurSelectList[Index]
-    local data = self:GetChatData(curSelectId)
-    if data.PostExecId then
-        local execData = ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
-        ChatExecLib.TryExec(self, execData)
-    end
-    self._CurChatId = data.NextId
-    self:UpdateChat()
-end
-
----@public
-function NpcChatClass:DoTalkNext()
-    local data = self:GetChatData(self._CurChatId)
-    if data then
-        if data.PostExecId then
-            local execData = ConfigMgr:GetConfig('ChatExec')[data.PostExecId]
-            ChatExecLib.TryExec(self, execData)
-        end
-        self._CurChatId = data.NextId
-        self:UpdateChat()
-    end
-end
-
----@public [Pure]
----@return ChatConfig
-function NpcChatClass:GetChatData(ChatId)
-    local config = ConfigMgr:GetConfig('Chat')
-    local data = config[ChatId]
-    if not data then
-        log.error('NpcChatClass:GetChatData()', '无效的ChatId', ChatId)
-    end
-    return data
-end
-
----@public [Pure] [Comp]
-function NpcChatClass:GetChatComp()
-    return self._Owner.Avatar:GetController().ChatComp
-end
-
----@public [Pure]
----@return RoleClass
-function NpcChatClass:GetChatOwner()
-    return self._Owner
 end
 
 return NpcChatClass
