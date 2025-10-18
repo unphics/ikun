@@ -18,3 +18,17 @@ data: Sat Oct 18 2025 13:45:58 GMT+0800 (中国标准时间)
 ---
 ## 模块设计
 1. 一定要用文本的形式先讲整个模块设计写下来, 再开始编码
+---
+## 英文名称简写对照表(Addr)
+|中文名称|英文名称|英文简写|
+|-|-|-|
+|管理器|manager|mgr|
+|配置|config|cfg|
+|定义|define|def|
+|显示|display|disp|
+|系数|correct|corr|
+|默认|default|dft|
+|位置|position|pos|
+|计算|calculate|calc|
+|分配|assign|asgn|
+---
