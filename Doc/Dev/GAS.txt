@@ -1,6 +1,0 @@
-
-GA控制节奏和分段, GE控制数值和状态
-
-UE.UAbilityTask_WaitGameplayTagAdded.WaitGameplayTagAdd()在服务端的更新有问题, 会先通知再改变数值, 所以不能用来写consume
-
-GameplayAbility有发RPC的权力, 但是不能选InstancePerExec
