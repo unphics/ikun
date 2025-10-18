@@ -31,7 +31,7 @@ end
 
 ---@public
 function NpcChatClass:NewChat(ChatId, Target)
-    log.info(log.key.Chat, '对话模块开始新对话', ChatId, rolelib.roleid(Target))
+    log.info(log.key.chat, '对话模块开始新对话', ChatId, rolelib.roleid(Target))
     self._CurChatId = ChatId
     self._CurSelectList = nil
     self.ChatTarget = rolelib.role(Target)
@@ -40,7 +40,7 @@ end
 
 ---@public
 function NpcChatClass:DoSelectIndex(Index)
-    log.info(log.key.Chat, '对话模块选择对话项', Index)
+    log.info(log.key.chat, '对话模块选择对话项', Index)
     local curSelectId = self._CurSelectList[Index]
     local data = self:GetChatData(curSelectId)
     if data.PostExecId then
