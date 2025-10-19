@@ -5,7 +5,7 @@
 ---@data    Wed Aug 27 2025 00:32:22 GMT+0800 (中国标准时间)
 ---
 
----@class ItemBaseConfig
+---@class ItemConfig
 ---@field ItemId id
 ---@field ItemName name
 ---@field ItemDesc string
@@ -13,6 +13,7 @@
 ---@field StackNum count
 ---@field ItemSubtype integer
 ---@field SpecialId id
+---@field ItemTemplate string
 
 ---@class ItemBaseClass 物品类
 ---@field ItemId id 全局唯一id(对于同为消耗品,不同获得途径不进行合并)
