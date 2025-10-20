@@ -30,6 +30,7 @@ function SkillComp:InitRoleSkill()
         return
     end
 
+    ---@todo zys 技能槽
     self._SkillSlot = {
         Equip = nil,
         UnEquip = nil,

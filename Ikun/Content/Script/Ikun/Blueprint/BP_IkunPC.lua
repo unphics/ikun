@@ -85,8 +85,11 @@ function BP_IkunPC:InitPlayerInput()
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Bag, EnhInput.TriggerEvent.Completed, self._OnBagCompleted)
     -- 战斗
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, self.OnMouseLeftStarted)
-    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftCompleted)
-    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
+    -- InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftCompleted)
+    -- InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
+
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Equip, EnhInput.TriggerEvent.Triggered, self._OnEquipCompleted)
+    
 end
 
 ---@private [Input]
@@ -118,11 +121,10 @@ function BP_IkunPC:OnMouseLeftStarted(ActionValue, ElapsedSeconds, TriggeredSeco
         return
     end
     ---@rule 玩家和平状态下的第一次左键点击先入战, 下一次再考虑执行左键绑定的技能等
-    if not self.OwnerChr.InFightComp:CheckInFight() then
-        self.OwnerChr.InFightComp:C2S_FallInFight()
+    if not self.OwnerChr.InFightComp:CheckIsEquip() then
+        self.OwnerChr.InFightComp:C2S_Equip()
         return
     end
-    self.OwnerChr.InFightComp:C2S_FallInFight()
     self.OwnerChr:C2S_LeftStart()
 end
 
@@ -130,6 +132,16 @@ end
 function BP_IkunPC:_OnBagCompleted()
     log.info('打开背包界面')
     ui_util.uimgr:ShowUI(ui_util.uidef.UI_Bag)
+end
+
+---@private [Input] 按R键后切换拿起放下武器
+function BP_IkunPC:_OnEquipCompleted()
+    log.info('拿起放下武器')
+    if not self.OwnerChr.InFightComp:CheckIsEquip() then
+        self.OwnerChr.InFightComp:C2S_Equip()
+    else
+        self.OwnerChr.InFightComp:C2S_UnEquip()
+    end
 end
 
 return BP_IkunPC

@@ -30,7 +30,7 @@ local IADef = {
     IA_Tab = '/Game/Ikun/UI/Input/IA/IA_Tab.IA_Tab',
     IA_BlankSpace = '/Game/Ikun/Blueprint/Input/IA/IA_BlankSpace.IA_BlankSpace',
     IA_Bag = '/Game/Ikun/Blueprint/Input/IA/IA_Bag.IA_Bag',
-    
+    IA_Equip = '/Game/Ikun/Blueprint/Input/IA/IA_Equip.IA_Equip',
 }
 EnhInput.IADef = IADef
 
@@ -136,6 +136,11 @@ EnhInput.BindActions = function(pc)
     EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Bag, EnhInput.TriggerEvent.Completed,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
             InputMgr.TriggerInputAction(IADef.IA_Bag, EnhInput.TriggerEvent.Completed, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        end, _)
+
+    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Equip, EnhInput.TriggerEvent.Completed,
+        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Equip, EnhInput.TriggerEvent.Completed, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end, _)
 end
 
