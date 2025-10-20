@@ -42,7 +42,7 @@ end
 ---@private
 function GoStallAction:_OnMoveFailed()
     self:EndAction(false)
-    log.dev('todo tp to stall')
+    log.error('todo tp to stall')
 end
 
 return GoStallAction

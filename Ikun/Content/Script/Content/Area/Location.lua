@@ -38,7 +38,7 @@ end
 ---@param LocationAvatar AActor
 function LocationClass:InitByLocationAvatar(LocationId, LocationAvatar)
     if not LocationAvatar:IsA(UE.AActor) then
-        log.dev('LocationClass:InitByLocationAvatar 状态不对', LocationId, LocationAvatar, obj_util.dispname(LocationAvatar))
+        log.error('LocationClass:InitByLocationAvatar 状态不对', LocationId, LocationAvatar, obj_util.dispname(LocationAvatar))
         return
     end
     local allLocationConfig = ConfigMgr:GetConfig('Location')
