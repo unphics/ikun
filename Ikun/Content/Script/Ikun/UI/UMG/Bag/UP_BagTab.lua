@@ -19,10 +19,6 @@ function UP_BagTab:Destruct()
 end
 
 ---@override
---function UP_BagTab:Tick(MyGeometry, InDeltaTime)
---end
-
----@override
 function UP_BagTab:OnListItemObjectSet(ListItemObject)
     self.ItemValue = ListItemObject.Value
     self.TxtName:SetText(self.ItemValue.BagTabName)

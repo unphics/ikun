@@ -3,7 +3,6 @@
 ---@brief   物品背包
 ---@author  zys
 ---@data    Wed Aug 27 2025 00:45:13 GMT+0800 (中国标准时间)
----@todo    重写委托, 有逻辑错误, 参数没法用
 ---
 
 ---@alias ItemChangeCallback fun(table:table, ItemCfgId: id, Count: count, ItemId: id)
@@ -33,7 +32,7 @@ function BagClass:ctor(Owner)
     self:AddItem(item3)
 end
 
----@public 添加物品
+---@public 添加一个物品
 ---@param Item ItemBaseClass
 function BagClass:AddItem(Item)
     -- local cfg = ConfigMgr:GetConfig('Item')[Item.ItemCfgId] ---@type ItemBaseConfig
@@ -49,6 +48,7 @@ function BagClass:AddItem(Item)
     end
     table.insert(self.__ItemRefByCfg[Item.ItemCfgId], Item)
 
+    -- 通知
     local count = Item.ItemCount or 1
     for _, ele in pairs(self._OnItemAdd) do
         if ele.Obj and ele.Fn then
@@ -57,7 +57,7 @@ function BagClass:AddItem(Item)
     end
 end
 
----@public
+---@public 移除一个物品
 ---@param ItemId id
 ---@return boolean
 function BagClass:RemoveItem(ItemId)
@@ -75,7 +75,7 @@ function BagClass:RemoveItem(ItemId)
         end
     end
     
-    -- 回调通知
+    -- 通知
     for _, ele in pairs(self._OnItemRemove) do
         if ele.Obj and ele.Fn then
             ele.Fn(ele.Obj, itemRemove.ItemCfgId, itemRemove.ItemCount, itemRemove.ItemId)
@@ -85,7 +85,7 @@ function BagClass:RemoveItem(ItemId)
 end
 
 
----@public 批量移除物品
+---@public 移除一定数量的某类物品
 ---@param ItemCfgId id
 ---@param Count count
 ---@return boolean
@@ -112,7 +112,8 @@ function BagClass:RemoveItems(ItemCfgId, Count)
         end
         removed = removed + removeCount
     end
-    -- 回调通知
+
+    -- 通知
     for _, ele in pairs(self._OnItemRemove) do
         if ele.Obj and ele.Fn then
             ele.Fn(ele.Obj, ItemCfgId, removed)
@@ -121,7 +122,7 @@ function BagClass:RemoveItems(ItemCfgId, Count)
     return true
 end
 
----@public [Pure] 判断是否可以移除一个此物品
+---@public [Pure] 判断是否可以移除一定数量的某类物品
 ---@param ItemCfgId id
 ---@param Count count
 ---@return boolean
@@ -139,7 +140,7 @@ function BagClass:CanRemoveItems(ItemCfgId, Count)
     return false
 end
 
----@public [Pure] 获取此物品的数量
+---@public [Pure] 获取此类物品的数量
 ---@param ItemCfgId id
 ---@return count
 function BagClass:GetItemCount(ItemCfgId)
@@ -152,7 +153,7 @@ function BagClass:GetItemCount(ItemCfgId)
     return total
 end
 
----@public 移动一类物品到其他背包中
+---@public 移动一定数量的某类物品到其他背包中
 ---@param Count count
 ---@param TargetBag BagClass
 ---@return boolean
@@ -181,15 +182,15 @@ function BagClass:TransferItems(ItemCfgId, Count, TargetBag)
         end
         moved = moved + moveCount
     end
-    -- 回调通知
+    -- 通知
     for _, ele in pairs(self._OnItemRemove) do
         if ele.Obj and ele.Fn then
-            ele.Fn(ele.Obj, ItemCfgId, moved)
+            ele.Fn(ele.Obj, ItemCfgId, moved, nil)
         end
     end
     for _, ele in pairs(TargetBag._OnItemAdd) do
         if ele.Obj and ele.Fn then
-            ele.Fn(ele.Obj, ItemCfgId, moved)
+            ele.Fn(ele.Obj, ItemCfgId, moved, nil)
         end
     end
     return true
@@ -248,6 +249,20 @@ function BagClass:GetAllItems()
         table.insert(tb, item)
     end
     return tb
+end
+
+---@public 使用物品
+---@param ItemCfgId id
+---@param ItemCount count
+---@param ItemId id
+function BagClass:TryUseItem(ItemCfgId, ItemCount, ItemId)
+    if ItemId and ItemId > 0 then
+        local item = self._ItemContainer[ItemId]
+        item:UseItem(self._Owner, ItemCount)
+    elseif ItemCfgId and ItemCfgId > 0 then
+        local item = self.__ItemRefByCfg[ItemCfgId][1]
+        item:UseItem(self._Owner, ItemCount)
+    end
 end
 
 return BagClass

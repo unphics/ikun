@@ -31,4 +31,9 @@ function ItemBaseClass:ctor(ItemId, ItemCfgId, ItemCount)
     self.ItemCount = ItemCount or 1
 end
 
+---@public 使用物品
+function ItemBaseClass:UseItem(OwnerRole, Count)
+    log.info(log.key.item, '物品模块使用物品', self.ItemId, self.ItemCfgId, Count)
+end
+
 return ItemBaseClass

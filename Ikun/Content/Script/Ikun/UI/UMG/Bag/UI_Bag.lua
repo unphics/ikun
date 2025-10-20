@@ -13,16 +13,8 @@ local EnhInput = require("Ikun/Module/Input/EnhInput")
 local UI_Bag = UnLua.Class()
 
 ---@override
--- function UI_Bag:Construct()
--- end
-
----@override
--- function UI_Bag:Destruct()
--- end
-
----@override
 function UI_Bag:OnShow()
-    log.dev('打开背包界面')
+    log.info(log.key.item, '打开背包界面')
     self:SetFocus()
     self:SetKeyboardFocus()
 
@@ -52,29 +44,8 @@ function UI_Bag:OnHide()
     pc.bShowMouseCursor = false
 end
 
----@private [Input] [Op] 当B键按下后关闭背包界面
-function UI_Bag:_OnBagCompleted()
-    log.info('关闭背包界面')
-    ui_util.uimgr:HideUI(ui_util.uidef.UI_Bag)
-end
-
----@private
-function UI_Bag:_UpdateTabPanel()
-    local tabInfos = {}
-    table.insert(tabInfos, {BagTabName = '玩家名字'})
-    local allItemType = ConfigMgr:GetConfig('ItemType')
-    for _, typeInfo in pairs(allItemType) do
-        table.insert(tabInfos, {
-            BagTabId = typeInfo.ItemTypeId,
-            BagTabName = typeInfo.ItemTypeName,
-            OwnerUI = self,
-        })
-    end
-    ui_util.set_list_items(self.ListTab, tabInfos)
-    self:_UpdateItems()
-end
-
-function UI_Bag:_UpdateItems()
+---@public 刷新所有物品
+function UI_Bag:RefreshItems()
     local player = UE.UGameplayStatics.GetPlayerPawn(self, 0)
     local comp = player.BP_BagComp ---@as BP_BagComp
     if comp then
@@ -101,6 +72,28 @@ function UI_Bag:_UpdateItems()
     end
 end
 
+---@private [Input] [Op] 当B键按下后关闭背包界面
+function UI_Bag:_OnBagCompleted()
+    log.info(log.key.item, '关闭背包界面')
+    ui_util.uimgr:HideUI(ui_util.uidef.UI_Bag)
+end
+
+---@private
+function UI_Bag:_UpdateTabPanel()
+    local tabInfos = {}
+    table.insert(tabInfos, {BagTabName = '玩家名字'})
+    local allItemType = ConfigMgr:GetConfig('ItemType')
+    for _, typeInfo in pairs(allItemType) do
+        table.insert(tabInfos, {
+            BagTabId = typeInfo.ItemTypeId,
+            BagTabName = typeInfo.ItemTypeName,
+            OwnerUI = self,
+        })
+    end
+    ui_util.set_list_items(self.ListTab, tabInfos)
+    self:RefreshItems()
+end
+
 ---@private [ItemCall]
 function UI_Bag:_OnTabClicked(BagTabId)
     self.BagTabId = BagTabId
@@ -110,11 +103,11 @@ end
 
 ---@private [ItemCall]
 function UI_Bag:_OnItemClicked(ItemCfgId)
-    log.dev('UI_Bag:_OnItemClicked', ItemCfgId)
+    log.info(log.key.item, '背包界面玩家点击物品',  ItemCfgId)
     self:_UpdateDetail(ItemCfgId)
     local player = UE.UGameplayStatics.GetPlayerPawn(self, 0)
     local comp = player.BP_BagComp ---@as BP_BagComp
-    comp:UseItem(ItemCfgId)
+    comp:C2S_UseItem(ItemCfgId, 1, -1)
 end
 
 ---@private [ItemCall] [Show]
@@ -123,15 +116,17 @@ function UI_Bag:_OnItemHovered(ItemCfgId)
 end
 
 ---@private [Show]
----@param ItemCfgId id
+---@param ItemCfgId id?
 function UI_Bag:_UpdateDetail(ItemCfgId)
-    local config = ConfigMgr:GetConfig('Item')[ItemCfgId]
-    if config then
-        self.CvsItemDetail:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
-        self.TxtItemName:SetText(config.ItemName)
-    else
-        self.CvsItemDetail:SetVisibility(UE.ESlateVisibility.Hidden)
+    if ItemCfgId then
+        local config = ConfigMgr:GetConfig('Item')[ItemCfgId]
+        if config then
+            self.CvsItemDetail:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
+            self.TxtItemName:SetText(config.ItemName)
+            return
+        end
     end
+    self.CvsItemDetail:SetVisibility(UE.ESlateVisibility.Hidden)
 end
 
 return UI_Bag

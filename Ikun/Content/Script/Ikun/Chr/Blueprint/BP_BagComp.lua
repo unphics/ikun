@@ -4,6 +4,7 @@
 ---@author  zys
 ---@data    Wed Oct 15 2025 23:44:49 GMT+0800 (中国标准时间)
 ---@todo    优化数据同步, 挪到主Blueprint目录中
+---@desc    
 ---
 
 local BPS_Item = UE.UObject.Load('/Game/Ikun/Blueprint/Struct/BPS_Item.BPS_Item')
@@ -75,7 +76,9 @@ function BP_BagComp:_SyncBagData()
 end
 
 ---@public
-function BP_BagComp:UseItem(Id)
+function BP_BagComp:C2S_UseItem_RPC(ItemCfgId, ItemCount, ItemId)
+    local role = self:GetOwner().GetRole and self:GetOwner():GetRole() ---@type RoleClass
+    role.Bag:TryUseItem(ItemCfgId, ItemCount, ItemId)
 end
 
 return BP_BagComp
