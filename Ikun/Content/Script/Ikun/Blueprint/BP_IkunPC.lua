@@ -88,7 +88,7 @@ function BP_IkunPC:InitPlayerInput()
     -- InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftCompleted)
     -- InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
 
-    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Equip, EnhInput.TriggerEvent.Triggered, self._OnEquipCompleted)
+    InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Equip, EnhInput.TriggerEvent.Completed, self._OnEquipCompleted)
     
 end
 
