@@ -46,6 +46,7 @@ end
 ---@public 装备武器
 function InFightComp:C2S_Equip_RPC()
     if not self:CheckIsEquip() then
+        gas_util.add_loose_tag(self:GetOwner(), 'Role.State.bEquip')
         self:GetOwner().SkillComp:TryActiveSlotSkill('Equip')
     end
 end
@@ -53,6 +54,7 @@ end
 ---@public 收起武器
 function InFightComp:C2S_UnEquip_RPC()
     if self:CheckIsEquip() then
+        gas_util.remove_loose_tag(self:GetOwner(), 'Role.State.bEquip')
         self:GetOwner().SkillComp:TryActiveSlotSkill('UnEquip')
     end
 end
