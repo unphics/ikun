@@ -6,7 +6,6 @@
 
 local BP_IkunPC = require('Ikun/Blueprint/BP_IkunPC')
 local EnhInput = require('Ikun/Module/Input/EnhInput')
--- require('SharedPCH')
 
 ---@class BP_GameInst: BP_GameInst_C
 local BP_GameInst = UnLua.Class()
@@ -15,8 +14,6 @@ function BP_GameInst:ReceiveInit()
     self.Overridden.ReceiveInit(self)
     -- 此处是客户端和服务器最早启动的地方, 因此可以在这里做一些初始化全局或者静态的东西
     log.info(log.key.ueinit..' BP_GameInstanceBase:ReceiveInit'..'--------------------------------------------------------------------------')
-    -- local main = class.new "derive" ()
-    -- main:test()
 end
 
 function BP_GameInst:ReceiveOnWorldChanged(OldWorld, NewWorld)

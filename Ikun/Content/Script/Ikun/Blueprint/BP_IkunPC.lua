@@ -12,12 +12,6 @@ local InputMgr = require("Ikun/Module/Input/InputMgr")
 ---@field OwnerChr BP_ChrBase
 local BP_IkunPC = UnLua.Class()
 
--- function BP_IkunPC:Initialize(Initializer)
--- end
-
--- function BP_IkunPC:UserConstructionScript()
--- end
-
 ---@override
 ---@param PossessedPawn BP_ChrBase
 function BP_IkunPC:ReceivePossess(PossessedPawn)
@@ -38,32 +32,7 @@ function BP_IkunPC:ReceiveBeginPlay()
         local trigger = UE.FAbilityTriggerData()
         trigger.TriggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Action.Charge.Max')
     end
-
-
-    -- if net_util.is_client(self) then
-    --     local EnhancedInput = require("UnLua.EnhancedInput")
-    --     local actionPath = '/Game/Developers/zys/EnhancedInput/IA_Test.IA_Test'
-    --     EnhancedInput.BindAction(self, actionPath, 'Started', function()
-    --         log.error('qqqqqqqqqqq')
-    --     end)
-    --     UE.UIkunFnLib.ReplaceInputs(self, self.InputComponent)
-    -- end
 end
-
--- function BP_IkunPC:ReceiveEndPlay()
--- end
-
--- function BP_IkunPC:ReceiveTick(DeltaSeconds)
--- end
-
--- function BP_IkunPC:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
--- end
-
--- function BP_IkunPC:ReceiveActorBeginOverlap(OtherActor)
--- end
-
--- function BP_IkunPC:ReceiveActorEndOverlap(OtherActor)
--- end
 
 ---@private [Input]
 function BP_IkunPC:InitInputSystem()
