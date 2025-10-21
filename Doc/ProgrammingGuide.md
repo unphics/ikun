@@ -17,6 +17,8 @@ BP_ChrBase 角色基类
     InFightComp 战斗状态组件, 入战状态/武备状态
     SkillComp 技能组件
     BP_BagComp 背包组件
+BP_NpcBase: BP_ChrBase Npc角色基类
+    BP_ReceptionComp Npc接待玩家组件
 ```
 ---
 ## 程序设计中建议的单位初始化顺序

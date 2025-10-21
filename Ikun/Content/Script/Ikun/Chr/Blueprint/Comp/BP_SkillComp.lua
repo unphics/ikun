@@ -16,17 +16,17 @@ local SLOT_NAME_HEAD = 'Skill.Type.Trigger.'
 ---@field AbilityAnims string[]
 ---@field Params table
 
----@class SkillComp: SkillComp_C
+---@class BP_SkillComp: BP_SkillComp_C
 ---@field _SkillSlot table
-local SkillComp = UnLua.Class()
+local BP_SkillComp = UnLua.Class()
 
 ---@public 初始化角色的技能
-function SkillComp:InitRoleSkill()
+function BP_SkillComp:InitRoleSkill()
     local role = rolelib.role(self:GetOwner())
 
     local roleCfg = RoleMgr:GetRoleConfig(role:GetRoleCfgId()) ---@type RoleConfig
     if not roleCfg.RoleSkills then
-        log.info('SkillComp:InitRoleSkill()', '无初始技能', role:RoleName())
+        log.info('BP_SkillComp:InitRoleSkill()', '无初始技能', role:RoleName())
         return
     end
 
@@ -48,21 +48,21 @@ end
 
 ---@public 激活技能 [Server]
 ---@param SlotName string
-function SkillComp:TryActiveSlotSkill(SlotName)
+function BP_SkillComp:TryActiveSlotSkill(SlotName)
     if net_util.is_client(self:GetOwner()) then
-        log.error('SkillComp:TryActiveSlotSkill()', '只能在服务端调用')
+        log.error('BP_SkillComp:TryActiveSlotSkill()', '只能在服务端调用')
         return
     end
-    log.info('SkillComp:TryActiveSlotSkill()', SlotName)
+    log.info('BP_SkillComp:TryActiveSlotSkill()', SlotName)
     local skillInfo = self._SkillSlot[SlotName]
     if not skillInfo then
-        log.warn('SkillComp:TryActiveSlotSkill()', '空槽位')
+        log.warn('BP_SkillComp:TryActiveSlotSkill()', '空槽位')
         return
     end
 
     local Tag = UE.UIkunFnLib.RequestGameplayTag(SLOT_NAME_HEAD..SlotName)
     if not Tag or not Tag.TagName then
-        log.error('SkillComp:TryActiveSlotSkill()', '无效的Tag')
+        log.error('BP_SkillComp:TryActiveSlotSkill()', '无效的Tag')
         return
     end
     
@@ -74,23 +74,23 @@ function SkillComp:TryActiveSlotSkill(SlotName)
 end
 
 ---@public
-function SkillComp:SetSlotSkill(SlotName, SkillId)
+function BP_SkillComp:SetSlotSkill(SlotName, SkillId)
     if self._SkillSlot[SlotName] then
-        log.error('SkillComp:SetSlotSkill() 该槽位已经存在技能')
+        log.error('BP_SkillComp:SetSlotSkill() 该槽位已经存在技能')
         return
     end
 
     local allSkillCfg = ConfigMgr:GetConfig('Skill') ---@type table<number, SkillConfig>
     local config = allSkillCfg[SkillId] ---@type SkillConfig
     if not config then
-        log.error('SkillComp:SetSlotSkill() 无效的技能Id')
+        log.error('BP_SkillComp:SetSlotSkill() 无效的技能Id')
         return
     end
 
     local slotTagName = SLOT_NAME_HEAD..SlotName
     local slotTag = UE.UIkunFnLib.RequestGameplayTag(slotTagName)
     if not slotTag or not slotTag.TagName then 
-        log.error('SkillComp:SetSlotSkill() 非法的技能槽位')
+        log.error('BP_SkillComp:SetSlotSkill() 非法的技能槽位')
         return
     end
     
@@ -104,11 +104,11 @@ function SkillComp:SetSlotSkill(SlotName, SkillId)
 end
 
 ---@public
-function SkillComp:UnsetSlotSkill(SlotName)
+function BP_SkillComp:UnsetSlotSkill(SlotName)
     local slotTagName = SLOT_NAME_HEAD..SlotName
     local slotTag = UE.UIkunFnLib.RequestGameplayTag(slotTagName)
     if not slotTag or not slotTag.TagName then 
-        log.error('SkillComp:UnsetSlotSkill() 非法的技能槽位')
+        log.error('BP_SkillComp:UnsetSlotSkill() 非法的技能槽位')
         return
     end
 
@@ -118,4 +118,4 @@ function SkillComp:UnsetSlotSkill(SlotName)
     self._SkillSlot[SlotName] = nil
 end
 
-return SkillComp
+return BP_SkillComp
