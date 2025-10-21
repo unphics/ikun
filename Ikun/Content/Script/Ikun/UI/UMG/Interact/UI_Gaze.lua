@@ -35,22 +35,19 @@ end
 
 ---@private [Show] 如果当前数据端凝视了目标, 那么就显示他的名字
 function UI_Gaze:UpdateGazeInfo()
-    local name = self:_GetPC().InteractComp:GetGazeName()
+    local name = self:_GetInteractComp():GetGazeName()
     self.TxtGazeName:SetText(name)
 end
 
 
 ---@private [Op]玩家想要交互当前注视的物体
 function UI_Gaze:OnInteractGaze()
-    self:_GetPC().InteractComp:C2S_ReqInteractGaze()
+    self:_GetInteractComp():C2S_ReqInteractGaze()
 end
 
 ---@private [Tool] [Pure]
-function UI_Gaze:_GetPC()
-    if not obj_util.is_valid(self._PC) then
-        self._PC = UE.UGameplayStatics.GetPlayerController(self, 0)
-    end
-    return self._PC
+function UI_Gaze:_GetInteractComp()
+    return UE.UGameplayStatics.GetPlayerController(self, 0).InteractComp
 end
 
 return UI_Gaze

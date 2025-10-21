@@ -5,27 +5,27 @@
 ---@data    Sat Aug 23 2025 11:23:32 GMT+0800 (中国标准时间)
 ---
 
----@class GazeComp: GazeComp_C
+---@class InteractComp: InteractComp_C
 ---@field GazeIntervalConst number 凝视间隔
 ---@field GazeDistanceConst number 凝视距离
 ---@field CurGazeCountTime number 当前凝视时间计时
-local GazeComp = UnLua.Class()
+local InteractComp = UnLua.Class()
 
 ---@override
-function GazeComp:ReceiveBeginPlay()
+function InteractComp:ReceiveBeginPlay()
     self.GazeIntervalConst = ConfigMgr:GetGlobalConst('GazeInterval')
     self.GazeDistanceConst = ConfigMgr:GetGlobalConst('GazeDistance')
     self.CurGazeCountTime = 0
 end
 
 ---@override
-function GazeComp:ReceiveTick(DeltaSeconds)
+function InteractComp:ReceiveTick(DeltaSeconds)
     self:Gazing(DeltaSeconds)
 end
 
 ---@private [Gaze] [Client] 注视物体
 ---@param DeltaTime number
-function GazeComp:Gazing(DeltaTime)
+function InteractComp:Gazing(DeltaTime)
     if net_util.is_server(self) then
         return
     end
@@ -52,11 +52,11 @@ end
 ---@private [Gaze] [Server] 客户端请求更新当前注视的物体
 ---@todo 增加Check
 ---@param InteractActor AActor
-function GazeComp:C2S_ReqUpdateGazing_RPC(InteractActor)
+function InteractComp:C2S_ReqUpdateGazing_RPC(InteractActor)
     if self.bInteracting then
         return
     end
-    -- log.info('GazeComp:C2S_ReqUpdateGazing', obj_util.dispname(InteractActor))
+    -- log.info('InteractComp:C2S_ReqUpdateGazing', obj_util.dispname(InteractActor))
     self.Rep_GazeName = ''
     if obj_util.is_valid(InteractActor) and (self:GetOwner().OwnerChr ~= InteractActor) then
         self.Rep_InteractActor = InteractActor
@@ -68,7 +68,7 @@ function GazeComp:C2S_ReqUpdateGazing_RPC(InteractActor)
 end
 
 ---@public [Input] [Server]
-function GazeComp:C2S_ReqInteractGaze_RPC()
+function InteractComp:C2S_ReqInteractGaze_RPC()
     if not self:_CanInteract() then
         return
     end
@@ -80,22 +80,24 @@ function GazeComp:C2S_ReqInteractGaze_RPC()
 end
 
 ---@public 进入交互状态
-function GazeComp:EnterInteract()
+function InteractComp:EnterInteract()
     self.bInteracting = true
 end
 
 ---@public 退出交互状态
-function GazeComp:QuitInteract()
+function InteractComp:QuitInteract()
     self.bInteracting = false
 end
 
 ---@public [Pure]
-function GazeComp:GetGazeName()
+function InteractComp:GetGazeName()
     return self.Rep_GazeName
 end
 
----@private
-function GazeComp:_CanInteract()
+---@private 玩家可以和目标交互
+---@return boolean
+function InteractComp:_CanInteract()
+    -- 有效性判断
     local ownerChr = self:GetOwner().OwnerChr
     local targetChr = self.Rep_InteractActor
     local ownerRole = rolelib.role(ownerChr)
@@ -103,9 +105,10 @@ function GazeComp:_CanInteract()
     if not targetRole then
         return false
     end
+
+    ---@todo
     targetRole.QuestGiver:HasAvailableQuest()
-        
     return true
 end
 
-return GazeComp
+return InteractComp

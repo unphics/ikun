@@ -23,7 +23,6 @@ end
 function GA_Equip:K2_OnEndAbility(WasCancelled)
     local chr = self:GetAvatarActorFromActorInfo()
     local animComp = chr.AnimComp ---@as AnimComp
-    -- animComp:IntoFight()
     animComp:LinkNewClassLayer('Fight')
     self.Super.K2_OnEndAbility(self, WasCancelled)
 end

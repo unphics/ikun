@@ -64,16 +64,6 @@ end
 
 ---@override
 function RoleClass:RoleTick(DeltaTime)
-    if self.BT then
-        self.BT:Tick(DeltaTime)
-        if self:GetRoleInstId() == debug_util.debugrole then
-            if debug_util.debug_bt == 1 then
-                self.Avatar.RoleComp:LogBT2UI(self.BT:PrintBT())
-            else
-                self.Avatar.RoleComp:LogBT2UI('')
-            end
-        end
-    end
     if self.Agent then
         self.Agent:TickAgent(DeltaTime)
     end

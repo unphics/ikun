@@ -5,6 +5,20 @@ author: zys
 data: Sat Oct 18 2025 13:45:58 GMT+0800 (中国标准时间)
 ```
 ---
+## 游戏角色相关组件配置
+```
+BP_IkunPC 玩家控制器
+    InteractComp 检测玩家注视Npc, 请求进入交互状态, 标记玩家进入交互状态
+    ChatComp 为对话模块和对话UI提供网络互通接口
+    CameraViewComp 相机
+BP_ChrBase 角色基类
+    RoleComp 角色组件
+    AnimComp 动画组件
+    InFightComp 战斗状态组件, 入战状态/武备状态
+    SkillComp 技能组件
+    BP_BagComp 背包组件
+```
+---
 ## 程序设计中建议的单位初始化顺序
 1. 逻辑初始化(组织各种模块)
 2. 数据初始化

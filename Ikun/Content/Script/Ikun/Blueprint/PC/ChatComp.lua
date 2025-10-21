@@ -11,7 +11,7 @@ local ChatComp = UnLua.Class()
 ---@public [Server]
 function ChatComp:BeginChat()
     self:S2C_BeginChat()
-    self:_GetNpcChat():NewChat(400011, self:GetOwner().InteractComp.Rep_InteractActor)
+    self:_GetNpcChat():NewChat(400011, self:_GetInteractComp().Rep_InteractActor)
     return true
 end
 
@@ -28,7 +28,7 @@ end
 ---@public [Server]
 function ChatComp:EndChat()
     self:S2C_EndChat()
-    self:GetOwner().InteractComp:QuitInteract()
+    self:_GetInteractComp():QuitInteract()
 end
 
 ---@private [Client]
@@ -79,6 +79,11 @@ function ChatComp:S2C_ShowQuestMsg_RPC(QuestName, QuestState)
     if ui then
         ui:SetQuestMsg(QuestName, QuestState)
     end
+end
+
+---@private
+function ChatComp:_GetInteractComp()
+    return self:GetOwner().InteractComp
 end
 
 return ChatComp

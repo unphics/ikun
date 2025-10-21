@@ -14,6 +14,7 @@ function AnimComp:ReceiveBeginPlay()
     self:LinkNewClassLayer('Init')
 end
 
+---@public
 function AnimComp:LinkNewClassLayer(Name)
     local class = self.AnimClassLayers:Find(Name)
     if class then
