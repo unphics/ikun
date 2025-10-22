@@ -18,6 +18,7 @@ require('Ikun/Module/AI/Goap/Core/Agent')
 
 -- sensors
 require('Ikun/Module/AI/Goap/Sensors/Default')
+require('Ikun/Module/AI/Goap/Sensors/Reception')
 
 -- actions
 require('Ikun/Module/AI/Goap/Actions/Wait')

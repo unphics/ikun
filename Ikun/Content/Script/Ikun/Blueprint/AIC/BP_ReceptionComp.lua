@@ -44,4 +44,10 @@ function BP_ReceptionComp:EndVisitNpc(InPlayer)
     end
 end
 
+---@public
+---@return number
+function BP_ReceptionComp:GetVisitorCount()
+    return #self._tbVisit
+end
+
 return BP_ReceptionComp
