@@ -25,7 +25,11 @@ function ReceptionClass:TickSensor(DeltaTime)
     local oldState = self._Agent.Memory:GetState('Recepting')
     self._Agent.Memory:SetState('Recepting', newState)
     if not newState and oldState then
-        -- push goal
+        local config = ConfigMgr:GetConfig('Goal')['Reception'] ---@as GoalConfig
+        local desiredStates = goap.util.make_states_from_config(config.DesiredState)
+        local goal = class.new'GGoal'(config.GoalName, desiredStates) ---@as GGoal
+        self._Agent:AddGoal(goal, 1)
+        log.dev('添加Goal:玩家访问Npc')
     end
 end
 
