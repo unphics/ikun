@@ -95,12 +95,6 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
     if config.GoapKey then
         local agent = class.new 'GAgent' (self) ---@as GAgent
         self.Agent = agent
-    else
-        if config.BTCfg and config.BTCfg.Init then
-            self:SwitchNewBT(config.BTCfg.Init)
-        else
-            log.error('RoleClass:InitByAvatar()', '没有初始BT', self:RoleName())
-        end
     end
 end
 

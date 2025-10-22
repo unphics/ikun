@@ -11,7 +11,7 @@ local ChatComp = UnLua.Class()
 ---@public [Server]
 function ChatComp:BeginChat()
     self:S2C_BeginChat()
-    self:_GetNpcChat():NewChat(400011, self:_GetInteractComp().Rep_InteractActor)
+    self:_GetNpcChat():NewChat(400011, self:_GetInteractComp():GetInteractTarget())
     return true
 end
 

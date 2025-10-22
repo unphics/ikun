@@ -13,6 +13,8 @@ local InteractComp = UnLua.Class()
 
 ---@override
 function InteractComp:ReceiveBeginPlay()
+    self.GazeName = ''
+    self.InteractActor = nil
     self.GazeIntervalConst = ConfigMgr:GetGlobalConst('GazeInterval')
     self.GazeDistanceConst = ConfigMgr:GetGlobalConst('GazeDistance')
     self.CurGazeCountTime = 0
@@ -20,12 +22,60 @@ end
 
 ---@override
 function InteractComp:ReceiveTick(DeltaSeconds)
-    self:Gazing(DeltaSeconds)
+    self:_Gazing(DeltaSeconds)
+end
+
+---@public [Input] [Server]
+function InteractComp:C2S_ReqInteractGaze_RPC()
+    if not self:_CanInteract() then
+        return
+    end
+    ---@todo check
+    ---@todo 如果是物体就执行拾取等, 如果是人就开始对话, 此时默认是人
+    if self:GetOwner().ChatComp:BeginChat(self.InteractActor) then
+        self:EnterInteract()
+    end
+end
+
+---@public 进入交互状态
+function InteractComp:EnterInteract()
+    local target = self:GetInteractTarget()
+    if not obj_util.is_valid(target) then
+        return log.error(log.key.chat, 'InteractComp:EnterInteract 尝试交互无效的目标')
+    end
+    local receptionComp = target:GetController().BP_ReceptionComp ---@as BP_ReceptionComp
+    if not receptionComp then
+        return log.error(log.key.chat, 'InteractComp:EnterInteract 交互的目标没有接待组件', target)
+    end
+    receptionComp:BeginVisitNpc(self:GetOwner())
+    self.bInteracting = true
+end
+
+---@public 退出交互状态
+function InteractComp:QuitInteract()
+    self.bInteracting = false
+    local target = self:GetInteractTarget()
+    if not obj_util.is_valid(target) then
+        return log.warn(log.key.chat, 'InteractComp:QuitInteract 结束交互时目标已经失效')
+    end
+    local receptionComp = target:GetController().BP_ReceptionComp ---@as BP_ReceptionComp
+    receptionComp:EndVisitNpc(self:GetOwner())
+end
+
+---@public [Pure] 获取当前凝视目标的名字
+function InteractComp:GetGazeName()
+    return self.GazeName
+end
+
+---@public [Pure] 获取当前交互的目标
+---@return BP_ChrBase
+function InteractComp:GetInteractTarget()
+    return self.InteractActor
 end
 
 ---@private [Gaze] [Client] 注视物体
 ---@param DeltaTime number
-function InteractComp:Gazing(DeltaTime)
+function InteractComp:_Gazing(DeltaTime)
     if net_util.is_server(self) then
         return
     end
@@ -57,49 +107,22 @@ function InteractComp:C2S_ReqUpdateGazing_RPC(InteractActor)
         return
     end
     -- log.info('InteractComp:C2S_ReqUpdateGazing', obj_util.dispname(InteractActor))
-    self.Rep_GazeName = ''
+    self.GazeName = ''
     if obj_util.is_valid(InteractActor) and (self:GetOwner().OwnerChr ~= InteractActor) then
-        self.Rep_InteractActor = InteractActor
-        local role = rolelib.role(self.Rep_InteractActor)
+        self.InteractActor = InteractActor
+        local role = rolelib.role(self.InteractActor)
         if role then
-            self.Rep_GazeName = role:RoleName()
+            self.GazeName = role:RoleName()
         end
     end
 end
 
----@public [Input] [Server]
-function InteractComp:C2S_ReqInteractGaze_RPC()
-    if not self:_CanInteract() then
-        return
-    end
-    ---@todo check
-    ---@todo 如果是物体就执行拾取等, 如果是人就开始对话, 此时默认是人
-    if self:GetOwner().ChatComp:BeginChat(self.Rep_InteractActor) then
-        self:EnterInteract()
-    end
-end
-
----@public 进入交互状态
-function InteractComp:EnterInteract()
-    self.bInteracting = true
-end
-
----@public 退出交互状态
-function InteractComp:QuitInteract()
-    self.bInteracting = false
-end
-
----@public [Pure]
-function InteractComp:GetGazeName()
-    return self.Rep_GazeName
-end
-
----@private 玩家可以和目标交互
+---@private 判断玩家是否可以和目标交互
 ---@return boolean
 function InteractComp:_CanInteract()
     -- 有效性判断
     local ownerChr = self:GetOwner().OwnerChr
-    local targetChr = self.Rep_InteractActor
+    local targetChr = self:GetInteractTarget()
     local ownerRole = rolelib.role(ownerChr)
     local targetRole = rolelib.role(targetChr)
     if not targetRole then
