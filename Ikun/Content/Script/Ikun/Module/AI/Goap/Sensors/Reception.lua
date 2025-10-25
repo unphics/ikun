@@ -5,12 +5,12 @@
 ---@data    Wed Oct 22 2025 09:47:14 GMT+0800 (中国标准时间)
 ---
 
----@class ReceptionClass: GSensor
+---@class ReceptionSensor: GSensor
 ---@field _ReceptionComp BP_ReceptionComp
-local ReceptionClass = class.class 'ReceptionClass':extends'GSensor' {}
+local ReceptionSensor = class.class 'ReceptionSensor':extends'GSensor' {}
 
 ---@override
-function ReceptionClass:ctor(Agent)
+function ReceptionSensor:ctor(Agent)
     class.GSensor.ctor(self, Agent)
     local avatar = rolelib.chr(self._Agent)
     local receptionComp = avatar:GetController().BP_ReceptionComp ---@as BP_ReceptionComp
@@ -18,7 +18,7 @@ function ReceptionClass:ctor(Agent)
 end
 
 ---@override
-function ReceptionClass:TickSensor(DeltaTime)
+function ReceptionSensor:TickSensor(DeltaTime)
     self._Agent.Memory:SetState('Recepting', false)
     
     local newState = self._ReceptionComp:GetVisitorCount() > 0
@@ -33,4 +33,4 @@ function ReceptionClass:TickSensor(DeltaTime)
     end
 end
 
-return ReceptionClass
+return ReceptionSensor

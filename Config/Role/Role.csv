@@ -10,7 +10,7 @@ RoleId|RoleName|RoleDesc|BelongKingdom|RoleSkills|InitBT|GoapKey|SpecialClass|Fi
 210002|鸽鸽||611001|530001,530002,530101|||||||
 |||||||||||
 |||||||||||
-210101|村长|清瀑村npc|611001||||||Init=Stand,|410011, 410021|
+210101|村长|清瀑村npc|611001|||VillageHead|||Init=Stand,|410011, 410021|
 210102|年轻的猎人|清瀑村npc|611001|||Hunter|||Init=Stand,||641002,
 210103|猎人的妹妹|清瀑村npc|611001|||Marketer|||Init=Stand,||641002,641003
 210104|杂货铺老板|清瀑村npc|611001|||Shopkeeper|||Init=Stand,||641001,
