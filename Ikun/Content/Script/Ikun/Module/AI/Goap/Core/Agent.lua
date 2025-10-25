@@ -54,29 +54,34 @@ function GAgent:ctor(InOwnerRole)
     end
 
     -- init sensor
-    for _, sensorName in ipairs(goapConfig.Sensors) do
-        local sensor = class.new(sensorName)(self)
-        table.insert(self.SensorList, sensor)
+    if goapConfig.Sensors then
+        for _, sensorName in ipairs(goapConfig.Sensors) do
+            local sensor = class.new(sensorName)(self)
+            table.insert(self.SensorList, sensor)
+        end
     end
     
     -- init action
-    local allAction = ConfigMgr:GetConfig('Action') ---@as table<string, ActionConfig>
-    for _, action in ipairs(goapConfig.InitActions) do
-        local config = allAction[action]
-        if not class[config.ActionTemplate] then
-            log.error('存在未实现的ActionTemplate', config.ActionTemplate)
-            goto continue
+    if goapConfig.InitActions then
+        local allAction = ConfigMgr:GetConfig('Action') ---@as table<string, ActionConfig>
+        for _, action in ipairs(goapConfig.InitActions) do
+            local config = allAction[action]
+            if not class[config.ActionTemplate] then
+                log.error('存在未实现的ActionTemplate', config.ActionTemplate)
+                goto continue
+            end
+            local preconditions = goap.util.make_states_from_config(config.Preconditions)
+            local effects = goap.util.make_states_from_config(config.Effects)
+            local action = class.new(config.ActionTemplate)(self, config.ActionName, preconditions, effects, config.Cost) ---@as GAction
+            table.insert(self.ActionList, action)
+            ::continue::
         end
-        local preconditions = goap.util.make_states_from_config(config.Preconditions)
-        local effects = goap.util.make_states_from_config(config.Effects)
-        local action = class.new(config.ActionTemplate)(self, config.ActionName, preconditions, effects, config.Cost) ---@as GAction
-        table.insert(self.ActionList, action)
-        ::continue::
     end
 
     -- GoapConfig环节的log
-    log.info('角色Agent初始化', InOwnerRole:RoleName(), goapKey,
-        obj_util.dispname(rolelib.chr(InOwnerRole)), InOwnerRole:GetRoleInstId())
+    log.info(string.format('角色Agent初始化, name=%s, goap=%s, chr=%s, rolecfg=%i, sensor.len=%i, action.len=%i', 
+        InOwnerRole:RoleName(), goapKey, obj_util.dispname(rolelib.chr(InOwnerRole)), 
+        InOwnerRole:GetRoleInstId(), #self.SensorList, #self.ActionList))
 end
 
 function GAgent:LateAtNight()

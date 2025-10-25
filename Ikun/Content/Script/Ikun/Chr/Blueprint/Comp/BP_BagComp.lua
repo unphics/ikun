@@ -37,7 +37,7 @@ function BP_BagComp:_InitBagComp()
     local avatar = self:GetOwner()
     local role = avatar.GetRole and avatar:GetRole() ---@type RoleClass
     if not role then
-        log.error('BP_BagComp:_InitBagComp() 初始化失败')
+        log.error('BP_BagComp:_InitBagComp() 初始化失败', obj_util.dispname(avatar))
         return
     end
     role.Bag:RegItemAdd(self, self._OnItemAdd)
