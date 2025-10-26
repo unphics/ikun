@@ -119,16 +119,15 @@ function ConfigMgr:_ParsePipeTable(InData, InMajorKeyColIdx)
                     local key, value = pair:match("^([^=]+)=([^=]+)$")
                     key = str_util.trim(key)
                     value = str_util.trim(value)
-                    rowResult[headerName][key] = tonumber(value) or value
+                    if key then
+                        rowResult[headerName][key] = tonumber(value) or value
+                    end
                 end
             elseif itemStr:find(',') then -- 数组
                 rowResult[headerName] = {}
                 local arr = str_util.split_simple(itemStr, ',')
                 for _, item in ipairs(arr) do
-                    local data = str_util.trim(item)
-                    if data then
-                        table.insert(rowResult[headerName], data)
-                    end
+                    table.insert(rowResult[headerName], str_util.trim(item))
                 end
             elseif itemStr:find('=') then -- 单键值对
                 local key, value = itemStr:match("^([^=]+)=([^=]+)$")
