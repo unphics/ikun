@@ -19,17 +19,15 @@ end
 
 ---@override
 function ReceptionSensor:TickSensor(DeltaTime)
-    self._Agent.Memory:SetState('Recepting', false)
-    
     local newState = self._ReceptionComp:GetVisitorCount() > 0
     local oldState = self._Agent.Memory:GetState('Recepting')
-    self._Agent.Memory:SetState('Recepting', newState)
-    if not newState and oldState then
+    if not oldState and newState then
+        self._Agent.Memory:SetState('Recepting', newState)
         local config = ConfigMgr:GetConfig('Goal')['Reception'] ---@as GoalConfig
         local desiredStates = goap.util.make_states_from_config(config.DesiredState)
         local goal = class.new'GGoal'(config.GoalName, desiredStates) ---@as GGoal
         self._Agent:AddGoal(goal, 1)
-        log.dev('添加Goal:玩家访问Npc')
+        self._Agent:MakePlan()
     end
 end
 

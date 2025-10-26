@@ -164,11 +164,6 @@ function GAgent:MakePlan()
     end
     for _, goal in ipairs(validGoals) do
         local cur = self.Memory:GetStates()
-        do -- debug
-            if rolelib.role(self):RoleName() == '杂货铺老板' and goal.Name == '晚上睡觉' then
-                local a = 1
-            end
-        end
         local plan = goap.planner.Plan(cur, goal, self.ActionList)
         if plan then
             self.Memory:Print()
