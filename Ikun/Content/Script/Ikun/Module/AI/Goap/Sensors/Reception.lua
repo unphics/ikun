@@ -27,6 +27,7 @@ function ReceptionSensor:TickSensor(DeltaTime)
         local desiredStates = goap.util.make_states_from_config(config.DesiredState)
         local goal = class.new'GGoal'(config.GoalName, desiredStates) ---@as GGoal
         self._Agent:AddGoal(goal, 1)
+        log.info('添加接待目标', rolelib.role(self._Agent):RoleName())
         self._Agent:MakePlan()
     end
 end

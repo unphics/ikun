@@ -125,7 +125,10 @@ function ConfigMgr:_ParsePipeTable(InData, InMajorKeyColIdx)
                 rowResult[headerName] = {}
                 local arr = str_util.split_simple(itemStr, ',')
                 for _, item in ipairs(arr) do
-                    table.insert(rowResult[headerName], str_util.trim(item))
+                    local data = str_util.trim(item)
+                    if data then
+                        table.insert(rowResult[headerName], data)
+                    end
                 end
             elseif itemStr:find('=') then -- 单键值对
                 local key, value = itemStr:match("^([^=]+)=([^=]+)$")

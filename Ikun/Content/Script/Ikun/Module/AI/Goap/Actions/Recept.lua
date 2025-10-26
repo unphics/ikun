@@ -11,7 +11,7 @@ local ReceptAction = class.class'ReceptAction':extends'GAction' {}
 ---@override
 function ReceptAction:ActionStart(Agent)
     class.GAction.ActionStart(self, Agent)
-    log.dev('开始')
+    log.info('接待开始', rolelib.role(Agent):RoleName())
 end
 
 ---@override
@@ -28,7 +28,7 @@ end
 
 ---@override
 function ReceptAction:ActionEnd(Agent, bSuccess)
-    log.dev('结束')
+    log.dev('接待结束', rolelib.role(Agent):RoleName())
 end
 
 return ReceptAction
