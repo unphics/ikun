@@ -62,7 +62,7 @@ function GAgent:ctor(InOwnerRole)
     end
     
     -- init action
-    if goapConfig.InitActions then
+    if goapConfig.InitActions and type(goapConfig.InitActions) == "table" then
         local allAction = ConfigMgr:GetConfig('Action') ---@as table<string, ActionConfig>
         for _, action in ipairs(goapConfig.InitActions) do
             local config = allAction[action]

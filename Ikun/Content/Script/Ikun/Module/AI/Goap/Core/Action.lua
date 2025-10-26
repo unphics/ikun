@@ -77,16 +77,16 @@ end
 function GAction:ActionEnd(Agent, bSuccess)
 end
 
+---@public [Runtime] 意外取消
+---@param Agent GAgent
+function GAction:ActionCancelled(Agent)
+end
+
 ---@protected [Runtime] do end
 ---@param bSuccess boolean
 function GAction:EndAction(bSuccess)
     self._ActionEnd = true
     self._ActionSucceed = bSuccess
-end
-
----@public [Runtime] 意外取消
----@param Agent GAgent
-function GAction:ActionCancelled(Agent)
 end
 
 ---@public [Runtime]

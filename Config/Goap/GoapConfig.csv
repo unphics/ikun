@@ -5,4 +5,4 @@ Marketer|市场小贩|DefaultSensor,|Getup,MorningWalk,WorkAtStall,ReturnHome,Ha
 Hunter|猎人|DefaultSensor,|Getup,MorningWalk,GainResource,ReturnHome,HaveDinner,Sleep|Wakeup,WalkAroundVillage,EatDinner,Hunt,GoToSleep,GoToHome|
 Shopkeeper|杂货铺老板|DefaultSensor,|Getup,MorningWalk,GainResource,ReturnHome,HaveDinner,Sleep|Wakeup,WalkAroundVillage,EatDinner,GoToCounter,StayOnCounter,LeaveCounter,GoToSleep,GoToHome,WaitEvening|
 IdlePerson|闲散人员|DefaultSensor,|RestDay,|SaunterDay,|
-VillageHead|村长|DefaultSensor, ReceptionSensor|||
+VillageHead|村长|DefaultSensor, ReceptionSensor||Recept,|
