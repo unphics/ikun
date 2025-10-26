@@ -104,15 +104,17 @@ data Sat Oct 18 2025 14:20:10 GMT+0800 (中国标准时间)
     - [x] 自动出战改为手动入战出战 (2025/10/20 -2025/10/20)
     - [x] 道具使用 (2025/10/20 - 2025/10/21)
     - [x] Goap接入Npc交互 (2025/10/20 - 2025/10/26)
+    - [ ] 技能槽位功能整理 (2025/10/26)
+---
+## 待处理项
+- [ ] Interact/Gaze/Recept整理
+- [ ] 技能-GameplayCue正式化
+- [ ] 国家优化-将国家的添加角色变成挂靠角色或者角色加入国家
+- [ ] 客户端操作逻辑判断IsOwningPlayer(maybe=GameplayAbility::IsLocallyPlayer)
 ---
 ## 未来展望
 - 装备
 - 团队AI重写
 - 大世界解决方案设计
 - UEds下的模块系统数据网络同步方案
----
-## 待处理项
-- [ ] 技能-GameplayCue正式化
-- [ ] 国家优化-将国家的添加角色变成挂靠角色或者角色加入国家
-- [ ] 客户端操作逻辑判断IsOwningPlayer(maybe=GameplayAbility::IsLocallyPlayer)
 ---
