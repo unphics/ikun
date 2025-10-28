@@ -96,14 +96,14 @@ function duplex:dset(key, value)
         end
         item._value = value
     else
-    local newItem = {
-        _key = key,
-        _value = value,
-        _valid = true,
-    }
-    table.insert(self._arrContainer, newItem)
-    self._mapContainer[key] = newItem
-    self._count = self._count + 1
+        local newItem = {
+            _key = key,
+            _value = value,
+            _valid = true,
+        }
+        table.insert(self._arrContainer, newItem)
+        self._mapContainer[key] = newItem
+        self._count = self._count + 1
     end
 end
 

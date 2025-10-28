@@ -18,7 +18,6 @@ end
 
 ---@public
 function GSensor:TickSensor(DeltaTime)
-    local time = TimeMgr.Hour
 end
 
 return GSensor

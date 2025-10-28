@@ -6,6 +6,7 @@
 ---
 
 ---@class GExecutor: AgentPartInterface
+---@field _OwnerAgent RoleClass
 ---@field CurPlan string[]
 ---@field CurGoal GGoal
 ---@field CurAction GAction
@@ -31,6 +32,7 @@ function GExecutor:ExecNewPlan(Goal, Plan)
     for _, action in ipairs(self._OwnerAgent.ActionList) do
         if action:GetActionName() == self.CurPlan[self._CurActionIdx] then
             self.CurAction = action
+            self.CurAction:ResetActionState()
         end
     end
 
@@ -70,7 +72,7 @@ function GExecutor:TickExecutor(DeltaTime)
             self.CurAction:ActionStart(self._OwnerAgent)
         else
             self.CurAction:ActionTick(self._OwnerAgent, DeltaTime)
-        end
+        end 
     end
 end
 

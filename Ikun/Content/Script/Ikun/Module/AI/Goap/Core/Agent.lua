@@ -29,9 +29,9 @@ local initState = {
 ---@field _OwnerRole RoleClass
 ---@field Memory GMemory
 ---@field ActionList GAction[] 所有可用行为
----@field SensorList GSensor[]
----@field GoalList GGoal[] 所有可选目标
----@field Executor GExecutor
+---@field _SensorList GSensor[]
+---@field _GoalList GGoal[] 所有可选目标
+---@field _Executor GExecutor
 local GAgent = class.class'GAgent' {}
 
 ---@public
@@ -39,10 +39,10 @@ local GAgent = class.class'GAgent' {}
 function GAgent:ctor(InOwnerRole)
     self._OwnerRole = InOwnerRole
     self.Memory = class.new 'GMemory' (self) ---@as GMemory
-    self.Executor = class.new'GExecutor'(self)
-    self.SensorList = {}
+    self._Executor = class.new'GExecutor'(self)
+    self._SensorList = {}
     self.ActionList = {}
-    self.GoalList = {}
+    self._GoalList = {}
 
     -- goap key
     local goapKey = RoleMgr:GetRoleConfig(self._OwnerRole:GetRoleCfgId()).GoapKey
@@ -54,29 +54,34 @@ function GAgent:ctor(InOwnerRole)
     end
 
     -- init sensor
-    for _, sensorName in ipairs(goapConfig.Sensors) do
-        local sensor = class.new(sensorName)(self)
-        table.insert(self.SensorList, sensor)
+    if goapConfig.Sensors then
+        for _, sensorName in ipairs(goapConfig.Sensors) do
+            local sensor = class.new(sensorName)(self)
+            table.insert(self._SensorList, sensor)
+        end
     end
     
     -- init action
-    local allAction = ConfigMgr:GetConfig('Action') ---@as table<string, ActionConfig>
-    for _, action in ipairs(goapConfig.InitActions) do
-        local config = allAction[action]
-        if not class[config.ActionTemplate] then
-            log.error('存在未实现的ActionTemplate', config.ActionTemplate)
-            goto continue
+    if goapConfig.InitActions and type(goapConfig.InitActions) == "table" then
+        local allAction = ConfigMgr:GetConfig('Action') ---@as table<string, ActionConfig>
+        for _, action in ipairs(goapConfig.InitActions) do
+            local config = allAction[action]
+            if not class[config.ActionTemplate] then
+                log.error('存在未实现的ActionTemplate', config.ActionTemplate)
+                goto continue
+            end
+            local preconditions = goap.util.make_states_from_config(config.Preconditions)
+            local effects = goap.util.make_states_from_config(config.Effects)
+            local action = class.new(config.ActionTemplate)(self, config.ActionName, preconditions, effects, config.Cost) ---@as GAction
+            table.insert(self.ActionList, action)
+            ::continue::
         end
-        local preconditions = goap.util.make_states_from_config(config.Preconditions)
-        local effects = goap.util.make_states_from_config(config.Effects)
-        local action = class.new(config.ActionTemplate)(self, config.ActionName, preconditions, effects, config.Cost) ---@as GAction
-        table.insert(self.ActionList, action)
-        ::continue::
     end
 
     -- GoapConfig环节的log
-    log.info('角色Agent初始化', InOwnerRole:RoleName(), goapKey,
-        obj_util.dispname(rolelib.chr(InOwnerRole)), InOwnerRole:GetRoleInstId())
+    log.info(string.format('角色Agent初始化, name=%s, goap=%s, chr=%s, rolecfg=%i, sensor.len=%i, action.len=%i', 
+        InOwnerRole:RoleName(), goapKey, obj_util.dispname(rolelib.chr(InOwnerRole)), 
+        InOwnerRole:GetRoleInstId(), #self._SensorList, #self.ActionList))
 end
 
 function GAgent:LateAtNight()
@@ -89,15 +94,22 @@ function GAgent:LateAtNight()
     local goapConfig = ConfigMgr:GetConfig('GoapConfig')[goapKey] ---@as GoapConfig
     local allGoal = ConfigMgr:GetConfig('Goal')
     local strGoal = ''
-    for i, name in ipairs(goapConfig.DailyGoals) do
-        local config = allGoal[name] ---@as GoalConfig
-        local desiredStates = goap.util.make_states_from_config(config.DesiredState)
-        local goal = class.new'GGoal'(config.GoalName, desiredStates) ---@as GGoal
-        self:AddGoal(goal)
-        strGoal = strGoal..config.GoalName..'|'
+    if goapConfig.DailyGoals then
+        for i, name in ipairs(goapConfig.DailyGoals) do
+            local config = allGoal[name] ---@as GoalConfig
+            if not config then
+                log.error('GAgent:LateAtNight', 'invalid goal', name)
+                goto continue
+            end
+            local desiredStates = goap.util.make_states_from_config(config.DesiredState)
+            local goal = class.new'GGoal'(config.GoalName, desiredStates) ---@as GGoal
+            self:AddGoal(goal)
+            strGoal = strGoal..config.GoalName..'|'
+            ::continue::
+        end
     end
     log.info('角色晚上更新', rolelib.role(self):RoleName(), strGoal)
-    if not self.Executor:IsExecuting() then
+    if not self._Executor:IsExecuting() then
         self:MakePlan()
     end
 end
@@ -106,22 +118,22 @@ end
 ---@param DeltaTime number
 function GAgent:TickAgent(DeltaTime)
     ---@param sensor GSensor
-    for _, sensor in ipairs(self.SensorList) do
+    for _, sensor in ipairs(self._SensorList) do
         sensor:TickSensor(DeltaTime)
     end
-    self.Executor:TickExecutor(DeltaTime)
+    self._Executor:TickExecutor(DeltaTime)
 end
 
 ---@public 添加可选目标
 ---@param Goal GGoal
 ---@param Priority integer 优先级
 function GAgent:AddGoal(Goal, Priority)
-    local length = #self.GoalList
+    local length = #self._GoalList
     Priority = Priority or length
-    if Priority >= length then
-        table.insert(self.GoalList, Goal)
+    if (Priority > length) or length == 0 then
+        table.insert(self._GoalList, Goal)
     else
-        table.insert(self.GoalList, Priority, Goal)
+        table.insert(self._GoalList, Priority, Goal)
     end
 end
 
@@ -133,9 +145,9 @@ end
 
 ---@param Goal GGoal
 function GAgent:FinishPlan(Goal, Plan)
-    for i = 1, #self.GoalList do
-        if self.GoalList[i] == Goal then
-            table.remove(self.GoalList, i)
+    for i = 1, #self._GoalList do
+        if self._GoalList[i] == Goal then
+            table.remove(self._GoalList, i)
             break
         end
     end
@@ -145,7 +157,7 @@ end
 ---@public 找出有效的目标列表, 从第一个目标开始找出一个有方法达到的目标
 function GAgent:MakePlan()
     local validGoals = {} ---@type GGoal[]
-    for _, goal in ipairs(self.GoalList) do
+    for _, goal in ipairs(self._GoalList) do
         ---@rule 有效判定: 自己有这个状态
         -- if goap.util.is_key_cover(self.Memory:GetStates(), goal.DesiredStates) then
             table.insert(validGoals, goal)
@@ -157,15 +169,10 @@ function GAgent:MakePlan()
     end
     for _, goal in ipairs(validGoals) do
         local cur = self.Memory:GetStates()
-        do -- debug
-            if rolelib.role(self):RoleName() == '杂货铺老板' and goal.Name == '晚上睡觉' then
-                local a = 1
-            end
-        end
         local plan = goap.planner.Plan(cur, goal, self.ActionList)
         if plan then
             self.Memory:Print()
-            self.Executor:ExecNewPlan(goal, plan)
+            self._Executor:ExecNewPlan(goal, plan)
             break
         else
             log.error(rolelib.role(self):RoleName(), '该目标没有方法执行', goal.Name, TimeMgr:GetCurTimeDisplay())

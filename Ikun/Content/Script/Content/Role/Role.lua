@@ -64,16 +64,6 @@ end
 
 ---@override
 function RoleClass:RoleTick(DeltaTime)
-    if self.BT then
-        self.BT:Tick(DeltaTime)
-        if self:GetRoleInstId() == debug_util.debugrole then
-            if debug_util.debug_bt == 1 then
-                self.Avatar.RoleComp:LogBT2UI(self.BT:PrintBT())
-            else
-                self.Avatar.RoleComp:LogBT2UI('')
-            end
-        end
-    end
     if self.Agent then
         self.Agent:TickAgent(DeltaTime)
     end
@@ -105,12 +95,6 @@ function RoleClass:InitByAvatar(Avatar, ConfigId, bNpc)
     if config.GoapKey then
         local agent = class.new 'GAgent' (self) ---@as GAgent
         self.Agent = agent
-    else
-        if config.BTCfg and config.BTCfg.Init then
-            self:SwitchNewBT(config.BTCfg.Init)
-        else
-            log.error('RoleClass:InitByAvatar()', '没有初始BT', self:RoleName())
-        end
     end
 end
 

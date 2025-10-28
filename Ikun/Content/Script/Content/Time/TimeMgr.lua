@@ -5,8 +5,6 @@
 ---@data    Sun May 04 2025 13:53:30 GMT+0800 (中国标准时间)
 ---
 
-local TimeCfg = require('Content/Time/Config/TimeCfg')
-
 local function FmtTime(Number)
     return Number < 10 and ('0' .. tostring(Number)) or tostring(Number)
 end
@@ -38,17 +36,24 @@ local TimeMgr = class.class'TimeMgr' {
 
 ---@public 初始化时间管理器的信息
 function TimeMgr:ctor()
-    self.ConstTimeFlowRate = TimeCfg.TimeFlowRate
-    self.GameSpeed = TimeCfg.GameSpeed
-    self.Second = 0
+    self.ConstTimeFlowRate = ConfigMgr:GetGlobalConst('TimeFlowRate') or 30
+    ---@todo declare
+    self.ConstSecondRadix = ConfigMgr:GetGlobalConst('SecondRadix') or 60
+    self.ConstMinuteRadix = ConfigMgr:GetGlobalConst('MinuteRadix') or 60
+    self.ConstHourRadix = ConfigMgr:GetGlobalConst('HourRadix') or 24
+    self.ConstDayRadix = ConfigMgr:GetGlobalConst('DayRadix') or 30
+    self.ConstMonthRadix = ConfigMgr:GetGlobalConst('MonthRadix') or 12
+    
+    self.GameSpeed = ConfigMgr:GetGlobalConst('GameSpeed') or 1
     self.Year = 2000
     self.Month = 7
     self.Day = 28
     self.Hour = 3
     self.Minute = 0
+    self.Second = 0
 end
 
----@public 运行时间管理器
+---@public [Tick] 运行时间管理器
 function TimeMgr:TickTimeMgr(DeltaTime)
     self:_UpdateGameTime(DeltaTime)
 end
@@ -83,20 +88,20 @@ end
 ---@private 更新时间
 function TimeMgr:_UpdateGameTime(DeltaTime)
     self.Second = self.Second + (DeltaTime * self.ConstTimeFlowRate)
-    while self.Second >= TimeCfg.SecondRadix do -- 秒级更新
-        self.Second = self.Second - TimeCfg.SecondRadix
+    while self.Second >= self.ConstSecondRadix do -- 秒级更新
+        self.Second = self.Second - self.ConstSecondRadix
         self.Minute = self.Minute + 1
-        if self.Minute >= TimeCfg.MinuteRadix then -- 分钟级更新
+        if self.Minute >= self.ConstMinuteRadix then -- 分钟级更新
             self.Minute = 0
             self.Hour = self.Hour + 1
             self:_OnHourUpdate()
-            if self.Hour >= TimeCfg.HourRadix then -- 小时级更新
+            if self.Hour >= self.ConstHourRadix then -- 小时级更新
                 self.Hour = 0
                 self.Day = self.Day + 1
-                if self.Day > TimeCfg.DayRadix then
+                if self.Day > self.ConstDayRadix then
                     self.Day = 1
                     self.Month = self.Month + 1
-                    if self.Month > TimeCfg.MonthRadix then
+                    if self.Month > self.ConstMonthRadix then
                         self.Month = 1
                         self.Year = self.Year + 1
                     end

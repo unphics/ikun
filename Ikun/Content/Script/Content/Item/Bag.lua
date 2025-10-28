@@ -1,161 +1,213 @@
 
 ---
----@brief   背包
+---@brief   物品背包
 ---@author  zys
 ---@data    Wed Aug 27 2025 00:45:13 GMT+0800 (中国标准时间)
 ---
 
----@class BagClass
----@field _ItemContainer table<number, ItemBaseClass>
----@field _Owner RoleClass
-local BagClass = class.class 'BagClass' {
-    ctor = function()end,
-    AddItem = function()end,
-    RemoveItem = function()end,
-    CanRemoveItem = function()end,
-    MoveItemToBag = function()end,
-    GetItemCount = function()end,
-    RegItemAdd = function()end,
-    UnRegItemAdd = function()end,
-    RegItemRemove = function()end,
-    UnRegItemRemove = function()end,
-    _ItemContainer = nil,
-    _Owner = nil,
-    _OnItemAdd = nil,
-    _OnItemRemove = nil,
-}
+---@alias ItemChangeCallback fun(table:table, ItemCfgId: id, Count: count, ItemId: id)
 
----@override
+---@class BagClass
+---@field private _ItemContainer table<id, ItemBaseClass> 物品容器<ItemId,物品对象>
+---@field private __ItemRefByCfg table<id, ItemBaseClass[]> 根据配置id建立索引的物品容器
+---@field private _Owner RoleClass 拥有者
+---@field private _OnItemAdd table[] 添加物品
+---@field private _OnItemRemove table[] 移除物品
+local BagClass = class.class 'BagClass' {}
+
+---@public
+---@param Owner RoleClass
 function BagClass:ctor(Owner)
     self._Owner = Owner
     self._ItemContainer = {}
+    self.__ItemRefByCfg = {}
     self._OnItemAdd = {}
     self._OnItemRemove = {}
+
+    local item1 = ItemMgr:CreateItem(110001, 1000)
+    self:AddItem(item1)
+    local item2 = ItemMgr:CreateItem(110001, 1000)
+    self:AddItem(item2)
+    local item3 = ItemMgr:CreateItem(110001, 1000)
+    self:AddItem(item3)
 end
 
----@public
+---@public 添加一个物品
 ---@param Item ItemBaseClass
 function BagClass:AddItem(Item)
-    local cfg = ConfigMgr:GetConfig('Item')[Item.ItemCfgId] ---@type ItemBaseConfig
+    -- local cfg = ConfigMgr:GetConfig('Item')[Item.ItemCfgId] ---@type ItemBaseConfig
+    if self._ItemContainer[Item.ItemId] then
+        log.error('BagClass:AddItem() 重复添加')
+        return
+    end
+    
     self._ItemContainer[Item.ItemId] = Item
+    
+    if not self.__ItemRefByCfg[Item.ItemCfgId] then
+        self.__ItemRefByCfg[Item.ItemCfgId] = {}
+    end
+    table.insert(self.__ItemRefByCfg[Item.ItemCfgId], Item)
+
+    -- 通知
     local count = Item.ItemCount or 1
     for _, ele in pairs(self._OnItemAdd) do
         if ele.Obj and ele.Fn then
-            ele.Fn(ele.Obj, Item.ItemCfgId, count)
+            ele.Fn(ele.Obj, Item.ItemCfgId, count, Item.ItemId)
         end
     end
 end
 
----@public
-function BagClass:RemoveItem(ItemId, Count)
-local item = self._ItemContainer[ItemId] ---@type ItemBaseClass
-    if not item then
-        return
+---@public 移除一个物品
+---@param ItemId id
+---@return boolean
+function BagClass:RemoveItem(ItemId)
+    if not self._ItemContainer[ItemId] then
+        return false
     end
-    local cfgId = item.ItemCfgId
-    local removed = 0
-    if item.ItemCount > Count then
-        item.ItemCount = item.ItemCount - Count
-        removed = Count
-    else
-        removed = item.ItemCount
-        Count = Count - item.ItemCount
-        self._ItemContainer[ItemId] = nil
-        for _, ele in pairs(self._ItemContainer) do
-            if ele.ItemCfgId == cfgId and Count > 0 then
-                if ele.ItemCount > Count then
-                    ele.ItemCount = ele.ItemCount - Count
-                    removed = removed + Count
-                    Count = 0
-                else
-                    removed = removed + ele.ItemCount
-                    Count = Count - ele.ItemCount
-                    self._ItemContainer[ele.ItemId] = nil
-                end
-            end
-            if Count <= 0 then
-                break
-            end
+
+    local itemRemove = self._ItemContainer[ItemId]
+    self._ItemContainer[ItemId] = nil
+
+    for i, item in ipairs(self.__ItemRefByCfg[itemRemove.ItemCfgId]) do
+        if item.ItemId == ItemId then
+            table.remove(self.__ItemRefByCfg[itemRemove.ItemCfgId], i)
+            break
         end
     end
-    -- 回调通知
+    
+    -- 通知
     for _, ele in pairs(self._OnItemRemove) do
         if ele.Obj and ele.Fn then
-            ele.Fn(ele.Obj, cfgId, removed)
+            ele.Fn(ele.Obj, itemRemove.ItemCfgId, itemRemove.ItemCount, itemRemove.ItemId)
         end
     end
+    return true
 end
 
----@public [Pure]
-function BagClass:CanRemoveItem(ItemCfgId, Count)
+
+---@public 移除一定数量的某类物品
+---@param ItemCfgId id
+---@param Count count
+---@return boolean
+function BagClass:RemoveItems(ItemCfgId, Count)
+    if not self:CanRemoveItems(ItemCfgId, Count) then
+        log.error('BagClass:RemoveItems() 没有足够的物品移除')
+        return false
+    end
+
+    local removed = 0 ---@type count
+    local index = 1
+    while index <= #self.__ItemRefByCfg[ItemCfgId] do
+        if removed >= Count then
+            break
+        end
+        local item = self.__ItemRefByCfg[ItemCfgId][index]
+        local removeCount = math.min(item.ItemCount, Count - removed)
+        if item.ItemCount == removeCount then
+            self._ItemContainer[item.ItemId] = nil
+            table.remove(self.__ItemRefByCfg[ItemCfgId], index)
+        else
+            item.ItemCount = item.ItemCount - removeCount
+            index = index + 1
+        end
+        removed = removed + removeCount
+    end
+
+    -- 通知
+    for _, ele in pairs(self._OnItemRemove) do
+        if ele.Obj and ele.Fn then
+            ele.Fn(ele.Obj, ItemCfgId, removed)
+        end
+    end
+    return true
+end
+
+---@public [Pure] 判断是否可以移除一定数量的某类物品
+---@param ItemCfgId id
+---@param Count count
+---@return boolean
+function BagClass:CanRemoveItems(ItemCfgId, Count)
+    if not self.__ItemRefByCfg[ItemCfgId] then
+        return false
+    end
     local total = 0
-    for _, item in pairs(self._ItemContainer) do
-        if item.ItemCfgId == ItemCfgId then
-            total = total + (item.ItemCount or 1)
-            if total >= Count then
-                return true
-            end
+    for _, item in ipairs(self.__ItemRefByCfg[ItemCfgId]) do
+        total = total + (item.ItemCount or 1)
+        if total >= Count then
+            return true
         end
     end
     return false
 end
 
----@public [Pure]
+---@public [Pure] 获取此类物品的数量
+---@param ItemCfgId id
+---@return count
 function BagClass:GetItemCount(ItemCfgId)
     local total = 0
-    for _, item in pairs(self._ItemContainer) do
-        if item.ItemCfgId == ItemCfgId then
+    if self.__ItemRefByCfg[ItemCfgId] then
+        for _, item in pairs(self.__ItemRefByCfg[ItemCfgId]) do
             total = total + (item.ItemCount or 1)
         end
     end
     return total
 end
 
----@public
+---@public 移动一定数量的某类物品到其他背包中
+---@param Count count
 ---@param TargetBag BagClass
-function BagClass:MoveItemToBag(ItemCfgId, Count, TargetBag)
- if not TargetBag or Count <= 0 then
-        return
+---@return boolean
+function BagClass:TransferItems(ItemCfgId, Count, TargetBag)
+    ---@todo 提供更多预检查, 如CanRemove和CanAccept
+    if not TargetBag or (Count <= 0) or not self:CanRemoveItems(ItemCfgId, Count) then
+        return false
     end
     local moved = 0
-    for ItemId, item in pairs(self._ItemContainer) do
-        if item.ItemCfgId == ItemCfgId and moved < Count then
-            local moveCount = math.min(item.ItemCount, Count - moved)
-            if item.ItemCount == moveCount then
-                TargetBag:AddItem(item)
-                self._ItemContainer[ItemId] = nil
-            else
-                item.ItemCount = item.ItemCount - moveCount
-                local ItemBaseClass = require("Content.Item.ItemBase")
-                local movedItem = ItemBaseClass(item.ItemId, item.ItemCfgId, moveCount)
-                TargetBag:AddItem(movedItem)
-            end
-            moved = moved + moveCount
-        end
+    local index = 1
+    while index <= #self.__ItemRefByCfg[ItemCfgId] do
         if moved >= Count then
             break
         end
+        local item = self.__ItemRefByCfg[ItemCfgId][index]
+        local moveCount = math.min(item.ItemCount, Count - moved)
+        if item.ItemCount == moveCount then
+            self._ItemContainer[item.ItemId] = nil
+            table.remove(self.__ItemRefByCfg[ItemCfgId], index)
+            TargetBag:AddItem(item)
+        else
+            item.ItemCount = item.ItemCount - moveCount
+            local movedItem = ItemMgr:CreateItem(item.ItemCfgId, moveCount) -- 移动时创建新Id
+            TargetBag:AddItem(movedItem)
+            index = index + 1
+        end
+        moved = moved + moveCount
     end
-    -- 回调通知
+    -- 通知
     for _, ele in pairs(self._OnItemRemove) do
         if ele.Obj and ele.Fn then
-            ele.Fn(ele.Obj, ItemCfgId, moved)
+            ele.Fn(ele.Obj, ItemCfgId, moved, nil)
         end
     end
-    -- for _, ele in pairs(TargetBag._OnItemAdd) do
-    --     if ele.Obj and ele.Fn then
-    --         ele.Fn(ele.Obj, ItemCfgId, moved)
-    --     end
-    -- end
+    for _, ele in pairs(TargetBag._OnItemAdd) do
+        if ele.Obj and ele.Fn then
+            ele.Fn(ele.Obj, ItemCfgId, moved, nil)
+        end
+    end
+    return true
 end
 
----@public [Register]
+---@public [Register] 注册物品添加回调
+---@param Obj table
+---@param Fn ItemChangeCallback
 function BagClass:RegItemAdd(Obj, Fn)
-    if Obj and Fn then
-       table.insert(self._OnItemAdd, {Obj = Obj, Fn = Fn}) 
+    if not  Obj or not Fn then
+        log.fatal('BagClass:RegItemAdd() 无效的参数', Obj, Fn)
+        return
     end
+    table.insert(self._OnItemAdd, make_weak({Obj = Obj, Fn = Fn})) 
 end
----@public [Register]
+
+---@public [Register] 反注册物品添加回调
 function BagClass:UnRegItemAdd(Obj)
     if Obj then
         for i, ele in ipairs(self._OnItemAdd) do
@@ -166,13 +218,18 @@ function BagClass:UnRegItemAdd(Obj)
         end
     end
 end
----@public [Register]
+
+---@public [Register] 注册物品移除回调
+---@param Fn ItemChangeCallback
 function BagClass:RegItemRemove(Obj, Fn)
-    if Obj and Fn then
-       table.insert(self._OnItemRemove, {Obj = Obj, Fn = Fn}) 
-    end 
+    if not Obj or not Fn then
+        log.fatal('BagClass:RegItemRemove() 无效的参数', Obj, Fn)
+        return
+    end
+    table.insert(self._OnItemRemove, make_weak({Obj = Obj, Fn = Fn})) 
 end
----@public [Register]
+
+---@public [Register] 反注册物品移除回调
 function BagClass:UnRegItemRemove(Obj)
     if Obj then
         for i, ele in ipairs(self._OnItemRemove) do
@@ -181,6 +238,30 @@ function BagClass:UnRegItemRemove(Obj)
                 break
             end
         end
+    end
+end
+
+---@public 获取背包里所有物品
+---@return ItemBaseClass[]
+function BagClass:GetAllItems()
+    local tb = {}
+    for id, item in pairs(self._ItemContainer) do
+        table.insert(tb, item)
+    end
+    return tb
+end
+
+---@public 使用物品
+---@param ItemCfgId id
+---@param ItemCount count
+---@param ItemId id
+function BagClass:TryUseItem(ItemCfgId, ItemCount, ItemId)
+    if ItemId and ItemId > 0 then
+        local item = self._ItemContainer[ItemId]
+        item:UseItem(self._Owner, ItemCount)
+    elseif ItemCfgId and ItemCfgId > 0 then
+        local item = self.__ItemRefByCfg[ItemCfgId][1]
+        item:UseItem(self._Owner, ItemCount)
     end
 end
 

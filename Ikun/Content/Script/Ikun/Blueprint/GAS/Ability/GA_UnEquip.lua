@@ -24,7 +24,6 @@ end
 function GA_UnEquip:K2_OnEndAbility(WasCancelled)
     local chr = self:GetAvatarActorFromActorInfo()
     local animComp = chr.AnimComp ---@as AnimComp
-    -- animComp:IntoPeace()
     animComp:LinkNewClassLayer('Peace')
     self.Super.K2_OnEndAbility(self, WasCancelled)
 end

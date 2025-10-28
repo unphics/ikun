@@ -5,7 +5,7 @@ Camera|CameraViewModel|||||||||
 District|Kingdom|Settlement||||||||
 Talk|Talk|Chat|ChatExec|ChatCond||||||
 Quest|Quest|QuestStep|QuestCondition|QuestReward||||||
-Item|Item|||||||||
+Item|Item|ItemType||||||||
 Role|Role|||||||||
 Skill|Skill|TargetActor|Effect|||||||
 Goap|GoapConfig|State|Goal|Action||||||

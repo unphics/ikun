@@ -119,7 +119,9 @@ function ConfigMgr:_ParsePipeTable(InData, InMajorKeyColIdx)
                     local key, value = pair:match("^([^=]+)=([^=]+)$")
                     key = str_util.trim(key)
                     value = str_util.trim(value)
-                    rowResult[headerName][key] = tonumber(value) or value
+                    if key then
+                        rowResult[headerName][key] = tonumber(value) or value
+                    end
                 end
             elseif itemStr:find(',') then -- 数组
                 rowResult[headerName] = {}

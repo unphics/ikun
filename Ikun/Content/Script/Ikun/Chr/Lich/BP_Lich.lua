@@ -4,8 +4,6 @@
 ---@data    Tue Jan 14 2025 13:56:55 GMT+0800 (中国标准时间)
 ---
 
-local LichColorCfg = require('Content/Role/Config/LichColorCfg')
-
 ---@class BP_Lich: BP_Lich_C
 local BP_Lich = UnLua.Class('/Ikun/Chr/Blueprint/BP_ChrBase')
 

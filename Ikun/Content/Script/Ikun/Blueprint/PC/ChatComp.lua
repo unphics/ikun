@@ -8,19 +8,10 @@
 ---@class ChatComp: BP_ChatComp_C
 local ChatComp = UnLua.Class()
 
-function ChatComp:ReceiveBeginPlay()
-end
-
--- function ChatComp:ReceiveEndPlay()
--- end
-
--- function ChatComp:ReceiveTick(DeltaSeconds)
--- end
-
 ---@public [Server]
 function ChatComp:BeginChat()
     self:S2C_BeginChat()
-    self:_GetNpcChat():NewChat(400011, self:GetOwner().InteractComp.Rep_InteractActor)
+    self:_GetNpcChat():NewChat(400011, self:_GetInteractComp():GetInteractTarget())
     return true
 end
 
@@ -37,7 +28,7 @@ end
 ---@public [Server]
 function ChatComp:EndChat()
     self:S2C_EndChat()
-    self:GetOwner().InteractComp:QuitInteract()
+    self:_GetInteractComp():QuitInteract()
 end
 
 ---@private [Client]
@@ -50,7 +41,7 @@ function ChatComp:S2C_ShowSelectList_RPC(SelectList)
     local ui = ui_util.uimgr:GetUIIfVisible(ui_util.uidef.Chat) ---@type Chat
     if ui then
         local selectList = SelectList:ToTable() 
-        ui:ShowSelectList(selectList)
+        ui:SetSelectListData(selectList)
     end
 end
 
@@ -72,6 +63,7 @@ function ChatComp:C2S_TalkNext_RPC()
     self:_GetNpcChat():DoTalkNext()
 end
 
+---@private 获取对话对象
 function ChatComp:_GetNpcChat()
     local ownerChr = self:GetOwner().OwnerChr
     local ownerRole = rolelib.role(ownerChr)
@@ -81,11 +73,17 @@ function ChatComp:_GetNpcChat()
     return nil
 end
 
+---@public 显示任务Tips
 function ChatComp:S2C_ShowQuestMsg_RPC(QuestName, QuestState)
     local ui = ui_util.uimgr:ShowUI(ui_util.uidef.UI_QuestMsg) ---@type UI_QuestMsg
     if ui then
         ui:SetQuestMsg(QuestName, QuestState)
     end
+end
+
+---@private
+function ChatComp:_GetInteractComp()
+    return self:GetOwner().InteractComp
 end
 
 return ChatComp

@@ -1,6 +1,6 @@
 
 
-log.dev('================Goap Example================')
+log.info('================Goap Example================')
 
 local agent = class.new 'GAgent' () ---@as GAgent
 agent.Memory:SetState('Hunger', true)
@@ -17,11 +17,11 @@ local actionEat2 = class.new'GAction'('BuyApple', {Apple = false}, {Apple = true
 agent:SetActions({actionEat1, actionEat2})
 
 agent:Plan()
-log.dev('result plan:')
+log.info('result plan:')
 if agent.CurPlan then
     for k, v in pairs(agent.CurPlan) do
-        log.dev('   ', k, v)
+        log.info('   ', k, v)
     end
 end
 
-log.dev('================Goap Example================')
+log.info('================Goap Example================')

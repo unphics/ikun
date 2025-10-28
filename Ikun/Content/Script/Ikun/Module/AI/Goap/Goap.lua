@@ -18,6 +18,7 @@ require('Ikun/Module/AI/Goap/Core/Agent')
 
 -- sensors
 require('Ikun/Module/AI/Goap/Sensors/Default')
+require('Ikun/Module/AI/Goap/Sensors/Reception')
 
 -- actions
 require('Ikun/Module/AI/Goap/Actions/Wait')
@@ -31,6 +32,7 @@ require('Ikun/Module/AI/Goap/Actions/Counter/GoCounter')
 require('Ikun/Module/AI/Goap/Actions/WaitDusk')
 require('Ikun/Module/AI/Goap/Actions/WaitEvening')
 require('Ikun/Module/AI/Goap/Actions/SaunterDay')
+require('Ikun/Module/AI/Goap/Actions/Recept')
 
 
 

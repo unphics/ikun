@@ -9,11 +9,6 @@
 local DefaultSensor = class.class 'DefaultSensor' : extends 'GSensor' {}
 
 ---@override
-function DefaultSensor:ctor(Agent)
-    class.GSensor.ctor(self, Agent)
-end
-
----@override
 function DefaultSensor:TickSensor(DeltaTime)
     class.GSensor.TickSensor(self, DeltaTime)
 

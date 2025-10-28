@@ -113,7 +113,9 @@ str_util.trim = function(InStr)
     if InStr:byte(len) == 32 then
         finish = InStr:byte(len - 1) == 32 and len - 2 or len - 1
     end
-    return InStr:sub(start, finish)
+
+    local result = InStr:sub(start, finish)
+    return result and result ~= '' and result or nil
 end
 
 return str_util

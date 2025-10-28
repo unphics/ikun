@@ -15,3 +15,5 @@ WorkAtStall|摆摊工作|在摊位工作|IsWorking=true,AtStall=true,StallSetup=
 ReturnHome|回家|返回家中|AtHome=true|0
 ||||
 RestDay|休息一天||IsWorking=false,IsResting=true|0
+||||
+Reception|接待玩家访问|todo:后续添加非战斗情况|Recepting=false|
