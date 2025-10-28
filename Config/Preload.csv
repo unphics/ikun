@@ -7,5 +7,5 @@ Talk|Talk|Chat|ChatExec|ChatCond||||||
 Quest|Quest|QuestStep|QuestCondition|QuestReward||||||
 Item|Item|ItemType||||||||
 Role|Role|||||||||
-Skill|Skill|TargetActor|Effect|||||||
+Skill|Skill|TargetActor|Effect|Slot||||||
 Goap|GoapConfig|State|Goal|Action||||||

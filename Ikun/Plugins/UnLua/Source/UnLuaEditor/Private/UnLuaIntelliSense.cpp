@@ -269,7 +269,7 @@ namespace UnLua
                 AccessLevel = Struct->IsNative() ? "private" : "public";
 
             FString TypeName = IntelliSense::GetTypeName(Property);
-            Ret += FString::Printf(TEXT("---@field %s %s %s"), *AccessLevel, *Property->GetName(), *TypeName);
+            Ret += FString::Printf(TEXT("---@field %s %s %s"), *AccessLevel, *Property->GetAuthoredName(), *TypeName);
 
             // comment
             const FString& ToolTip = Property->GetMetaData(NAME_ToolTip);

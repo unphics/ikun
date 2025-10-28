@@ -15,7 +15,7 @@ local GA_GroundSurge = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 function GA_GroundSurge:K2_ActivateAbilityFromEvent(Payload)
     self:GAInitData()
     if net_util.is_server(self) then
-        local config = Payload.OptionalObject.SkillConfig ---@as SkillConfig
+        local config = ConfigMgr:GetConfig('Skill')[Payload.OptionalObject.SkillId] ---@type SkillConfig
         self.SkillConfig = config
 
         local animKey = config.AbilityAnims[1]

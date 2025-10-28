@@ -43,7 +43,7 @@ function BP_InFIghtComp:ExitFight()
     end
 end
 
----@public 装备武器
+---@public 拿起武器
 function BP_InFIghtComp:C2S_Equip_RPC()
     if not self:CheckIsEquip() then
         gas_util.add_loose_tag(self:GetOwner(), 'Role.State.bEquip')
