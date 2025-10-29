@@ -5,7 +5,7 @@ author: zys
 data: Sat Oct 18 2025 13:45:58 GMT+0800 (中国标准时间)
 ```
 ---
-## 开发目录组织
+## 当前开发目录组织
 ```
 VscodeWorkspace:
 Doc/: 游戏文档
@@ -45,7 +45,7 @@ Script/: 游戏的所有lua脚本文件
     Util/: 工具类, 如str/table/net/math/gas/log等
 ```
 ---
-## 游戏角色相关组件配置
+## 当前游戏角色相关组件配置
 ```
 BP_IkunPC 玩家控制器
     InteractComp 检测玩家注视Npc, 请求进入交互状态, 标记玩家进入交互状态
