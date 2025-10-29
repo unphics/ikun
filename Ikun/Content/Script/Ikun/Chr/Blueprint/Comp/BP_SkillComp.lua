@@ -6,7 +6,7 @@
 ---
 
 local BPS_SkillSlot = UE.UObject.Load('/Game/Ikun/Blueprint/Struct/BPS_SkillSlot.BPS_SkillSlot')
-local SLOT_NAME_HEAD = 'Skill.Type.Trigger.'
+local SLOT_NAME_HEAD = 'Skill.Slot.'
 
 ---@class SkillConfig
 ---@field SkillName string
