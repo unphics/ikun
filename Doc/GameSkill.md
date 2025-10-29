@@ -100,6 +100,14 @@ data: Sat Oct 18 2025 14:48:57 GMT+0800 (中国标准时间)
 ### GameplayTag 设计
 ```
 Skill (技能)
+    Slot(槽位)
+        Equip
+        UnEquip
+        Dodge
+        NormalOne
+        NormalTwo
+        Hit
+        Special
     Type (类型)
         Trigger (触发)
             Active (主动技能)
