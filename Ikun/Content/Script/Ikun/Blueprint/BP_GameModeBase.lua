@@ -28,6 +28,7 @@ function BP_GameModeBase:ReceiveBeginPlay()
         gameinit.triggerinit(gameinit.ring.four)
     end)
     UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 't.MaxFPS 200')
+    UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 'stat FPS')
 end
 
 ---@override
