@@ -1,6 +1,8 @@
 
 ---
 ---@brief   委托, 事件, 消息
+---@authot  zys
+---@data    Sat Nov 01 2025 19:56:29 GMT+0800 (中国标准时间)
 ---
 
 ---@class msgbus
@@ -24,7 +26,7 @@ end
 ---@public
 ---@return msgbus
 function msgbus.create()
-    local bus = class.new 'msgbus' () ---@type msgbus
+    local bus = class.new 'msgbus' () ---@as msgbus
     return bus
 end
 

@@ -15,7 +15,7 @@ require("Content/District/Settlements/Village")
 
 ---@class Kingdom
 ---@field tbZone ZoneClass[] 这个国家的所有大区/行省
----@field dpKingdomRoles duplex<number, RoleClass> 这个国家的所有角色
+---@field _tbKingdomRoles table<number, RoleClass> 这个国家的所有角色
 ---@field tbRoleBornRecord number[] 这个国家出生(赋予籍贯)角色记录
 ---@field KingdomName string
 ---@field KingdomInstId number
@@ -33,14 +33,14 @@ local Kingdom = class.class"Kingdom" {
     KingdomName = nil,
 --[[private]]
     tbZone = nil,
-    dpKingdomRoles = nil,
+    _tbKingdomRoles = nil,
     tbRoleBornRecord = nil,
 }
 
 ---@override
 ---@param Config KingdomConfig
 function Kingdom:ctor(Id, Config)
-    self.dpKingdomRoles = duplex.create() ---@as duplex<RoleClass>
+    self._tbKingdomRoles = {}
     self.tbZone = {}
     self.tbRoleBornRecord = {}
 
@@ -55,7 +55,7 @@ end
 
 ---@override
 function Kingdom:TickKingdom(DeltaTime)
-    for _, id, role in self.dpKingdomRoles:diter() do
+    for id, role in pairs(self._tbKingdomRoles) do
         role:RoleTick(DeltaTime)
     end
 end
@@ -90,7 +90,7 @@ function Kingdom:AddKingdomMember(inRole)
         inRole.RoleInfo:InitRoleInstId(InstId)
         RoleMgr:NewRole(InstId, inRole)
     end
-    self.dpKingdomRoles:dinsert(inRole:GetRoleInstId(), inRole)
+    self._tbKingdomRoles[inRole:GetRoleInstId()] = inRole
     log.info('zys AddKingdomMember', inRole:RoleName(), self.KingdomName, inRole:GetRoleInstId())
 end
 

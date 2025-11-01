@@ -7,34 +7,23 @@
 ---
 
 do
-    log = require('Util.Log') ---@type log
+    log = ikf.log
+    class = ikf.class
+    math_util = ikf.math_util
+    table_util = ikf.table_util ---@type table_util
+    str_util = ikf.str_util ---@type str_util
+    msg_bus = ikf.msg_bus ---@type msgbus
+
     debug_util = require('Util/debug_util')
-    table_util = require('Util/table_util') ---@type table_util
-    str_util = require("Util.str_util") ---@type str_util
-end
-
-do
-    -- _ = require("Util.Class.class1")
-    class = require("Util.Class.class2") ---@type class
-    -- _ = require("Util.Class.test1")
-    -- _ = require("Util.Class.test2")
-end
-
-do
-    duplex = require("Util/Duplex/duplex") ---@type duplex
-    -- _ = require("Util/Duplex/test")
-    msg_bus = require("Util.msg_bus") ---@type msgbus
 end
 
 do
     world_util = require("Util/world_util")
     gas_util = require('Util/gas_util') ---@type gas_util
     actor_util = require('Util/actor_util')
-    decision_util = require('Util/DecisionUtil')
     obj_util = require('Util/obj_util') ---@type obj_util
     net_util = require("Util/net_util")
     async_util = require("Util/async_util")
-    math_util = require('Util/math_util')
     ui_util = require("Util/UI/ui_util") ---@type ui_util
     draw_util = require('Util/draw_util')
 end
