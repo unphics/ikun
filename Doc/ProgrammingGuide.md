@@ -157,7 +157,7 @@ GameplayAbility有发RPC的权力, 但是不能选InstancePerExec
 ```
 Script/
     Framework/: 资源加载/数据表格/网络/日志/界面/
-        Core/
+        core/
             Init 框架入口
             Class OOP实现
             Log 日志

@@ -5,8 +5,6 @@
 ---@data    Mon Jan 13 2025 14:53:06 GMT+0800 (中国标准时间)
 ---
 
-local ikf = nil ---@as ikf
-
 ---@class __class
 ---@field super table
 ---@field extends fun(__classs, base: string, ...: string):table
@@ -247,7 +245,4 @@ classes.class = class
 classes.deriveof = deriveof
 classes.instanceof = instanceof
 
-return function(inikf)
-    ikf = inikf
-    return classes
-end
+return classes

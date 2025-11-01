@@ -13,9 +13,9 @@ do
     table_util = ikf.table_util ---@type table_util
     str_util = ikf.str_util ---@type str_util
     msg_bus = ikf.msg_bus ---@type msgbus
-
-    debug_util = require('Util/debug_util')
 end
+
+debug_util = require('Util/debug_util')
 
 do
     world_util = require("Util/world_util")

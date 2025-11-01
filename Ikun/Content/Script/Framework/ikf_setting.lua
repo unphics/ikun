@@ -13,6 +13,7 @@
 local setting = {}
 
 setting.ikf_path = 'Framework'
+setting.logkey_path = setting.ikf_path..'/core/log/logkey'
 
 setting.sys_print = function()end
 setting.sys_warn = function()end

@@ -5,10 +5,10 @@
 ---@data    Sun May 04 2025 14:19:28 GMT+0800 (中国标准时间)
 ---
 
-local ikf = nil ---@as ikf
-
 ---@class log
+---@field key logkeys
 local log = {}
+log.key = require(ikf.setting.logkey_path)
 
 ---@public
 function log.dev(...)
@@ -45,22 +45,4 @@ function log.fatal(...)
     ikf.setting.sys_error("[FATAL]", ..., debug.traceback())
 end
 
-log.key = {
-    luainit     = '[Lua初始化]',
-    ueinit      = '[UE初始化]',
-    roleinit    = '[角色初始化]',
-    repos       = '[射手站位调整]',
-    lich02boom  = '[Lich二技能]',
-    beha        = '[行为选择]',
-    support     = '[支援]',
-    abp         = '[动画蓝图]',
-    archer01    = '[弓箭手一技能]',
-    sceneinit   = '[场景初始化]',
-    chat        = '[对话]', -- 对话界面, 对话模块, 交互模块(任务是否也同)
-    item        = '[物品]',
-}
-
-return function(inikf)
-    ikf = inikf
-    return log
-end
+return log
