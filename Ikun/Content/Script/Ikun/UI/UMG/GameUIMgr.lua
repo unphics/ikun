@@ -24,6 +24,7 @@ function GameUIMgr:Construct()
         -- self:ShowUI(ui_util.uidef.TalkList)
         -- self:ShowUI(ui_util.uidef.Interact)
         self:ShowUI(ui_util.uidef.Gaze)
+        self:ShowUI(ui_util.uidef.UI_Main)
     end)
 end
 

@@ -40,4 +40,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	FGameplayAbilitySpecHandle GiveAbilityWithDynTriggerTag(TSubclassOf<UGameplayAbility> AbilityClass, FGameplayTag TriggerTag, int32 Level = 0, int32 InputID = -1);
+
+	UFUNCTION(BlueprintCallable)
+	void TryActiveAbilityWithPaylod(FGameplayAbilitySpecHandle InHandle, const FGameplayEventData& Payload);
 };

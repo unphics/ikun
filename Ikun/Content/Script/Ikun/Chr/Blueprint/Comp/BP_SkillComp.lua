@@ -80,7 +80,8 @@ function BP_SkillComp:TryActiveSlotSkill(SlotName)
 
     -- 发送事件激活技能
     log.info('BP_SkillComp:TryActiveSlotSkill()', SlotName)
-    UE.UAbilitySystemBlueprintLibrary.SendGameplayEventToActor(self:GetOwner(), skillInfo.SlotTag, payload)
+    -- UE.UAbilitySystemBlueprintLibrary.SendGameplayEventToActor(self:GetOwner(), skillInfo.SlotTag, payload)
+    self:GetOwner().ASC:TryActiveAbilityWithPaylod(skillInfo.SlotSkillHandle, payload)
 end
 
 ---@public [Server] 设置槽位的技能
@@ -106,7 +107,7 @@ function BP_SkillComp:SetSlotSkill(SlotName, SkillId)
     -- 设置槽位的技能
     local abilityClass = gas_util.find_ability_class(config.AbilityTemplate)
     local asc = self:GetOwner().ASC ---@as UIkunASC
-    local handle = asc:GiveAbilityWithDynTriggerTag(abilityClass, slotInfo.SlotTag, 0, 0)
+    local handle = asc:K2_GiveAbility(abilityClass, 0, 0) -- asc:GiveAbilityWithDynTriggerTag(abilityClass, slotInfo.SlotTag, 0, 0)
     if handle and handle ~= -1 then
         slotInfo.SlotSkillHandle = handle
         slotInfo.SlotSkillId = SkillId

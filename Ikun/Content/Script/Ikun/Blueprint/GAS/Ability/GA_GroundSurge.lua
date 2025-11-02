@@ -28,8 +28,12 @@ function GA_GroundSurge:K2_ActivateAbilityFromEvent(Payload)
         chargeTask:ReadyForActivation()
         self:RefTask(chargeTask)
     else
-        self.DrawPower = InputMgr.BorrowInputPower(self)
-        InputMgr.RegisterInputAction(self.DrawPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftDownCompleted)
+        local pc = UE.UGameplayStatics.GetPlayerController(self:GetAvatarActorFromActorInfo(), 0)
+        if pc and pc:IsLocalPlayerController() then
+            self.DrawPower = InputMgr.BorrowInputPower(self)
+            InputMgr.RegisterInputAction(self.DrawPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftDownCompleted)
+        else
+        end
     end
 end
 
@@ -82,7 +86,10 @@ end
 
 ---@private 松手后不在持续施法, 结束技能
 function GA_GroundSurge:S2C_OnKeyRelease_RPC()
-    self:MontageJumpToSection('Anim_End')
+    -- local avatar = self:GetAvatarActorFromActorInfo()
+    -- if obj_util.is_valid(avatar)  then
+    --     self:MontageJumpToSection('Anim_End')
+    -- end
     if self.BeamAT then
         self.BeamAT:EndTask()
     end
