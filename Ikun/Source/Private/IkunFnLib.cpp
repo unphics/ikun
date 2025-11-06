@@ -14,6 +14,8 @@
 #include "ikun_cpp_utl.h"
 #include "LuaEnv.h"
 #include "GAS/IkunAbilityTypes.h"
+#include "Interfaces/OnlineSessionInterface.h"
+#include "OnlineSubsystem.h"
 
 #include "UnLuaBase.h"
 #include "Lua/lua-5.4.4/src/lua.h"
@@ -114,4 +116,14 @@ bool UIkunFnLib::ReplaceInputs(AActor* Actor, UInputComponent* InputComponent) {
 	lua_State* L = UnLua::GetState();
 	UnLua::FLuaEnv* Env = UnLua::FLuaEnv::FindEnv(L);
 	return Env->GetManager()->ReplaceInputs(Actor, InputComponent);
+}
+
+bool UIkunFnLib::IsInSession() {
+ 	IOnlineSubsystem* OnlineSub = IOnlineSubsystem::Get();
+	if (OnlineSub) {
+		auto sessionInt = OnlineSub->GetSessionInterface();
+		auto num = sessionInt->GetNumSessions();
+		return num > 0;
+	}
+	return false;
 }

@@ -75,4 +75,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static bool ReplaceInputs(AActor* Actor, UInputComponent* InputComponent);
+	
+	UFUNCTION(BlueprintCallable)
+	static bool IsInSession();
 };

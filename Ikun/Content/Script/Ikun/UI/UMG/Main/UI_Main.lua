@@ -34,7 +34,7 @@ end
 --end
 
 function UI_Main:OnShow()
-    log.dev('qqq')
+    log.dev('qqq n ', UE.UIkunFnLib.IsInSession())
     self.CvsCtrlWindow:SetVisibility(UE.ESlateVisibility.Hidden)
 end
 
