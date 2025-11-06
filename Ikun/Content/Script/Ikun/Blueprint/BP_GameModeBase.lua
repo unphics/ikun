@@ -4,6 +4,8 @@
 ---@data    Fri May 30 2025 22:38:14 GMT+0800 (中国标准时间)
 ---
 
+local GameMap = require('Module/GameMap')
+
 ---@class BP_GameModeBase: BP_GameModeBase_C
 local BP_GameModeBase = UnLua.Class()
 
@@ -14,6 +16,10 @@ end
 
 ---@override
 function BP_GameModeBase:ReceiveBeginPlay()
+    self.Overridden.ReceiveBeginPlay(self)
+    local gm = class.new 'GameMap' (self) ---@as GameMap
+    log.dev('CheckMap', gm:CheckMap())
+
     log.info(log.key.ueinit..' BP_GameModeBase:ReceiveBeginPlay() svr:'..tostring(net_util.is_server(self)))
     async_util.delay(self, 0.1, function()
         gameinit.triggerinit(gameinit.ring.one)

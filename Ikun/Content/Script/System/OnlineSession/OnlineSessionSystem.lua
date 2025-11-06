@@ -8,4 +8,10 @@
 ---@class OnlineSessionSystem
 local OnlineSessionSystem = class.class 'OnlineSessionSystem' {}
 
+---@public
+---@param World UWorld
+function OnlineSessionSystem.OpenEntryMap(World)
+    UE.UGameplayStatics.OpenLevel(World, 'EntryMap', true, "Client")
+end
+
 return OnlineSessionSystem

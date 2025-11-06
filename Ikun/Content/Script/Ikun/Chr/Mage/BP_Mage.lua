@@ -10,7 +10,6 @@ local BP_Mage = UnLua.Class('Ikun/Chr/Blueprint/BP_ChrBase')
 
 function BP_Mage:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
-    log.dev(net_util.print(self))
 end
 
 function BP_Mage:C2S_LeftStart_RPC()

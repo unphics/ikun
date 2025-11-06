@@ -9,3 +9,4 @@ Item|Item|ItemType||||||||
 Role|Role|||||||||
 Skill|Skill|TargetActor|Effect|Slot||||||
 Goap|GoapConfig|State|Goal|Action||||||
+UI|DefaultOpen|

@@ -23,6 +23,7 @@ function BP_GameStateBase:InitUIModule()
     local UIMgr = UE.UWidgetBlueprintLibrary.Create(self, UIMgrClass, UE.UGameplayStatics.GetPlayerController(self, 0))
     if UIMgr then
         UIMgr:AddToViewport(0)
+        UIMgr:InitUIMgr(self:GetWorld())
     end
 end
 

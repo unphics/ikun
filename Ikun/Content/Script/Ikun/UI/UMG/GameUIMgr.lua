@@ -5,31 +5,23 @@
 ---
 
 ---@class GameUIMgr: GameUIMgr_C
+---@field GameWorld UWorld
 ---@field tbUIWidget table<string, UUserWidget>
 local GameUIMgr = UnLua.Class()
 
---function GameUIMgr:Initialize(Initializer)
---end
-
---function GameUIMgr:PreConstruct(IsDesignTime)
---end
-
+---@override
 function GameUIMgr:Construct()
-    self.tbUIWidget = {}
-    ui_util.uimgr = self
-
-    gameinit.registerinit(gameinit.ring.three, self, function()
-        self:ShowUI(ui_util.uidef.MainHud)
-        self:ShowUI(ui_util.uidef.BreathePointer)
-        -- self:ShowUI(ui_util.uidef.TalkList)
-        -- self:ShowUI(ui_util.uidef.Interact)
-        self:ShowUI(ui_util.uidef.Gaze)
-        self:ShowUI(ui_util.uidef.UI_Main)
-    end)
 end
 
---function GameUIMgr:Tick(MyGeometry, InDeltaTime)
---end
+---@public
+---@param Wolrd UWorld
+function GameUIMgr:InitUIMgr(Wolrd)
+    self.tbUIWidget = {}
+    self.GameWorld = Wolrd
+    ui_util.uimgr = self
+    
+    gameinit.registerinit(gameinit.ring.three, self, self._OpenDefaultUI)
+end
 
 ---@public
 function GameUIMgr:ShowUI(UIDef)
@@ -98,6 +90,21 @@ function GameUIMgr:GetUIIfVisible(UIDef)
             return
         end
         return UI
+    end
+end
+
+---@private 打开默认UI
+function GameUIMgr:_OpenDefaultUI()
+    local mapName = self.GameWorld:GetName()
+    local defaultUIs = ConfigMgr:GetConfig('DefaultOpen')[mapName]
+    if not defaultUIs then
+        return log.error('找不到该地图的默认UI', mapName)
+    end
+    for i = 1, 10 do
+        local name = defaultUIs['UI'..i]
+        if name then
+            self:ShowUI(ui_util.uidef[name])
+        end
     end
 end
 

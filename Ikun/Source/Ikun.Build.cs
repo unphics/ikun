@@ -21,8 +21,8 @@ public class Ikun : ModuleRules
             "GameplayTags",
 			"UMG",
 			"UnLua",
-			"OnlineSubsystemUtils",
 			"OnlineSubsystem",
+			"OnlineSubsystemUtils",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

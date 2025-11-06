@@ -6,11 +6,11 @@
 ---@todo    改名为Entry
 ---
 
----@class UI_Main: UI_Main_C
-local UI_Main = UnLua.Class()
+---@class UI_Entry: UI_Entry_C
+local UI_Entry = UnLua.Class()
 
 ---@override
-function UI_Main:Construct()
+function UI_Entry:Construct()
     self.UP_CreateSession.BtnSelect.OnClicked:Add(self, self._OnBtnCreateSessionWndClicked)
     self.UP_FindSession.BtnSelect.OnClicked:Add(self, self._OnBtnFindSessionWndClicked)
     self.BtnCreateSession.OnClicked:Add(self, self._OnBtnCreateSessionClicked)
@@ -21,7 +21,7 @@ function UI_Main:Construct()
 end
 
 ---@override
-function UI_Main:Destroy()
+function UI_Entry:Destroy()
     self.UP_CreateSession.BtnSelect.OnClicked:Clear()
     self.UP_FindSession.BtnSelect.OnClicked:Clear()
     self.BtnCreateSession.OnClicked:Clear()
@@ -30,35 +30,34 @@ function UI_Main:Destroy()
 end
 
 ---@override
---function UI_Main:Tick(MyGeometry, InDeltaTime)
+--function UI_Entry:Tick(MyGeometry, InDeltaTime)
 --end
 
-function UI_Main:OnShow()
-    log.dev('qqq n ', UE.UIkunFnLib.IsInSession())
+function UI_Entry:OnShow()
     self.CvsCtrlWindow:SetVisibility(UE.ESlateVisibility.Hidden)
 end
 
 ---@private
-function UI_Main:_OnBtnCreateSessionWndClicked()
+function UI_Entry:_OnBtnCreateSessionWndClicked()
     self.CvsCtrlWindow:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
     self.CvsCreateSession:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
     self.CvsFindSession:SetVisibility(UE.ESlateVisibility.Hidden)
 end
 
 ---@private
-function UI_Main:_OnBtnFindSessionWndClicked()
+function UI_Entry:_OnBtnFindSessionWndClicked()
     self.CvsCtrlWindow:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
     self.CvsCreateSession:SetVisibility(UE.ESlateVisibility.Hidden)
     self.CvsFindSession:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
 end
 
 ---@private
-function UI_Main:_OnBtnBackClicked()
+function UI_Entry:_OnBtnBackClicked()
     self.CvsCtrlWindow:SetVisibility(UE.ESlateVisibility.Hidden)
 end
 
 ---@private
-function UI_Main:_OnBtnCreateSessionClicked()
+function UI_Entry:_OnBtnCreateSessionClicked()
     local pc = self:GetOwningPlayer()
     local bLan = self.CheckLan:IsChecked()
     local count = tonumber(self.EditPersionCount:GetText()) or 10
@@ -73,7 +72,7 @@ function UI_Main:_OnBtnCreateSessionClicked()
 end
 
 ---@private
-function UI_Main:_OnBtnFindSessionClicked()
+function UI_Entry:_OnBtnFindSessionClicked()
     log.dev('qq find')
     local pc = self:GetOwningPlayer()
     local proxy = UE.UFindSessionsCallbackProxy.FindSessions(pc, pc, 100, true)
@@ -91,4 +90,4 @@ function UI_Main:_OnBtnFindSessionClicked()
     proxy:Activate()
 end
 
-return UI_Main
+return UI_Entry
