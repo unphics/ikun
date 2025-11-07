@@ -17,6 +17,9 @@ end
 
 debug_util = require('Util/debug_util')
 
+require('Module/Modules')
+modules = class.new'Modules'() ---@type Modules
+
 do
     world_util = require("Util/world_util")
     gas_util = require('Util/gas_util') ---@type gas_util

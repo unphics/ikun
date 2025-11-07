@@ -30,9 +30,6 @@ function UI_Entry:Destroy()
 end
 
 ---@override
---function UI_Entry:Tick(MyGeometry, InDeltaTime)
---end
-
 function UI_Entry:OnShow()
     self.CvsCtrlWindow:SetVisibility(UE.ESlateVisibility.Hidden)
 end
@@ -61,33 +58,17 @@ function UI_Entry:_OnBtnCreateSessionClicked()
     local pc = self:GetOwningPlayer()
     local bLan = self.CheckLan:IsChecked()
     local count = tonumber(self.EditPersionCount:GetText()) or 10
-    local proxy = UE.UCreateSessionCallbackProxy.CreateSession(pc, pc, count, bLan)
-    proxy.OnSuccess:Add(self, function()
-        UE.UGameplayStatics.OpenLevel(pc, 'VillageMap', true, "Listen")
+    modules.GameSession:CreateSession(pc, count, bLan, function ()
+        modules.GameLevelMgr:OpenGameLevel(pc)
     end)
-    proxy.OnFailure:Add(self, function()
-        log.error('failed to create session')
-    end)
-    proxy:Activate()
 end
 
 ---@private
 function UI_Entry:_OnBtnFindSessionClicked()
-    log.dev('qq find')
     local pc = self:GetOwningPlayer()
-    local proxy = UE.UFindSessionsCallbackProxy.FindSessions(pc, pc, 100, true)
-    proxy.OnSuccess:Add(self, function(this, InSessionResults)
-        log.dev('qqq find success')
-        local tb = {}
-        for i =  1, InSessionResults:Length() do
-            table.insert(tb, InSessionResults:Get(i))
-        end
-        ui_util.set_list_items(self.ListSession, tb)
+    modules.GameSession:FindSession(pc, true, function (tbInSessionResult)
+        ui_util.set_list_items(self.ListSession, tbInSessionResult)
     end)
-    proxy.OnFailure:Add(self, function()
-        log.error('failed to find session')
-    end)
-    proxy:Activate()
 end
 
 return UI_Entry

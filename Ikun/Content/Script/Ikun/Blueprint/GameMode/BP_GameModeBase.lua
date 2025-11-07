@@ -1,18 +1,12 @@
 
 ---
----@brief   游戏模式, 模块管理器在这里活动
+---@brief   游戏模式基类
 ---@author  zys
 ---@data    Fri May 30 2025 22:38:14 GMT+0800 (中国标准时间)
 ---
 
-
 ---@class BP_GameModeBase: BP_GameModeBase_C
 local BP_GameModeBase = UnLua.Class()
-
----@override
-function BP_GameModeBase:UserConstructionScript()
-    log.info(log.key.ueinit..' BP_GameModeBase:UserConstructionScript()')
-end
 
 ---@override
 function BP_GameModeBase:ReceiveBeginPlay()
@@ -31,8 +25,6 @@ function BP_GameModeBase:ReceiveBeginPlay()
     async_util.delay(self, 0.4, function()
         gameinit.triggerinit(gameinit.ring.four)
     end)
-    UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 't.MaxFPS 200')
-    UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 'stat FPS')
 end
 
 ---@override

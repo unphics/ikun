@@ -13,26 +13,28 @@ local InputMgr = require("Ikun/Module/Input/InputMgr")
 local BP_PC_Base = UnLua.Class()
 
 ---@override
----@param PossessedPawn BP_ChrBase
-function BP_PC_Base:ReceivePossess(PossessedPawn)
-    if PossessedPawn.GetRole then
-        self.OwnerChr = PossessedPawn
+function BP_PC_Base:ReceiveBeginPlay()
+    self.Overridden.ReceiveBeginPlay(self)
+    log.info(log.key.ueinit..' BP_PC_Base:ReceiveBeginPlay()', net_util.print(self))
+
+    if net_util.is_server(self) then
+        if not modules.GameLevelMgr:CheckLevel(self:GetWorld()) then
+            modules.GameLevelMgr:OpenEntryLevel(self:GetWorld())
+        end
+    end
+    
+    if net_util.is_client(self) then
+        self:InitInputSystem()
+        self:InitPlayerInput()
+        self.bShowMouseCursor = false
     end
 end
 
 ---@override
-function BP_PC_Base:ReceiveBeginPlay()
-
-
-    log.info(log.key.ueinit..' BP_PC_Base:ReceiveBeginPlay()', net_util.print(self))
-    self.Overridden.ReceiveBeginPlay(self)
-    if net_util.is_client(self) then
-        self:InitInputSystem()
-        self:InitPlayerInput()
-        -- async_util.delay(self, 1, self.InitPlayerInput, self)
-    else
-        local trigger = UE.FAbilityTriggerData()
-        trigger.TriggerTag = UE.UIkunFnLib.RequestGameplayTag('Skill.Action.Charge.Max')
+---@param PossessedPawn BP_ChrBase
+function BP_PC_Base:ReceivePossess(PossessedPawn)
+    if PossessedPawn.GetRole then
+        self.OwnerChr = PossessedPawn
     end
 end
 
@@ -56,9 +58,7 @@ function BP_PC_Base:InitPlayerInput()
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Bag, EnhInput.TriggerEvent.Completed, self._OnBagCompleted)
     -- 战斗
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, self.OnMouseLeftStarted)
-    -- InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftCompleted)
-    -- InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered, self.OnMouseLeftTriggered)
-
+    -- 装备
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Equip, EnhInput.TriggerEvent.Completed, self._OnEquipCompleted)
     
 end

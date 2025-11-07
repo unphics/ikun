@@ -1,10 +1,9 @@
---
--- DESCRIPTION
---
--- @COMPANY **
--- @AUTHOR **
--- @DATE ${date} ${time}
---
+
+---
+---@brief   游戏入口界面的加入会话列表的Item
+---@author  zys
+---@data    Sat Nov 08 2025 00:00:28 GMT+0800 (中国标准时间)
+---
 
 ---@class UP_FindSessionItem: UP_FindSessionItem_C
 local M = UnLua.Class()
@@ -22,15 +21,11 @@ end
 ---@override
 function M:OnListItemObjectSet(ListItemObject)
     self.BtnJoin:SetVisibility(UE.ESlateVisibility.Visible)
-    local sessionResult = ListItemObject.Value ---@type FBlueprintSessionResult
-    local svrName = UE.UFindSessionsCallbackProxy.GetServerName(sessionResult)
-    self.TxtSessionName:SetText(svrName)
-    local curPlayerNum = UE.UFindSessionsCallbackProxy.GetCurrentPlayers(sessionResult)
-    local maxPlayerNum = UE.UFindSessionsCallbackProxy.GetMaxPlayers(sessionResult)
-    self.TxtPlayerCount:SetText('Player:'..curPlayerNum..'/'..maxPlayerNum)
-    local ping = UE.UFindSessionsCallbackProxy.GetPingInMs(sessionResult)
-    self.TxtSessionPing:SetText('Ping:'..ping)
-    self.SessionResult = sessionResult
+    local info = ListItemObject.Value ---@type SessionInfo
+    self.TxtSessionName:SetText(info.SessionName)
+    self.TxtPlayerCount:SetText('Player:'..info.CurPlayerNum..'/'..info.MaxPlayerNum)
+    self.TxtSessionPing:SetText('Ping:'..info.PingMs)
+    self.SessionResult = info.SessionResult
 end
 
 ---@override
@@ -40,16 +35,9 @@ end
 
 function M:_OnBtnJoinClicked()
     if self.SessionResult then
-        local pc = self:GetOwningPlayer()
         self.BtnJoin:SetVisibility(UE.ESlateVisibility.Hidden)
-        local proxy = UE.UJoinSessionCallbackProxy.JoinSession(pc, pc, self.SessionResult)
-        proxy.OnSuccess:Add(self, function()
-            log.dev('succeed to join')
-        end)
-        proxy.OnFailure:Add(self, function()
-            log.dev('failed to join')
-        end)
-        proxy:Activate()
+        local pc = self:GetOwningPlayer()
+        modules.GameSession:JoinSession(pc, self.SessionResult)
     end
 end
 
