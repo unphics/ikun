@@ -5,7 +5,6 @@
 ---@data    Fri May 30 2025 22:38:14 GMT+0800 (中国标准时间)
 ---
 
-local GameLevelMgr = require('Module/GameLevelMgr')
 
 ---@class BP_GameModeBase: BP_GameModeBase_C
 local BP_GameModeBase = UnLua.Class()

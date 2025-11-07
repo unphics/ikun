@@ -1,6 +1,6 @@
 
 ---
----@brief   PlayerController
+---@brief   玩家控制器基类
 ---@author  zys
 ---@data    Sat Jul 19 2025 17:23:24 GMT+0800 (中国标准时间)
 ---
@@ -22,7 +22,9 @@ end
 
 ---@override
 function BP_PC_Base:ReceiveBeginPlay()
-    log.info(log.key.ueinit..' BP_PC_Base:ReceiveBeginPlay() svr:'..tostring(net_util.is_server(self)))
+
+
+    log.info(log.key.ueinit..' BP_PC_Base:ReceiveBeginPlay()', net_util.print(self))
     self.Overridden.ReceiveBeginPlay(self)
     if net_util.is_client(self) then
         self:InitInputSystem()
