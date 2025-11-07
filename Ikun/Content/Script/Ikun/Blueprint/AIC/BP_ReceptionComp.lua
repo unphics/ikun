@@ -6,7 +6,7 @@
 ---
 
 ---@class BP_ReceptionComp: BP_ReceptionComp_C
----@field _tbVisit BP_PC_Base[]
+---@field _tbVisit PC_Base[]
 local BP_ReceptionComp = UnLua.Class()
 
 ---@override
@@ -26,14 +26,14 @@ function BP_ReceptionComp:ReceiveEndPlay(EndPlayReason)
 end
 
 ---@public
----@param InPlayer BP_PC_Base
+---@param InPlayer PC_Base
 function BP_ReceptionComp:BeginVisitNpc(InPlayer)
     log.info(log.key.chat, '玩家开始访问Npc', InPlayer)
     table.insert(self._tbVisit, InPlayer)
 end
 
 ---@public
----@param InPlayer BP_PC_Base
+---@param InPlayer PC_Base
 function BP_ReceptionComp:EndVisitNpc(InPlayer)
     log.info(log.key.chat, '玩家结束访问Npc', InPlayer)
     for i, chr in ipairs(self._tbVisit) do

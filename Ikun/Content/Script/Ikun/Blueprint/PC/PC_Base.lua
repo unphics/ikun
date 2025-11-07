@@ -8,15 +8,14 @@
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 
----@class BP_PC_Base: BP_PC_Base_C
+---@class PC_Base: PC_Base_C
 ---@field OwnerChr BP_ChrBase
-local BP_PC_Base = UnLua.Class()
+local PC_Base = UnLua.Class()
 
 ---@override
-function BP_PC_Base:ReceiveBeginPlay()
+function PC_Base:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
-    log.info(log.key.ueinit..' BP_PC_Base:ReceiveBeginPlay()', net_util.print(self))
-
+    log.info(log.key.ueinit..' PC_Base:ReceiveBeginPlay()', net_util.print(self))
     if net_util.is_server(self) then
         if not modules.GameLevelMgr:CheckLevel(self:GetWorld()) then
             modules.GameLevelMgr:OpenEntryLevel(self:GetWorld())
@@ -32,23 +31,23 @@ end
 
 ---@override
 ---@param PossessedPawn BP_ChrBase
-function BP_PC_Base:ReceivePossess(PossessedPawn)
+function PC_Base:ReceivePossess(PossessedPawn)
     if PossessedPawn.GetRole then
         self.OwnerChr = PossessedPawn
     end
 end
 
 ---@private [Input]
-function BP_PC_Base:InitInputSystem()
-    log.info('BP_PC_Base:InitInputSystem()')
+function PC_Base:InitInputSystem()
+    log.info('PC_Base:InitInputSystem()')
     EnhInput.InitByPlayerController(self)
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
 
 end
-EnhInput.BindActions(BP_PC_Base)
+EnhInput.BindActions(PC_Base)
 
 ---@private [Input]
-function BP_PC_Base:InitPlayerInput()
+function PC_Base:InitPlayerInput()
     local inputPower = InputMgr.ObtainInputPower(self)
     -- 基础的移动, 转向, 跳跃
     InputMgr.RegisterInputAction(inputPower, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered, self.OnMoveInput)
@@ -64,7 +63,7 @@ function BP_PC_Base:InitPlayerInput()
 end
 
 ---@private [Input]
-function BP_PC_Base:OnMoveInput(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+function PC_Base:OnMoveInput(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
     local rot = self:GetControlRotation()
     local yawRot = UE.FRotator(0, rot.Yaw, 0)
     local forward = yawRot:GetForwardVector()
@@ -75,19 +74,19 @@ function BP_PC_Base:OnMoveInput(ActionValue, ElapsedSeconds, TriggeredSeconds, I
 end
 
 ---@private [Input]
-function BP_PC_Base:OnLookInput(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+function PC_Base:OnLookInput(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
     self:AddYawInput(-ActionValue.X)
     self:AddPitchInput(ActionValue.Y)
 end
 
-function BP_PC_Base:OnJumpStarted(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+function PC_Base:OnJumpStarted(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
     if obj_util.is_valid(self.OwnerChr) then
         self.OwnerChr:C2S_Jump()
     end
 end
 
 ---@private [Input]
-function BP_PC_Base:OnMouseLeftStarted(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+function PC_Base:OnMouseLeftStarted(ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
     if not obj_util.is_valid(self.OwnerChr) then
         return
     end
@@ -100,13 +99,13 @@ function BP_PC_Base:OnMouseLeftStarted(ActionValue, ElapsedSeconds, TriggeredSec
 end
 
 ---@private [Input] 按键B按下后打开背包
-function BP_PC_Base:_OnBagCompleted()
+function PC_Base:_OnBagCompleted()
     log.info('打开背包界面')
     ui_util.uimgr:ShowUI(ui_util.uidef.UI_Bag)
 end
 
 ---@private [Input] 按R键后切换拿起放下武器
-function BP_PC_Base:_OnEquipCompleted()
+function PC_Base:_OnEquipCompleted()
     log.info('拿起放下武器')
     if not self.OwnerChr.InFightComp:CheckIsEquip() then
         self.OwnerChr.InFightComp:C2S_Equip()
@@ -115,4 +114,4 @@ function BP_PC_Base:_OnEquipCompleted()
     end
 end
 
-return BP_PC_Base
+return PC_Base
