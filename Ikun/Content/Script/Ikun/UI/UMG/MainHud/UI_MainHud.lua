@@ -16,7 +16,10 @@ local UI_MainHud = UnLua.Class()
 
 ---@override
 function UI_MainHud:Construct()
-    local bSvr = net_util.is_server()
+    if not obj_util.is_valid(ui_util.uimgr.GameWorld) then
+        return
+    end
+    local bSvr = net_util.is_server(ui_util.uimgr.GameWorld)
     self.TxtLocalHost:SetText(bSvr and 'LocalHost=Server' or 'LocalHost=Client')
 end
 

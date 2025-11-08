@@ -17,6 +17,9 @@ end
 
 ---@private [Init]
 function BP_LocationRegisterComp:AvatarInitLocation()
+    if not obj_util.is_valid(self) then
+        return
+    end
     if self.LocationId <= 0 then
         log.error('BP_LocationRegisterComp:AvatarInitLocation()', '未配置LocationId')
         return

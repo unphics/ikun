@@ -17,7 +17,6 @@ function PC_Base:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     log.info(log.key.ueinit, ' PC_Base:ReceiveBeginPlay()', net_util.print(self))
     if net_util.is_server(self) then
-
         gameinit.triggerinit(gameinit.groups.ctl_init)
         gameinit.triggerinit(gameinit.groups.ctl_delay_1)
 
@@ -25,12 +24,13 @@ function PC_Base:ReceiveBeginPlay()
             modules.GameLevelMgr:OpenEntryLevel(self:GetWorld())
         end
     end
-
+    
     self.bShowMouseCursor = false
     if net_util.is_client(self) then
         self:InitInputSystem()
         self:InitPlayerInput()
     end
+    ui_util.init_ui_module(self:GetWorld())
 end
 
 ---@override

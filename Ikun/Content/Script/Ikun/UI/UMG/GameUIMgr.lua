@@ -1,7 +1,8 @@
+
 ---
----@brief 游戏UI管理
----@author zys
----@data Sat Apr 05 2025 14:39:37 GMT+0800 (中国标准时间)
+---@brief   游戏UI管理
+---@author  zys
+---@data    Sat Apr 05 2025 14:39:37 GMT+0800 (中国标准时间)
 ---
 
 ---@class GameUIMgr: GameUIMgr_C
@@ -13,19 +14,32 @@ local GameUIMgr = UnLua.Class()
 function GameUIMgr:Construct()
 end
 
+---@override
+function GameUIMgr:Destruct()
+end
+
 ---@public
 ---@param Wolrd UWorld
 function GameUIMgr:InitUIMgr(Wolrd)
     self.tbUIWidget = {}
-    self.GameWorld = Wolrd
     ui_util.uimgr = self
-    
+    self.GameWorld = Wolrd
     gameinit.registerinit(gameinit.ring.open_dft_ui, self, self._OpenDefaultUI)
+end
+
+---@public
+function GameUIMgr:UninitUIMgr()
+    for _, widget in pairs(self.tbUIWidget) do
+        widget:RemoveFromParent()
+    end
 end
 
 ---@public
 function GameUIMgr:ShowUI(UIDef)
     log.info('[GameUIMgr:ShowUI] ', UIDef)
+    if not obj_util.is_valid(self) then
+        return
+    end
     local UI = self.tbUIWidget[UIDef]
     if UI then
         UI:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
@@ -95,6 +109,9 @@ end
 
 ---@private 打开默认UI
 function GameUIMgr:_OpenDefaultUI()
+    if not obj_util.is_valid(self) then
+        return
+    end
     local mapName = self.GameWorld:GetName()
     local defaultUIs = ConfigMgr:GetConfig('DefaultOpen')[mapName]
     if not defaultUIs then

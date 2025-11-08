@@ -30,6 +30,20 @@ ui_util.set_list_items = function(list_widget, array)
 end
 
 ---@public
+---@param World UWorld
+ui_util.init_ui_module = function(World)
+    if not obj_util.is_valid(World) then
+        return
+    end
+    local UIMgrClass = UE.UClass.Load('/Game/Ikun/UI/UMG/GameUIMgr.GameUIMgr_C')
+    local UIMgr = UE.UWidgetBlueprintLibrary.Create(World, UIMgrClass, UE.UGameplayStatics.GetPlayerController(World, 0))
+    if UIMgr then
+        UIMgr:AddToViewport(0)
+        UIMgr:InitUIMgr(World)
+    end
+end
+
+---@public
 ---@param UserWidget UUserWidget
 ui_util.release_mouse = function(UserWidget)
     local PC = UE.UGameplayStatics.GetPlayerController(world_util.World, 0)
