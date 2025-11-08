@@ -23,7 +23,7 @@ local CosmosClass = class.class "CosmosClass" {
 function CosmosClass:ctor()
     self._tbStar = {}
 
-    gameinit.registerinit(gameinit.ring.zero, self, self.InitAllStar)
+    gameinit.registerinit(gameinit.ring.init_star, self, self.InitAllStar)
 end
 
 ---@override

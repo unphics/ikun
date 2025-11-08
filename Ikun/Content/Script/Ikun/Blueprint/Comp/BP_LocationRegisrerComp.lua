@@ -11,7 +11,7 @@ local BP_LocationRegisterComp = UnLua.Class()
 ---@override
 function BP_LocationRegisterComp:ReceiveBeginPlay()
     if net_util.is_server(self) then
-        gameinit.registerinit(gameinit.ring.one, self, self.AvatarInitLocation)
+        gameinit.registerinit(gameinit.ring.init_loc, self, self.AvatarInitLocation)
     end
 end
 

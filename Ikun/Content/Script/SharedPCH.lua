@@ -40,7 +40,7 @@ do
     require('Content/Quest/QuestMgr')
     require("Content/Area/Cosmos")
 
-    gameinit = require("GameInit") ---@type gameinit
+    gameinit = ikf.init ---@type gameinit
 
     ConfigMgr = class.new 'ConfigMgr'() ---@as ConfigMgr
     TimeMgr = class.new 'TimeMgr'() ---@as TimeMgr
@@ -67,4 +67,4 @@ do
     local NavMoveBehav = require('Ikun/Module/Nav/NavMoveBehav')
 end
 
-gameinit.triggerinit(gameinit.ring.zero)
+gameinit.triggerinit(gameinit.groups.env_init)

@@ -42,7 +42,7 @@ function QuestMgr:ctor()
     self._QuestConfig_QuestId = {}
     self._QuestStepConfig_QuestId = {}
 
-    gameinit.registerinit(gameinit.ring.zero, self, self.InitQuestMgr)
+    gameinit.registerinit(gameinit.ring.init_quest, self, self.InitQuestMgr)
 end
 
 ---@overide [Init]

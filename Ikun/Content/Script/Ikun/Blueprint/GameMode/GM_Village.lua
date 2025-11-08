@@ -12,18 +12,7 @@ local GM_Village = UnLua.Class('Ikun/Blueprint/GameMode/GM_Base')
 function GM_Village:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
 
-    async_util.delay(self:GetWorld(), 0.1, function()
-        gameinit.triggerinit(gameinit.ring.one)
-    end)
-    async_util.delay(self:GetWorld(), 0.2, function()
-        gameinit.triggerinit(gameinit.ring.two)
-    end)
-    async_util.delay(self:GetWorld(), 0.3, function()
-        gameinit.triggerinit(gameinit.ring.three)
-    end)
-    async_util.delay(self:GetWorld(), 0.4, function()
-        gameinit.triggerinit(gameinit.ring.four)
-    end)
+    gameinit.triggerinit(gameinit.groups.gm_init)
 end
 
 ---@override

@@ -15,17 +15,21 @@ local PC_Base = UnLua.Class()
 ---@override
 function PC_Base:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
-    log.info(log.key.ueinit..' PC_Base:ReceiveBeginPlay()', net_util.print(self))
+    log.info(log.key.ueinit, ' PC_Base:ReceiveBeginPlay()', net_util.print(self))
     if net_util.is_server(self) then
+
+        gameinit.triggerinit(gameinit.groups.ctl_init)
+        gameinit.triggerinit(gameinit.groups.ctl_delay_1)
+
         if not modules.GameLevelMgr:CheckLevel(self:GetWorld()) then
             modules.GameLevelMgr:OpenEntryLevel(self:GetWorld())
         end
     end
-    
+
+    self.bShowMouseCursor = false
     if net_util.is_client(self) then
         self:InitInputSystem()
         self:InitPlayerInput()
-        self.bShowMouseCursor = false
     end
 end
 

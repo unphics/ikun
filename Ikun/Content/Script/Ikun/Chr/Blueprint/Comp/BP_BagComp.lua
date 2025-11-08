@@ -15,7 +15,7 @@ local BP_BagComp = UnLua.Class()
 ---@override
 function BP_BagComp:ReceiveBeginPlay()
     if net_util.is_server(self:GetOwner()) then
-        gameinit.registerinit(gameinit.ring.four, self, self._InitBagComp)
+        gameinit.registerinit(gameinit.ring.init_bag_comp, self, self._InitBagComp)
     end
 end
 

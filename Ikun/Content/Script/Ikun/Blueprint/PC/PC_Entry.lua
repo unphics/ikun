@@ -11,10 +11,9 @@ local PC_Entry = UnLua.Class('Ikun/Blueprint/PC/PC_Base')
 ---@override
 function PC_Entry:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
-    
-    if net_util.is_client(self)  then
-        self.bShowMouseCursor = true
-    end
+    self.Super.ReceiveBeginPlay(self)
+    log.info(log.key.ueinit, 'PC_Entry:ReceiveBeginPlay()', net_util.print(self))
+    self.bShowMouseCursor = true
 end
 
 return PC_Entry

@@ -11,12 +11,15 @@ local BP_SiteRegisterComp = UnLua.Class()
 ---@override
 function BP_SiteRegisterComp:ReceiveBeginPlay()
     if net_util.is_server(self) then
-        gameinit.registerinit(gameinit.ring.two, self, self.AvatarInitSite)
+        gameinit.registerinit(gameinit.ring.init_site, self, self.AvatarInitSite)
     end
 end
 
 ---@private
 function BP_SiteRegisterComp:AvatarInitSite()
+    if not obj_util.is_valid(self) then
+        return
+    end
     local site = class.new'SiteClass'() ---@as SiteClass
     site:InitSite(self:K2_GetComponentToWorld().Translation, self.SiteId)
     self:K2_DestroyComponent(self)

@@ -12,6 +12,7 @@ local PC_Village = UnLua.Class('Ikun/Blueprint/PC/PC_Base')
 function PC_Village:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     self.Super.ReceiveBeginPlay(self)
+    log.info(log.key.ueinit, 'PC_Village:ReceiveBeginPlay()', net_util.print(self))
 end
 
 return PC_Village

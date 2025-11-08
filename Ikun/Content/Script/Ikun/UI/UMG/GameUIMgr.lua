@@ -20,7 +20,7 @@ function GameUIMgr:InitUIMgr(Wolrd)
     self.GameWorld = Wolrd
     ui_util.uimgr = self
     
-    gameinit.registerinit(gameinit.ring.three, self, self._OpenDefaultUI)
+    gameinit.registerinit(gameinit.ring.open_dft_ui, self, self._OpenDefaultUI)
 end
 
 ---@public

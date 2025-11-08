@@ -12,12 +12,16 @@ local RoleComp = UnLua.Class()
 ---@override
 function RoleComp:ReceiveBeginPlay()
     if net_util.is_server(self:GetOwner()) then    
-        gameinit.registerinit(gameinit.ring.three, self, self.AvatarInitRole)
+        gameinit.registerinit(gameinit.ring.init_role, self, self.AvatarInitRole)
     end
 end
 
 ---@private [Init] 初始化逻辑角色
 function RoleComp:AvatarInitRole()
+    if not obj_util.is_valid(self) then
+        return
+    end
+    
     local roleConfig = RoleMgr:GetRoleConfig(self.RoleConfigId)
     if not roleConfig then
         log.error('RoleComp:AvatarInitRole()', '无效的RoleConfigId')
