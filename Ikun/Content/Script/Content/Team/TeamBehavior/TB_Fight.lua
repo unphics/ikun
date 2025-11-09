@@ -156,7 +156,7 @@ function TB_Fight:DefensivePos(Army)
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
         local Role = ele ---@type RoleClass
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 150)
-        self.DirectiveMoveCoord[Role:GetRoleInstId()] = ResultLoc
+        self.DirectiveMoveCoord[Role:GetRoleId()] = ResultLoc
     end
 end
 
@@ -171,13 +171,13 @@ function TB_Fight:AsgnFightTarget(Army)
         if not perception then
             break
         end
-        self.DynaSuppressTarget[Role:GetRoleInstId()] = perception.Role
+        self.DynaSuppressTarget[Role:GetRoleId()] = perception.Role
     end
     Enemy.FireTarget = Enemy.dpEnemyPerception:dget(1).Role
     ---@rule 给后排分配对面的前排
     for i, ele in ipairs(Army[FightPosDef.Backline]) do
         local Role = ele ---@type RoleClass
-        self.DynaSuppressTarget[Role:GetRoleInstId()] = Enemy.dpEnemyPerception:dget(1).Role
+        self.DynaSuppressTarget[Role:GetRoleId()] = Enemy.dpEnemyPerception:dget(1).Role
     end
 end
 

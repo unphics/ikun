@@ -5,14 +5,14 @@
 ---@data    Sun Nov 09 2025 09:27:37 GMT+0800 (中国标准时间)
 ---
 
----@class RoleBase
+---@class RoleBaseClass
 ---@field public Avatar BP_ChrBase UE表演对象
 ---@field public Bag BagClass 背包
 ---@field private _RoleId number
 ---@field private _RoleCfgId number
 ---@field private _RoleName string
 ---@field private _BelongKingdom Kingdom 所属国家
-local RoleBase = class.class'RoleBase' {
+local RoleBaseClass = class.class'RoleBaseClass' {
     RoleTick = function()end,
     LateAtNight = function()end,
     GetRoleId = function()end,
@@ -29,45 +29,55 @@ local RoleBase = class.class'RoleBase' {
 }
 
 ---@public
-function RoleBase:ctor()
+function RoleBaseClass:ctor()
     self.Bag = class.new'BagClass'(self)
 end
 
 ---@public
 ---@param DeltaTime number
-function RoleBase:RoleTick(DeltaTime)
+function RoleBaseClass:RoleTick(DeltaTime)
+end
+
+---@public
+function RoleBaseClass:InitRole(ConfigId)
+    local config = RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
+    if not config then
+        return log.error(log.key.roleinit,'无效的配置Id')
+    end
+
+    
 end
 
 ---@public 半夜刷新调用
-function RoleBase:LateAtNight()
+function RoleBaseClass:LateAtNight()
 end
 
 ---@public [Pure]
 ---@return number
-function RoleBase:GetRoleId()
+function RoleBaseClass:GetRoleId()
     return self._RoleId
 end
 
 ---@public [Pure]
 ---@return number
-function RoleBase:GetRoleCfgId()
+function RoleBaseClass:GetRoleCfgId()
     return self._RoleCfgId
 end
 
 ---@public [Pure]
 ---@return string
-function RoleBase:RoleName()
+function RoleBaseClass:RoleName()
     return self._RoleName
 end
 
 ---@public [Pure]
 ---@return Kingdom
-function RoleBase:GetBelongKingdom()
+function RoleBaseClass:GetBelongKingdom()
     return self._BelongKingdom
 end
 
 ---@public [Pure] [Debug]
-function RoleBase:PrintRole()
+function RoleBaseClass:PrintRole()
     return string.format('{Role:%s:%i}', self:GetRoleId(), self:RoleName())
 end
 

@@ -131,7 +131,7 @@ function GA_Lich_Skill_02:OnTAValidData(Data, EventTag)
         local hitRole = Actor.GetRole and Actor:GetRole()
         local isEnemy = hitRole and SelfActor:GetRole():IsEnemy(Actor:GetRole())
         if not isSelf and hitRole and isEnemy then
-            -- log.debug(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleInstId())
+            -- log.debug(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleId())
             local EffectContextHandle = self:GetContextFromOwner(Data)
             Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         else

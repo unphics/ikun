@@ -42,10 +42,10 @@ debug_util.IsChrDebug = function(Chr)
         return Chr == debug_util.debugrole
     end
     if Chr.GetRole then
-        return Chr:GetRole():GetRoleInstId() == debug_util.debugrole
+        return Chr:GetRole():GetRoleId() == debug_util.debugrole
     end
     if class.instanceof(Chr, class.RoleClass) then
-        return Chr:GetRoleInstId() == debug_util.debugrole
+        return Chr:GetRoleId() == debug_util.debugrole
     end
     return false
 end

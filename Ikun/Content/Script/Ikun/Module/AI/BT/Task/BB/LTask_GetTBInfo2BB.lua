@@ -29,14 +29,14 @@ function LTask_GetTBInfo2BB:OnInit()
     end
     local read_fn = Role.Team.CurTB['Read' .. self.ConstTableName]
     if read_fn then ---@note 如果该表有Read方法, 则优先使用Read方法读取数据
-        local Role = read_fn(Role.Team.CurTB, Role:GetRoleInstId())
+        local Role = read_fn(Role.Team.CurTB, Role:GetRoleId())
         self.Blackboard:SetBBValue(self.ConstBBKey, Role)
     else
         local Table = Role.Team.CurTB[self.ConstTableName]
         if not Table then
             return log.error('LTask_GetTBInfo2BB:OnInit() 该TeamBehavior没有ConstTableName成员')
         end
-        self.Blackboard:SetBBValue(self.ConstBBKey, Table[Role:GetRoleInstId()])
+        self.Blackboard:SetBBValue(self.ConstBBKey, Table[Role:GetRoleId()])
     end
 end
 function LTask_GetTBInfo2BB:OnUpdate(DeltaTime)

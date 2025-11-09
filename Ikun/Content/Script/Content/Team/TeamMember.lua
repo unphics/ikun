@@ -30,7 +30,7 @@ function TeamMemberClass:ctor(Team)
 end
 ---@public 添加成员
 function TeamMemberClass:AddMember(Role)
-    self.dpMember:dinsert(Role:GetRoleInstId(), Role)
+    self.dpMember:dinsert(Role:GetRoleId(), Role)
 end
 ---@public 移除成员
 function TeamMemberClass:RemoveMember(InstId)
@@ -62,7 +62,7 @@ function TeamMemberClass:ElectLeader()
 end
 function TeamMemberClass:GetLeader()
     if not self.TeamLeader or self.TeamLeader:IsRoleDead() then
-        self:RemoveMember(self.TeamLeader:GetRoleInstId())
+        self:RemoveMember(self.TeamLeader:GetRoleId())
         self:ElectLeader()
     end
     return self.TeamLeader

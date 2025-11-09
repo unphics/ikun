@@ -171,7 +171,7 @@ function LBT:PrintBT()
     end
     local strName = 'Name: ' .. obj_util.dispname(self.Chr)
     local Role = self.Chr:GetRole() ---@type RoleClass
-    local strId = ', Id : ' .. Role:GetRoleInstId()
+    local strId = ', Id : ' .. Role:GetRoleId()
     PrintText = PrintText .. strName .. strId .. '\n'
     PrintText = PrintText .. 'BT: ' .. self.Desc .. '\n'
     PrintText = PrintText .. self.Root:PrintNode(0)

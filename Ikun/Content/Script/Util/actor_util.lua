@@ -94,7 +94,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         true, TraceColor, HitColor, DrawTime)
     local Results = {}
     local owner = rolelib.role(pos1)
-    if owner:GetRoleInstId() == debug_util.debugrole then
+    if owner:GetRoleId() == debug_util.debugrole then
         local a = 1
     end
     for i = 1, HitResults:Length() do
@@ -104,7 +104,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         end
         local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
         if role then
-            -- log.log(log.key.repos..rolelib.roleid(pos1)..'has_obstacles_box: Hit Actor '..role:GetRoleInstId() ..','..role:RoleName())
+            -- log.log(log.key.repos..rolelib.roleid(pos1)..'has_obstacles_box: Hit Actor '..role:GetRoleId() ..','..role:RoleName())
         end
         if not Actor.GetMovementComponent then
             goto continue
@@ -145,7 +145,7 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
         if not HitRole then
             return false
         end
-        if OwnerRole:GetRoleInstId() == HitRole:GetRoleInstId() then
+        if OwnerRole:GetRoleId() == HitRole:GetRoleId() then
             return false
         end
         if OwnerRole:IsFirend(HitRole) then

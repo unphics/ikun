@@ -81,7 +81,7 @@ function GAgent:ctor(InOwnerRole)
     -- GoapConfig环节的log
     log.info(string.format('角色Agent初始化, name=%s, goap=%s, chr=%s, rolecfg=%i, sensor.len=%i, action.len=%i', 
         InOwnerRole:RoleName(), goapKey, obj_util.dispname(rolelib.chr(InOwnerRole)), 
-        InOwnerRole:GetRoleInstId(), #self._SensorList, #self.ActionList))
+        InOwnerRole:GetRoleId(), #self._SensorList, #self.ActionList))
 end
 
 function GAgent:LateAtNight()

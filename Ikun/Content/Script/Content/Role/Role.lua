@@ -37,7 +37,7 @@ local RoleClass = class.class 'RoleClass' {
     GetTarget = function()end,
     GetBelongKingdom = function()end,
     GetRoleCfgId = function()end,
-    GetRoleInstId = function()end,
+    GetRoleId = function()end,
     RoleName = function()end,
     IsRoleDead = function()end,
     Team = nil,
@@ -160,7 +160,7 @@ end
 
 ---@public [Debug] [Pure] 打印这个角色的信息
 function RoleClass:PrintRole()
-    return string.format('{Id:%i, name:%s}', self:GetRoleInstId(), self:RoleName())
+    return string.format('{Id:%i, name:%s}', self:GetRoleId(), self:RoleName())
 end
 
 ---@public [Pure] 获取角色配置Id
@@ -169,7 +169,7 @@ function RoleClass:GetRoleCfgId()
 end
 
 ---@public [Pure] 获取角色实力Id
-function RoleClass:GetRoleInstId()
+function RoleClass:GetRoleId()
     return self.RoleInfo.RoleInstId
 end
 

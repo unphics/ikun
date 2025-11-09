@@ -53,7 +53,7 @@ end
 
 do
     require('Content/Role/Role')
-    rolelib = require('Content/Role/RoleLib') ---@type rolelib
+    rolelib = require('Module/Role/RoleLib') ---@type rolelib
 end
 
 do

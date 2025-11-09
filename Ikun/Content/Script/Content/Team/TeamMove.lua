@@ -32,11 +32,11 @@ function TeamMoveClass:ctor(Team)
 end
 ---@public Role抵达后调用
 function TeamMoveClass:OnArrived(Role)
-    if not Role or not self.mapMemberMoveTarget or not self.mapMemberMoveTarget[Role:GetRoleInstId()] then
+    if not Role or not self.mapMemberMoveTarget or not self.mapMemberMoveTarget[Role:GetRoleId()] then
         return log.error('TeamMoveClass:OnArrived() 自身状态错误')
     end
 
-    self.mapMemberMoveTarget[Role:GetRoleInstId()].bArrived = true
+    self.mapMemberMoveTarget[Role:GetRoleId()].bArrived = true
 
     if self:IsAllMemberArrived() then
         self:OnAllMemberArrived()
@@ -67,7 +67,7 @@ function TeamMoveClass:GetMoveTarget(Role)
             self.OwnerTeam.CurTB:CalcAllMemberMoveTarget()
         end
     end
-    local MoveTargetData = self.mapMemberMoveTarget[Role:GetRoleInstId()]
+    local MoveTargetData = self.mapMemberMoveTarget[Role:GetRoleId()]
     if not MoveTargetData then
         self.OwnerTeam.CurTB:CalcMemberMoveTarget(Role)
     end
@@ -87,7 +87,7 @@ function TeamMoveClass:SetMemberMoveTarget(Role, MoveTarget, bForceMove)
     end
     ---@type TeamMoveTarget
     local tb = {MoveTarget = MoveTarget, bArrived = false, bForceMove = bForceMove}
-    self.mapMemberMoveTarget[Role:GetRoleInstId()] = tb
+    self.mapMemberMoveTarget[Role:GetRoleId()] = tb
     return tb
 end
 

@@ -71,7 +71,7 @@ function LService_ConsiderBehav:HasSpecial(Context)
     if not Team.CurTB.DirectiveMoveCoord then
         return false
     end
-    local vec = Team.CurTB.DirectiveMoveCoord[Role:GetRoleInstId()]
+    local vec = Team.CurTB.DirectiveMoveCoord[Role:GetRoleId()]
     if vec then
         return true
     end

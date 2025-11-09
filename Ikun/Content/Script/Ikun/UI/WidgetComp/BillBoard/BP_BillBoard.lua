@@ -46,7 +46,7 @@ end
 
 ---@private [Role]
 function BP_BillBoardComp:OnRoleNameUpdate(RoleName)
-    self:S2C_SetText(self:GetOwner():GetRole():GetRoleInstId())
+    self:S2C_SetText(self:GetOwner():GetRole():GetRoleId())
 end
 
 ---@private [Tick]

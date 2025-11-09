@@ -11,7 +11,7 @@ local rolelib = {}
 ---@public
 ---@param inRole RoleClass
 ---@return boolean
-rolelib.is_live_role = function(inRole)
+function rolelib.is_live_role(inRole)
     if inRole and not inRole:IsRoleDead() then
         return true
     end
@@ -20,10 +20,10 @@ end
 
 ---@public
 ---@param Chr RoleClass | BP_ChrBase | GAgent | GMemory
-rolelib.roleid = function(Chr)
+function rolelib.roleid(Chr)
     local role = rolelib.role(Chr)
     if role then
-        return string.format('[%s]', tostring(role:GetRoleInstId()))
+        return string.format('[%s]', tostring(role:GetRoleId()))
     else
         return 'undefined'
     end
@@ -32,7 +32,7 @@ end
 ---@public
 ---@param Obj RoleClass | BP_ChrBase | GAgent | AgentPartInterface
 ---@return RoleClass?
-rolelib.role = function(Obj)
+function rolelib.role(Obj)
     if class.instanceof(Obj, class.RoleClass) and obj_util.is_valid(Obj.Avatar) then
         return Obj ---@as RoleClass
     end
@@ -51,7 +51,7 @@ end
 ---@public
 ---@param Chr RoleClass | BP_ChrBase
 ---@return BP_ChrBase?
-rolelib.chr = function(Chr)
+function rolelib.chr(Chr)
     local role = rolelib.role(Chr)
     if role and obj_util.is_valid(role.Avatar) then
         return role.Avatar
@@ -60,7 +60,7 @@ rolelib.chr = function(Chr)
 end
 
 ---@public
-rolelib.is_valid_enemy = function(target, owner)
+function rolelib.is_valid_enemy(target, owner)
     local targetRole = rolelib.role(target)
     if not targetRole then
         return false

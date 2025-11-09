@@ -56,7 +56,7 @@ function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
     if class.instanceof(EnemyTeam, class.TeamClass) then
         ---@step 如该TeamLeader已添加, 则该Team已添加
         local EnemyLeaer = EnemyTeam.TeamMember:GetLeader()
-        if self.dpEnemyPerception:dfind(EnemyLeaer:GetRoleInstId()) then
+        if self.dpEnemyPerception:dfind(EnemyLeaer:GetRoleId()) then
             return false
         end
         ---@step 存储敌军所有角色
@@ -64,7 +64,7 @@ function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
             self:TryAddNewEnemyRole(Role)
         end
     else
-        if self.dpEnemyPerception:dfind(EnemyTeam:GetRoleInstId()) then
+        if self.dpEnemyPerception:dfind(EnemyTeam:GetRoleId()) then
             return false
         end
         self:TryAddNewEnemyRole(EnemyTeam)
@@ -75,7 +75,7 @@ end
 ---@private 尝试添加一个敌人角色
 ---@param EnemyRole RoleClass
 function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
-    if self.dpEnemyPerception:dfind(EnemyRole:GetRoleInstId()) then
+    if self.dpEnemyPerception:dfind(EnemyRole:GetRoleId()) then
         return
     end
     ---@type TeamEnemyPerception
@@ -88,7 +88,7 @@ function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
         Confidence = 1,
         TargetBy = nil,
     }
-    self.dpEnemyPerception:dinsert(EnemyRole:GetRoleInstId(), RolePerception)
+    self.dpEnemyPerception:dinsert(EnemyRole:GetRoleId(), RolePerception)
 end
 
 ---@public 根据远近排序(第一个最近)
@@ -115,7 +115,7 @@ end
 ---@public 移除一个角色
 ---@param Role RoleClass
 function TeamEnemyClass:RemoveEnemyRole(Role)
-    self.dpEnemyPerception:dremove(Role:GetRoleInstId())
+    self.dpEnemyPerception:dremove(Role:GetRoleId())
     log.dev('TeamEnemyClass:RemoveEnemyRole() : ', Role:RoleName())
 end
 

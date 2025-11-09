@@ -26,7 +26,7 @@ end
 ---@public [Logic] 发布需要驰援的请求; 被支援者调用
 function TeamSupportClass:PublishSupportReq(ReqRole)
     if ReqRole then
-        if self.dpSupportPair:dfind(ReqRole:GetRoleInstId()) then
+        if self.dpSupportPair:dfind(ReqRole:GetRoleId()) then
             -- log.debug(log.key.support, rolelib.roleid(ReqRole)..'再次请求支援')  
             return
         end
@@ -37,13 +37,13 @@ function TeamSupportClass:PublishSupportReq(ReqRole)
             ReqRole = ReqRole,
             dpSupporters = duplex.create()
         }
-        self.dpSupportPair:dinsert(ReqRole:GetRoleInstId(), SupportInfo)
+        self.dpSupportPair:dinsert(ReqRole:GetRoleId(), SupportInfo)
         log.dev(log.key.support, rolelib.roleid(ReqRole)..'请求支援')
     end
 end
 ---@public [Logic] 不再需要支援; 被支援者调用
 function TeamSupportClass:StopSupportReq(ReqRole)
-    self.dpSupportPair:dremove(ReqRole:GetRoleInstId())
+    self.dpSupportPair:dremove(ReqRole:GetRoleId())
     log.dev(log.key.support, rolelib.roleid(ReqRole)..'不再需要支援')
 end
 ---@public [Logic] 随便支援一个人; 支援者调用
@@ -62,7 +62,7 @@ function TeamSupportClass:BeginSupport(Role)
             info = ele
         end
     end
-    info.dpSupporters:dinsert(Role:GetRoleInstId(), Role)
+    info.dpSupporters:dinsert(Role:GetRoleId(), Role)
     log.dev(log.key.support, rolelib.roleid(Role)..'支援了'..rolelib.roleid(info.ReqRole))
     return info.ReqRole
 end
@@ -73,9 +73,9 @@ function TeamSupportClass:EndSupport(ReqRole, RspRole)
     if not rolelib.is_live_role(ReqRole) then
         return
     end
-    local info = self.dpSupportPair:dfind(ReqRole:GetRoleInstId())
+    local info = self.dpSupportPair:dfind(ReqRole:GetRoleId())
     if info then
-        if info.dpSupporters:dremove(RspRole:GetRoleInstId()) then
+        if info.dpSupporters:dremove(RspRole:GetRoleId()) then
             log.dev(log.key.support, rolelib.roleid(RspRole)..'结束了对'..rolelib.roleid(ReqRole)..'的支援')
         end
     end

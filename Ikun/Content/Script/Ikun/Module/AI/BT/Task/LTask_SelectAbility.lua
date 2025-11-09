@@ -56,7 +56,7 @@ function LTask_SelectAbility:SelectAbilityRandom()
         if not class.instanceof(OwnerRole.Team.CurTB, class.TB_Patrol) then
             return
         end
-        FightTargetRole = OwnerRole.Team.CurTB:ReadDynaSuppressTarget(FightTargetRole:GetRoleInstId())
+        FightTargetRole = OwnerRole.Team.CurTB:ReadDynaSuppressTarget(FightTargetRole:GetRoleId())
         FightTargetAvatar = FightTargetRole and FightTargetRole.Avatar
         if not obj_util.is_valid(FightTargetAvatar) or not rolelib.is_live_role(FightTargetRole) then
             return log.error('LTask_SelectAbility:SelectAbilityRandom(): 没有有效的敌人 !!!')
