@@ -5,6 +5,8 @@
 ---@data    Fri May 30 2025 23:46:56 GMT+0800 (中国标准时间)
 ---
 
+require('Module/Role/RoleBase')
+
 ---@class RoleConfig
 ---@field RoleId number
 ---@field RoleName string

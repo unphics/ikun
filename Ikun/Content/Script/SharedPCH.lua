@@ -35,7 +35,7 @@ do
     require('Ikun/Module/Config/ConfigMgr')
     require('Content/Time/TimeMgr')
     require('Content/Item/ItemMgr')
-    require('Content/Role/RoleMgr')
+    require('Module/Role/RoleMgr')
     require('Content/Team/TeamMgr')
     require('Content/Quest/QuestMgr')
     require("Content/Area/Cosmos")
