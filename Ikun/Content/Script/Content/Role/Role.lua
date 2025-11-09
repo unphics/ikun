@@ -6,7 +6,6 @@
 ---@desc    对于摆放在场景中的Chr或者Spawn出的Chr, 分配给他们ConfigId, 在Chr里构造Role, 然后Role开始在游戏内容管理中注册, 成为世界的一员
 ---
 
-local BTDef = require('Ikun/Module/AI/BT/BTDef')
 local TeamClass = require('Content/Team/Team')
 local FightTargetClass = require('Content/Role/FightTarget')
 local RoleInfoClass = require('Content/Role/RoleInfo')
@@ -18,7 +17,6 @@ require('Content/Chat/NpcChat')
 ---@field RoleInfo RoleInfoClass * 角色基础信息
 ---@field Avatar BP_ChrBase * 角色在游戏场景中的AvatarActor
 ---@field Team TeamClass * 战斗团队
----@field BT LBT * 行为树
 ---@field BelongKingdomLua Kingdom * 所属国家
 ---@field QuestComp QuestCompClass * 角色的任务
 ---@field Bag BagClass * 背包
@@ -31,7 +29,6 @@ local RoleClass = class.class 'RoleClass' {
     ctor = function()end,
     RoleTick = function()end,
     InitByAvatar = function()end,
-    SwitchNewBT = function()end,
     IsFirend = function()end,
     IsEnemy = function()end,
     AddEnemyChecked = function()end,
@@ -53,7 +50,6 @@ local RoleClass = class.class 'RoleClass' {
     RoleInfo = nil,
     Avatar = nil,
     BelongKingdomLua = nil,
-    BT = nil,
     bNpc = nil,
 }
 
@@ -101,24 +97,6 @@ end
 function RoleClass:LateAtNight()
     if self.Agent then
         self.Agent:LateAtNight()
-    end
-end
-
-function RoleClass:SwitchNewBT(NewBTKey)
-    log.info('RoleClass:SwitchNewBT()', self:RoleName(), NewBTKey)
-    if self.Avatar.RoleComp.bCustomStartBT then
-        return
-    end
-    local BTClass = BTDef[NewBTKey]
-    if not BTClass then
-        log.error('RoleClass:SwitchNewBT()', 'no NewBTKey', NewBTKey, self:RoleName())
-        return
-    end
-    self.BT = BTClass(self.Avatar)
-    if not self.BT then
-        self.BT = BTClass(self.Avatar)
-        log.error('RoleClass:SwitchNewBT()', 'Failed to init BT', NewBTKey, self:RoleName())
-        return
     end
 end
 
@@ -172,18 +150,12 @@ function RoleClass:RoleBeginDeath()
         self.Team.TeamSupport:StopSupportReq(self)
         self.Team.TeamMember:RemoveMember(rolelib.roleid(self))
     end
-    self.BT = nil
 end
 
 ---@public [Pure] 获取所属国家
 ---@return Kingdom
 function RoleClass:GetBelongKingdom()
     return self.BelongKingdomLua
-end
-
----@public [LBTCondition] [Pure] 角色此时有团队指导的移动目标
-function RoleClass:HasTeamMoveTarget()
-    return self.Team.TeamMove.mapMemberMoveTarget and self.Team.TeamMove.mapMemberMoveTarget[self:GetRoleInstId()] or nil
 end
 
 ---@public [Debug] [Pure] 打印这个角色的信息

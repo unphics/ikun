@@ -3,6 +3,7 @@
 ---@brief Lich一技能, 远程
 ---@author zys
 ---@data Fri Jan 31 2025 14:13:55 GMT+0800 (中国标准时间)
+---@deprecated
 ---
 
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")

@@ -3,6 +3,7 @@
 ---@brief   Team的基础信息; 还有消息传递解耦
 ---@author  zys
 ---@data    Sun Jul 06 2025 18:32:37 GMT+0800 (中国标准时间)
+---@deprecated
 ---
 
 ---@class TeamInfoClass

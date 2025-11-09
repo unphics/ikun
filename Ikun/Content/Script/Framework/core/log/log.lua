@@ -10,9 +10,14 @@
 local log = {}
 log.key = require(ikf.setting.logkey_path)
 
----@public
+---@public 开发期临时使用的print,由于其高亮功能方便精准查看日志
 function log.dev(...)
     ikf.setting.sys_error("[DEV]", ...)
+end
+
+---@public 开发期功能占位
+function log.todo(...)
+    ikf.setting.sys_error("[TODO]", ...)
 end
 
 ---@public 日志

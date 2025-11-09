@@ -3,6 +3,7 @@
 ---@brief 团队移动, 存储成员移动目标
 ---@author zys
 ---@data Sat Apr 19 2025 06:20:04 GMT+0800 (中国标准时间)
+---@deprecated
 ---
 
 ---@class TeamMoveTarget

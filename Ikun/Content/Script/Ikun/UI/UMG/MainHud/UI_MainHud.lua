@@ -8,12 +8,6 @@
 ---@class UI_MainHud: UI_MainHud_C
 local UI_MainHud = UnLua.Class()
 
---function UI_MainHud:Initialize(Initializer)
---end
-
---function UI_MainHud:PreConstruct(IsDesignTime)
---end
-
 ---@override
 function UI_MainHud:Construct()
     if not obj_util.is_valid(ui_util.uimgr.GameWorld) then
@@ -25,7 +19,6 @@ end
 
 ---@override
 function UI_MainHud:Tick(MyGeometry, InDeltaTime)
-    -- self:UpdateAnimInfo()
     self:UpdateTimeInfo()
 end
 

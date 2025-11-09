@@ -33,21 +33,11 @@ function BP_ChrBase:GetRole()
     return self.RoleComp.Role
 end
 
----@public [Server] [Tool] [Pure] [Debug] 打印当前角色的一些信息
----@return string
-function BP_ChrBase:PrintRoleInfo()
-    local Role = self:GetRole()
-    return ' [Actor='..obj_util.dispname(self)..', RoleName='..Role:RoleName()..', RoleId='..Role:GetRoleInstId()..'] '
-end
-
 ---@private Chr开始死亡
 function BP_ChrBase:ChrBeginDeath()
     self.bChrDead = true
     if self:GetRole() then
-        self:GetRole():RoleBeginDeath()
-        async_util.delay(self, 0.1, function()
-            self:K2_DestroyActor()
-        end)
+        log.todo('Role死亡流程')
     end
 end
 

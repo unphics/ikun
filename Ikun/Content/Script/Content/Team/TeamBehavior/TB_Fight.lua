@@ -3,6 +3,7 @@
 ---@brief 战斗行为
 ---@author zys
 ---@data Fri Apr 25 2025 22:27:17 GMT+0800 (中国标准时间)
+---@deprecated
 ---
 
 local BTType = require('Ikun.Module.AI.BT.BTType')

@@ -57,13 +57,15 @@ do
 end
 
 do
-    require('Ikun/Module/AI/BT/LBT')
     require("Ikun/Module/AI/MLP")
     goap = require("Ikun/Module/AI/Goap/Goap") ---@type goap
     -- goap.test()
 end
 
 do
+    
+    local MoveStuckMonitor = require('Ikun/Module/Nav/MoveStuckMonitor')
+    local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
     local NavMoveBehav = require('Ikun/Module/Nav/NavMoveBehav')
 end
 
