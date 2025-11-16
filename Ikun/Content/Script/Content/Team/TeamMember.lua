@@ -6,8 +6,8 @@
 
 ---@class TeamMemberClass
 ---@field OwnerTeam TeamClass
----@field TeamLeader RoleClass
----@field dpMember duplex<number, RoleClass>
+---@field TeamLeader RoleBaseClass
+---@field dpMember duplex<number, RoleBaseClass>
 local TeamMemberClass = class.class 'TeamMemberClass' {
     --[[public]]
     ctor = function() end,
@@ -76,7 +76,7 @@ function TeamMemberClass:PrintMember()
     return str
 end
 ---@public [Pure] 根据战斗职业数量分表获取所有成员
----@return RoleClass[], RoleClass[]
+---@return RoleBaseClass[], RoleBaseClass[]
 function TeamMemberClass:GetAllMember_PosCount()
     local ArrSingle = {}
     local ArrMulti = {}

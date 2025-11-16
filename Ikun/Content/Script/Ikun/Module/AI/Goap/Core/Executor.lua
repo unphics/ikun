@@ -6,7 +6,7 @@
 ---
 
 ---@class GExecutor: AgentPartInterface
----@field _OwnerAgent RoleClass
+---@field _OwnerAgent RoleBaseClass
 ---@field CurPlan string[]
 ---@field CurGoal GGoal
 ---@field CurAction GAction

@@ -10,13 +10,13 @@
 ---@class BagClass
 ---@field private _ItemContainer table<id, ItemBaseClass> 物品容器<ItemId,物品对象>
 ---@field private __ItemRefByCfg table<id, ItemBaseClass[]> 根据配置id建立索引的物品容器
----@field private _Owner RoleClass 拥有者
+---@field private _Owner RoleBaseClass 拥有者
 ---@field private _OnItemAdd table[] 添加物品
 ---@field private _OnItemRemove table[] 移除物品
 local BagClass = class.class 'BagClass' {}
 
 ---@public
----@param Owner RoleClass
+---@param Owner RoleBaseClass
 function BagClass:ctor(Owner)
     self._Owner = Owner
     self._ItemContainer = {}

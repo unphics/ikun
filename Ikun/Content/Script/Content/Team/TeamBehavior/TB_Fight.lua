@@ -15,7 +15,7 @@ local DftFPAsgnRate = require('Content/Team/Config/DftFPAsgnRate')
 ---@field OwnerTeam TeamClass
 ---@field Army table
 ---@field DirectiveMoveCoord table<number, FVector> 指令性运动坐标(移动坐标, 分配三要素-1)
----@field DynaSuppressTarget table<number, RoleClass> 动态抑制目标(攻击目标, 分配三要素-2)
+---@field DynaSuppressTarget table<number, RoleBaseClass> 动态抑制目标(攻击目标, 分配三要素-2)
 ---@field TacticManeuverZone table<number, FVector> 战术机动区(活动范围, 分配三要素-1)
 local TB_Fight = class.class 'TB_Fight' : extends 'TeamBehaviorBase' {
 --[[public]]
@@ -71,7 +71,7 @@ end
 function TB_Fight:AllMemberSwitchFightBT()
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, ele in ipairs(AllMember) do
-        ---@type RoleClass
+        ---@type RoleBaseClass
         local Role = ele
         local NewBTKey = RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).BTCfg[BTType.Fight]
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        
@@ -125,7 +125,7 @@ function TB_Fight:AsgnFightPos()
     local tbSingleFP, tbMultiFP = self.OwnerTeam.TeamMember:GetAllMember_PosCount()
     ---@todo 优先处理只能承担单一职业的角色; 此处略过
     for _, ele in ipairs(tbMultiFP) do
-        local Role = ele ---@type RoleClass
+        local Role = ele ---@type RoleBaseClass
         local tbFP = RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).FightPosAssign
         local FightPos = nil
         ---@todo (if 有得跑 or 有牧师)血量极少, 强制后排
@@ -154,7 +154,7 @@ function TB_Fight:DefensivePos(Army)
     Dir:Normalize()
     local FrontlineTarget = OwnerLoc + (Dir * 500)
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
-        local Role = ele ---@type RoleClass
+        local Role = ele ---@type RoleBaseClass
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, FrontlineTarget, 150)
         self.DirectiveMoveCoord[Role:GetRoleId()] = ResultLoc
     end
@@ -166,7 +166,7 @@ function TB_Fight:AsgnFightTarget(Army)
     Enemy:SortEnemyByDist()
     ---@rule 给前排分配对面的前排
     for i, ele in ipairs(Army[FightPosDef.Frontline]) do
-        local Role = ele ---@type RoleClass
+        local Role = ele ---@type RoleBaseClass
         local perception = Enemy.dpEnemyPerception:dget(i)
         if not perception then
             break
@@ -176,7 +176,7 @@ function TB_Fight:AsgnFightTarget(Army)
     Enemy.FireTarget = Enemy.dpEnemyPerception:dget(1).Role
     ---@rule 给后排分配对面的前排
     for i, ele in ipairs(Army[FightPosDef.Backline]) do
-        local Role = ele ---@type RoleClass
+        local Role = ele ---@type RoleBaseClass
         self.DynaSuppressTarget[Role:GetRoleId()] = Enemy.dpEnemyPerception:dget(1).Role
     end
 end
@@ -219,7 +219,7 @@ function TB_Fight:OffensivePos(Army)
     Dir:Normalize()
     local BacklineTarget = EnemyLoc + Dir * 500 -- 敌方后排的大致位置
     for _, ele in ipairs(Army[FightPosDef.Frontline]) do
-        local Role = ele ---@type RoleClass
+        local Role = ele ---@type RoleBaseClass
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(Role.Avatar, BacklineTarget, 150)
         self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, ResultLoc, true)
     end

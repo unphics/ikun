@@ -66,7 +66,7 @@ end
 ---@todo 其实是Team要求，后面拆分一下
 ---@param Context ConsiderContext
 function LService_ConsiderBehav:HasSpecial(Context)
-    local Role = self.Chr:GetRole() ---@type RoleClass
+    local Role = self.Chr:GetRole() ---@type RoleBaseClass
     local Team = Role.Team
     if not Team.CurTB.DirectiveMoveCoord then
         return false

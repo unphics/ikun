@@ -32,7 +32,7 @@ function LTask_FindLoc4Ability:OnUpdate(DeltaTime)
 end
 function LTask_FindLoc4Ability:GetTargetActor()
     local FightTarget = self.Blackboard:GetBBValue(BBKeyDef.FightTarget)
-    if class.instanceof(FightTarget, class.RoleClass) then
+    if class.instanceof(FightTarget, class.RoleBaseClass) then
         return FightTarget.Avatar
     end
     if FightTarget.IsA then

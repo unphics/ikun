@@ -41,7 +41,7 @@ function TeamBehaviorBase:CalcAllMemberMoveTarget()
 end
 
 ---@public
----@param Role RoleClass
+---@param Role RoleBaseClass
 function TeamBehaviorBase:CalcMemberMoveTarget(Role)
     return self.OwnerTeam.TeamMove:SetMemberMoveTarget(Role, Role.Avatar:K2_GetActorLocation(), false)
 end

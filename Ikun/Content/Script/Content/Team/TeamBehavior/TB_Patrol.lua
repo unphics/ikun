@@ -20,7 +20,7 @@ local TB_Patrol = class.class 'TB_Patrol' : extends 'TeamBehaviorBase' {
 function TB_Patrol:InitTB()
     local AllMember = self.OwnerTeam.TeamMember:GetAllMember()
     for _, role in ipairs(AllMember) do
-        ---@type RoleClass
+        ---@type RoleBaseClass
         local Role = role
         local NewBTKey = RoleMgr:GetRoleConfig(Role:GetRoleCfgId()).BTCfg[BTType.Patrol]
         Role.BT.Blackboard:SetBBValue(BBKeyDef.BBNewBTKey, NewBTKey)        

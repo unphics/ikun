@@ -6,8 +6,8 @@
 ---
 
 ---@class FightTargetClass
----@field TargetRole RoleClass
----@field OwnerRole RoleClass
+---@field TargetRole RoleBaseClass
+---@field OwnerRole RoleBaseClass
 local FightTargetClass = class.class 'FightTargetClass' {
 --[[public]]
     ctor = function()end,
@@ -16,7 +16,7 @@ local FightTargetClass = class.class 'FightTargetClass' {
     OwnerRole = nil,
 }
 ---@public
----@param OwnerRole RoleClass
+---@param OwnerRole RoleBaseClass
 function FightTargetClass:ctor(OwnerRole)
     self.OwnerRole = OwnerRole
 end
@@ -25,7 +25,7 @@ function FightTargetClass:SetTarget(Role)
     self.TargetRole = Role
 end
 ---@public 获取战斗目标
----@return RoleClass
+---@return RoleBaseClass
 function FightTargetClass:GetTarget()
     return self.TargetRole
 end

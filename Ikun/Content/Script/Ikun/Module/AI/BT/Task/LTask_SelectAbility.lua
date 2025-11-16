@@ -48,7 +48,7 @@ end
 ---@private 在一定条件下随机选择技能
 function LTask_SelectAbility:SelectAbilityRandom()
     local OwnerRole = rolelib.role(self.Chr)
-    local FightTargetRole = self.Blackboard:GetBBValue(BBKeyDef.FightTarget) ---@type RoleClass
+    local FightTargetRole = self.Blackboard:GetBBValue(BBKeyDef.FightTarget) ---@type RoleBaseClass
     local FightTargetAvatar = FightTargetRole.Avatar ---@type BP_ChrBase
 
     if not obj_util.is_valid(FightTargetAvatar) or not rolelib.is_live_role(FightTargetRole) then

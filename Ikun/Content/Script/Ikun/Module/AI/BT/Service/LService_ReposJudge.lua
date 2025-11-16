@@ -26,7 +26,7 @@ function LService_ReposJudge:OnUpdate(DeltaTime)
     if not actor_util.has_obstacles(self.FightTarget.Avatar, self.Chr, actor_util.filter_is_firend_4_obstacles(self.Chr), function(tb)
             local owner = self.Chr:GetRole()
             for i, chr in ipairs(tb) do
-                local role = chr:GetRole() ---@type RoleClass
+                local role = chr:GetRole() ---@type RoleBaseClass
             end
         end) then
         draw_util.draw_dir_sphere(self.Chr, self.FightTarget.Avatar, draw_util.white)

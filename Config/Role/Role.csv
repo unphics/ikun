@@ -1,27 +1,27 @@
-RoleId|RoleName|RoleDesc|BelongKingdom|RoleSkills|InitBT|GoapKey|SpecialClass|FightPosAssign|BTCfg|RoleChat|HoldLocations
-|||初始归属的国家|角色的初始技能|||||||
-|||||||||||
-200002|阿克巴鲁斯|常见的; 法师, 战士|611002||Team_MakeTeam_1|||Frontline,Backline|Init=Team_MakeTeam_1, Patrol=Team_Patrol_Together_1, Fight=Team_Fight_2||
-200003|阿巴克|见人就砍; 法师, 战士|611003||JungleMonsters_Burn_1||R_Lich_3||||
-200004|鲁鲁修|法师, 战士|611003||Team_MakeTeam_1|||Frontline,Backline|Init=Team_MakeTeam_1, Patrol=Team_Patrol_Together_1, Fight=Team_Fight_2||
-200005|布噜布噜布噜||611001|||||||410011, 410021|
-|||||||||||
-210001|刘秀||611001|Equip=530001,UnEquip=530002,NormalOne=530201|||||||
-210002|鸽鸽||611001|530001,530002,530101|||||||
-|||||||||||
-|||||||||||
-210101|村长|清瀑村npc|611001|||VillageHead|||Init=Stand,|410011, 410021|
-210102|年轻的猎人|清瀑村npc|611001|||Hunter|||Init=Stand,||641002,
-210103|猎人的妹妹|清瀑村npc|611001|||Marketer|||Init=Stand,||641002,641003
-210104|杂货铺老板|清瀑村npc|611001|||Shopkeeper|||Init=Stand,||641001,
-210105|杂货铺老板娘|清瀑村npc|611001||||||Init=Stand,||641001,
-|||||||||||
-210111|该溜子A|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
-210112|该溜子B|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
-210113|该溜子C|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
-210114|该溜子D|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
-210115|该溜子E|清瀑村npc|611001|||IdlePerson|||Init=Stand,||
-|||||||||||
-|||||||||||
-|||||||||||
-|||||||||||
+RoleId|RoleName|RoleDesc|bUniqueRole|BelongKingdom|RoleSkills|GoapKey|RoleChat|HoldLocations
+|||是唯一角色|初始归属的国家|角色的初始技能|||
+|||||todo:后面配成模板|||
+200002|阿克巴鲁斯|常见的; 法师, 战士||611002||||
+200003|阿巴克|见人就砍; 法师, 战士||611003||||
+200004|鲁鲁修|法师, 战士||611003||||
+200005|布噜布噜布噜|||611001|||410011, 410021|
+||||||||
+210001|刘秀||true|611001|Equip=530001,UnEquip=530002,NormalOne=530201|||
+210002|鸽鸽||true|611001|530001,530002,530101|||
+||||||||
+||||||||
+210101|村长|清瀑村npc|true|611001||VillageHead|410011, 410021|
+210102|年轻的猎人|清瀑村npc|true|611001||Hunter||641002,
+210103|猎人的妹妹|清瀑村npc|true|611001||Marketer||641002,641003
+210104|杂货铺老板|清瀑村npc|true|611001||Shopkeeper||641001,
+210105|杂货铺老板娘|清瀑村npc|true|611001||||641001,
+||||||||
+210111|该溜子A|清瀑村npc|true|611001||IdlePerson||
+210112|该溜子B|清瀑村npc|true|611001||IdlePerson||
+210113|该溜子C|清瀑村npc|true|611001||IdlePerson||
+210114|该溜子D|清瀑村npc|true|611001||IdlePerson||
+210115|该溜子E|清瀑村npc|true|611001||IdlePerson||
+||||||||
+||||||||
+||||||||
+||||||||

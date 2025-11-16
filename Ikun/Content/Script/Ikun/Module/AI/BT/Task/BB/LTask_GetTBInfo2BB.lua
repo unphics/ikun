@@ -23,7 +23,7 @@ end
 function LTask_GetTBInfo2BB:OnInit()
     class.LTask.OnInit(self)
 
-    local Role = self.Chr:GetRole() ---@type RoleClass
+    local Role = self.Chr:GetRole() ---@type RoleBaseClass
     if not Role or not Role.Team then
         return log.error('LTask_GetTBInfo2BB:OnInit() 该Role没有Team')
     end

@@ -197,7 +197,7 @@ function LTask_AiMoveBase:GetNavTarget()
     if not BB_MoveTarget then
         return log.error('LTask_AiMoveBase:GetNavTarget(): No MoveTarget')
     end
-    if class.instanceof(BB_MoveTarget, class.RoleClass) then
+    if class.instanceof(BB_MoveTarget, class.RoleBaseClass) then
         if not BB_MoveTarget.Avatar then
             return log.error('LTask_AiMoveBase:GetNavTarget(): No Avatar')
         end

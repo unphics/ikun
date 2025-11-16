@@ -7,7 +7,7 @@
 ---
 
 ---@class RoleHoldLocationClass
----@field _OwnerRole RoleClass
+---@field _OwnerRole RoleBaseClass
 ---@field _tbHoldLocation LocationClass[]
 local RoleHoldLocationClass = class.class 'RoleHoldLocationClass' {
     ctor = function()end,
@@ -17,7 +17,7 @@ local RoleHoldLocationClass = class.class 'RoleHoldLocationClass' {
 }
 
 ---@override
----@param InOwnerRole RoleClass
+---@param InOwnerRole RoleBaseClass
 function RoleHoldLocationClass:ctor(InOwnerRole, InConfigId)
     self._tbHoldLocation = {}
     self._OwnerRole = InOwnerRole

@@ -26,7 +26,7 @@ local initState = {
 ---@field InitActions string[]
 
 ---@class GAgent
----@field _OwnerRole RoleClass
+---@field _OwnerRole RoleBaseClass
 ---@field Memory GMemory
 ---@field ActionList GAction[] 所有可用行为
 ---@field _SensorList GSensor[]
@@ -35,7 +35,7 @@ local initState = {
 local GAgent = class.class'GAgent' {}
 
 ---@public
----@param InOwnerRole RoleClass
+---@param InOwnerRole RoleBaseClass
 function GAgent:ctor(InOwnerRole)
     self._OwnerRole = InOwnerRole
     self.Memory = class.new 'GMemory' (self) ---@as GMemory
@@ -183,7 +183,7 @@ function GAgent:MakePlan()
 end
 
 ---@public
----@return RoleClass
+---@return RoleBaseClass
 function GAgent:GetAgentRole()
     return self._OwnerRole
 end

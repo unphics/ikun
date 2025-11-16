@@ -7,7 +7,7 @@
 ---
 
 ---@class QuestGiverClass
----@field _Owner RoleClass
+---@field _Owner RoleBaseClass
 local QuestGiverClass = class.class 'QuestGiverClass' {
     ctor = function()end,
     _Owner = nil,

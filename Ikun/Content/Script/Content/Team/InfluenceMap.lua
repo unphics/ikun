@@ -28,7 +28,7 @@ end
 ---@field ItemGridSize number 每个正方形格子的边长 -> 50
 ---@field HalfGridCount number 从大正方形Map中心点到边有多少格 -> 100
 ---@field InfluenceItems InfluenceItem[] 图
----@field CalcFns function<InfluenceItem,RoleClass,InfluenceMapClass>[]
+---@field CalcFns function<InfluenceItem,RoleBaseClass,InfluenceMapClass>[]
 local InfluenceMapClass = class.class 'InfluenceMapClass' {
 --[[public]]
     ctor = function()end,
@@ -85,7 +85,7 @@ end
 ---@public [Calc] 添加人头数算子
 function InfluenceMapClass:AddCalcRoleCount()
     ---@param InfluenceItem InfluenceItem
-    ---@param Role RoleClass
+    ---@param Role RoleBaseClass
     local function fn(InfluenceItem, Role, InfluenceMapClass)
         if not Role:IsRoleDead() then
             InfluenceItem.RoleCount = InfluenceItem.RoleCount + 1
@@ -94,13 +94,13 @@ function InfluenceMapClass:AddCalcRoleCount()
     return self:AddCustomCalc(fn)
 end
 ---@public [Calc] 添加自定义算子
----@param fnCalc function<InfluenceItem,RoleClass,InfluenceMapClass>
+---@param fnCalc function<InfluenceItem,RoleBaseClass,InfluenceMapClass>
 function InfluenceMapClass:AddCustomCalc(fnCalc)
     table.insert(self.CalcFns, fnCalc)
     return self
 end
 ---@public [Add] 添加一个角色
----@param Role RoleClass
+---@param Role RoleBaseClass
 function InfluenceMapClass:AddRole(Role)
     if not Role or not Role.Avatar then
         return log.error('InfluenceMapClass:AddRole(): 输入参数错误')
@@ -124,7 +124,7 @@ function InfluenceMapClass:CheckPosInMapRange(X, Y)
     return bX and bY
 end
 ---@public [Add] 添加一群角色
----@param Roles RoleClass[]
+---@param Roles RoleBaseClass[]
 function InfluenceMapClass:AddRoles(Roles)
     for _, R in ipairs(Roles) do
         self:AddRole(R)

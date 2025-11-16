@@ -6,7 +6,7 @@
 ---
 
 ---@class RoleInfoClass
----@field OwnerRole RoleClass
+---@field OwnerRole RoleBaseClass
 ---@field RoleInstId number 角色实例Id
 ---@field RoleCfgId number 配置表模板Id
 ---@field RoleDispName string 角色名字
@@ -24,7 +24,7 @@ local RoleInfoClass = class.class'RoleInfoClass' {
     OwnerRole = nil,
 }
 
----@param Role RoleClass
+---@param Role RoleBaseClass
 function RoleInfoClass:ctor(Role, CfgId)
     local config = RoleMgr:GetRoleConfig(CfgId) ---@type RoleConfig
     self.OwnerRole = Role

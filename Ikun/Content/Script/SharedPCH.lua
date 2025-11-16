@@ -52,7 +52,6 @@ do
 end
 
 do
-    require('Content/Role/Role')
     rolelib = require('Module/Role/RoleLib') ---@type rolelib
 end
 

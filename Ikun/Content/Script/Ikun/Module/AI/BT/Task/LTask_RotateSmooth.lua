@@ -90,7 +90,7 @@ function LTask_RotateSmooth:GetRotTargetLoc()
         log.error('LTask_RotateSmooth:OnInit Failed to index MoveTarget !')
         return
     end
-    if class.instanceof(MoveTarget, class.RoleClass) then
+    if class.instanceof(MoveTarget, class.RoleBaseClass) then
         MoveTarget = MoveTarget.Avatar:K2_GetActorLocation()
     end
     if not MoveTarget then

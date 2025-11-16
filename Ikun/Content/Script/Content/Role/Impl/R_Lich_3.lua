@@ -4,8 +4,8 @@
 ---@data Tue Jan 28 2025 00:06:09 GMT+0800 (中国标准时间)
 ---
 
----@class R_Lich_3: RoleClass
-local R_Lich_3 = class.class 'R_Lich_3' : extends 'RoleClass' {
+---@class R_Lich_3: RoleBaseClass
+local R_Lich_3 = class.class 'R_Lich_3' : extends 'RoleBaseClass' {
     IsEnemy = function()end,
 }
 function R_Lich_3:IsEnemy(OtherRole)

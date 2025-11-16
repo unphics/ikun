@@ -6,7 +6,7 @@
 ---
 
 ---@class RoleComp: RoleComp_C
----@field Role RoleClass
+---@field Role RoleBaseClass
 local RoleComp = UnLua.Class()
 
 ---@override
@@ -21,21 +21,11 @@ function RoleComp:AvatarInitRole()
     if not obj_util.is_valid(self) then
         return
     end
-    
-    local roleConfig = RoleMgr:GetRoleConfig(self.RoleConfigId)
-    if not roleConfig then
-        log.error('RoleComp:AvatarInitRole()', '无效的RoleConfigId')
-        return
+    local role = RoleMgr:AvatarBindRole(self.RoleConfigId)
+    if role then
+        role:SetAvatar(self:GetOwner())
+        self.Role = role
     end
-
-    -- 如果有特化的角色模板则使用特化初始化
-    if roleConfig.SpecialClass then
-        self.Role = class.new(roleConfig.SpecialClass)() ---@as RoleClass
-    else
-        self.Role = class.new 'RoleClass'() ---@as RoleClass
-    end
-
-    self.Role:InitByAvatar(self:GetOwner(), self.RoleConfigId, self.bNpc)
 end
 
 return RoleComp

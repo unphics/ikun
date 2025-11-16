@@ -31,8 +31,8 @@ function TeamSupportClass:PublishSupportReq(ReqRole)
             return
         end
         ---@class SupportInfo
-        ---@field ReqRole RoleClass
-        ---@field dpSupporters duplex<number, RoleClass>[]
+        ---@field ReqRole RoleBaseClass
+        ---@field dpSupporters duplex<number, RoleBaseClass>[]
         local SupportInfo = {
             ReqRole = ReqRole,
             dpSupporters = duplex.create()
@@ -47,8 +47,8 @@ function TeamSupportClass:StopSupportReq(ReqRole)
     log.dev(log.key.support, rolelib.roleid(ReqRole)..'不再需要支援')
 end
 ---@public [Logic] 随便支援一个人; 支援者调用
----@param Role RoleClass
----@return RoleClass
+---@param Role RoleBaseClass
+---@return RoleBaseClass
 function TeamSupportClass:BeginSupport(Role)
     local info = nil ---@type SupportInfo
     for _, k, ele in self.dpSupportPair:diter() do
@@ -67,8 +67,8 @@ function TeamSupportClass:BeginSupport(Role)
     return info.ReqRole
 end
 ---@public [Logic] 结束支援; 支援者调用
----@param ReqRole RoleClass 被支援者
----@param RspRole RoleClass 支援者
+---@param ReqRole RoleBaseClass 被支援者
+---@param RspRole RoleBaseClass 支援者
 function TeamSupportClass:EndSupport(ReqRole, RspRole)
     if not rolelib.is_live_role(ReqRole) then
         return

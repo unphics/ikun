@@ -3,13 +3,14 @@
 ---@brief   角色相关的帮助函数
 ---@author  zys
 ---@data    Sun Jul 06 2025 19:22:01 GMT+0800 (中国标准时间)
+---@todo    从RoleLib改成RoleUtil
 ---
 
 ---@class rolelib
 local rolelib = {}
 
----@public
----@param inRole RoleClass
+---@public 判断角色还活着
+---@param inRole RoleBaseClass
 ---@return boolean
 function rolelib.is_live_role(inRole)
     if inRole and not inRole:IsRoleDead() then
@@ -18,8 +19,8 @@ function rolelib.is_live_role(inRole)
     return false
 end
 
----@public
----@param Chr RoleClass | BP_ChrBase | GAgent | GMemory
+---@public 易用接口获取角色Id
+---@param Chr RoleBaseClass | BP_ChrBase | GAgent | GMemory
 function rolelib.roleid(Chr)
     local role = rolelib.role(Chr)
     if role then
@@ -29,12 +30,12 @@ function rolelib.roleid(Chr)
     end
 end
 
----@public
----@param Obj RoleClass | BP_ChrBase | GAgent | AgentPartInterface
----@return RoleClass?
+---@public 易用接口获取角色对象
+---@param Obj RoleBaseClass | BP_ChrBase | GAgent | AgentPartInterface
+---@return RoleBaseClass?
 function rolelib.role(Obj)
-    if class.instanceof(Obj, class.RoleClass) and obj_util.is_valid(Obj.Avatar) then
-        return Obj ---@as RoleClass
+    if class.instanceof(Obj, class.RoleBaseClass) and obj_util.is_valid(Obj.Avatar) then
+        return Obj ---@as RoleBaseClass
     end
     if Obj and Obj.GetRole and obj_util.is_valid(Obj) then
         return Obj:GetRole()
@@ -48,8 +49,8 @@ function rolelib.role(Obj)
     return nil
 end
 
----@public
----@param Chr RoleClass | BP_ChrBase
+---@public 易用接口获取角色的AvatarChr
+---@param Chr RoleBaseClass | BP_ChrBase
 ---@return BP_ChrBase?
 function rolelib.chr(Chr)
     local role = rolelib.role(Chr)
@@ -59,7 +60,8 @@ function rolelib.chr(Chr)
     return nil
 end
 
----@public
+---@public 判断是一个有效的敌人
+---@return boolean
 function rolelib.is_valid_enemy(target, owner)
     local targetRole = rolelib.role(target)
     if not targetRole then

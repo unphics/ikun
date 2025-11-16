@@ -47,7 +47,7 @@ actor_util.has_obstacles = function(pos1, pos2,  allow_fn, fn)
     local tb = {}
     for i = 1, HitResults:Length() do
         local Actor = HitResults:Get(i).HitObjectHandle.Actor
-        local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
+        local role = Actor.GetRole and Actor:GetRole() ---@type RoleBaseClass
         if role then
             -- log
         end
@@ -102,7 +102,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         if not Actor or not obj_util.is_valid(Actor) then
             goto continue
         end
-        local role = Actor.GetRole and Actor:GetRole() ---@type RoleClass
+        local role = Actor.GetRole and Actor:GetRole() ---@type RoleBaseClass
         if role then
             -- log.log(log.key.repos..rolelib.roleid(pos1)..'has_obstacles_box: Hit Actor '..role:GetRoleId() ..','..role:RoleName())
         end

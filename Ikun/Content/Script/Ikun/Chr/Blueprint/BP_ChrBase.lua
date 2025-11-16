@@ -5,7 +5,7 @@
 ---
 
 ---@class BP_ChrBase: BP_ChrBase_C
----@field Role RoleClass
+---@field Role RoleBaseClass
 local BP_ChrBase = UnLua.Class()
 
 ---@override
@@ -25,7 +25,7 @@ function BP_ChrBase:ReceiveTick(DeltaSeconds)
 end
 
 ---@public [Server] [Tool] [Pure] 获取当前Chr的Role
----@return RoleClass | nil
+---@return RoleBaseClass | nil
 function BP_ChrBase:GetRole()
     if not obj_util.is_valid(self) then
         return log.error('BP_ChrBase:GetRole() Has Released')

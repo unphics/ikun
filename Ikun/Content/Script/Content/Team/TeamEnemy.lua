@@ -6,18 +6,18 @@
 ---
 
 ---@class TeamEnemyPerception
----@field Role RoleClass
+---@field Role RoleBaseClass
 ---@field LastSeenTime number 最后一次更新时间
 ---@field LastSeenLoc FVector 最后一次更新的位置
 ---@field Confidence number 可信度
 ---@field Investigation number 侦查值(侦查程度)
 ---@field Visibility boolean 可见?
----@field TargetBy RoleClass?
+---@field TargetBy RoleBaseClass?
 
 ---@class TeamEnemyClass
 ---@field dpEnemyPerception duplex<number, TeamEnemyPerception> 感知到的敌军信息
 ---@field OwnerTeam TeamClass
----@field FireTarget RoleClass 集火目标
+---@field FireTarget RoleBaseClass 集火目标
 local TeamEnemyClass = class.class 'TeamEnemyClass' {
 ---[[public]]
     cotr = function()end,
@@ -47,7 +47,7 @@ function TeamEnemyClass:ResetTeamEnemyData()
 end
 
 ---@public 遭遇敌军; 第一次遭遇时, 根据敌军情况第一次评估敌军信息
----@param EnemyTeam TeamClass | RoleClass
+---@param EnemyTeam TeamClass | RoleBaseClass
 ---@return boolean 是否是遭遇(是否第一次)
 function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
     if not EnemyTeam then
@@ -73,7 +73,7 @@ function TeamEnemyClass:OnEncounterEnemy(EnemyTeam)
 end
 
 ---@private 尝试添加一个敌人角色
----@param EnemyRole RoleClass
+---@param EnemyRole RoleBaseClass
 function TeamEnemyClass:TryAddNewEnemyRole(EnemyRole)
     if self.dpEnemyPerception:dfind(EnemyRole:GetRoleId()) then
         return
@@ -113,7 +113,7 @@ function TeamEnemyClass:GetAllEnemy()
 end
 
 ---@public 移除一个角色
----@param Role RoleClass
+---@param Role RoleBaseClass
 function TeamEnemyClass:RemoveEnemyRole(Role)
     self.dpEnemyPerception:dremove(Role:GetRoleId())
     log.dev('TeamEnemyClass:RemoveEnemyRole() : ', Role:RoleName())

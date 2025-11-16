@@ -13,6 +13,9 @@ local ReceptionSensor = class.class 'ReceptionSensor':extends'GSensor' {}
 function ReceptionSensor:ctor(Agent)
     class.GSensor.ctor(self, Agent)
     local avatar = rolelib.chr(self._Agent)
+    if not avatar then
+        return 
+    end
     local receptionComp = avatar:GetController().BP_ReceptionComp ---@as BP_ReceptionComp
     self._ReceptionComp = receptionComp
 end

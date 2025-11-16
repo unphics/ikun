@@ -7,7 +7,7 @@
 
 ---@class NavMoveBehav
 ---@field Chr BP_ChrBase
----@field Role RoleClass
+---@field Role RoleBaseClass
 ---@field MaxStuckTime number
 ---@field QueryNavExtent FVector
 ---@field MoveToInfo MoveToInfo each
@@ -30,7 +30,7 @@ local NavMoveBehav = class.class 'NavMoveBehav' {
     MoveToInfo = nil,
 }
 ---@override
----@param Chr BP_ChrBase|RoleClass
+---@param Chr BP_ChrBase|RoleBaseClass
 function NavMoveBehav:ctor(Chr, MaxStuckTime)
     self.Chr = rolelib.chr(Chr)
     self.Role = rolelib.role(Chr)
