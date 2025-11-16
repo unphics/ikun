@@ -6,12 +6,14 @@
 ---
 
 local NpcChat = require("Content/Chat/NpcChat")
+require('Module/Role/RoleHoldLocation')
 
 ---@class RoleBaseClass
 ---@field public Avatar BP_ChrBase UE表演对象
 ---@field public Bag BagClass 背包
 ---@field public QuestComp QuestCompClass 角色的任务, 预计处理 todo zys
 ---@field public QuestGiver QuestGiverClass, 预计处理 todo zys
+---@field public HoldLocation RoleHoldLocationClass todo zys 角色持有的地点
 ---@field public NpcChat NpcChatClass
 ---@field private _RoleId number
 ---@field private _RoleCfgId number
@@ -30,6 +32,7 @@ local RoleBaseClass = class.class'RoleBaseClass' {
     QuestComp = nil,
     QuestGiver = nil,
     NpcChat = nil,
+    HoldLocation = nil,
     _BelongKingdom = nil,
     _RoleId = -1,
     _RoleCfgId = -1,
@@ -69,6 +72,9 @@ function RoleBaseClass:InitRole(ConfigId)
     self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(config.BelongKingdom) ---@type Kingdom
     self.BelongKingdomLua:AddKingdomMember(self)
     
+    self.HoldLocation = class.new 'RoleHoldLocationClass'(self, ConfigId)
+
+    -- todo
     -- self.Avatar.SkillComp:InitRoleSkill()
     
     if config.GoapKey then
