@@ -39,7 +39,7 @@ local RoleBaseClass = class.class'RoleBaseClass' {
     _RoleName = '未命名',
 }
 
----@public
+---@override
 function RoleBaseClass:ctor()
     self.Bag = class.new'BagClass'(self)
     self.QuestComp = class.new 'QuestCompClass'(self)
@@ -48,7 +48,7 @@ function RoleBaseClass:ctor()
     self.NpcChat = class.new 'NpcChatClass'(self)
 end
 
----@public
+---@override
 ---@param DeltaTime number
 function RoleBaseClass:RoleTick(DeltaTime)
     if self.Agent then
@@ -56,7 +56,7 @@ function RoleBaseClass:RoleTick(DeltaTime)
     end
 end
 
----@public
+---@public [Init]
 function RoleBaseClass:InitRole(ConfigId)
     local config = RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
     if not config then

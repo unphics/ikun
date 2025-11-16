@@ -56,9 +56,7 @@ do
 end
 
 do
-    require("Ikun/Module/AI/MLP")
-    goap = require("Ikun/Module/AI/Goap/Goap") ---@type goap
-    -- goap.test()
+    goap = require("System/Goap/Goap") ---@type goap
 end
 
 do
