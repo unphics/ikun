@@ -17,7 +17,7 @@ local UI_Gaze = UnLua.Class()
 function UI_Gaze:OnShow()
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Interact))
     self._GazeInputPower = InputMgr.BorrowInputPower(self)
-    InputMgr.RegisterInputAction(self._GazeInputPower, EnhInput.IADef.IA_Interact, EnhInput.TriggerEvent.Started, self.OnInteractGaze)
+    InputMgr.RegisterInputAction(self._GazeInputPower, EnhInput.IADef.IA_Interact, EnhInput.TriggerEventDef.Started, self.OnInteractGaze)
     
     self.TxtGazeName:SetText('')
 end

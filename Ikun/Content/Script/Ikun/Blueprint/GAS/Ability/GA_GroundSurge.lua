@@ -31,7 +31,7 @@ function GA_GroundSurge:K2_ActivateAbilityFromEvent(Payload)
         local pc = UE.UGameplayStatics.GetPlayerController(self:GetAvatarActorFromActorInfo(), 0)
         if pc and pc:IsLocalPlayerController() then
             self.DrawPower = InputMgr.BorrowInputPower(self)
-            InputMgr.RegisterInputAction(self.DrawPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftDownCompleted)
+            InputMgr.RegisterInputAction(self.DrawPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEventDef.Completed, self.OnMouseLeftDownCompleted)
         else
         end
     end

@@ -7,41 +7,20 @@
 
 local EnhancedInput = require("UnLua.EnhancedInput")
 
+local IMCDef = require('System/Input/IMCDef') ---@type IMCDef
+local IADef = require('System/Input/IADef') ---@type IADef
+local TriggerEventDef = require('System/Input/TriggerEventDef') ---@type TriggerEventDef
+
 local InputMgr = require('Ikun/Module/Input/InputMgr')
 
 ---@class EnhInput
 ---@field _EnhInputSubsys UEnhancedInputLocalPlayerSubsystem
----@field _PlayerController BP_IkunPC
+---@field _PlayerController PC_Base
 local EnhInput = {}
 
-EnhInput.IMCDef = {
-    IMC_Base = '/Game/Ikun/Blueprint/Input/IMC/IMC_Base.IMC_Base',
-    IMC_Interact = '/Game/Ikun/UI/Input/IMC/IMC_Interact.IMC_Interact',
-    IMC_Bag = '/Game/Ikun/UI/Input/IMC/IMC_Bag.IMC_Bag',
-}
-
----@enum IADef
-local IADef = {
-    IA_Move = '/Game/Ikun/Blueprint/Input/IA/IA_Move.IA_Move',
-    IA_Look = '/Game/Ikun/Blueprint/Input/IA/IA_Look.IA_Look',
-    IA_MouseLeftDown = '/Game/Ikun/Blueprint/Input/IA/IA_MouseLeftDown.IA_MouseLeftDown',
-    IA_Interact = '/Game/Ikun/UI/Input/IA/IA_Interact.IA_Interact',
-    IA_Wheel = '/Game/Ikun/UI/Input/IA/IA_Wheel.IA_Wheel',
-    IA_Tab = '/Game/Ikun/UI/Input/IA/IA_Tab.IA_Tab',
-    IA_BlankSpace = '/Game/Ikun/Blueprint/Input/IA/IA_BlankSpace.IA_BlankSpace',
-    IA_Bag = '/Game/Ikun/Blueprint/Input/IA/IA_Bag.IA_Bag',
-    IA_Equip = '/Game/Ikun/Blueprint/Input/IA/IA_Equip.IA_Equip',
-}
 EnhInput.IADef = IADef
-
----@enum TriggerEvent
-EnhInput.TriggerEvent = {
-    Triggered = 'Triggered',
-    Started = 'Started',
-    Ongoing = 'Ongoing',
-    Canceled = 'Canceled',
-    Completed = 'Completed',
-}
+EnhInput.IMCDef = IMCDef
+EnhInput.TriggerEventDef = TriggerEventDef
 
 ---@public [Init]
 ---@param PC BP_IkunPC
@@ -53,7 +32,7 @@ end
 
 ---@public [IMC]
 EnhInput.AddIMC = function(IMC)
-    local sys = EnhInput.GetEnhInputSubsys()
+    local sys = EnhInput._GetEnhInputSubsys()
     if not sys then
         log.error('EnhInput.AddIMC', '注册IMC时EnhSubSys未准备好', IMC)
         return
@@ -66,81 +45,76 @@ end
 
 ---@public [IMC]
 EnhInput.RemoveIMC = function(IMC)
-    if EnhInput.GetEnhInputSubsys() and EnhInput.HasIMC(IMC) then
-        EnhInput.GetEnhInputSubsys():RemoveMappingContext(IMC, UE.FModifyContextOptions())
+    if EnhInput._GetEnhInputSubsys() and EnhInput.HasIMC(IMC) then
+        EnhInput._GetEnhInputSubsys():RemoveMappingContext(IMC, UE.FModifyContextOptions())
     end
 end
 
 ---@public [IMC]
 EnhInput.HasIMC = function(IMC)
-    if EnhInput.GetEnhInputSubsys() then
-        return EnhInput.GetEnhInputSubsys():HasMappingContext(IMC)
+    if EnhInput._GetEnhInputSubsys() then
+        return EnhInput._GetEnhInputSubsys():HasMappingContext(IMC)
     end
 end
 
 ---@public [Tool]
 ---@return UEnhancedInputLocalPlayerSubsystem
-EnhInput.GetEnhInputSubsys = function()
+EnhInput._GetEnhInputSubsys = function()
     if not EnhInput._EnhInputSubsys then
-        EnhInput._GetEnhInputSubsys()
+        EnhInput._EnhInputSubsys  = UE.USubsystemBlueprintLibrary.GetLocalPlayerSubSystemFromPlayerController(EnhInput._PlayerController, UE.UEnhancedInputLocalPlayerSubsystem)
     end
     return EnhInput._EnhInputSubsys
-end
-
----@private [Tool]
-EnhInput._GetEnhInputSubsys = function()
-    EnhInput._EnhInputSubsys  = UE.USubsystemBlueprintLibrary.GetLocalPlayerSubSystemFromPlayerController(EnhInput._PlayerController, UE.UEnhancedInputLocalPlayerSubsystem)
 end
 
 ---@public
 EnhInput.BindActions = function(pc)
     log.info(log.key.ueinit, 'EnhInput.BindActions running')
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Move, EnhInput.TriggerEvent.Triggered,
+    EnhancedInput.BindAction(pc, IADef.IA_Move, EnhInput.TriggerEventDef.Triggered,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_Move, EnhInput.TriggerEvent.Triggered, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Move, EnhInput.TriggerEventDef.Triggered, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Look, EnhInput.TriggerEvent.Triggered,
+    EnhancedInput.BindAction(pc, IADef.IA_Look, EnhInput.TriggerEventDef.Triggered,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_Look, EnhInput.TriggerEvent.Triggered, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Look, EnhInput.TriggerEventDef.Triggered, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started,
+    EnhancedInput.BindAction(pc, IADef.IA_MouseLeftDown, EnhInput.TriggerEventDef.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown, EnhInput.TriggerEventDef.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed,
+    EnhancedInput.BindAction(pc, IADef.IA_MouseLeftDown, EnhInput.TriggerEventDef.Completed,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown, EnhInput.TriggerEventDef.Completed, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Triggered,
+    EnhancedInput.BindAction(pc, IADef.IA_MouseLeftDown, EnhInput.TriggerEventDef.Triggered,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown,EnhInput.TriggerEvent.Triggered, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_MouseLeftDown,EnhInput.TriggerEventDef.Triggered, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end)
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_BlankSpace, EnhInput.TriggerEvent.Started,
+    EnhancedInput.BindAction(pc, IADef.IA_BlankSpace, EnhInput.TriggerEventDef.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_BlankSpace,EnhInput.TriggerEvent.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_BlankSpace,EnhInput.TriggerEventDef.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end, _)
 
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Interact, EnhInput.TriggerEvent.Started,
+    EnhancedInput.BindAction(pc, IADef.IA_Interact, EnhInput.TriggerEventDef.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_Interact,EnhInput.TriggerEvent.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Interact,EnhInput.TriggerEventDef.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end, _)
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Wheel, EnhInput.TriggerEvent.Started,
+    EnhancedInput.BindAction(pc, IADef.IA_Wheel, EnhInput.TriggerEventDef.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_Wheel,EnhInput.TriggerEvent.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Wheel,EnhInput.TriggerEventDef.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end, _)
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Tab, EnhInput.TriggerEvent.Started,
+    EnhancedInput.BindAction(pc, IADef.IA_Tab, EnhInput.TriggerEventDef.Started,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_Tab,EnhInput.TriggerEvent.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-        end, _)
-
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Bag, EnhInput.TriggerEvent.Completed,
-        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_Bag, EnhInput.TriggerEvent.Completed, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Tab,EnhInput.TriggerEventDef.Started, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end, _)
 
-    EnhancedInput.BindAction(pc, EnhInput.IADef.IA_Equip, EnhInput.TriggerEvent.Completed,
+    EnhancedInput.BindAction(pc, IADef.IA_Bag, EnhInput.TriggerEventDef.Completed,
         function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
-            InputMgr.TriggerInputAction(IADef.IA_Equip, EnhInput.TriggerEvent.Completed, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Bag, EnhInput.TriggerEventDef.Completed, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+        end, _)
+
+    EnhancedInput.BindAction(pc, IADef.IA_Equip, EnhInput.TriggerEventDef.Completed,
+        function(SourceObj, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
+            InputMgr.TriggerInputAction(IADef.IA_Equip, EnhInput.TriggerEventDef.Completed, ActionValue, ElapsedSeconds, TriggeredSeconds, InputAction)
         end, _)
 end
 

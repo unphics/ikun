@@ -45,7 +45,7 @@ function GA_DrawBow:K2_ActivateAbilityFromEvent(Payload)
     else
         gas_util.add_loose_tag(self:GetAvatarActorFromActorInfo(), 'Role.State.CantMove')
         self.DrawPower = InputMgr.BorrowInputPower(self)
-        InputMgr.RegisterInputAction(self.DrawPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEvent.Completed, self.OnMouseLeftDownCompleted)
+        InputMgr.RegisterInputAction(self.DrawPower, EnhInput.IADef.IA_MouseLeftDown, EnhInput.TriggerEventDef.Completed, self.OnMouseLeftDownCompleted)
     end
 end
 
