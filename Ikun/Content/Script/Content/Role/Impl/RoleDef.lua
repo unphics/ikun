@@ -1,1 +1,0 @@
-require('Content/Role/Impl/R_Lich_3')
