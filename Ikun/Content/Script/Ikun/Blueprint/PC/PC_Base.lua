@@ -12,6 +12,8 @@ local InputMgr = require("Ikun/Module/Input/InputMgr")
 ---@field OwnerChr BP_ChrBase
 local PC_Base = UnLua.Class()
 
+EnhInput.BindActions(PC_Base)
+
 ---@override
 function PC_Base:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
@@ -26,10 +28,12 @@ function PC_Base:ReceiveBeginPlay()
     end
     
     self.bShowMouseCursor = false
+
+    self:InitInputSystem()
+    self:InitPlayerInput()
     if net_util.is_client(self) then
-        self:InitInputSystem()
-        self:InitPlayerInput()
     end
+
     ui_util.init_ui_module(self:GetWorld())
 end
 
@@ -48,7 +52,6 @@ function PC_Base:InitInputSystem()
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
 
 end
-EnhInput.BindActions(PC_Base)
 
 ---@private [Input]
 function PC_Base:InitPlayerInput()

@@ -34,7 +34,7 @@ end
 EnhInput.AddIMC = function(IMC)
     local sys = EnhInput._GetEnhInputSubsys()
     if not sys then
-        log.error('EnhInput.AddIMC', '注册IMC时EnhSubSys未准备好', IMC)
+        log.error('EnhInput.AddIMC', '注册IMC时EnhSubSys未准备好', IMC, net_util.print(EnhInput._PlayerController))
         return
     end
     if EnhInput.HasIMC(IMC) then

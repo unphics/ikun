@@ -18,12 +18,6 @@ function BP_GameInst:ReceiveInit()
 end
 
 function BP_GameInst:ReceiveOnWorldChanged(OldWorld, NewWorld)
-    -- if OldWorld then
-    --     EnhInput:ResetEnhInput()
-    -- end
-    -- if NewWorld then
-    --     EnhInput:BindActions()
-    -- end
     do
         local newWorldName = NewWorld and NewWorld:GetName()
         local type = NewWorld and UE.UIkunFnLib.GetWorldType(NewWorld)

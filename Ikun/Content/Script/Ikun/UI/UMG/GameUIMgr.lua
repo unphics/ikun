@@ -24,6 +24,7 @@ function GameUIMgr:InitUIMgr(Wolrd)
     self.tbUIWidget = {}
     ui_util.uimgr = self
     self.GameWorld = Wolrd
+    log.info('GameUIMgr:InitUIMgr', Wolrd, obj_util.dispname(Wolrd))
     gameinit.registerinit(gameinit.ring.open_dft_ui, self, self._OpenDefaultUI)
 end
 
@@ -45,8 +46,8 @@ function GameUIMgr:ShowUI(UIDef)
         UI:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
     else
         local UIClass = UE.UClass.Load(UIDef) 
-        local PC = UE.UGameplayStatics.GetPlayerController(world_util.World, 0)
-        UI = UE.UWidgetBlueprintLibrary.Create(world_util.World, UIClass, PC)
+        local PC = UE.UGameplayStatics.GetPlayerController(self.GameWorld, 0)
+        UI = UE.UWidgetBlueprintLibrary.Create(self.GameWorld, UIClass, PC)
         local Slot = self.GameWindow:AddChild(UI) ---@type UCanvasPanelSlot
         UI:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
         UI.bIsFocusable = true

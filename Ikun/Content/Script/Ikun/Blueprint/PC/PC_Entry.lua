@@ -5,8 +5,12 @@
 ---@data    Fri Nov 07 2025 23:06:24 GMT+0800 (中国标准时间)
 ---
 
+local EnhInput = require('Ikun/Module/Input/EnhInput')
+
 ---@class PC_Entry: PC_Base
 local PC_Entry = UnLua.Class('Ikun/Blueprint/PC/PC_Base')
+
+EnhInput.BindActions(PC_Entry)
 
 ---@override
 function PC_Entry:ReceiveBeginPlay()
