@@ -36,7 +36,6 @@ do
     require('Content/Time/TimeMgr')
     require('Content/Item/ItemMgr')
     require('Module/Role/RoleMgr')
-    require('Content/Team/TeamMgr')
     require('Content/Quest/QuestMgr')
     require("Content/Area/Cosmos")
 

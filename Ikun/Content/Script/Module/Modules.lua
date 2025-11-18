@@ -20,4 +20,9 @@ function Modules:ctor()
     self.GameSession = class.new'GameSession'()
 end
 
+---@override
+function Modules:tick(DeltaTime)
+    
+end
+
 return Modules

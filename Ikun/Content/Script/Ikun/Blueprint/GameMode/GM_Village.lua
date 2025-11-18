@@ -19,7 +19,6 @@ end
 function GM_Village:ReceiveTick(DeltaSeconds)
     self.Overridden.ReceiveTick(self, DeltaSeconds)
     TimeMgr:TickTimeMgr(DeltaSeconds)
-    TeamMgr:TickTeamMgr(DeltaSeconds)
     Cosmos:TickCosmos(DeltaSeconds)
 end
 
