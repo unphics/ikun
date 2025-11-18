@@ -50,7 +50,7 @@ function rolelib.role(Obj)
 end
 
 ---@public 易用接口获取角色的AvatarChr
----@param Chr RoleBaseClass | BP_ChrBase
+---@param Chr RoleBaseClass | BP_ChrBase | GAgent | AgentPartInterface
 ---@return BP_ChrBase?
 function rolelib.chr(Chr)
     local role = rolelib.role(Chr)

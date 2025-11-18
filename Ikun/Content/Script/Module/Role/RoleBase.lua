@@ -91,6 +91,9 @@ end
 
 ---@public 半夜刷新调用
 function RoleBaseClass:LateAtNight()
+    if self.Agent then
+        self.Agent:LateAtNight()
+    end
 end
 
 ---@public [Pure]

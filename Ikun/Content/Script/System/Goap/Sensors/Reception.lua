@@ -6,23 +6,23 @@
 ---
 
 ---@class ReceptionSensor: GSensor
----@field _ReceptionComp BP_ReceptionComp
+---@field private _OwnerAgent GAgent
 local ReceptionSensor = class.class 'ReceptionSensor':extends'GSensor' {}
 
 ---@override
 function ReceptionSensor:ctor(Agent)
     class.GSensor.ctor(self, Agent)
-    local avatar = rolelib.chr(self._Agent)
-    if not avatar then
-        return 
-    end
-    local receptionComp = avatar:GetController().BP_ReceptionComp ---@as BP_ReceptionComp
-    self._ReceptionComp = receptionComp
+    self._OwnerAgent = Agent
 end
 
 ---@override
 function ReceptionSensor:TickSensor(DeltaTime)
-    local newState = self._ReceptionComp:GetVisitorCount() > 0
+    local comp = self:_GetReceptionComp()
+    if not comp then
+        return
+    end
+
+    local newState = comp:GetVisitorCount() > 0
     local oldState = self._Agent.Memory:GetState('Recepting')
     if not oldState and newState then
         self._Agent.Memory:SetState('Recepting', newState)
@@ -32,6 +32,16 @@ function ReceptionSensor:TickSensor(DeltaTime)
         self._Agent:AddGoal(goal, 1)
         log.info('添加接待目标', rolelib.role(self._Agent):RoleName())
         self._Agent:MakePlan()
+    end
+end
+
+---@private
+---@return BP_ReceptionComp?
+function ReceptionSensor:_GetReceptionComp()
+    local avatar = rolelib.chr(self._OwnerAgent)
+    if avatar then
+        local comp = avatar:GetController().BP_ReceptionComp ---@as BP_ReceptionComp
+        return comp
     end
 end
 
