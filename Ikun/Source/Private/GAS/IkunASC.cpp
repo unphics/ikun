@@ -74,3 +74,8 @@ FGameplayAbilitySpecHandle UIkunASC::GiveAbilityWithDynTriggerTag(TSubclassOf<UG
 
 	return SpecHandle;
 }
+
+void UIkunASC::TryActiveAbilityWithPaylod(FGameplayAbilitySpecHandle InHandle, const FGameplayEventData& Payload)
+{
+	this->TriggerAbilityFromGameplayEvent(InHandle, this->AbilityActorInfo.Get(), FGameplayTag(), &Payload, *this);
+}

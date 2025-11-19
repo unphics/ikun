@@ -17,7 +17,7 @@
 ---@field _Sites SiteClass[]
 ---@field _LocationId number
 ---@field _Name string
----@field _OwnerRoles RoleClass[]
+---@field _OwnerRoles RoleBaseClass[]
 local LocationClass = class.class 'LocationClass' {
     ctor = function()end,
     InitByLocationAvatar = function()end,

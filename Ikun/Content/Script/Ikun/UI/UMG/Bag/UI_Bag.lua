@@ -21,7 +21,7 @@ function UI_Bag:OnShow()
     -- input
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Bag))
     local power = InputMgr.ObtainInputPower(self)
-    InputMgr.RegisterInputAction(power, EnhInput.IADef.IA_Bag, EnhInput.TriggerEvent.Completed, self._OnBagCompleted)
+    InputMgr.RegisterInputAction(power, EnhInput.IADef.IA_Bag, EnhInput.TriggerEventDef.Completed, self._OnBagCompleted)
     self._BagUIInputPower = power
 
     -- cursor

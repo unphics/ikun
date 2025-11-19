@@ -19,10 +19,10 @@ local DynaSelect = require('Content/Chat/DynaSelect')
 ---@field PostExecId number
 
 ---@class NpcChatClass
----@field _Owner RoleClass 对话对象的Owner
+---@field _Owner RoleBaseClass 对话对象的Owner
 ---@field _CurChatId number 当前的对话Id
 ---@field _CurSelectList number[] 当前对话的对话列表
----@field ChatTarget RoleClass 当前对话的对方
+---@field ChatTarget RoleBaseClass 当前对话的对方
 local NpcChatClass = class.class 'NpcChatClass' {}
 
 function NpcChatClass:ctor(Owner)
@@ -82,7 +82,7 @@ function NpcChatClass:GetChatComp()
 end
 
 ---@public [Pure]
----@return RoleClass
+---@return RoleBaseClass
 function NpcChatClass:GetChatOwner()
     return self._Owner
 end

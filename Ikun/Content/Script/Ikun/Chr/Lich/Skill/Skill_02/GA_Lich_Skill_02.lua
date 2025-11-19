@@ -3,6 +3,7 @@
 ---@brief Lich一技能, 远程
 ---@author zys
 ---@data Fri Jan 31 2025 14:13:55 GMT+0800 (中国标准时间)
+---@deprecated
 ---
 
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
@@ -130,7 +131,7 @@ function GA_Lich_Skill_02:OnTAValidData(Data, EventTag)
         local hitRole = Actor.GetRole and Actor:GetRole()
         local isEnemy = hitRole and SelfActor:GetRole():IsEnemy(Actor:GetRole())
         if not isSelf and hitRole and isEnemy then
-            -- log.debug(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleInstId())
+            -- log.debug(log.key.lich02boom, '接收爆炸的敌人', Actor:GetRole():GetRoleId())
             local EffectContextHandle = self:GetContextFromOwner(Data)
             Actor:GetAbilitySystemComponent():BP_ApplyGameplayEffectToSelf(self.GameplayEffectClass, 1, EffectContextHandle)
         else

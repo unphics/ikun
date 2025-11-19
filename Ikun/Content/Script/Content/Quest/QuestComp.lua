@@ -6,7 +6,7 @@
 ---
 
 ---@class QuestCompClass
----@field _Owner RoleClass
+---@field _Owner RoleBaseClass
 ---@field _Quests QuestInstClass[]
 local QuestCompClass = class.class 'QuestCompClass' {
     ctor = function()end,

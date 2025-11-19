@@ -13,7 +13,7 @@ local GA_UnEquip = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 function GA_UnEquip:K2_ActivateAbilityFromEvent(Payload)
     self:GAInitData()
     if net_util.is_server(self) then
-        local config = Payload.OptionalObject.SkillConfig ---@type SkillConfig
+        local config = ConfigMgr:GetConfig('Skill')[Payload.OptionalObject.SkillId] ---@type SkillConfig
         local animKey = config.AbilityAnims[1]
         self.MtgUnEquip = self.AvatarLua.AnimComp.AnimMtg:Find(animKey)
         self:S2C_PlayUnEquipMtg(self.MtgUnEquip)

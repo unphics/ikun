@@ -5,47 +5,7 @@ author: zys
 data: Sat Oct 18 2025 13:45:58 GMT+0800 (中国标准时间)
 ```
 ---
-## 开发目录组织
-```
-VscodeWorkspace:
-Doc/: 游戏文档
-Config/: 游戏配置文件
-    Area/: 游戏中的世界地理地貌地形相关配置, 如所有的物理地点配置等
-    Camera/: 玩家摄像机相关配置, 如普通/瞄准等状态的相机位置旋转FOV配置等
-    District/: 游戏中的世界行政地区相关配置, 如国家/村庄等
-    Goap/: 游戏的AI解决方案是采用的GoalOrientedActionPlan, 相关的State/Goal/Action等在此配置
-    Item/: 游戏的物品配置
-    Quest/: 任务相关配置
-    Role/: 角色相关配置
-    Skill/: 技能相关配置, 如Skill/Effect/TargetActor等
-    Talk/: 对话相关配置
-    GlobalConst: 全局一些常量配置, 如游戏速度等
-    Preload: 需要预加载的配置表在此注册
-Script/: 游戏的所有lua脚本文件
-    Content/: 游戏的不与UE对象绑定的纯业务脚本
-        Area/: 地理地貌相关脚本, 包含Cosmos/Location/Site/Star等类
-        Chat/: 对话功能, 包含NpcChat/ChatExecLib/ChatCondLib等类
-        District/: 行政地区, 包含City/Village/Kingdom等类
-        Item/: 物品, 包含ItemBase/Bag/ItemMgr等
-        Quest/: 任务系统, 包含QuestInst/QuestMgr/QuestComp/QuestTool等
-        Role/: 角色, 包含Role/RoleMgr/RoleInfo/RoleLib等
-    Ikun/: 与UE对象绑定的业务脚本
-        Actor/: 包含BP_House/BP_Stall等
-        Blueprint/
-            AIC/: AIController类及其组件
-            Comp/: Actor的组件
-            GAS/: GAS所有模板文件, 有Ability/Cue/EffectCalc/TargetActor等文件夹
-            PC/: PlayerController类及其组件
-        Chr/: 人形类及其组件
-        Module/: 使用UE但是不和UE对象绑定的lua脚本
-            AI/: AI解决方案, 包含一套行为树实现和一套GOAP实现, 及其所有业务脚本
-            Config/: 配置表管理器
-            Input/: UE增强输入应用层模块
-            Nav/: 寻路
-    Util/: 工具类, 如str/table/net/math/gas/log等
-```
----
-## 游戏角色相关组件配置
+## 当前游戏角色相关组件配置
 ```
 BP_IkunPC 玩家控制器
     InteractComp 检测玩家注视Npc, 请求进入交互状态, 标记玩家进入交互状态
@@ -152,5 +112,37 @@ end
 GA控制节奏和分段, GE控制数值和状态
 UE.UAbilityTask_WaitGameplayTagAdded.WaitGameplayTagAdd()在服务端的更新有问题, 会先通知再改变数值, 所以不能用来写consume
 GameplayAbility有发RPC的权力, 但是不能选InstancePerExec
+```
+## 新的工程组织
+```
+Script/
+    Framework/: 资源加载/数据表格/网络/日志/界面/
+        core/
+            Init 框架入口
+            Class OOP实现
+            Log 日志
+            ObjectPool 对象池
+            Config 配置
+            Version 版本号
+            Duplex 双容器
+        System/
+            File
+            Network
+        DataTable
+    System/
+        GOAP
+        Nav: 路径缓存
+    Module/
+
+    Ikun/
+```
+---
+## 程序设计
+```
+模式概念:
+    继承:建立'是一个'的关系, 有限的继承可以提升开发效率
+    组合:建立'有一个'的关系
+    接口:建立'能做什么'的契约, 如IInteractable
+    ECS:数据与行为分离
 ```
 ---

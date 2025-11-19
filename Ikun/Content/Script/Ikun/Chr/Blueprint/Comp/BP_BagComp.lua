@@ -15,14 +15,14 @@ local BP_BagComp = UnLua.Class()
 ---@override
 function BP_BagComp:ReceiveBeginPlay()
     if net_util.is_server(self:GetOwner()) then
-        gameinit.registerinit(gameinit.ring.four, self, self._InitBagComp)
+        gameinit.registerinit(gameinit.ring.init_bag_comp, self, self._InitBagComp)
     end
 end
 
 ---@override
 function BP_BagComp:ReceiveEndPlay()
     local avatar = self:GetOwner()
-    local role = avatar.GetRole and avatar:GetRole() ---@type RoleClass
+    local role = avatar.GetRole and avatar:GetRole() ---@type RoleBaseClass
     if role then
         role.Bag:UnRegItemAdd(self)
         role.Bag:UnRegItemRemove(self)
@@ -35,7 +35,7 @@ end
 ---@private [Init]
 function BP_BagComp:_InitBagComp()
     local avatar = self:GetOwner()
-    local role = avatar.GetRole and avatar:GetRole() ---@type RoleClass
+    local role = avatar.GetRole and avatar:GetRole() ---@type RoleBaseClass
     if not role then
         log.error('BP_BagComp:_InitBagComp() 初始化失败', obj_util.dispname(avatar))
         return
@@ -64,7 +64,7 @@ end
 ---@private [Data] 立即同步所有物品到组件
 function BP_BagComp:_SyncBagData()
     self.BagItems:Clear()
-    local role = self:GetOwner().GetRole and self:GetOwner():GetRole() ---@type RoleClass
+    local role = self:GetOwner().GetRole and self:GetOwner():GetRole() ---@type RoleBaseClass
     local allItem = role.Bag:GetAllItems() ---@type ItemBaseClass[]
     for _, item in ipairs(allItem) do
         local struct = BPS_Item()
@@ -77,7 +77,7 @@ end
 
 ---@public
 function BP_BagComp:C2S_UseItem_RPC(ItemCfgId, ItemCount, ItemId)
-    local role = self:GetOwner().GetRole and self:GetOwner():GetRole() ---@type RoleClass
+    local role = self:GetOwner().GetRole and self:GetOwner():GetRole() ---@type RoleBaseClass
     role.Bag:TryUseItem(ItemCfgId, ItemCount, ItemId)
 end
 

@@ -21,7 +21,7 @@ local QuestStateType = require('Content/Quest/QuestStateType')
 
 ---@class QuestInstClass
 ---@field QuestId number
----@field _Owner RoleClass
+---@field _Owner RoleBaseClass
 ---@field QuestState QuestStateType
 ---@field _CurStep number
 local QuestInstClass = class.class 'QuestInstClass' {

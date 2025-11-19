@@ -35,17 +35,17 @@ debug_util.gamespeed = function(speed)
 end
 
 ---@public
----@param Chr BP_ChrBase | RoleClass | number
+---@param Chr BP_ChrBase | RoleBaseClass | number
 ---@return boolean
 debug_util.IsChrDebug = function(Chr)
     if type(Chr) == "number" then
         return Chr == debug_util.debugrole
     end
     if Chr.GetRole then
-        return Chr:GetRole():GetRoleInstId() == debug_util.debugrole
+        return Chr:GetRole():GetRoleId() == debug_util.debugrole
     end
-    if class.instanceof(Chr, class.RoleClass) then
-        return Chr:GetRoleInstId() == debug_util.debugrole
+    if class.instanceof(Chr, class.RoleBaseClass) then
+        return Chr:GetRoleId() == debug_util.debugrole
     end
     return false
 end

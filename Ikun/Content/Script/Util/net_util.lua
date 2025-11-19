@@ -8,33 +8,38 @@
 ---@class net_util
 local net_util = {}
 
----@public
+---@public 判断是服务端
 ---@return boolean
-net_util.is_server = function(World)
-    World = World or world_util.World
-    return UE.UKismetSystemLibrary.IsServer(World)
+net_util.is_server = function(InWorld)
+    return UE.UKismetSystemLibrary.IsServer(InWorld)
 end
 
----@public
+---@public 判断是客户端
 ---@return boolean
-net_util.is_client = function(World)
-    World = World or world_util.World
-    return not UE.UKismetSystemLibrary.IsServer(World)
+net_util.is_client = function(InWorld)
+    return not UE.UKismetSystemLibrary.IsServer(InWorld)
 end
 
----@public
-net_util.client_get_player_chr = function(World)
-    if net_util.is_server(World) then
+---@public 格式化打印当前的CS描述
+---@return string
+net_util.print = function(InWorld)
+    return net_util.is_server(InWorld) and '<Net:Server>' or '<Net:Client>'
+end
+
+---@public 判断在一个会话中
+---@return boolean
+net_util.is_in_session = function(InWorld, Name)
+    Name = Name or "None"
+    return UE.UIkunFnLib.IsInSession(InWorld, Name)
+end
+
+---@public 客户端获取玩家Character
+net_util.client_get_player_chr = function(InWorld)
+    if net_util.is_server(InWorld) then
         log.error('Must be client!')
         return
     end
-    return UE.UGameplayStatics.GetPlayerCharacter(World, 0)
-end
-
----@public
----@return string
-net_util.print = function(world)
-    return net_util.is_server(world) and '<Net:Server>' or '<Net:Client>'
+    return UE.UGameplayStatics.GetPlayerCharacter(InWorld, 0)
 end
 
 return net_util

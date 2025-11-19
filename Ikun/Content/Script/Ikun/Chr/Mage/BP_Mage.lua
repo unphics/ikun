@@ -8,6 +8,10 @@
 ---@class BP_Mage: BP_ChrBase
 local BP_Mage = UnLua.Class('Ikun/Chr/Blueprint/BP_ChrBase')
 
+function BP_Mage:ReceiveBeginPlay()
+    self.Overridden.ReceiveBeginPlay(self)
+end
+
 function BP_Mage:C2S_LeftStart_RPC()
     self.SkillComp:TryActiveSlotSkill('NormalOne')
 end

@@ -11,12 +11,15 @@ local BP_LocationRegisterComp = UnLua.Class()
 ---@override
 function BP_LocationRegisterComp:ReceiveBeginPlay()
     if net_util.is_server(self) then
-        gameinit.registerinit(gameinit.ring.one, self, self.AvatarInitLocation)
+        gameinit.registerinit(gameinit.ring.init_loc, self, self.AvatarInitLocation)
     end
 end
 
 ---@private [Init]
 function BP_LocationRegisterComp:AvatarInitLocation()
+    if not obj_util.is_valid(self) then
+        return
+    end
     if self.LocationId <= 0 then
         log.error('BP_LocationRegisterComp:AvatarInitLocation()', '未配置LocationId')
         return

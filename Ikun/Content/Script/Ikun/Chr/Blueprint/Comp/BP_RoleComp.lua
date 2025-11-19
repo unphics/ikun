@@ -6,32 +6,28 @@
 ---
 
 ---@class RoleComp: RoleComp_C
----@field Role RoleClass
+---@field Role RoleBaseClass
 local RoleComp = UnLua.Class()
 
 ---@override
 function RoleComp:ReceiveBeginPlay()
     if net_util.is_server(self:GetOwner()) then    
-        gameinit.registerinit(gameinit.ring.three, self, self.AvatarInitRole)
+        gameinit.registerinit(gameinit.ring.init_role, self, self.AvatarInitRole)
     end
 end
 
 ---@private [Init] 初始化逻辑角色
 function RoleComp:AvatarInitRole()
-    local roleConfig = RoleMgr:GetRoleConfig(self.RoleConfigId)
-    if not roleConfig then
-        log.error('RoleComp:AvatarInitRole()', '无效的RoleConfigId')
+    if not obj_util.is_valid(self) then
         return
     end
-
-    -- 如果有特化的角色模板则使用特化初始化
-    if roleConfig.SpecialClass then
-        self.Role = class.new(roleConfig.SpecialClass)() ---@as RoleClass
-    else
-        self.Role = class.new 'RoleClass'() ---@as RoleClass
+    local role = RoleMgr:GetOrCreateRole(self.RoleConfigId)
+    if role then
+        local avatar = self:GetOwner()
+        role:SetAvatar(avatar)
+        self.Role = role
+        avatar.SkillComp:InitRoleSkill()
     end
-
-    self.Role:InitByAvatar(self:GetOwner(), self.RoleConfigId, self.bNpc)
 end
 
 return RoleComp

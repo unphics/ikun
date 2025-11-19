@@ -1,45 +1,53 @@
+
 ---
----@brief 游戏UI管理
----@author zys
----@data Sat Apr 05 2025 14:39:37 GMT+0800 (中国标准时间)
+---@brief   游戏UI管理
+---@author  zys
+---@data    Sat Apr 05 2025 14:39:37 GMT+0800 (中国标准时间)
 ---
 
 ---@class GameUIMgr: GameUIMgr_C
+---@field GameWorld UWorld
 ---@field tbUIWidget table<string, UUserWidget>
 local GameUIMgr = UnLua.Class()
 
---function GameUIMgr:Initialize(Initializer)
---end
-
---function GameUIMgr:PreConstruct(IsDesignTime)
---end
-
+---@override
 function GameUIMgr:Construct()
-    self.tbUIWidget = {}
-    ui_util.uimgr = self
-
-    gameinit.registerinit(gameinit.ring.three, self, function()
-        self:ShowUI(ui_util.uidef.MainHud)
-        self:ShowUI(ui_util.uidef.BreathePointer)
-        -- self:ShowUI(ui_util.uidef.TalkList)
-        -- self:ShowUI(ui_util.uidef.Interact)
-        self:ShowUI(ui_util.uidef.Gaze)
-    end)
 end
 
---function GameUIMgr:Tick(MyGeometry, InDeltaTime)
---end
+---@override
+function GameUIMgr:Destruct()
+end
+
+---@public
+---@param Wolrd UWorld
+function GameUIMgr:InitUIMgr(Wolrd)
+    self.tbUIWidget = {}
+    ui_util.uimgr = self
+    self.GameWorld = Wolrd
+    log.info('GameUIMgr:InitUIMgr', Wolrd, obj_util.dispname(Wolrd))
+    gameinit.registerinit(gameinit.ring.open_dft_ui, self, self._OpenDefaultUI)
+end
+
+---@public
+function GameUIMgr:UninitUIMgr()
+    for _, widget in pairs(self.tbUIWidget) do
+        widget:RemoveFromParent()
+    end
+end
 
 ---@public
 function GameUIMgr:ShowUI(UIDef)
     log.info('[GameUIMgr:ShowUI] ', UIDef)
+    if not obj_util.is_valid(self) then
+        return
+    end
     local UI = self.tbUIWidget[UIDef]
     if UI then
         UI:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
     else
         local UIClass = UE.UClass.Load(UIDef) 
-        local PC = UE.UGameplayStatics.GetPlayerController(world_util.World, 0)
-        UI = UE.UWidgetBlueprintLibrary.Create(world_util.World, UIClass, PC)
+        local PC = UE.UGameplayStatics.GetPlayerController(self.GameWorld, 0)
+        UI = UE.UWidgetBlueprintLibrary.Create(self.GameWorld, UIClass, PC)
         local Slot = self.GameWindow:AddChild(UI) ---@type UCanvasPanelSlot
         UI:SetVisibility(UE.ESlateVisibility.SelfHitTestInvisible)
         UI.bIsFocusable = true
@@ -97,6 +105,24 @@ function GameUIMgr:GetUIIfVisible(UIDef)
             return
         end
         return UI
+    end
+end
+
+---@private 打开默认UI
+function GameUIMgr:_OpenDefaultUI()
+    if not obj_util.is_valid(self) then
+        return
+    end
+    local mapName = self.GameWorld:GetName()
+    local defaultUIs = ConfigMgr:GetConfig('DefaultOpen')[mapName]
+    if not defaultUIs then
+        return log.error('找不到该地图的默认UI', mapName)
+    end
+    for i = 1, 10 do
+        local name = defaultUIs['UI'..i]
+        if name then
+            self:ShowUI(ui_util.uidef[name])
+        end
     end
 end
 

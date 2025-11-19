@@ -7,23 +7,14 @@
 ---@class BP_GameStateBase: BP_GameStateBase_C
 local BP_GameStateBase = UnLua.Class()
 
----@protected [ImplBP]
+---@override
 function BP_GameStateBase:ReceiveBeginPlay()
     world_util.World = self
-    log.info(log.key.ueinit..' BP_GameStateBase:ReceiveBeginPlay() svr:'..tostring(net_util.is_server()))
-    self:InitUIModule()
+    log.info(log.key.ueinit, ' BP_GameStateBase:ReceiveBeginPlay()', net_util.print(self))
 end
 
----@private [Client] [UIMgr]
-function BP_GameStateBase:InitUIModule()
-    -- if net_util.is_server(self) then
-    --     return
-    -- end
-    local UIMgrClass = UE.UClass.Load('/Game/Ikun/UI/UMG/GameUIMgr.GameUIMgr_C')
-    local UIMgr = UE.UWidgetBlueprintLibrary.Create(self, UIMgrClass, UE.UGameplayStatics.GetPlayerController(self, 0))
-    if UIMgr then
-        UIMgr:AddToViewport(0)
-    end
+---@override
+function BP_GameStateBase:ReceiveEndPlay()
 end
 
 return BP_GameStateBase

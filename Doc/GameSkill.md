@@ -38,7 +38,7 @@ data: Sat Oct 18 2025 14:48:57 GMT+0800 (中国标准时间)
 |Dodge|瞬移|Shift|
 |NormalOne|技能一|MouseLeft|
 |NormalTwo|技能二|MouseRight|
-|Hit|受击|无|
+|OnHit|受击|无|
 |Special|特殊技能|Z|
 ---
 ## 技能分类
@@ -100,6 +100,14 @@ data: Sat Oct 18 2025 14:48:57 GMT+0800 (中国标准时间)
 ### GameplayTag 设计
 ```
 Skill (技能)
+    Slot(槽位)
+        Equip
+        UnEquip
+        Dodge
+        NormalOne
+        NormalTwo
+        OnHit
+        Special
     Type (类型)
         Trigger (触发)
             Active (主动技能)

@@ -36,6 +36,11 @@
 		{
 			"Name": "PythonFoundationPackages",
 			"Enabled": true
+		},
+		{
+			"Name": "MMOKitCode",
+			"Enabled": false,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/9f9161a84be2466c8e56e07991ae065b"
 		}
 	]
 }

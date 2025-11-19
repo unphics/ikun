@@ -7,34 +7,26 @@
 ---
 
 do
-    log = require('Util.Log') ---@type log
-    debug_util = require('Util/debug_util')
-    table_util = require('Util/table_util') ---@type table_util
-    str_util = require("Util.str_util") ---@type str_util
+    log = ikf.log
+    class = ikf.class
+    math_util = ikf.math_util
+    table_util = ikf.table_util ---@type table_util
+    str_util = ikf.str_util ---@type str_util
+    msg_bus = ikf.msg_bus ---@type msgbus
 end
 
-do
-    -- _ = require("Util.Class.class1")
-    class = require("Util.Class.class2") ---@type class
-    -- _ = require("Util.Class.test1")
-    -- _ = require("Util.Class.test2")
-end
+debug_util = require('Util/debug_util')
 
-do
-    duplex = require("Util/Duplex/duplex") ---@type duplex
-    -- _ = require("Util/Duplex/test")
-    msg_bus = require("Util.msg_bus") ---@type msgbus
-end
+require('Module/Modules')
+modules = class.new'Modules'() ---@type Modules
 
 do
     world_util = require("Util/world_util")
     gas_util = require('Util/gas_util') ---@type gas_util
     actor_util = require('Util/actor_util')
-    decision_util = require('Util/DecisionUtil')
     obj_util = require('Util/obj_util') ---@type obj_util
     net_util = require("Util/net_util")
     async_util = require("Util/async_util")
-    math_util = require('Util/math_util')
     ui_util = require("Util/UI/ui_util") ---@type ui_util
     draw_util = require('Util/draw_util')
 end
@@ -43,12 +35,11 @@ do
     require('Ikun/Module/Config/ConfigMgr')
     require('Content/Time/TimeMgr')
     require('Content/Item/ItemMgr')
-    require('Content/Role/RoleMgr')
-    require('Content/Team/TeamMgr')
+    require('Module/Role/RoleMgr')
     require('Content/Quest/QuestMgr')
     require("Content/Area/Cosmos")
 
-    gameinit = require("GameInit") ---@type gameinit
+    gameinit = ikf.init ---@type gameinit
 
     ConfigMgr = class.new 'ConfigMgr'() ---@as ConfigMgr
     TimeMgr = class.new 'TimeMgr'() ---@as TimeMgr
@@ -60,19 +51,18 @@ do
 end
 
 do
-    require('Content/Role/Role')
-    rolelib = require('Content/Role/RoleLib') ---@type rolelib
+    rolelib = require('Module/Role/RoleLib') ---@type rolelib
 end
 
 do
-    require('Ikun/Module/AI/BT/LBT')
-    require("Ikun/Module/AI/MLP")
-    goap = require("Ikun/Module/AI/Goap/Goap") ---@type goap
-    -- goap.test()
+    goap = require("System/Goap/Goap") ---@type goap
 end
 
 do
+    
+    local MoveStuckMonitor = require('Ikun/Module/Nav/MoveStuckMonitor')
+    local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
     local NavMoveBehav = require('Ikun/Module/Nav/NavMoveBehav')
 end
 
-gameinit.triggerinit(gameinit.ring.zero)
+gameinit.triggerinit(gameinit.groups.env_init)

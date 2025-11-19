@@ -8,21 +8,17 @@
 ---@class UI_MainHud: UI_MainHud_C
 local UI_MainHud = UnLua.Class()
 
---function UI_MainHud:Initialize(Initializer)
---end
-
---function UI_MainHud:PreConstruct(IsDesignTime)
---end
-
 ---@override
 function UI_MainHud:Construct()
-    local bSvr = net_util.is_server()
+    if not obj_util.is_valid(ui_util.uimgr.GameWorld) then
+        return
+    end
+    local bSvr = net_util.is_server(ui_util.uimgr.GameWorld)
     self.TxtLocalHost:SetText(bSvr and 'LocalHost=Server' or 'LocalHost=Client')
 end
 
 ---@override
 function UI_MainHud:Tick(MyGeometry, InDeltaTime)
-    -- self:UpdateAnimInfo()
     self:UpdateTimeInfo()
 end
 

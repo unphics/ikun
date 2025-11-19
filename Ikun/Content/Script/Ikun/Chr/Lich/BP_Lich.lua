@@ -15,7 +15,7 @@ end
 ---@deprecated
 function BP_Lich:OnChrInitDisplay()
     error('BP_Lich:OnChrInitDisplay() 相关配置已经失效')
-    local role = self:GetRole() ---@type RoleClass
+    local role = self:GetRole() ---@type RoleBaseClass
     if not role then
         return log.error('BP_Lich:OnChrInitDisplay() : Role未初始化 !!!', obj_util.dispname(self))
     end
