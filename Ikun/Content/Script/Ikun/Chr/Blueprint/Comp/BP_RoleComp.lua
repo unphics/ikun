@@ -21,10 +21,12 @@ function RoleComp:AvatarInitRole()
     if not obj_util.is_valid(self) then
         return
     end
-    local role = RoleMgr:AvatarBindRole(self.RoleConfigId)
+    local role = RoleMgr:GetOrCreateRole(self.RoleConfigId)
     if role then
-        role:SetAvatar(self:GetOwner())
+        local avatar = self:GetOwner()
+        role:SetAvatar(avatar)
         self.Role = role
+        avatar.SkillComp:InitRoleSkill()
     end
 end
 

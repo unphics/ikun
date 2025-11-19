@@ -38,43 +38,50 @@ function RoleMgrClass:ctor()
     self._AllConfigRoles = {}
 end
 
----@public
----@todo 把创建流程拆出去
+---@public 获取或创建一个角色实例
 ---@param InRoleConfigId integer
 ---@return RoleBaseClass?
-function RoleMgrClass:AvatarBindRole(InRoleConfigId)
+function RoleMgrClass:GetOrCreateRole(InRoleConfigId)
     local config = self:GetRoleConfig(InRoleConfigId)
 
     if not config then
-        log.error('RoleMgrClass:AvatarBindRole()', '无效的RoleConfigId', InRoleConfigId)
-        return
+        log.error('RoleMgrClass:GetOrCreateRole()', '无效的RoleConfigId', InRoleConfigId)
+        return nil
     end
 
-    if config.bUniqueRole then
-        if self._AllConfigRoles[InRoleConfigId] then
-            return self._AllConfigRoles[InRoleConfigId][1]
-        else
-            local role = class.new 'RoleBaseClass'() ---@as RoleBaseClass
-            role:InitRole(InRoleConfigId)
-            return role
-        end
-    else
-        local role = class.new 'RoleBaseClass'() ---@as RoleBaseClass
-        role:InitRole(InRoleConfigId)
-        return role
+    if config.bUniqueRole and self._AllConfigRoles[InRoleConfigId] then
+        return self._AllConfigRoles[InRoleConfigId][1]
     end
+
+    return self:_CreateRoleInst(InRoleConfigId, config)
 end
 
----@public [Core] 新角色注册到管理器中
----@todo 统一初始化流程
+---@private
+---@param InRoleCfgId integer
+---@param InConfig RoleConfig
+---@return RoleBaseClass?
+function RoleMgrClass:_CreateRoleInst(InRoleCfgId, InConfig)
+    local role = class.new 'RoleBaseClass'() ---@as RoleBaseClass
+    role:InitBaseInfo(InRoleCfgId, InConfig)
+
+    local belongKingdom = role:GetBelongKingdom()
+    local instId = belongKingdom:GenRoleInstId(role)
+    role._RoleId = instId
+
+    self:RegisterRole(role)
+
+    role:InitComplexPart()
+
+    belongKingdom:AddKingdomMember(role)
+
+    return role
+end
+
+---@public 将新创建的角色注册到管理器中
 ---@param InRole RoleBaseClass
-function RoleMgrClass:NewRole(InRole)
+function RoleMgrClass:RegisterRole(InRole)
     local id = InRole:GetRoleId() ---@type integer
     local cfgId = InRole:GetRoleCfgId() ---@type integer
-
-    if not InRole then
-        return log.error('RoleMgrClass:NewRole(): 数据错误', id, InRole)
-    end
     
     if self._AllRoles[id] then
         return log.error('RoleMgrClass:NewRole(): 重复的Role', id)

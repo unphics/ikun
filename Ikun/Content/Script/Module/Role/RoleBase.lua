@@ -15,32 +15,21 @@ require('Module/Role/RoleHoldLocation')
 ---@field public QuestGiver QuestGiverClass, 预计处理 todo zys
 ---@field public HoldLocation RoleHoldLocationClass todo zys 角色持有的地点
 ---@field public NpcChat NpcChatClass
----@field private _RoleId number
----@field private _RoleCfgId number
+---@field private _RoleId integer
+---@field private _RoleCfgId integer
 ---@field private _RoleName string
 ---@field private _BelongKingdom Kingdom 所属国家
-local RoleBaseClass = class.class'RoleBaseClass' {
-    RoleTick = function()end,
-    LateAtNight = function()end,
-    GetRoleId = function()end,
-    GetRoleCfgId = function()end,
-    RoleName = function()end,
-    GetBelongKingdom = function()end,
-    PrintRole = function()end,
-    Avatar = nil,
-    Bag = nil,
-    QuestComp = nil,
-    QuestGiver = nil,
-    NpcChat = nil,
-    HoldLocation = nil,
-    _BelongKingdom = nil,
-    _RoleId = -1,
-    _RoleCfgId = -1,
-    _RoleName = '未命名',
-}
+local RoleBaseClass = class.class'RoleBaseClass' {}
 
 ---@override
 function RoleBaseClass:ctor()
+    self.Avatar = nil
+    self.HoldLocation = nil
+    self._BelongKingdom = nil
+    self._RoleId = -1
+    self._RoleCfgId = -1
+    self._RoleName = '未命名'
+    
     self.Bag = class.new'BagClass'(self)
     self.QuestComp = class.new 'QuestCompClass'(self)
     self.QuestGiver = class.new 'QuestGiverClass'(self)
@@ -56,27 +45,24 @@ function RoleBaseClass:RoleTick(DeltaTime)
     end
 end
 
----@public [Init]
-function RoleBaseClass:InitRole(ConfigId)
-    local config = RoleMgr:GetRoleConfig(ConfigId) ---@type RoleConfig
-    if not config then
-        return log.error(log.key.roleinit,'无效的配置Id')
-    end
-
-    self._RoleCfgId = ConfigId
-    self._RoleName = config.RoleName
-
-    self.HoldLocation = class.new 'RoleHoldLocationClass'(self, ConfigId)
+---@public [Init-Step1]
+---@param InRoleCfgId integer
+---@param InConfig RoleConfig
+function RoleBaseClass:InitBaseInfo(InRoleCfgId, InConfig)
+    self._RoleCfgId = InRoleCfgId
+    self._RoleName = InConfig.RoleName
+    self._RoleId = -1
     
     local DistrictMgr = Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
-    self.BelongKingdomLua = DistrictMgr:FindKingdomByCfgId(config.BelongKingdom) ---@type Kingdom
-    self.BelongKingdomLua:AddKingdomMember(self)
-    
-    self.HoldLocation = class.new 'RoleHoldLocationClass'(self, ConfigId)
+    self._BelongKingdom = DistrictMgr:FindKingdomByCfgId(InConfig.BelongKingdom) ---@type Kingdom
+end
 
-    -- todo
-    -- self.Avatar.SkillComp:InitRoleSkill()
-    
+---@public [Init-Step2] 复杂组件初始化. 此阶段已有有效的实例ID.
+function RoleBaseClass:InitComplexPart()
+    local config = RoleMgr:GetRoleConfig(self._RoleCfgId) ---@type RoleConfig
+
+    self.HoldLocation = class.new 'RoleHoldLocationClass'(self, self._RoleCfgId)
+
     if config.GoapKey then
         local agent = class.new 'GAgent' (self) ---@as GAgent
         self.Agent = agent
@@ -97,13 +83,13 @@ function RoleBaseClass:LateAtNight()
 end
 
 ---@public [Pure]
----@return number
+---@return integer
 function RoleBaseClass:GetRoleId()
     return self._RoleId
 end
 
 ---@public [Pure]
----@return number
+---@return integer
 function RoleBaseClass:GetRoleCfgId()
     return self._RoleCfgId
 end

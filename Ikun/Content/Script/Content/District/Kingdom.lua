@@ -14,35 +14,20 @@ require("Content/District/Settlements/City")
 require("Content/District/Settlements/Village")
 
 ---@class Kingdom
----@field tbZone ZoneClass[] 这个国家的所有大区/行省
----@field _tbKingdomRoles table<number, RoleBaseClass> 这个国家的所有角色
----@field tbRoleBornRecord number[] 这个国家出生(赋予籍贯)角色记录
----@field KingdomName string
----@field KingdomInstId number
----@field KingdomConfig KingdomConfig
-local Kingdom = class.class"Kingdom" {
---[[public]]
-    ctor = function() end,
-    Tick = function() end,
-    AddSettlement = function(Settlement) end,
-    FindSettlementLua = function(SettlementId) end,
-    AddKingdomMember = function(inRole)end,
-    CalcRoleKingdomFriendShip = function(rhsRole)end,
-    KingdomInstId = nil,
-    KingdomConfig = nil,
-    KingdomName = nil,
---[[private]]
-    tbZone = nil,
-    _tbKingdomRoles = nil,
-    tbRoleBornRecord = nil,
-}
+---@field public KingdomName string
+---@field public KingdomInstId integer
+---@field public KingdomConfig KingdomConfig
+---@field private _tbZone ZoneClass[] 这个国家的所有大区/行省
+---@field private _tbKingdomRoles table<integer, RoleBaseClass> 这个国家的所有角色
+---@field private _tbRoleBornRecord number[] 这个国家出生(赋予籍贯)角色记录
+local Kingdom = class.class"Kingdom" {}
 
 ---@override
 ---@param Config KingdomConfig
 function Kingdom:ctor(Id, Config)
     self._tbKingdomRoles = {}
-    self.tbZone = {}
-    self.tbRoleBornRecord = {}
+    self._tbZone = {}
+    self._tbRoleBornRecord = {}
 
     self.KingdomName = Config.KingdomName
     self.KingdomConfig = Config
@@ -50,7 +35,7 @@ function Kingdom:ctor(Id, Config)
 
     ---@notice 现在默认所有聚集地都在大区1里, 等以后如果地域广大后重新处理大区划分问题
     local zone = class.new "ZoneClass" ("default")
-    table.insert(self.tbZone, zone)
+    table.insert(self._tbZone, zone)
 end
 
 ---@override
@@ -63,14 +48,14 @@ end
 ---@public 增加一个聚集地
 ---@param Settlement SettlementBaseClass
 function Kingdom:AddSettlement(Settlement)
-    self.tbZone[1]:AddSettlement(Settlement)
+    self._tbZone[1]:AddSettlement(Settlement)
 end
 
----@public 根据聚集地Id查找实例
+---@public [Pure] 根据聚集地Id查找实例
 ---@param SettlementId number
 ---@return SettlementBaseClass?
 function Kingdom:FindSettlementLua(SettlementId)
-    for _, zone in ipairs(self.tbZone) do
+    for _, zone in ipairs(self._tbZone) do
         for j, settlement in ipairs(zone.tbSettlement) do
             if j == SettlementId then
                 return settlement
@@ -79,30 +64,26 @@ function Kingdom:FindSettlementLua(SettlementId)
     end
 end
 
----@public 给国家增加一个角色成员
----@todo 将添加角色接口变成挂靠角色或者角色加入国家
----@param inRole RoleBaseClass
-function Kingdom:AddKingdomMember(inRole)
-    ---@rule 内建规则: 对于没有实例Id的角色, 第一次挂靠的国家应赋予角色实例Id, 可以理解为出生籍贯
-    if inRole:GetRoleId() < 0 then
-        local InstId = self.KingdomInstId * 1000 + #self.tbRoleBornRecord
-        table.insert(self.tbRoleBornRecord, inRole:RoleName())
-        inRole._RoleId = InstId
-        RoleMgr:NewRole(inRole)
-    end
-    self._tbKingdomRoles[inRole:GetRoleId()] = inRole
-    log.info('zys AddKingdomMember', inRole:RoleName(), self.KingdomName, inRole:GetRoleId())
+---@public 负责生成角色在该国出生的唯一ID
+---@param InRole RoleBaseClass
+---@return integer
+function Kingdom:GenRoleInstId(InRole)
+    ---@rule 内建规则: 对于没有实例Id的角色, 第一次挂靠的国家应赋予角色实例Id, 可以理解为出生籍贯 -> 实例Id = 王国Id * 1000 + 出生序号
+    local bornIndex = #self._tbRoleBornRecord + 1
+    table.insert(self._tbRoleBornRecord, InRole:RoleName())
+    return self.KingdomInstId * 1000 + bornIndex
 end
 
----@public 友谊度判断
----@version 0.1.0 简单判断国家相同则+5, 不同则-5
----@param rhsRole RoleBaseClass
-function Kingdom:CalcRoleKingdomFriendShip(rhsRole)
-    if rhsRole:GetBelongKingdom().KingdomInstId ~= self.KingdomInstId then
-        return -5
-    else
-        return 5
+---@public 给国家增加一个角色成员
+---@param inRole RoleBaseClass
+function Kingdom:AddKingdomMember(inRole)
+    if self._tbKingdomRoles[inRole:GetRoleId()] then
+        log.error('Kingdom:AddKingdomMember', '角色已存在于本国', inRole:RoleName(), self.KingdomName)
+        return
     end
+
+    self._tbKingdomRoles[inRole:GetRoleId()] = inRole
+    log.info('AddKingdomMember', inRole:RoleName(), self.KingdomName, inRole:GetRoleId())
 end
 
 return Kingdom
