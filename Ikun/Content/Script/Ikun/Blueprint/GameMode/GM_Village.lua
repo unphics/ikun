@@ -22,4 +22,7 @@ function GM_Village:ReceiveTick(DeltaSeconds)
     Cosmos:TickCosmos(DeltaSeconds)
 end
 
+function GM_Village:ReceiveEndPlay(EndReason)
+end
+
 return GM_Village

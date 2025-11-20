@@ -41,7 +41,7 @@ end
 ---@param DeltaTime number
 function RoleBaseClass:RoleTick(DeltaTime)
     if self.Agent then
-        self.Agent:TickAgent(DeltaTime)
+        -- self.Agent:TickAgent(DeltaTime)
     end
 end
 
