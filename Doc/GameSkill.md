@@ -66,6 +66,15 @@ Attribute部分:
         2. 临时属性:
             伤害结算: 在GAS中通常不会直接修改Health而是修改一个IncomingDamage的隐藏属性
             当检测到IncomingDamage变化时: 触发护盾抵扣->减伤->无敌判断->扣除Health->IncomingDamage清零
+    GAS计算部分:
+        SetByCaller:
+            数值依赖操作/上下文(蓄力、距离)
+        MMC(UGameplayModMagnitudeCalculation):
+            数值依赖多个属性的复杂公式(派生属性)
+        EEC(UGameplayEffectExecutionCalculation):
+            涉及攻防对抗/暴击判定等
+    设计:
+    实现:
 Tag部分:
     需求:
         1. 层级判定:
