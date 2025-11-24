@@ -390,12 +390,14 @@ namespace UnLua
         }
         else if (const auto Enum = Cast<UEnum>(Field))
         {
-            const auto EnumProperty = new FEnumProperty(PropertyCollector, NAME_None, RF_Transient, 0, CPF_HasGetValueTypeHash, Enum);
+            // FEnumProperty constructor signature changed in UE 5.6
+            const auto EnumProperty = new FEnumProperty(PropertyCollector, NAME_None, RF_Transient);
             const auto UnderlyingProperty = new FByteProperty(EnumProperty, TEXT("UnderlyingType"), RF_Transient);
+            EnumProperty->SetEnum(Enum);
             Property = EnumProperty;
             Property->AddCppProperty(UnderlyingProperty);
-            Property->ElementSize = UnderlyingProperty->ElementSize;
-            Property->PropertyFlags |= CPF_IsPlainOldData | CPF_NoDestructor | CPF_ZeroConstructor;
+            Property->SetElementSize(UnderlyingProperty->GetElementSize());
+            Property->PropertyFlags |= CPF_HasGetValueTypeHash | CPF_IsPlainOldData | CPF_NoDestructor | CPF_ZeroConstructor;
         }
         else
         {
