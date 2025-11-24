@@ -37,6 +37,11 @@
             "Name": "UnLuaDefaultParamCollector",
             "Type": "Program",
             "LoadingPhase": "PostConfigInit"
+        },
+        {
+            "Name": "UnLuaEx",
+            "Type": "Runtime",
+            "LoadingPhase": "PreDefault"
         }
     ]
 }
