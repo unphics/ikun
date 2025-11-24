@@ -8,8 +8,8 @@ public class IkunTarget : TargetRules
 	public IkunTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
+		DefaultBuildSettings = BuildSettingsVersion.V5;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_6;
 		ExtraModuleNames.Add("Ikun");
 	}
 }
