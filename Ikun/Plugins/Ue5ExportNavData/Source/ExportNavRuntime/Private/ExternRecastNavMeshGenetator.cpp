@@ -221,10 +221,18 @@ void FExternExportNavMeshGenerator::ExternExportNavigationData(const FString& Fi
 					AdditionalData += FString::Printf(TEXT("# AgentRadius\n"));
 					AdditionalData += FString::Printf(TEXT("rd_agr %5.5f\n"), CurrentGen->GetConfig().AgentRadius);
 					AdditionalData += FString::Printf(TEXT("# Agent max climb\n"));
+#if ENGINE_MINOR_VERSION < 6
 					AdditionalData += FString::Printf(TEXT("rd_amc %5.5f\n"), (int)CurrentGen->GetConfig().AgentMaxClimb);
-			
+#elif ENGINE_MINOR_VERSION == 6
+					AdditionalData += FString::Printf(TEXT("rd_amc %5.5f\n"), CurrentGen->GetConfig().AgentMaxClimb);
+#endif
+
 					AdditionalData += FString::Printf(TEXT("# border size\n"));
+#if ENGINE_MINOR_VERSION < 6
 					AdditionalData += FString::Printf(TEXT("rd_bs %d\n"), (int)CurrentGen->GetConfig().borderSize);
+#elif ENGINE_MINOR_VERSION == 6
+					AdditionalData += FString::Printf(TEXT("rd_bs %d\n"), (int)CurrentGen->GetConfig().borderSize.low);
+#endif
 					AdditionalData += FString::Printf(TEXT("# Max edge len\n"));
 					AdditionalData += FString::Printf(TEXT("rd_mel %d\n"), CurrentGen->GetConfig().maxEdgeLen);
 					AdditionalData += FString::Printf(TEXT("# maxSimplificationError\n"));
