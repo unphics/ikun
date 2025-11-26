@@ -175,32 +175,35 @@ void UE4RecastHelper::SerializedtNavMesh(const char* path, const dtNavMesh* mesh
 	using namespace UE4RecastHelper;
 	if (!mesh) return;
 
-	// ²½Öè3.1: ´´½¨Êä³öÎÄ¼ş
+	// æ­¥éª¤3.1: åˆ›å»ºè¾“å‡ºæ–‡ä»¶
 	std::FILE* fp = std::fopen(path, "wb");
-	if (!fp)
+	if (!fp) {
 		return;
+	}
 
-	// ²½Öè3.2: ×¼±¸ÎÄ¼şÍ·
-	NavMeshSetHeader header;
-	header.magic = NAVMESHSET_MAGIC; // ÎÄ¼ş±êÊ¶·û
-	header.version = NAVMESHSET_VERSION; // °æ±¾ºÅ
-	header.numTiles = 0; // ³õÊ¼»¯TileÊıÁ¿
+	// æ­¥éª¤3.2: å‡†å¤‡æ–‡ä»¶å¤´
+	UE4RecastHelper::NavMeshSetHeader header;
+	// NavMeshSetHeader header;
+	header.magic = NAVMESHSET_MAGIC; // æ–‡ä»¶æ ‡è¯†ç¬¦
+	header.version = NAVMESHSET_VERSION; // ç‰ˆæœ¬å·
+	header.numTiles = 0; // åˆå§‹åŒ–Tileæ•°é‡
 	// auto dtNavMesh_getTile = GET_PRIVATE_MEMBER_FUNCTION(dtNavMesh, getTile);
 
-	for (int i = 0; i < mesh->getMaxTiles(); ++i)
-	{
+	for (int i = 0; i < mesh->getMaxTiles(); ++i) {
 		const dtMeshTile* tile = mesh->getTile(i);
 		// const dtMeshTile* tile = CALL_MEMBER_FUNCTION(mesh, dtNavMesh_getTile, i);
 		if (!tile || !tile->header || !tile->dataSize) continue;
 		header.numTiles++;
 	}
 	std::memcpy(&header.params, mesh->getParams(), sizeof(dtNavMeshParams));
-	std::fwrite(&header, sizeof(NavMeshSetHeader), 1, fp);
+	std::fwrite(&header, sizeof(UE4RecastHelper::NavMeshSetHeader), 1, fp);
 
 	// Store tiles.
-	for (int i = 0; i < mesh->getMaxTiles(); ++i)
-	{
+	for (int i = 0; i < mesh->getMaxTiles(); ++i) {
 		const dtMeshTile* tile = mesh->getTile(i);
+
+		
+		
 		// const dtMeshTile* tile = CALL_MEMBER_FUNCTION(mesh, dtNavMesh_getTile, i);
 		if (!tile || !tile->header || !tile->dataSize) continue;
 
