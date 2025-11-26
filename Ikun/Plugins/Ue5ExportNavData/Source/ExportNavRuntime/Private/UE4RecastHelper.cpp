@@ -175,15 +175,16 @@ void UE4RecastHelper::SerializedtNavMesh(const char* path, const dtNavMesh* mesh
 	using namespace UE4RecastHelper;
 	if (!mesh) return;
 
+	// 步骤3.1: 创建输出文件
 	std::FILE* fp = std::fopen(path, "wb");
 	if (!fp)
 		return;
 
-	// Store header.
+	// 步骤3.2: 准备文件头
 	NavMeshSetHeader header;
-	header.magic = NAVMESHSET_MAGIC;
-	header.version = NAVMESHSET_VERSION;
-	header.numTiles = 0;
+	header.magic = NAVMESHSET_MAGIC; // 文件标识符
+	header.version = NAVMESHSET_VERSION; // 版本号
+	header.numTiles = 0; // 初始化Tile数量
 	// auto dtNavMesh_getTile = GET_PRIVATE_MEMBER_FUNCTION(dtNavMesh, getTile);
 
 	for (int i = 0; i < mesh->getMaxTiles(); ++i)

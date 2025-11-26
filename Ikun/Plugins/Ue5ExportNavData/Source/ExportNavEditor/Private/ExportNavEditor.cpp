@@ -93,16 +93,16 @@ void FExportNavEditorModule::PluginButtonClicked()
 
 #if EXPORT_NAV_MESH_AS_CM
 			FString NavMeshFileCM = FPaths::Combine(OutPath, MapName + TEXT("-NavMesh-CM-") + CurrentTime+TEXT(".obj"));
-			DoExportNavMesh(NavMeshFileCM,EExportMode::Centimeter);
+			DoExportNavMesh(NavMeshFileCM,EExportMode::Centimeter); // Num=82 L"D:/CppProj/ikun/Ikun/Saved/resource/VillageMap-NavMesh-CM-2025.11.25-22.44.10.obj\0"
 			CreateSaveFileNotify(NavMeshMsg, NavMeshFileCM);
 #endif
 #if EXPORT_NAV_MESH_AS_M
 			FString NavMeshFileM = FPaths::Combine(OutPath, MapName + TEXT("-NavMesh-M-") + CurrentTime + TEXT(".obj"));
 			DoExportNavMesh(NavMeshFileM, EExportMode::Metre);
-			CreateSaveFileNotify(NavMeshMsg, NavMeshFileM);
+			CreateSaveFileNotify(NavMeshMsg, NavMeshFileM); // Num=81 L"D:/CppProj/ikun/Ikun/Saved/resource/VillageMap-NavMesh-M-2025.11.25-22.44.10.obj\0"
 #endif
 			FString NavDataFile = FPaths::Combine(OutPath, MapName + TEXT("-NavData-") + CurrentTime+TEXT(".bin"));
-			DoExportNavData(NavDataFile);
+			DoExportNavData(NavDataFile); // Num=79 L"D:/CppProj/ikun/Ikun/Saved/resource/VillageMap-NavData-2025.11.25-22.44.10.bin\0"
 
 			FText NavDataMsg = LOCTEXT("SaveNavMeshData", "Successd to Export the RecastNavigation data.");
 			CreateSaveFileNotify(NavDataMsg, NavDataFile);
@@ -150,7 +150,6 @@ void FExportNavEditorModule::CreateSaveFileNotify(const FText& InMsg, const FStr
 void FExportNavEditorModule::DoExportNavData(const FString& SaveToFile)
 {
 	UFlibExportNavData::ExportRecastNavData(SaveToFile);
-
 }
 
 void FExportNavEditorModule::AddMenuExtension(FMenuBuilder& Builder)

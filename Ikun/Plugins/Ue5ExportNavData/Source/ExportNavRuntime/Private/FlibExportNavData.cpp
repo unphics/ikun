@@ -65,29 +65,28 @@ bool UFlibExportNavData::ExportRecastNavMesh(const FString& SaveFile,EExportMode
 
 bool UFlibExportNavData::ExportRecastNavData(const FString& InFilePath)
 {
+	// 步骤1: 获取当前编辑器世界
 	// UWorld* World = GEditor->GetEditorWorldContext(false).World();
 	UWorld* World = NULL;
 
 	auto WorldList = GEngine->GetWorldContexts();
-	for (int32 i = 0; i < WorldList.Num(); ++i)
-	{
+	for (int32 i = 0; i < WorldList.Num(); ++i) {
 		UWorld* local_World = WorldList[i].World();
-		if (local_World && UKismetSystemLibrary::IsValid(local_World))
-		{
+		if (local_World && UKismetSystemLibrary::IsValid(local_World)) {
 			World = local_World;
 			break;
 		}
 	}
 	if (!World) return false;
 
+	// 步骤2: 获取当前世界的dtNavMesh实例
 	dtNavMesh* RecastdtNavMesh = UFlibExportNavData::GetdtNavMeshInsByWorld(World);
 
-	if (RecastdtNavMesh)
-	{
+	if (RecastdtNavMesh) {
+		// 步骤3: 调用序列化函数
 		UE4RecastHelper::SerializedtNavMesh(TCHAR_TO_ANSI(*InFilePath), RecastdtNavMesh);
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }
@@ -95,12 +94,18 @@ bool UFlibExportNavData::ExportRecastNavData(const FString& InFilePath)
 
 dtNavMesh* UFlibExportNavData::GetdtNavMeshInsByWorld(UWorld* InWorld)
 {
+	// 获取导航系统
 	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(InWorld);
 	check(NavSys);
+
+	// 获取主要的导航数据实例
 	ANavigationData* MainNavDataIns = NavSys->GetDefaultNavDataInstance();
+
+	// 转换为Recast导航网格
 	ARecastNavMesh* RecastNavMeshIns = Cast<ARecastNavMesh>(MainNavDataIns);
 	if(RecastNavMeshIns && UKismetSystemLibrary::IsValid(RecastNavMeshIns))
 	{
+		// 获取底层的Detour导航网格
 		dtNavMesh* RecastdtNavMesh = RecastNavMeshIns->GetRecastMesh();
 		return RecastdtNavMesh;
 	}
