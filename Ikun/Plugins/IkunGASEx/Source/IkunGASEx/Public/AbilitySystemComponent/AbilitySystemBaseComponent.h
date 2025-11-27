@@ -13,8 +13,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 public:
 	UFUNCTION(BlueprintCallable)
-	void TryActiveAbilityWithPaylod(FGameplayAbilitySpecHandle InHandle, const FGameplayEventData& Payload);
+	bool K2_TryActiveAbilityWithPaylod(FGameplayAbilitySpecHandle InHandle, const FGameplayEventData& Payload);
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Init")
-	TArray<TSubclassOf<UAttributeSet>> InitAttributeSets;
 };

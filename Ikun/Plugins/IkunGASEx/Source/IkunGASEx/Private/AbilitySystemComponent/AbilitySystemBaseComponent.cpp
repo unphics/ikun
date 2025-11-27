@@ -2,10 +2,6 @@
 
 UAbilitySystemBaseComponent::UAbilitySystemBaseComponent(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer) {
 	PrimaryComponentTick.bCanEverTick = true;
-
-	for (auto& set : this->InitAttributeSets) {
-		this->K2_InitStats(set, nullptr);
-	}
 }
 
 void UAbilitySystemBaseComponent::BeginPlay() {
@@ -16,7 +12,7 @@ void UAbilitySystemBaseComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UAbilitySystemBaseComponent::TryActiveAbilityWithPaylod(FGameplayAbilitySpecHandle InHandle, const FGameplayEventData& Payload) {
-	this->TriggerAbilityFromGameplayEvent(InHandle, this->AbilityActorInfo.Get(), FGameplayTag(), &Payload, *this);
+bool UAbilitySystemBaseComponent::K2_TryActiveAbilityWithPaylod(FGameplayAbilitySpecHandle InHandle, const FGameplayEventData& Payload) {
+	return this->TriggerAbilityFromGameplayEvent(InHandle, this->AbilityActorInfo.Get(), FGameplayTag(), &Payload, *this);
 }
 
