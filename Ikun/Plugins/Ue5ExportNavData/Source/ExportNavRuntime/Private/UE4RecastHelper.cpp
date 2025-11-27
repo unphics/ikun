@@ -181,8 +181,48 @@ void UE4RecastHelper::SerializedtNavMesh(const char* path, const dtNavMesh* mesh
 		return;
 	}
 
+#if 1
+	struct dtNavMeshParams_std {
+		float orig[3];
+		float tileWidth;
+		float tileHeight;
+		int maxTiles;
+		int maxPolys;
+	} ;
+	dtNavMeshParams_std params;
+	params.orig[0] = mesh->getParams()->orig[0];
+	params.orig[1] = mesh->getParams()->orig[1];
+	params.orig[2] = mesh->getParams()->orig[2];
+	params.tileWidth = mesh->getParams()->tileWidth;
+	params.tileHeight = mesh->getParams()->tileHeight;
+	params.maxTiles = mesh->getParams()->maxTiles;
+	params.maxPolys = mesh->getParams()->maxPolys;
+	struct NavMeshSetHeader_std
+	{
+		int magic;
+		int version;
+		int numTiles;
+		dtNavMeshParams_std params;
+	};
+	NavMeshSetHeader_std header;
+	header.magic = NAVMESHSET_MAGIC;
+	header.version = NAVMESHSET_VERSION;
+	header.numTiles = 1;
+	std::memcpy(&header.params, &params, sizeof(dtNavMeshParams_std));
+	std::fwrite(&header, sizeof(dtNavMeshParams_std), 1, fp);
+	
+	const dtMeshTile* tile = mesh->getTile(1);
+
+	// wait update
+	NavMeshTileHeader tileHeader;
+	tileHeader.tileRef = mesh->getTileRef(tile);
+	tileHeader.dataSize = tile->dataSize;
+	std::fwrite(&tileHeader, sizeof(tileHeader), 1, fp);
+	std::fwrite(tile->data, tile->dataSize, 1, fp);
+#else
+	
 	// 步骤3.2: 准备文件头
-	UE4RecastHelper::NavMeshSetHeader header;
+	NavMeshSetHeader header;
 	// NavMeshSetHeader header;
 	header.magic = NAVMESHSET_MAGIC; // 文件标识符
 	header.version = NAVMESHSET_VERSION; // 版本号
@@ -196,14 +236,11 @@ void UE4RecastHelper::SerializedtNavMesh(const char* path, const dtNavMesh* mesh
 		header.numTiles++;
 	}
 	std::memcpy(&header.params, mesh->getParams(), sizeof(dtNavMeshParams));
-	std::fwrite(&header, sizeof(UE4RecastHelper::NavMeshSetHeader), 1, fp);
+	std::fwrite(&header, sizeof(NavMeshSetHeader), 1, fp);
 
 	// Store tiles.
 	for (int i = 0; i < mesh->getMaxTiles(); ++i) {
 		const dtMeshTile* tile = mesh->getTile(i);
-
-		
-		
 		// const dtMeshTile* tile = CALL_MEMBER_FUNCTION(mesh, dtNavMesh_getTile, i);
 		if (!tile || !tile->header || !tile->dataSize) continue;
 
@@ -214,7 +251,8 @@ void UE4RecastHelper::SerializedtNavMesh(const char* path, const dtNavMesh* mesh
 
 		std::fwrite(tile->data, tile->dataSize, 1, fp);
 	}
-
+#endif
+	
 	std::fclose(fp);
 }
 

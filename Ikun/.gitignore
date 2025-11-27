@@ -1,6 +1,7 @@
 /.vs
 /.idea
-/Saved
+## /Saved
+!Save/UnrealBuildTool/BuildConfiguration.xml
 /build
 /.vsconfig
 /Ikun.sln

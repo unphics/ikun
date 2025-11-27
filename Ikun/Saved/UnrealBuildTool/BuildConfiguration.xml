@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration xmlns="https://www.unrealengine.com/BuildConfiguration">
+    <WindowsPlatform>
+        <Compiler>VisualStudio2022</Compiler>
+        <CompilerVersion>14.37.32822</CompilerVersion>
+    </WindowsPlatform>
+</Configuration>
