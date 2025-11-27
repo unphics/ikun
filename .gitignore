@@ -24,11 +24,31 @@
 # /ikun/Plugins/Puerts/Source/CSharpParamDefaultValueMetas
 
 
+## Visual Studio
+/ikun/.vs
+/ikun/.vsconfig
+/ikun/Ikun.sln
+/ikun/UpgradeLog.htm
+/ikun/Backup
+
+## Rider
+/ikun/.idea
+
+# Unreal
 **/Binaries/
 **/Intermediate/
+/ikun/DerivedDataCache/
+/ikun/Saved/
 
-# ctags的tag索引文件
+## Build Toolchain Config
+!ikun/Save/UnrealBuildTool/BuildConfiguration.xml
+
+# UnLua
+/ikun/Plugins/UnLua/Source/UnLuaDefaultParamCollector
+/ikun/Plugins/UnLua/Source/UnLuaDefaultParamCollectorUbtPlugin
+
+# Ctags
 **/tags
 
 # 游戏设计参考, 其他游戏的内容截图等, 不能私自分发
-/References
+/References/
