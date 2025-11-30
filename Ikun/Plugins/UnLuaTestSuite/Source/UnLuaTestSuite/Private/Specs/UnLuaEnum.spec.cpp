@@ -19,7 +19,7 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-BEGIN_DEFINE_SPEC(FUnLuaEnumSpec, "UnLua.API.Enum", EAutomationTestFlags::ProductFilter | ApplicationContextMask)
+BEGIN_DEFINE_SPEC(FUnLuaEnumSpec, "UnLua.API.Enum", EAutomationTestFlags::ProductFilter | EAutomationTestFlags::ApplicationContextMask)
     lua_State* L;
 END_DEFINE_SPEC(FUnLuaEnumSpec)
 
@@ -56,19 +56,13 @@ void FUnLuaEnumSpec::Define()
     {
         It(TEXT("获取枚举的本地化文本"), EAsyncExecution::TaskGraphMainThread, [this]()
         {
-            const char* Chunk = R"(
-            return UE.ECollisionResponse:GetDisplayNameTextByValue(UE.ECollisionResponse.ECR_Overlap)
-            )";
+            const char* Chunk = "\
+            return UE.ECollisionResponse:GetDisplayNameTextByValue(UE.ECollisionResponse.ECR_Overlap)\
+            ";
             UnLua::RunChunk(L, Chunk);
-#if UNLUA_ENABLE_FTEXT
-            const auto Actual = *(FText*)GetCppInstanceFast(L, -1);
-            const auto Expected = UEnum::GetDisplayValueAsText(ECR_Overlap);
-            TEST_TRUE(Expected.EqualTo(Actual))
-#else
-            const auto Actual = FUTF8ToTCHAR(lua_tostring(L, -1));
+            const auto Actual = UTF8_TO_TCHAR(lua_tostring(L, -1));
             const auto Expected = UEnum::GetDisplayValueAsText(ECR_Overlap).ToString();
-            TEST_EQUAL(Actual.Get(), Expected);
-#endif
+            TEST_EQUAL(Actual, Expected);
         });
 
         It(TEXT("不存在的枚举值返回nil"), EAsyncExecution::TaskGraphMainThread, [this]()
@@ -78,14 +72,14 @@ void FUnLuaEnumSpec::Define()
             TEST_EQUAL(lua_tointeger(L, -1), 0x7FFFLL);
         });
     });
-
+    
     Describe(TEXT("GetMaxValue"), [this]
     {
         It(TEXT("获取枚举类型的最大值"), EAsyncExecution::TaskGraphMainThread, [this]()
         {
-            const char* Chunk = R"(
-            return UE.ECollisionResponse:GetMaxValue()
-            )";
+            const char* Chunk = "\
+            return UE.ECollisionResponse:GetMaxValue()\
+            ";
             UnLua::RunChunk(L, Chunk);
             const auto Actual = (int32)lua_tointeger(L, -1);
             const auto Expected = (int32)ECR_MAX;
@@ -99,4 +93,4 @@ void FUnLuaEnumSpec::Define()
     });
 }
 
-#endif
+#endif //WITH_DEV_AUTOMATION_TESTS

@@ -20,7 +20,7 @@
 #include "UnLuaSettings.generated.h"
 
 
-UCLASS(Config=UnLuaSettings, DefaultConfig, Meta=(DisplayName="UnLua"))
+UCLASS(Config=UnLua, DefaultConfig, Meta=(DisplayName="UnLua"))
 class UNLUA_API UUnLuaSettings : public UObject
 {
     GENERATED_BODY()
@@ -52,6 +52,6 @@ public:
     TSubclassOf<ULuaModuleLocator> ModuleLocatorClass = ULuaModuleLocator::StaticClass();
 
     /** List of classes to bind on startup. */
-    UPROPERTY(config, EditAnywhere, Category=Runtime, meta = (MetaClass="/Script/CoreUObject.Object", AllowAbstract="True", DisplayName = "List of classes to bind on startup"))
+    UPROPERTY(config, EditAnywhere, Category=Runtime, meta = (MetaClass="Object", AllowAbstract="True", DisplayName = "List of classes to bind on startup"))
     TArray<FSoftClassPath> PreBindClasses;
 };

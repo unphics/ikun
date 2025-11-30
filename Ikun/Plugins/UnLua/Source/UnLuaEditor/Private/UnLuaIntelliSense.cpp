@@ -110,15 +110,6 @@ namespace UnLua
             // declaration
             Ret += FString::Printf(TEXT("local %s = {}\r\n"), *EscapeSymbolName(TypeName));
 
-            // exported functions
-            const auto Exported = GetExportedReflectedClasses().Find(TypeName);
-            if (Exported)
-            {
-                TArray<IExportedFunction*> ExportedFunctions;
-                (*Exported)->GetFunctions(ExportedFunctions);
-                for (const auto Function : ExportedFunctions)
-                    Function->GenerateIntelliSense(Ret);
-            }
             return Ret;
         }
 

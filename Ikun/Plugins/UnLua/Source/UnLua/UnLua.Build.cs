@@ -25,37 +25,23 @@ public class UnLua : ModuleRules
 {
     public UnLua(ReadOnlyTargetRules Target) : base(Target)
     {
-#if UE_5_2_OR_LATER
-        IWYUSupport = IWYUSupport.None;
-#else
+        // 针对 UE 5.2 及以上版本 (你用的是 5.6，必须用这个)
+        if (Target.Version.MajorVersion > 5 || (Target.Version.MajorVersion == 5 && Target.Version.MinorVersion >= 2))
+        {
+            bEnableUndefinedIdentifierWarnings = true;
+        } else {
+            // 针对旧版本 UE
+            bEnableUndefinedIdentifierWarnings = false;
+        }
+
         bEnforceIWYU = false;
-#endif
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicIncludePaths.AddRange(
-            new string[]
-            {
-            }
-        );
+        PublicIncludePaths.AddRange(new string[] {});
 
-        PrivateIncludePaths.AddRange(
-            new[]
-            {
-                "UnLua/Private",
-            }
-        );
+        PrivateIncludePaths.AddRange(new[] {"UnLua/Private",});
 
-        PublicDependencyModuleNames.AddRange(
-            new[]
-            {
-                "Core",
-                "CoreUObject",
-                "Engine",
-                "Slate",
-                "InputCore",
-                "Lua"
-            }
-        );
+        PublicDependencyModuleNames.AddRange(new[] {"Core", "CoreUObject", "Engine", "Slate", "InputCore", "Lua"});
 
         PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Private"));
 
@@ -92,9 +78,9 @@ public class UnLua : ModuleRules
         loadBoolConfig("bEnableDebug", "UNLUA_ENABLE_DEBUG", false);
         loadBoolConfig("bEnablePersistentParamBuffer", "ENABLE_PERSISTENT_PARAM_BUFFER", true);
         loadBoolConfig("bEnableTypeChecking", "ENABLE_TYPE_CHECK", true);
+        loadBoolConfig("bEnableRPCCall", "SUPPORTS_RPC_CALL", true);
         loadBoolConfig("bEnableUnrealInsights", "ENABLE_UNREAL_INSIGHTS", false);
         loadBoolConfig("bEnableCallOverriddenFunction", "ENABLE_CALL_OVERRIDDEN_FUNCTION", true);
-        loadBoolConfig("bEnableFText", "UNLUA_ENABLE_FTEXT", false);
         loadBoolConfig("bLuaCompileAsCpp", "LUA_COMPILE_AS_CPP", false);
         loadBoolConfig("bWithUE4Namespace", "WITH_UE4_NAMESPACE", true);
         loadBoolConfig("bLegacyReturnOrder", "UNLUA_LEGACY_RETURN_ORDER", false);

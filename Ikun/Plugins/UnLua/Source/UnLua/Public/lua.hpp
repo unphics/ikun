@@ -1,6 +1,6 @@
 // Tencent is pleased to support the open source community by making UnLua available.
 // 
-// Copyright (C) 2019 Tencent. All rights reserved.
+// Copyright (C) 2019 THL A29 Limited, a Tencent company. All rights reserved.
 //
 // Licensed under the MIT License (the "License"); 
 // you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -14,31 +14,27 @@
 
 #pragma once
 
-// Save UE's TString macro to avoid conflict with Lua's TString struct
-#ifdef TString
-#pragma push_macro("TString")
-#undef TString
-#define UNLUA_TSTRING_PUSHED
-#endif
-
-#ifdef __cplusplus
-#if !LUA_COMPILE_AS_CPP
+#if defined(__cplusplus) && !LUA_COMPILE_AS_CPP
 extern "C" {
-#endif
 #endif
 
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
 
-#ifdef __cplusplus
-#if !LUA_COMPILE_AS_CPP
-}
-#endif
+#if LUA_VERSION_NUM==501
+#include "compat-5.3.h"
+
+#ifndef LUA_GNAME
+#define LUA_GNAME "_G"
 #endif
 
-// Restore UE's TString macro
-#ifdef UNLUA_TSTRING_PUSHED
-#pragma pop_macro("TString")
-#undef UNLUA_TSTRING_PUSHED
+#ifndef MAXUPVAL
+#define MAXUPVAL 255
+#endif
+
+#endif
+
+#if defined(__cplusplus) && !LUA_COMPILE_AS_CPP
+}
 #endif

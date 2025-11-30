@@ -149,11 +149,11 @@ static Node *mainposition (const Table *t, int ktt, const Value *kvl) {
       return hashmod(t, l_hashfloat(n));
     }
     case LUA_VSHRSTR: {
-      LuaTString *ts = tsvalueraw(*kvl);
+      TString *ts = tsvalueraw(*kvl);
       return hashstr(t, ts);
     }
     case LUA_VLNGSTR: {
-      LuaTString *ts = tsvalueraw(*kvl);
+      TString *ts = tsvalueraw(*kvl);
       return hashpow2(t, luaS_hashlongstr(ts));
     }
     case LUA_VFALSE:
@@ -744,7 +744,7 @@ const TValue *luaH_getint (Table *t, lua_Integer key) {
 /*
 ** search function for short strings
 */
-const TValue *luaH_getshortstr (Table *t, LuaTString *key) {
+const TValue *luaH_getshortstr (Table *t, TString *key) {
   Node *n = hashstr(t, key);
   lua_assert(key->tt == LUA_VSHRSTR);
   for (;;) {  /* check whether 'key' is somewhere in the chain */
@@ -760,7 +760,7 @@ const TValue *luaH_getshortstr (Table *t, LuaTString *key) {
 }
 
 
-const TValue *luaH_getstr (Table *t, LuaTString *key) {
+const TValue *luaH_getstr (Table *t, TString *key) {
   if (key->tt == LUA_VSHRSTR)
     return luaH_getshortstr(t, key);
   else {  /* for long strings, use generic case */

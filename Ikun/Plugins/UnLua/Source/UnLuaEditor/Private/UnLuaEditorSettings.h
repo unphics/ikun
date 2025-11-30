@@ -70,13 +70,13 @@ public:
     UPROPERTY(config, EditAnywhere, Category = "Build")
     bool bEnableTypeChecking = true;
 
+    /** Enable RPC support (Deprecated). (Requires restart to take effect) */
+    UPROPERTY(config, EditAnywhere, Category = "Build")
+    bool bEnableRPCCall = true;
+
     /** Enable 'Overridden' support at lua runtime. (Requires restart to take effect) */
     UPROPERTY(config, EditAnywhere, Category = "Build")
     bool bEnableCallOverriddenFunction = true;
-
-    /** Enable FText support at lua runtime which will no longer be treated as a string. (Requires restart to take effect) */
-    UPROPERTY(config, EditAnywhere, Category = "Build")
-    bool bEnableFText = true;
 
     /** Whether or not compile lua module as c++ code. (Requires restart to take effect) */
     UPROPERTY(config, EditAnywhere, Category = "Build")

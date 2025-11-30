@@ -19,7 +19,7 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-BEGIN_DEFINE_SPEC(FUnLuaLibFRotatorSpec, "UnLua.API.FRotator", EAutomationTestFlags::ProductFilter | ApplicationContextMask)
+BEGIN_DEFINE_SPEC(FUnLuaLibFRotatorSpec, "UnLua.API.FRotator", EAutomationTestFlags::ProductFilter | EAutomationTestFlags::ApplicationContextMask)
     lua_State* L;
 END_DEFINE_SPEC(FUnLuaLibFRotatorSpec)
 

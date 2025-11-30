@@ -33,12 +33,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FIssue304Event, TArray<FString>, Arr
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FIssue362Delegate, TArray<int32>&, Array);
 
-#if UE_VERSION_NEWER_THAN(5,5,0)
-constexpr EAutomationTestFlags ApplicationContextMask = EAutomationTestFlags_ApplicationContextMask;
-#else
-constexpr EAutomationTestFlags ApplicationContextMask = EAutomationTestFlags::ApplicationContextMask;
-#endif
-
 UENUM()
 enum EEnumForIssue331
 {
@@ -106,7 +100,6 @@ public:
 
     UUnLuaTestStub()
     {
-        Counter = 0;
         ScopedEnum = EScopedEnum::Value1;
         EnumClass = EEnumClass::Value1;
         MapForIssue407.Add(1, 1);

@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and limitations under the License.
 
 #include "Registries/ClassRegistry.h"
-#include "UnLuaCompatibility.h"
 #include "LuaEnv.h"
 #include "Binding.h"
 #include "LowLevel.h"
@@ -26,21 +25,20 @@ extern int32 UObject_Delete(lua_State* L);
 
 namespace UnLua
 {
+    TMap<UStruct*, FClassDesc*> FClassRegistry::Classes;
+    TMap<FName, FClassDesc*> FClassRegistry::Name2Classes;
+
     FClassRegistry::FClassRegistry(FLuaEnv* Env)
         : Env(Env)
     {
     }
 
-    FClassRegistry::~FClassRegistry()
+    FClassRegistry* FClassRegistry::Find(const lua_State* L)
     {
-        for (const auto Pair : Name2Classes)
-            delete Pair.Value;
-    }
-
-    void FClassRegistry::Initialize()
-    {
-        Register("UObject");
-        Register("UClass");
+        const auto Env = FLuaEnv::FindEnv(L);
+        if (Env == nullptr)
+            return nullptr;
+        return Env->GetClassRegistry();
     }
 
     FClassDesc* FClassRegistry::Find(const char* TypeName)
@@ -105,6 +103,20 @@ namespace UnLua
         return Ret;
     }
 
+    bool FClassRegistry::StaticUnregister(const UObjectBase* Type)
+    {
+        FClassDesc* ClassDesc;
+        if (!Classes.RemoveAndCopyValue((UStruct*)Type, ClassDesc))
+            return false;
+        ClassDesc->UnLoad();
+        for (auto Pair : FLuaEnv::AllEnvs)
+        {
+            auto Registry = Pair.Value->GetClassRegistry();
+            Registry->Unregister(ClassDesc);
+        }
+        return true;
+    }
+
     bool FClassRegistry::PushMetatable(lua_State* L, const char* MetatableName)
     {
         int Type = luaL_getmetatable(L, MetatableName);
@@ -114,7 +126,7 @@ namespace UnLua
             if (Ret && Ret->IsClass() && !Ret->IsStructValid())
             {
                 // unregister invalid metatable
-                Unregister(Ret, true);
+                Unregister(Ret);
             }
             else
             {
@@ -213,14 +225,7 @@ namespace UnLua
         lua_setmetatable(L, -2);
 
         TArray<FClassDesc*> ClassDescChain;
-        ClassDescChain.Add(ClassDesc);
-
-        UStruct* SuperStruct = ClassDesc->AsStruct()->GetInheritanceSuper();
-        while (SuperStruct)
-        {
-            ClassDescChain.Add(RegisterReflectedType(SuperStruct));
-            SuperStruct = SuperStruct->GetInheritanceSuper();
-        }
+        ClassDesc->GetInheritanceChain(ClassDescChain);
 
         TArray<IExportedClass*> ExportedClasses;
         for (int32 i = ClassDescChain.Num() - 1; i > -1; --i)
@@ -262,19 +267,12 @@ namespace UnLua
         return Register(TCHAR_TO_UTF8(*MetatableName));
     }
 
-    void FClassRegistry::Unregister(const UStruct* Class)
+    void FClassRegistry::Cleanup()
     {
-        const auto Desc = Find(Class);
-        if (!Desc)
-            return;
-        Classes.Remove(Class);
-        Desc->UnLoad();
-        Unregister(Desc, true);
-    }
-
-    void FClassRegistry::NotifyUObjectDeleted(UObject* Object)
-    {
-        Unregister((UStruct*)Object);
+        for (const auto Pair : Name2Classes)
+            delete Pair.Value;
+        Name2Classes.Empty();
+        Classes.Empty();
     }
 
     UField* FClassRegistry::LoadReflectedType(const char* InName)
@@ -282,11 +280,11 @@ namespace UnLua
         FString Name = UTF8_TO_TCHAR(InName);
 
         // find candidates in memory
-        UField* Ret = FindFirstObject<UClass>(*Name);
+        UField* Ret = FindObject<UClass>(ANY_PACKAGE, *Name);
         if (!Ret)
-            Ret = FindFirstObject<UScriptStruct>(*Name);
+            Ret = FindObject<UScriptStruct>(ANY_PACKAGE, *Name);
         if (!Ret)
-            Ret = FindFirstObject<UEnum>(*Name);
+            Ret = FindObject<UEnum>(ANY_PACKAGE, *Name);
 
         // load candidates if not found
         if (!Ret)
@@ -304,17 +302,19 @@ namespace UnLua
         check(Type);
         check(!Classes.Contains(Type));
 
-        FClassDesc* ClassDesc = new FClassDesc(Env, Type, Name);
+        FClassDesc* ClassDesc = new FClassDesc(Type, Name);
         Classes.Add(Type, ClassDesc);
         Name2Classes.Add(FName(*Name), ClassDesc);
 
         return ClassDesc;
     }
 
-    void FClassRegistry::Unregister(const FClassDesc* ClassDesc, const bool bForce)
+    void FClassRegistry::Unregister(const FClassDesc* ClassDesc)
     {
-        if (ClassDesc->IsStructValid() && !bForce)
+        if (ClassDesc->IsStructValid())
+        {
             return;
+        }
         const auto L = Env->GetMainState();
         const auto MetatableName = ClassDesc->GetName();
         lua_pushnil(L);

@@ -31,7 +31,7 @@ static void Run(TFunction<void(lua_State*, UWorld*)> Test)
     const FURL URL;
     World->InitializeActorsForPlay(URL);
     World->BeginPlay();
-    World->SetBegunPlay(true);
+    World->bBegunPlay = true;
 
     UnLua::PushUObject(L, World);
     lua_setglobal(L, "World");
@@ -40,7 +40,6 @@ static void Run(TFunction<void(lua_State*, UWorld*)> Test)
     Test(L, World);
 
     // TearDown
-    World->EndPlay(EEndPlayReason::Destroyed);
     GEngine->DestroyWorldContext(World);
     World->DestroyWorld(false);
     UnLua::Shutdown();
@@ -53,22 +52,22 @@ bool FUnLuaTest_StaticBinding::RunTest(const FString& Parameters)
 {
     Run([this](lua_State* L, UWorld* World)
     {
-        const char* Chunk1 = R"(
-                    local ActorClass = UE.UClass.Load('/UnLuaTestSuite/Tests/Binding/BP_UnLuaTestActor_StaticBinding.BP_UnLuaTestActor_StaticBinding_C')
-                    G_Actor = World:SpawnActor(ActorClass)
-                )";
+        const char* Chunk1 = "\
+                    local ActorClass = UE.UClass.Load('/UnLuaTestSuite/Tests/Binding/BP_UnLuaTestActor_StaticBinding.BP_UnLuaTestActor_StaticBinding_C')\
+                    G_Actor = World:SpawnActor(ActorClass)\
+                ";
         UnLua::RunChunk(L, Chunk1);
 
 
         World->Tick(LEVELTICK_All, SMALL_NUMBER);
 
-        const char* Chunk2 = R"(
-                return G_Actor:RunTest()
-                )";
+        const char* Chunk2 = "\
+                return G_Actor:RunTest()\
+                ";
         UnLua::RunChunk(L, Chunk2);
 
         const auto Error = lua_tostring(L, -1);
-        TEST_EQUAL(Error, FString(""));
+        TEST_EQUAL(Error, "");
     });
 
     return true;
@@ -80,23 +79,23 @@ bool FUnLuaTest_DynamicBinding::RunTest(const FString& Parameters)
 {
     Run([this](lua_State* L, UWorld* World)
     {
-        const char* Chunk1 = R"(
-                    local ActorClass = UE.UClass.Load('/UnLuaTestSuite/Tests/Binding/BP_UnLuaTestActor_DynamicBinding.BP_UnLuaTestActor_DynamicBinding_C')
-                    local Transform = UE.FTransform()
-                    G_Actor = World:SpawnActor(ActorClass, Transform, UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn, nil, nil, 'Tests.Binding.BP_UnLuaTestActor')
-                )";
+        const char* Chunk1 = "\
+                    local ActorClass = UE.UClass.Load('/UnLuaTestSuite/Tests/Binding/BP_UnLuaTestActor_DynamicBinding.BP_UnLuaTestActor_DynamicBinding_C')\
+                    local Transform = UE.FTransform()\
+                    G_Actor = World:SpawnActor(ActorClass, Transform, UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn, nil, nil, 'Tests.Binding.BP_UnLuaTestActor')\
+                ";
         UnLua::RunChunk(L, Chunk1);
 
 
         World->Tick(LEVELTICK_All, SMALL_NUMBER);
 
-        const char* Chunk2 = R"(
-                return G_Actor:RunTest()
-                )";
+        const char* Chunk2 = "\
+                return G_Actor:RunTest()\
+                ";
         UnLua::RunChunk(L, Chunk2);
 
         const auto Error = lua_tostring(L, -1);
-        TEST_EQUAL(Error, FString(""));
+        TEST_EQUAL(Error, "");
     });
     return true;
 }
@@ -109,22 +108,22 @@ bool FUnLuaTest_ConflictedBinding::RunTest(const FString& Parameters)
     {
         AddExpectedError(TEXT("conflicts"), EAutomationExpectedErrorFlags::Contains);
 
-        const char* Chunk1 = R"(
-                    local ActorClass = UE.UClass.Load('/UnLuaTestSuite/Tests/Binding/BP_UnLuaTestActor_StaticBinding.BP_UnLuaTestActor_StaticBinding_C')
-                    local Transform = UE.FTransform()
-                    G_Actor = World:SpawnActor(ActorClass, Transform, UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn, nil, nil, 'Tests.Binding.Foo')
-                )";
+        const char* Chunk1 = "\
+                    local ActorClass = UE.UClass.Load('/UnLuaTestSuite/Tests/Binding/BP_UnLuaTestActor_StaticBinding.BP_UnLuaTestActor_StaticBinding_C')\
+                    local Transform = UE.FTransform()\
+                    G_Actor = World:SpawnActor(ActorClass, Transform, UE.ESpawnActorCollisionHandlingMethod.AlwaysSpawn, nil, nil, 'Tests.Binding.Foo')\
+                ";
         UnLua::RunChunk(L, Chunk1);
 
         World->Tick(LEVELTICK_All, SMALL_NUMBER);
 
-        const char* Chunk2 = R"(
-                return G_Actor:RunTest()
-                )";
+        const char* Chunk2 = "\
+                return G_Actor:RunTest()\
+                ";
         UnLua::RunChunk(L, Chunk2);
 
         const auto Error = lua_tostring(L, -1);
-        TEST_EQUAL(Error, FString(""));
+        TEST_EQUAL(Error, "");
     });
     return true;
 }
@@ -135,21 +134,21 @@ bool FUnLuaTest_MultipleBinding::RunTest(const FString& Parameters)
 {
     Run([this](lua_State* L, UWorld* World)
     {
-        const char* Chunk1 = R"(
-                    local ActorClass = UE.UClass.Load('/UnLuaTestSuite/Tests/Binding/BP_UnLuaTestActor_StaticBindingChild.BP_UnLuaTestActor_StaticBindingChild_C')
-                    G_Actor = World:SpawnActor(ActorClass)
-                )";
+        const char* Chunk1 = "\
+                    local ActorClass = UE.UClass.Load('/UnLuaTestSuite/Tests/Binding/BP_UnLuaTestActor_StaticBindingChild.BP_UnLuaTestActor_StaticBindingChild_C')\
+                    G_Actor = World:SpawnActor(ActorClass)\
+                ";
         UnLua::RunChunk(L, Chunk1);
 
         World->Tick(LEVELTICK_All, SMALL_NUMBER);
 
-        const char* Chunk2 = R"(
-                return G_Actor:RunTest()
-                )";
+        const char* Chunk2 = "\
+                return G_Actor:RunTest()\
+                ";
         UnLua::RunChunk(L, Chunk2);
 
         const auto Error = lua_tostring(L, -1);
-        TEST_EQUAL(Error, FString(""));
+        TEST_EQUAL(Error, "");
     });
 
     return true;
@@ -171,10 +170,10 @@ bool FUnLuaTest_Overridden::RunTest(const FString& Parameters)
         World->Tick(LEVELTICK_All, SMALL_NUMBER);
 
         const auto Actual = lua_tostring(L, -1);
-        TEST_EQUAL(Actual, FString("BP ABC Lua"));
+        TEST_EQUAL(Actual, "BP ABC Lua");
     });
 
     return true;
 }
 
-#endif
+#endif //WITH_DEV_AUTOMATION_TESTS

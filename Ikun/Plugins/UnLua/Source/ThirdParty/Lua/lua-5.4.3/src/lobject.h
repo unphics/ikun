@@ -356,7 +356,7 @@ typedef struct GCObject {
 #define tsvalue(o)	check_exp(ttisstring(o), gco2ts(val_(o).gc))
 
 #define setsvalue(L,obj,x) \
-  { TValue *io = (obj); LuaTString *x_ = (x); \
+  { TValue *io = (obj); TString *x_ = (x); \
     val_(io).gc = obj2gco(x_); settt_(io, ctb(x_->tt)); \
     checkliveness(L,io); }
 
@@ -369,24 +369,23 @@ typedef struct GCObject {
 
 /*
 ** Header for a string value.
-** Renamed from LuaTString to LuaTString to avoid conflict with UE's LuaTString template in UE 5.6+
 */
-typedef struct LuaTString {
+typedef struct TString {
   CommonHeader;
   lu_byte extra;  /* reserved words for short strings; "has hash" for longs */
   lu_byte shrlen;  /* length for short strings */
   unsigned int hash;
   union {
     size_t lnglen;  /* length for long strings */
-    struct LuaTString *hnext;  /* linked list for hash table */
+    struct TString *hnext;  /* linked list for hash table */
   } u;
   char contents[1];
-} LuaTString;
+} TString;
 
 
 
 /*
-** Get the actual string (array of bytes) from a 'LuaTString'.
+** Get the actual string (array of bytes) from a 'TString'.
 */
 #define getstr(ts)  ((ts)->contents)
 
@@ -394,7 +393,7 @@ typedef struct LuaTString {
 /* get the actual string (array of bytes) from a Lua value */
 #define svalue(o)       getstr(tsvalue(o))
 
-/* get string length from 'LuaTString *s' */
+/* get string length from 'TString *s' */
 #define tsslen(s)	((s)->tt == LUA_VSHRSTR ? (s)->shrlen : (s)->u.lnglen)
 
 /* get string length from 'TValue *o' */
@@ -501,7 +500,7 @@ typedef struct Udata0 {
 ** Description of an upvalue for function prototypes
 */
 typedef struct Upvaldesc {
-  LuaTString *name;  /* upvalue name (for debug information) */
+  TString *name;  /* upvalue name (for debug information) */
   lu_byte instack;  /* whether it is in stack (register) */
   lu_byte idx;  /* index of upvalue (in stack or in outer function's list) */
   lu_byte kind;  /* kind of corresponding variable */
@@ -513,7 +512,7 @@ typedef struct Upvaldesc {
 ** (used for debug information)
 */
 typedef struct LocVar {
-  LuaTString *varname;
+  TString *varname;
   int startpc;  /* first point where variable is active */
   int endpc;    /* first point where variable is dead */
 } LocVar;
@@ -558,7 +557,7 @@ typedef struct Proto {
   ls_byte *lineinfo;  /* information about source lines (debug information) */
   AbsLineInfo *abslineinfo;  /* idem */
   LocVar *locvars;  /* information about local variables (debug information) */
-  LuaTString  *source;  /* used for debug information */
+  TString  *source;  /* used for debug information */
   GCObject *gclist;
 } Proto;
 
@@ -798,5 +797,4 @@ LUAI_FUNC void luaO_chunkid (char *out, const char *source, size_t srclen);
 
 
 #endif
-
 

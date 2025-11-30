@@ -19,7 +19,7 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-BEGIN_DEFINE_SPEC(FUnLuaLibArraySpec, "UnLua.API.TArray", EAutomationTestFlags::ProductFilter | ApplicationContextMask)
+BEGIN_DEFINE_SPEC(FUnLuaLibArraySpec, "UnLua.API.TArray", EAutomationTestFlags::ProductFilter | EAutomationTestFlags::ApplicationContextMask)
     TSharedPtr<UnLua::FLuaEnv> Env;
     lua_State* L;
 END_DEFINE_SPEC(FUnLuaLibArraySpec)
@@ -645,6 +645,8 @@ void FUnLuaLibArraySpec::Define()
         });
     });
 
+#if LUA_VERSION_NUM > 501
+
     Describe(TEXT("pairs"), [this]
     {
         It(TEXT("迭代获取数组索引与元素"), EAsyncExecution::TaskGraphMainThread, [this]
@@ -665,10 +667,10 @@ void FUnLuaLibArraySpec::Define()
 
             const auto Ret = UnLua::FLuaTable(Env.Get(), -1);
             TEST_EQUAL(Ret.Length(), 4);
-            TEST_EQUAL(Ret[1].Value<int>(), 1);
-            TEST_EQUAL(Ret[2].Value<int>(), 100);
-            TEST_EQUAL(Ret[3].Value<int>(), 2);
-            TEST_EQUAL(Ret[4].Value<int>(), 200);
+            TEST_EQUAL(Ret[1].Value<int>(), 1)
+            TEST_EQUAL(Ret[2].Value<int>(), 100)
+            TEST_EQUAL(Ret[3].Value<int>(), 2)
+            TEST_EQUAL(Ret[4].Value<int>(), 200)
         });
 
         It(TEXT("按引用获取元素（原生）"), EAsyncExecution::TaskGraphMainThread, [this]
@@ -725,6 +727,8 @@ void FUnLuaLibArraySpec::Define()
             TEST_EQUAL(Result2, 2);
         });
     });
+
+#endif
 }
 
 #endif

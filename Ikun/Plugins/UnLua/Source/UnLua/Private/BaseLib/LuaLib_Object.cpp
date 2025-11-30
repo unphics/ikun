@@ -52,8 +52,8 @@ int32 UObject_Load(lua_State* L)
         UEnum* Enum = Cast<UEnum>(Object);
         if (Enum)
         {
-            const auto EnumDesc = UnLua::FLuaEnv::FindEnvChecked(L).GetEnumRegistry()->Register(Enum);
-            int32 Type = luaL_getmetatable(L, TCHAR_TO_UTF8(*EnumDesc->GetName()));
+            UnLua::FLuaEnv::FindEnvChecked(L).GetEnumRegistry()->Register(Enum);
+            int32 Type = luaL_getmetatable(L, TCHAR_TO_UTF8(*UnLua::LowLevel::GetMetatableName(Enum)));
             check(Type == LUA_TTABLE);
         }
         else

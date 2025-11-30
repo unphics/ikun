@@ -19,7 +19,7 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-BEGIN_DEFINE_SPEC(FUnLuaLibFIntVectorSpec, "UnLua.API.FIntVector", EAutomationTestFlags::ProductFilter | ApplicationContextMask)
+BEGIN_DEFINE_SPEC(FUnLuaLibFIntVectorSpec, "UnLua.API.FIntVector", EAutomationTestFlags::ProductFilter | EAutomationTestFlags::ApplicationContextMask)
     lua_State* L;
 END_DEFINE_SPEC(FUnLuaLibFIntVectorSpec)
 

@@ -18,50 +18,48 @@
 
 namespace UnLua
 {
-    FLuaIndex::FLuaIndex(lua_State* InL, int32 InIndex)
-        : L(InL), Index(LowLevel::AbsIndex(InL, InIndex))
+        /**
+     * Lua stack index wrapper
+     */
+    FLuaIndex::FLuaIndex(FLuaEnv* Env, int32 InIndex)
+        : Env(Env)
     {
+        if (InIndex < 0 && InIndex > LUA_REGISTRYINDEX)
+        {
+            const auto L = Env->GetMainState();
+            int32 Top = lua_gettop(L);
+            Index = Top + InIndex + 1;
+        }
+        else
+        {
+            Index = InIndex;
+        }
     }
 
-    FLuaIndex::FLuaIndex(FLuaEnv* Env, int32 Index)
-        : FLuaIndex(Env->GetMainState(), Index)
-    {
-    }
-
-    FLuaValue::FLuaValue(lua_State* L, int32 Index)
-        : FLuaIndex(L, Index), Type(lua_type(L, Index))
-    {
-    }
-
-    FLuaValue::FLuaValue(lua_State* L, int32 Index, int32 Type)
-        : FLuaIndex(L, Index), Type(Type)
-    {
-        check(lua_type(L, Index) == Type);
-    }
-
+    /**
+     * Generic Lua value
+     */
     FLuaValue::FLuaValue(FLuaEnv* Env, int32 Index)
-        : FLuaValue(Env->GetMainState(), Index)
+        : FLuaIndex(Env, Index)
     {
+        const auto L = Env->GetMainState();
+        Type = lua_type(L, Index);
     }
 
     FLuaValue::FLuaValue(FLuaEnv* Env, int32 Index, int32 Type)
-        : FLuaValue(Env->GetMainState(), Index, Type)
+        : FLuaIndex(Env, Index), Type(Type)
     {
+        const auto L = Env->GetMainState();
+        check(lua_type(L, Index) == Type);
     }
 
-    FLuaTable::FLuaTable(lua_State* L, int32 Index)
-        : FLuaIndex(L, Index), PushedValues(0)
-    {
-    }
-
-    FLuaTable::FLuaTable(lua_State* L, FLuaValue Value)
-        : FLuaIndex(L, Value.GetIndex()), PushedValues(0)
-    {
-    }
-
+    /**
+     * Lua table wrapper
+     */
     FLuaTable::FLuaTable(FLuaEnv* Env, int32 Index)
-        : FLuaTable(Env->GetMainState(), Index)
+        : FLuaIndex(Env, Index), PushedValues(0)
     {
+        const auto L = Env->GetMainState();
         check(lua_type(L, Index) == LUA_TTABLE);
     }
 
@@ -80,6 +78,7 @@ namespace UnLua
     {
         if (PushedValues)
         {
+            const auto L = Env->GetMainState();
             lua_pop(L, PushedValues);
             PushedValues = 0;
         }
@@ -87,67 +86,78 @@ namespace UnLua
 
     int32 FLuaTable::Length() const
     {
+        const auto L = Env->GetMainState();
         return lua_rawlen(L, Index);
     }
 
     FLuaValue FLuaTable::operator[](int32 i) const
     {
+        const auto L = Env->GetMainState();
         lua_pushinteger(L, i);
         lua_gettable(L, Index);
         ++PushedValues;
-        return FLuaValue(L, -1);
+        return FLuaValue(Env, -1);
     }
 
     FLuaValue FLuaTable::operator[](int64 i) const
     {
+        const auto L = Env->GetMainState();
         lua_pushinteger(L, i);
         lua_gettable(L, Index);
         ++PushedValues;
-        return FLuaValue(L, -1);
+        return FLuaValue(Env, -1);
     }
 
     FLuaValue FLuaTable::operator[](double d) const
     {
+        const auto L = Env->GetMainState();
         lua_pushnumber(L, d);
-        lua_gettable(L, Index);
+        int32 Type = lua_gettable(L, Index);
         ++PushedValues;
-        return FLuaValue(L, -1);
+        return FLuaValue(Env, -1);
     }
 
-    FLuaValue FLuaTable::operator[](const char* s) const
+    FLuaValue FLuaTable::operator[](const char *s) const
     {
+        const auto L = Env->GetMainState();
         lua_pushstring(L, s);
-        lua_gettable(L, Index);
+        int32 Type = lua_gettable(L, Index);
         ++PushedValues;
-        return FLuaValue(L, -1);
+        return FLuaValue(Env, -1);
     }
 
-    FLuaValue FLuaTable::operator[](const void* p) const
+    FLuaValue FLuaTable::operator[](const void *p) const
     {
+        const auto L = Env->GetMainState();
         lua_pushlightuserdata(L, (void*)p);
-        lua_gettable(L, Index);
+        int32 Type = lua_gettable(L, Index);
         ++PushedValues;
-        return FLuaValue(L, -1);
+        return FLuaValue(Env, -1);
     }
 
     FLuaValue FLuaTable::operator[](FLuaIndex StackIndex) const
     {
+        const auto L = Env->GetMainState();
         lua_pushvalue(L, StackIndex.GetIndex());
-        lua_gettable(L, Index);
+        int32 Type = lua_gettable(L, Index);
         ++PushedValues;
-        return FLuaValue(L, -1);
+        return FLuaValue(Env, -1);
     }
 
     FLuaValue FLuaTable::operator[](FLuaValue Key) const
     {
+        const auto L = Env->GetMainState();
         lua_pushvalue(L, Key.GetIndex());
         int32 Type = lua_gettable(L, Index);
         ++PushedValues;
-        return FLuaValue(L, Type);
+        return FLuaValue(Env, Type);
     }
 
-    FLuaFunction::FLuaFunction(lua_State* L, const char* GlobalFuncName)
-        : L(L), FunctionRef(LUA_REFNIL)
+    /**
+     * Lua function wrapper
+     */
+    FLuaFunction::FLuaFunction(FLuaEnv* Env, const char *GlobalFuncName)
+        : Env(Env), FunctionRef(LUA_REFNIL)
     {
         if (!GlobalFuncName)
         {
@@ -155,6 +165,7 @@ namespace UnLua
         }
 
         // find global function and create a reference for the function
+        const auto L = Env->GetMainState();
         int32 Type = lua_getglobal(L, GlobalFuncName);
         if (Type == LUA_TFUNCTION)
         {
@@ -167,8 +178,8 @@ namespace UnLua
         }
     }
 
-    FLuaFunction::FLuaFunction(lua_State* L, const char* GlobalTableName, const char* FuncName)
-        : L(L), FunctionRef(LUA_REFNIL)
+    FLuaFunction::FLuaFunction(FLuaEnv* Env, const char *GlobalTableName, const char *FuncName)
+        : Env(Env), FunctionRef(LUA_REFNIL)
     {
         if (!GlobalTableName || !FuncName)
         {
@@ -176,6 +187,7 @@ namespace UnLua
         }
 
         // find a function in a global table and create a reference for the function
+        const auto L = Env->GetMainState();
         int32 Type = lua_getglobal(L, GlobalTableName);
         if (Type == LUA_TTABLE)
         {
@@ -198,10 +210,11 @@ namespace UnLua
         }
     }
 
-    FLuaFunction::FLuaFunction(lua_State* L, FLuaTable Table, const char* FuncName)
-        : L(L), FunctionRef(LUA_REFNIL)
+    FLuaFunction::FLuaFunction(FLuaEnv* Env, FLuaTable Table, const char *FuncName)
+        : Env(Env), FunctionRef(LUA_REFNIL)
     {
         // find a function in a table and create a reference for the function
+        const auto L = Env->GetMainState();
         lua_pushstring(L, FuncName);
         int32 Type = lua_gettable(L, Table.GetIndex());
         if (Type == LUA_TFUNCTION)
@@ -215,36 +228,17 @@ namespace UnLua
         }
     }
 
-    FLuaFunction::FLuaFunction(lua_State* L, FLuaValue Value)
-        : L(L), FunctionRef(LUA_REFNIL)
+    FLuaFunction::FLuaFunction(FLuaEnv* Env, FLuaValue Value)
+        : Env(Env), FunctionRef(LUA_REFNIL)
     {
         // create a reference for the Generic Lua value if it's a function
         int32 Type = Value.GetType();
         if (Type == LUA_TFUNCTION)
         {
+            const auto L = Env->GetMainState();
             lua_pushvalue(L, Value.GetIndex());
             FunctionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         }
-    }
-
-    FLuaFunction::FLuaFunction(FLuaEnv* Env, const char* GlobalFuncName)
-        : FLuaFunction(Env->GetMainState(), GlobalFuncName)
-    {
-    }
-
-    FLuaFunction::FLuaFunction(FLuaEnv* Env, const char* GlobalTableName, const char* FuncName)
-        : FLuaFunction(Env->GetMainState(), GlobalTableName, FuncName)
-    {
-    }
-
-    FLuaFunction::FLuaFunction(FLuaEnv* Env, FLuaTable Table, const char* FuncName)
-        : FLuaFunction(Env->GetMainState(), Table, FuncName)
-    {
-    }
-
-    FLuaFunction::FLuaFunction(FLuaEnv* Env, FLuaValue Value)
-        : FLuaFunction(Env->GetMainState(), Value)
-    {
     }
 
     FLuaFunction::~FLuaFunction()
@@ -252,31 +246,30 @@ namespace UnLua
         // releases reference for the function
         if (FunctionRef != LUA_REFNIL)
         {
+            const auto L = Env->GetMainState();
             luaL_unref(L, LUA_REGISTRYINDEX, FunctionRef);
         }
     }
 
-    FLuaRetValues::FLuaRetValues(lua_State* L, int32 NumResults)
-        : L(L), bValid(NumResults > -1)
+    /**
+     * Lua function return values
+     */
+    FLuaRetValues::FLuaRetValues(FLuaEnv* Env, int32 NumResults)
+        : Env(Env), bValid(NumResults > -1)
     {
         if (NumResults > 0)
         {
             Values.Reserve(NumResults);
             for (int32 i = 0; i < NumResults; ++i)
             {
-                Values.Add(FLuaValue(L, i - NumResults));
+                Values.Add(FLuaValue(Env, i - NumResults));
             }
         }
     }
 
-    FLuaRetValues::FLuaRetValues(FLuaEnv* Env, int32 NumResults)
-        : L(Env->GetMainState()), bValid(NumResults > -1)
-    {
-    }
-
     // move constructor, and disable copy constructor
-    FLuaRetValues::FLuaRetValues(FLuaRetValues&& Src)
-        : L(Src.L), Values(MoveTemp(Src.Values)), bValid(Src.bValid)
+    FLuaRetValues::FLuaRetValues(FLuaRetValues &&Src)
+        : Env(Src.Env), Values(MoveTemp(Src.Values)), bValid(Src.bValid)
     {
         check(true);
     }
@@ -290,6 +283,7 @@ namespace UnLua
     {
         if (Values.Num() > 0)
         {
+            const auto L = Env->GetMainState();
             lua_pop(L, Values.Num());
             Values.Empty();
         }

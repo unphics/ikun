@@ -43,7 +43,7 @@ struct FUnLuaTest_Issue303 : FUnLuaTestBase
 
         lua_getglobal(L, "Result");
         const auto Result = lua_tostring(L, -1);
-        RUNNER_TEST_EQUAL(Result, FString("abc"));
+        RUNNER_TEST_EQUAL(Result, "abc");
 
         return true;
     }

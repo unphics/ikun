@@ -99,7 +99,6 @@ bool FUnLuaTestBase::SetUp()
 
 void FUnLuaTestBase::TearDown()
 {
-    GameInstance->Shutdown();
     if (InstantTest())
     {
         const auto World = GetWorld();

@@ -16,11 +16,6 @@
 
 #include "CoreUObject.h"
 
-namespace UnLua
-{
-    class FLuaEnv;
-}
-
 class FPropertyDesc;
 class FFunctionDesc;
 class FFieldDesc;
@@ -31,7 +26,7 @@ class FFieldDesc;
 class FClassDesc
 {
 public:
-    FClassDesc(UnLua::FLuaEnv *Env, UStruct *InStruct, const FString &InName);
+    FClassDesc(UStruct *InStruct, const FString &InName);
 
     FORCEINLINE bool IsValid() const { return true; }
 
@@ -103,7 +98,6 @@ private:
     TArray<TSharedPtr<FPropertyDesc>> Properties;
     TArray<TSharedPtr<FFunctionDesc>> Functions;
     TArray<FClassDesc*> SuperClasses;
-    UnLua::FLuaEnv* Env;
 
     struct FFunctionCollection *FunctionCollection;
 };

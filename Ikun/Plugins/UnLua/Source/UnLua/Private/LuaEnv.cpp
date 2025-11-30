@@ -1,6 +1,6 @@
 ﻿// Tencent is pleased to support the open source community by making UnLua available.
 // 
-// Copyright (C) 2019 Tencent. All rights reserved.
+// Copyright (C) 2019 THL A29 Limited, a Tencent company. All rights reserved.
 //
 // Licensed under the MIT License (the "License"); 
 // you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -29,29 +29,19 @@
 #include "UnLuaLegacy.h"
 #include "UnLuaLib.h"
 #include "UnLuaSettings.h"
-
-// Protect TString from UE/Lua naming conflict
-#ifdef TString
-#pragma push_macro("TString")
-#undef TString
-#define UNLUA_LSTATE_TSTRING_PUSHED
-#endif
-
+#if USING_LUAJIT
+#include "lj_state.h"
+#else
 #include "lstate.h"
-
-#ifdef UNLUA_LSTATE_TSTRING_PUSHED
-#pragma pop_macro("TString")
-#undef UNLUA_LSTATE_TSTRING_PUSHED
 #endif
 
 namespace UnLua
 {
-    // EInternalObjectFlags::AsyncLoading was removed in UE 5.6, use Async instead
-    constexpr EInternalObjectFlags AsyncObjectFlags = EInternalObjectFlags::Async;
+    constexpr EInternalObjectFlags AsyncObjectFlags = EInternalObjectFlags::AsyncLoading | EInternalObjectFlags::Async;
 
     TMap<lua_State*, FLuaEnv*> FLuaEnv::AllEnvs;
     FLuaEnv::FOnCreated FLuaEnv::OnCreated;
-    FLuaEnv::FOnDestroyed FLuaEnv::OnDestroyed;
+    FLuaEnv::FOnCreated FLuaEnv::OnDestroyed;
 
 #if ENABLE_UNREAL_INSIGHTS && CPUPROFILERTRACE_ENABLED
     void Hook(lua_State* L, lua_Debug* ar)
@@ -105,6 +95,7 @@ namespace UnLua
         L = lua_newstate(GetLuaAllocator(), nullptr);
 #endif
 
+        check(L);
         AllEnvs.Add(L, this);
 
         luaL_openlibs(L);
@@ -117,15 +108,14 @@ namespace UnLua
 
         ObjectRegistry = new FObjectRegistry(this);
         ClassRegistry = new FClassRegistry(this);
-        ClassRegistry->Initialize();
+        ClassRegistry->Register("UObject");
+        ClassRegistry->Register("UClass");
 
         FunctionRegistry = new FFunctionRegistry(this);
         DelegateRegistry = new FDelegateRegistry(this);
         ContainerRegistry = new FContainerRegistry(this);
         PropertyRegistry = new FPropertyRegistry(this);
         EnumRegistry = new FEnumRegistry(this);
-        EnumRegistry->Initialize();
-
         DanglingCheck = new FDanglingCheck(this);
         DeadLoopCheck = new FDeadLoopCheck(this);
 
@@ -226,13 +216,22 @@ namespace UnLua
         if (!L)
             return nullptr;
 
+#if USING_LUAJIT
+        const auto MainThread = mainthread(G(L));
+#else
         const auto MainThread = G(L)->mainthread;
+#endif
         return AllEnvs.FindRef(MainThread);
     }
 
     FLuaEnv& FLuaEnv::FindEnvChecked(const lua_State* L)
     {
-        return *AllEnvs.FindChecked(G(L)->mainthread);
+#if USING_LUAJIT
+        const auto MainThread = mainthread(G(L));
+#else
+        const auto MainThread = G(L)->mainthread;
+#endif
+        return *AllEnvs.FindChecked(MainThread);
     }
 
     void FLuaEnv::Start(const TMap<FString, UObject*>& Args)
@@ -284,8 +283,6 @@ namespace UnLua
         if (Manager)
             Manager->NotifyUObjectDeleted(Object);
         ObjectRegistry->NotifyUObjectDeleted(Object);
-        ClassRegistry->NotifyUObjectDeleted(Object);
-        EnumRegistry->NotifyUObjectDeleted(Object);
 
         if (CandidateInputComponents.Num() <= 0)
             return;
@@ -619,10 +616,9 @@ namespace UnLua
 
         auto LoadIt = [&]
         {
-            if (Env.LoadString(L, Data, FullPath))
+            if (Env.LoadString(L, Data, TCHAR_TO_UTF8(*FullPath)))
                 return 1;
-            const auto Msg = FString::Printf(TEXT("file loading from file system error.\nfull path:%s"), *FullPath);
-            return luaL_error(L, TCHAR_TO_UTF8(*Msg));
+            return luaL_error(L, "file loading from file system error");
         };
 
         const auto PackagePath = UnLuaLib::GetPackagePath(L);
@@ -658,11 +654,16 @@ namespace UnLua
     void FLuaEnv::AddSearcher(lua_CFunction Searcher, int Index) const
     {
         lua_getglobal(L, "package");
+#if LUA_VERSION_NUM == 501
+        lua_getfield(L, -1, "loaders");
+#else
         lua_getfield(L, -1, "searchers");
+#endif
         lua_remove(L, -2);
         if (!lua_istable(L, -1))
         {
             UE_LOG(LogUnLua, Warning, TEXT("Invalid package.serachers!"));
+            lua_pop(L, 1);
             return;
         }
 

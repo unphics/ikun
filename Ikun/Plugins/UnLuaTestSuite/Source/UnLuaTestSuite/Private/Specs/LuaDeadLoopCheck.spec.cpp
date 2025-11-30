@@ -19,8 +19,9 @@
 #include "Misc/AutomationTest.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
+#if !USING_LUAJIT
 
-BEGIN_DEFINE_SPEC(FLuaDeadLoopCheckSpec, "UnLua.Settings", EAutomationTestFlags::ProductFilter | ApplicationContextMask)
+BEGIN_DEFINE_SPEC(FLuaDeadLoopCheckSpec, "UnLua.Settings", EAutomationTestFlags::ProductFilter | EAutomationTestFlags::ApplicationContextMask)
 
     virtual bool SuppressLogWarnings() override
     {
@@ -61,4 +62,5 @@ void FLuaDeadLoopCheckSpec::Define()
     });
 }
 
+#endif
 #endif

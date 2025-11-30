@@ -28,7 +28,6 @@
 #include "DefaultParamCollection.h"
 #include "GameDelegates.h"
 #include "LuaEnvLocator.h"
-#include "LuaOverrides.h"
 #include "UnLuaDebugBase.h"
 #include "UnLuaInterface.h"
 #include "UnLuaSettings.h"
@@ -136,7 +135,14 @@ namespace UnLua
                 EnvLocator->Reset();
                 EnvLocator->RemoveFromRoot();
                 EnvLocator = nullptr;
-                FLuaOverrides::Get().RestoreAll();
+                FClassRegistry::Cleanup();
+                FEnumRegistry::Cleanup();
+
+                for (const auto Class : TObjectRange<UClass>())
+                {
+                    if (Class->ImplementsInterface(UUnLuaInterface::StaticClass()))
+                        ULuaFunction::RestoreOverrides(Class);
+                }
             }
 
             bIsActive = bActive;
@@ -174,6 +180,13 @@ namespace UnLua
         virtual void NotifyUObjectDeleted(const UObjectBase* Object, int32 Index) override
         {
             // UE_LOG(LogTemp, Log, TEXT("NotifyUObjectDeleted : %p"), Object);
+            if (!bIsActive)
+                return;
+
+            if (FClassRegistry::StaticUnregister(Object))
+                return;
+
+            FEnumRegistry::StaticUnregister(Object);
         }
 
         virtual void OnUObjectArrayShutdown() override

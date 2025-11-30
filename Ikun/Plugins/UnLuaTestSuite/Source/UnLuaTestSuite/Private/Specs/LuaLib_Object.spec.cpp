@@ -20,7 +20,7 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-BEGIN_DEFINE_SPEC(FUnLuaLibObjectSpec, "UnLua.API.UObject", EAutomationTestFlags::ProductFilter | ApplicationContextMask)
+BEGIN_DEFINE_SPEC(FUnLuaLibObjectSpec, "UnLua.API.UObject", EAutomationTestFlags::ProductFilter | EAutomationTestFlags::ApplicationContextMask)
     lua_State* L;
     UWorld* World;
 END_DEFINE_SPEC(FUnLuaLibObjectSpec)
@@ -90,7 +90,7 @@ void FUnLuaLibObjectSpec::Define()
             return Actor:GetName()
             )";
             UnLua::RunChunk(L, Chunk);
-            TEST_EQUAL(lua_tostring(L, -1), FString("Test"));
+            TEST_EQUAL(lua_tostring(L, -1), "Test");
         });
     });
 

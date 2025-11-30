@@ -1,6 +1,6 @@
 // Tencent is pleased to support the open source community by making UnLua available.
 // 
-// Copyright (C) 2019 Tencent. All rights reserved.
+// Copyright (C) 2019 THL A29 Limited, a Tencent company. All rights reserved.
 //
 // Licensed under the MIT License (the "License"); 
 // you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -174,32 +174,19 @@ namespace UnLua
 
     FORCEINLINE int32 Push(lua_State* L, FText& V, bool bCopy = false)
     {
-#if UNLUA_ENABLE_FTEXT
-        const auto Userdata = NewTypedUserdata(L, FText);
-        new(Userdata) FText(V);
-#else
         lua_pushstring(L, TCHAR_TO_UTF8(*V.ToString()));
-#endif
         return 1;
     }
 
     FORCEINLINE int32 Push(lua_State* L, const FText& V, bool bCopy = false)
     {
-#if UNLUA_ENABLE_FTEXT
-        const auto Userdata = NewTypedUserdata(L, FText);
-#else
         lua_pushstring(L, TCHAR_TO_UTF8(*V.ToString()));
-#endif
         return 1;
     }
 
     FORCEINLINE int32 Push(lua_State* L, FText&& V, bool bCopy = false)
     {
-#if UNLUA_ENABLE_FTEXT
-        const auto Userdata = NewTypedUserdata(L, FText);
-#else
         lua_pushstring(L, TCHAR_TO_UTF8(*V.ToString()));
-#endif
         return 1;
     }
 
@@ -449,12 +436,10 @@ namespace UnLua
         return lua_isstring(L, Index) != 0;
     }
 
-#if !UNLUA_ENABLE_FTEXT
     FORCEINLINE bool IsType(lua_State* L, int32 Index, TType<FText>)
     {
         return lua_isstring(L, Index) != 0;
     }
-#endif
 
     FORCEINLINE bool IsType(lua_State* L, int32 Index, TType<UObject*>)
     {
@@ -585,12 +570,10 @@ namespace UnLua
         return FName(lua_tostring(L, Index));
     }
 
-#if !UNLUA_ENABLE_FTEXT
     FORCEINLINE FText Get(lua_State* L, int32 Index, TType<FText>)
     {
         return FText::FromString(UTF8_TO_TCHAR(lua_tostring(L, Index)));
     }
-#endif
 
     FORCEINLINE UObject* Get(lua_State* L, int32 Index, TType<UObject*>)
     {
@@ -610,45 +593,6 @@ namespace UnLua
     FORCEINLINE const UClass* Get(lua_State* L, int32 Index, TType<const UClass*>)
     {
         return Cast<UClass>(UnLua::GetUObject(L, Index));
-    }
-
-    /**
-     * Push arguments for Lua function
-     */
-    template <bool bCopy> FORCEINLINE int32 PushArgs(lua_State* L)
-    {
-        return 0;
-    }
-
-    template <bool bCopy, typename T1, typename... T2>
-    FORCEINLINE int32 PushArgs(lua_State* L, T1&& V1, T2&&... V2)
-    {
-        const int32 Ret1 = UnLua::Push(L, Forward<T1>(V1), bCopy);
-        const int32 Ret2 = PushArgs<bCopy>(L, Forward<T2>(V2)...);
-        return Ret1 + Ret2;
-    }
-
-    /**
-     * Internal helper to call a Lua function. Used internally only. Please do not use!
-     */
-    template <typename... T>
-    FORCEINLINE_DEBUGGABLE FLuaRetValues CallFunctionInternal(lua_State* L, T&&... Args)
-    {
-        // make sure the function is on the top of the stack, and the message handler is below the function
-        int32 MessageHandlerIdx = lua_gettop(L) - 1;
-        check(MessageHandlerIdx > 0);
-        int32 NumArgs = PushArgs<false>(L, Forward<T>(Args)...);
-        int32 Code = lua_pcall(L, NumArgs, LUA_MULTRET, MessageHandlerIdx);
-        int32 TopIdx = lua_gettop(L);
-        if (Code == LUA_OK)
-        {
-            int32 NumResults = TopIdx - MessageHandlerIdx;
-            lua_remove(L, MessageHandlerIdx);
-            FLuaRetValues Result(L, NumResults);
-            return Result;    // MoveTemp(Result);
-        }
-        lua_pop(L, TopIdx - MessageHandlerIdx + 1);
-        return FLuaRetValues(L, INDEX_NONE);
     }
 
     /**
@@ -674,10 +618,10 @@ namespace UnLua
         {
             UE_LOG(LogUnLua, Warning, TEXT("Global function %s doesn't exist!"), UTF8_TO_TCHAR(FuncName));
             lua_pop(L, 2);
-            return FLuaRetValues(L, INDEX_NONE);
+            return FLuaRetValues(Env, INDEX_NONE);
         }
 
-        return CallFunctionInternal(L, Forward<T>(Args)...);
+        return CallFunctionInternal(Env, Forward<T>(Args)...);
     }
 
     /**
@@ -710,7 +654,7 @@ namespace UnLua
         }
         lua_remove(L, -2);
 
-        return CallFunctionInternal(L, Forward<T>(Args)...);
+        return CallFunctionInternal(Env, Forward<T>(Args)...);
     }
 
     /**
@@ -732,41 +676,83 @@ namespace UnLua
         {
             UE_LOG(LogUnLua, Warning, TEXT("Function %s doesn't exist!"), UTF8_TO_TCHAR(FuncName));
             lua_pop(L, 2);
-            return FLuaRetValues(L, INDEX_NONE);
+            return FLuaRetValues(Env, INDEX_NONE);
         }
 
-        return CallFunctionInternal(L, Forward<T>(Args)...);
+        return CallFunctionInternal(Env, Forward<T>(Args)...);
     }
 
     template <typename T>
     FORCEINLINE T FLuaValue::Value() const
     {
-        return UnLua::Get(L, Index, TType<T>());
+        return UnLua::Get(Env->GetMainState(), Index, TType<T>());
     }
 
     template <typename T>
     FORCEINLINE FLuaValue::operator T() const
     {
-        return UnLua::Get(L, Index, TType<T>());
+        return UnLua::Get(Env->GetMainState(), Index, TType<T>());
     }
 
     template <typename T, typename Allocator>
     FORCEINLINE FLuaValue::operator TArray<T, Allocator>& () const
     {
-        return UnLua::Get(L, Index, TType<TArray<T, Allocator>&>());
+        return UnLua::Get(Env->GetMainState(), Index, TType<TArray<T, Allocator>&>());
     }
 
     template <typename T, typename KeyFunc, typename Allocator>
     FORCEINLINE FLuaValue::operator TSet<T, KeyFunc, Allocator>& () const
     {
-        return UnLua::Get(L, Index, TType<TSet<T, KeyFunc, Allocator>&>());
+        return UnLua::Get(Env->GetMainState(), Index, TType<TSet<T, KeyFunc, Allocator>&>());
     }
 
     template <typename KeyType, typename ValueType, typename Allocator, typename KeyFunc>
     FORCEINLINE FLuaValue::operator TMap<KeyType, ValueType, Allocator, KeyFunc>& () const
     {
-        return UnLua::Get(L, Index, TType<TMap<KeyType, ValueType, Allocator, KeyFunc>&>());
+        return UnLua::Get(Env->GetMainState(), Index, TType<TMap<KeyType, ValueType, Allocator, KeyFunc>&>());
     }
+
+    /**
+     * Push arguments for Lua function
+     */
+    template <bool bCopy> FORCEINLINE int32 PushArgs(lua_State* L)
+    {
+        return 0;
+    }
+
+    template <bool bCopy, typename T1, typename... T2>
+    FORCEINLINE int32 PushArgs(lua_State* L, T1&& V1, T2&&... V2)
+    {
+        const int32 Ret1 = UnLua::Push(L, Forward<T1>(V1), bCopy);
+        const int32 Ret2 = PushArgs<bCopy>(L, Forward<T2>(V2)...);
+        return Ret1 + Ret2;
+    }
+
+
+    /**
+     * Internal helper to call a Lua function. Used internally only. Please do not use!
+     */
+    template <typename... T>
+    FORCEINLINE_DEBUGGABLE FLuaRetValues CallFunctionInternal(FLuaEnv* Env, T&&... Args)
+    {
+        // make sure the function is on the top of the stack, and the message handler is below the function
+        const auto L = Env->GetMainState();
+        int32 MessageHandlerIdx = lua_gettop(L) - 1;
+        check(MessageHandlerIdx > 0);
+        int32 NumArgs = PushArgs<false>(L, Forward<T>(Args)...);
+        int32 Code = lua_pcall(L, NumArgs, LUA_MULTRET, MessageHandlerIdx);
+        int32 TopIdx = lua_gettop(L);
+        if (Code == LUA_OK)
+        {
+            int32 NumResults = TopIdx - MessageHandlerIdx;
+            lua_remove(L, MessageHandlerIdx);
+            FLuaRetValues Result(Env, NumResults);
+            return Result;    // MoveTemp(Result);
+        }
+        lua_pop(L, TopIdx - MessageHandlerIdx + 1);
+        return FLuaRetValues(Env, INDEX_NONE);
+    }
+
 
     /**
      * Call function in Lua table
@@ -776,9 +762,10 @@ namespace UnLua
     {
         if (!FuncName)
         {
-            return FLuaRetValues(L, INDEX_NONE);
+            return FLuaRetValues(Env, INDEX_NONE);
         }
 
+        lua_State* L = Env->GetMainState();
         lua_pushcfunction(L, ReportLuaCallError);
 
         lua_pushstring(L, FuncName);
@@ -787,10 +774,10 @@ namespace UnLua
         {
             UE_LOG(LogUnLua, Warning, TEXT("Function %s of table doesn't exist!"), UTF8_TO_TCHAR(FuncName));
             lua_pop(L, 2);
-            return FLuaRetValues(L, INDEX_NONE);
+            return FLuaRetValues(Env, INDEX_NONE);
         }
 
-        return CallFunctionInternal(L, Forward<T>(Args)...);
+        return CallFunctionInternal(Env, Forward<T>(Args)...);
     }
 
 
@@ -802,12 +789,13 @@ namespace UnLua
     {
         if (!IsValid())
         {
-            return FLuaRetValues(L, INDEX_NONE);
+            return FLuaRetValues(Env, INDEX_NONE);
         }
 
+        lua_State* L = Env->GetMainState();
         lua_pushcfunction(L, ReportLuaCallError);
         lua_rawgeti(L, LUA_REGISTRYINDEX, FunctionRef);
-        return CallFunctionInternal(L, Forward<T>(Args)...);
+        return CallFunctionInternal(Env, Forward<T>(Args)...);
     }
 
 
@@ -831,7 +819,7 @@ namespace UnLua
         virtual bool IsTriviallyDestructible() const override
         {
             static_assert(TIsDestructible<T>::Value, "type must be destructible!");
-            return std::is_trivially_destructible<T>::value;
+            return TIsTriviallyDestructible<T>::Value;
         }
 
         virtual int32 GetSize() const override { return sizeof(T); }
@@ -853,18 +841,19 @@ namespace UnLua
         virtual void Destruct(void* Dest) const override
         {
             static_assert(TIsDestructible<T>::Value, "type must be destructible!");
-            DestructInternal((T*)Dest, typename std::conditional<std::is_trivially_destructible<T>::value, FTrue, FFalse>::type());
+            DestructInternal((T*)Dest, typename TChooseClass<TIsTriviallyDestructible<T>::Value, FTrue, FFalse>::Result());
         }
 
         virtual void Copy(void* Dest, const void* Src) const override
         {
             static_assert(TIsCopyConstructible<T>::Value, "type must be copy constructible!");
-            CopyInternal((T*)Dest, (const T*)Src, typename std::conditional<std::is_trivially_copy_constructible<T>::value, FTrue, FFalse>::type());
+            CopyInternal((T*)Dest, (const T*)Src, typename TChooseClass<TIsTriviallyCopyConstructible<T>::Value, FTrue, FFalse>::Result());
         }
 
         virtual bool Identical(const void* A, const void* B) const override
         {
-            return IdenticalInternal((const T*)A, (const T*)B, typename std::conditional<THasEqualityOperator<T>::Value, FTrue, FFalse>::type());
+            static_assert(THasEqualityOperator<T>::Value, "type must support operator==()!");
+            return IdenticalInternal((const T*)A, (const T*)B, typename TChooseClass<THasEqualityOperator<T>::Value, FTrue, FFalse>::Result());
         }
 
         virtual FString GetName() const override { return FString(TType<typename TDecay<T>::Type>::GetName()); }
@@ -890,7 +879,7 @@ namespace UnLua
         {
             static_assert(TIsCopyConstructible<T>::Value, "type must be copy constructible!");
             T V = UnLua::Get(L, IndexInStack, TType<T>());
-            CopyInternal((T*)ValuePtr, &V, typename std::conditional<std::is_trivially_copy_constructible<T>::value, FTrue, FFalse>::type());
+            CopyInternal((T*)ValuePtr, &V, typename TChooseClass<TIsTriviallyCopyConstructible<T>::Value, FTrue, FFalse>::Result());
             return false;
         }
 
@@ -934,7 +923,7 @@ namespace UnLua
 
         virtual bool WriteValue_InContainer(lua_State* L, void* ContainerPtr, int32 IndexInStack, bool bCreateCopy = true) const override
         {
-            return WriteValue(L, ContainerPtr, IndexInStack, bCreateCopy);
+            return WriteValue(L, ContainerPtr, IndexInStack);
         }
 
         virtual bool WriteValue(lua_State* L, void* ValuePtr, int32 IndexInStack, bool bCreateCopy) const override
