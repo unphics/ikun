@@ -7,8 +7,8 @@
 ---
 
 do
-    log = ikf.log
-    class = ikf.class
+    log = require('Core/Log/log') ---@type log
+    class = require('Core/Class/class')
     math_util = require('Core/Util/math_util') ---@type math_util
     table_util = require('Core/Util/table_util') ---@type table_util
     str_util = require('Core/Util/str_util') ---@type str_util
@@ -38,7 +38,7 @@ do
     require('Content/Quest/QuestMgr')
     require("Content/Area/Cosmos")
 
-    gameinit = ikf.init ---@type gameinit
+    gameinit = require('Core/Init/gameinit') ---@type gameinit
 
     ConfigMgr = class.new 'ConfigMgr'() ---@as ConfigMgr
     TimeMgr = class.new 'TimeMgr'() ---@as TimeMgr
