@@ -31,10 +31,14 @@ public class Lua : ModuleRules
     public Lua(ReadOnlyTargetRules Target) : base(Target)
     {
         Type = ModuleType.External;
+        PCHUsage = ModuleRules.PCHUsageMode.NoPCHs;
+        //bOverrideBuildEnvironment = true;
         bEnableUndefinedIdentifierWarnings = false;
         ShadowVariableWarningLevel = WarningLevel.Off;
+        bUseUnity = false;
+        PublicDefinitions.Add("_CRT_SECURE_NO_WARNINGS");
 
-        m_LuaVersion = GetLuaVersion();
+            m_LuaVersion = GetLuaVersion();
         m_UsingLuaJit = m_LuaVersion.ToLower().Contains("jit");
         m_Config = GetConfigName();
         m_LibName = GetLibraryName();

@@ -25,14 +25,7 @@ public class UnLua : ModuleRules
 {
     public UnLua(ReadOnlyTargetRules Target) : base(Target)
     {
-        // 针对 UE 5.2 及以上版本 (你用的是 5.6，必须用这个)
-        if (Target.Version.MajorVersion > 5 || (Target.Version.MajorVersion == 5 && Target.Version.MinorVersion >= 2))
-        {
-            bEnableUndefinedIdentifierWarnings = true;
-        } else {
-            // 针对旧版本 UE
-            bEnableUndefinedIdentifierWarnings = false;
-        }
+        bEnableUndefinedIdentifierWarnings = false;
 
         bEnforceIWYU = false;
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
