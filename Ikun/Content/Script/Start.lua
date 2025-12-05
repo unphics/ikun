@@ -6,26 +6,27 @@
 ---
 
 _G.ffi = require ("ffi") ---@type ffilib
+_G.log = require('Core/Log/log') ---@type log
 
-print("========================================")
-print("[Check] Lua Version Check:")
-print("Global _VERSION: " .. tostring(_VERSION))
+log.info("========================================")
+log.info("[Check] Lua Version Check:")
+log.info("Global _VERSION: " .. tostring(_VERSION))
 
-if jit then
-    print("✅ JIT Enabled!")
-    print("   - Version: " .. tostring(jit.version))
-    print("   - Arch:    " .. tostring(jit.arch))
-    print("   - OS:      " .. tostring(jit.os))
+if _G.jit then
+    log.info("✅ JIT Enabled!")
+    log.info("   - Version: " .. tostring(_G.jit.version))
+    log.info("   - Arch:    " .. tostring(_G.jit.arch))
+    log.info("   - OS:      " .. tostring(_G.jit.os))
     
     -- 检查 JIT 编译器是否真的在工作
-    if jit.status() then
-        print("   - Status:  Running (Optimizing code)")
+    if _G.jit.status() then
+        log.info("   - Status:  Running (Optimizing code)")
     else
-        print("   - Status:  OFF (Interpreter mode)")
+        log.info("   - Status:  OFF (Interpreter mode)")
     end
 else
-    print("❌ No JIT detected! You are running standard Lua.")
+    log.info("❌ No JIT detected! You are running standard Lua.")
 end
-print("========================================")
+log.info("========================================")
 
 require('SharedPCH')

@@ -7,7 +7,6 @@
 ---
 
 do
-    log = require('Core/Log/log') ---@type log
     class = require('Core/Class/class')
     math_util = require('Core/Util/math_util') ---@type math_util
     table_util = require('Core/Util/table_util') ---@type table_util
