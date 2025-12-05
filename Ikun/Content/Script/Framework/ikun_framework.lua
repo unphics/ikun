@@ -19,9 +19,9 @@ ikf = {}
 ---@param setting ikf_setting
 ikf.init_core = function(setting)
     ikf.setting = setting
-    ikf.math_util = require( setting.ikf_path..'/util/math_util')
-    ikf.table_util = require(setting.ikf_path..'/util/table_util')
-    ikf.str_util = require(setting.ikf_path..'/util/str_util')
+    -- ikf.math_util = require( setting.ikf_path..'/util/math_util')
+    -- ikf.table_util = require(setting.ikf_path..'/util/table_util')
+    -- ikf.str_util = require(setting.ikf_path..'/util/str_util')
     
     ikf.log = require(setting.ikf_path..'/core/log/log')
     ikf.class = require(setting.ikf_path..'/core/class/class')

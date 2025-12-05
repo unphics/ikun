@@ -9,9 +9,9 @@
 do
     log = ikf.log
     class = ikf.class
-    math_util = ikf.math_util
-    table_util = ikf.table_util ---@type table_util
-    str_util = ikf.str_util ---@type str_util
+    math_util = require('Core/Util/math_util') ---@type math_util
+    table_util = require('Core/Util/table_util') ---@type table_util
+    str_util = require('Core/Util/str_util') ---@type str_util
     msg_bus = ikf.msg_bus ---@type msgbus
 end
 
