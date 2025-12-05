@@ -5,6 +5,7 @@
 ---@data    Fri Nov 07 2025 16:16:52 GMT+0800 (中国标准时间)
 ---
 
+require('Module/DirectoryBrowser/DirectoryBrowser')
 require('Module/GameLevel/GameLevelMgr')
 require('Module/GameSession/GameSession')
 
