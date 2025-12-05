@@ -20,38 +20,25 @@
 #include "UnLuaCompatibility.h"
 #include "UnLuaManager.generated.h"
 
-namespace UnLua
-{
+namespace UnLua {
     class FLuaEnv;
 }
 
 UCLASS()
-class UNLUA_API UUnLuaManager : public UObject
-{
+class UNLUA_API UUnLuaManager : public UObject {
     GENERATED_BODY()
-
 public:
-
     UnLua::FLuaEnv* Env;
-
     UUnLuaManager();
-
     bool Bind(UObject *Object, const TCHAR *InModuleName, int32 InitializerTableRef = LUA_NOREF);
-
     void NotifyUObjectDeleted(const UObjectBase *Object);
-
     void Cleanup();
-
     int GetBoundRef(const UClass* Class);
-
     void GetDefaultInputs();
-
     void CleanupDefaultInputs();
-
     bool ReplaceInputs(AActor *Actor, class UInputComponent *InputComponent);
-
     void OnMapLoaded(UWorld *World);
-
+    
     UFUNCTION(BlueprintCallable)
     UDynamicBlueprintBinding* GetOrAddBindingObject(UClass* Class, UClass* BindingClass);
 
@@ -63,31 +50,23 @@ public:
 
     UFUNCTION(BlueprintImplementableEvent)
     void EnhancedInputActionDigital(bool ActionValue, float ElapsedSeconds, float TriggeredSeconds);
-
     UFUNCTION(BlueprintImplementableEvent)
     void EnhancedInputActionAxis1D(float ActionValue, float ElapsedSeconds, float TriggeredSeconds);
-
     UFUNCTION(BlueprintImplementableEvent)
     void EnhancedInputActionAxis2D(const FVector2D& ActionValue, float ElapsedSeconds, float TriggeredSeconds);
-
     UFUNCTION(BlueprintImplementableEvent)
     void EnhancedInputActionAxis3D(const FVector& ActionValue, float ElapsedSeconds, float TriggeredSeconds);
     
     UFUNCTION(BlueprintImplementableEvent)
     void InputAction(FKey Key);
-
     UFUNCTION(BlueprintImplementableEvent)
     void InputAxis(float AxisValue);
-
     UFUNCTION(BlueprintImplementableEvent)
     void InputTouch(ETouchIndex::Type FingerIndex, const FVector &Location);
-
     UFUNCTION(BlueprintImplementableEvent)
     void InputVectorAxis(const FVector &AxisValue);
-
     UFUNCTION(BlueprintImplementableEvent)
     void InputGesture(float Value);
-
     UFUNCTION(BlueprintImplementableEvent)
     void TriggerAnimNotify();
 
@@ -103,8 +82,7 @@ private:
     void ReplaceVectorAxisInputs(AActor *Actor, UInputComponent *InputComponent, TSet<FName> &LuaFunctions);
     void ReplaceGestureInputs(AActor *Actor, UInputComponent *InputComponent, TSet<FName> &LuaFunctions);
 
-    struct FClassBindInfo
-    {
+    struct FClassBindInfo {
         UClass* Class;
         FString ModuleName;
         int TableRef;
