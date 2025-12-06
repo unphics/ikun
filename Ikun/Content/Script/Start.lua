@@ -28,5 +28,8 @@ else
     log.info("❌ No JIT detected! You are running standard Lua.")
 end
 log.info("========================================")
-
 require('SharedPCH')
+
+--[[
+require('Core/FFI/test')
+--]]

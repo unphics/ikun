@@ -13,7 +13,7 @@ function BP_GameInst:ReceiveInit()
     -- 此处是客户端和服务器最早启动的地方, 因此可以在这里做一些初始化全局或者静态的东西
     log.info(log.key.ueinit..' BP_GameInstanceBase:ReceiveInit'..'--------------------------------------------------------------------------')
 
-    UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 't.MaxFPS 200', nil)
+    UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 't.MaxFPS 1000', nil)
     UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 'stat FPS', nil)
 end
 
