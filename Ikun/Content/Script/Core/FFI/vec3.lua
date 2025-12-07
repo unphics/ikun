@@ -127,7 +127,9 @@ end
 ---@public
 ---@param fvec FVector
 function vec3:fromUE(fvec)
-    return vec3(fvec.X, fvec.Y, fvec.Z)
+    self.x = fvec.X
+    self.y = fvec.Y
+    self.z = fvec.Z
 end
 
 vec3 = vec3:Register()

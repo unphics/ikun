@@ -15,7 +15,16 @@ local fficlass = {}
 ---@param c_def string|nil C语言的结构体定义, 如果已经定义过, 传nil
 function fficlass.define(c_type_name, c_def)
     if c_def then
-        pcall(ffi.cdef, c_def)
+        local ok, err = pcall(ffi.cdef, c_def)
+        if not ok then
+            local err_msg = tostring(err)
+            local str = "\n============================================================================================\n"
+            str = str .. "❌ [FFI Error] Failed to define struct: " .. tostring(c_type_name) .. '\n'
+            str = str .. "Error Message: " .. err_msg .. "\n"
+            str = str .. "Context (C Code):\n" .. c_def .. "\n"
+            str = str .. "============================================================================================"
+            log.error(str)
+        end
     end
 
     local mt = {}
@@ -23,7 +32,19 @@ function fficlass.define(c_type_name, c_def)
 
     function mt:Register()
         self.Register = nil
-        return ffi.metatype(c_type_name, self)
+
+        local raw_ctor = ffi.metatype(c_type_name, self)
+
+        local class_proxy = {}
+
+        setmetatable(class_proxy, {
+            __call = function(_,...)
+                return raw_ctor(...)
+            end,
+            __index = self
+        })
+
+        return raw_ctor
     end
 
     return mt
