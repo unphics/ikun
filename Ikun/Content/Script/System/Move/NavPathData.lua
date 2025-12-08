@@ -1,38 +1,26 @@
 
 
 local fficlass = require("Core/FFI/fficlass")
-
-require('Core/FFI/vec3')
-
----@enum NavPathDataFindingState
-local NavPathDataFindingState = {
-    Init = 0,
-    Finding = 1,
-    Success = 2,
-    Failure = 3,
-}
+local vec3 = require('Core/FFI/vec3')
 
 ---@class NavPathData
 ---@field private _CurSegIdx number
 ---@field private _NavPoints vec3[]
 ---@field private _PointNum number
 ---@field private _FindingObj integer
----@field private _FindingState NavPathDataFindingState
-local NavPathData = fficlass.define('NavPathData2', [[
+local NavPathData = fficlass.define('NavPathData', [[
     typedef struct {
         int _CurSegIdx;
         vec3 _NavPoints [32];
         int _PointNum;
         void* _FindingObj;
-        int _FindingState;
-    } NavPathData2;
+    } NavPathData;
 ]])
 
 function NavPathData:Clear()
     self._CurSegIdx = 1
     self._PointNum = 0
     self._FindingObj = nil
-    self._FindingState = NavPathDataFindingState.Init
 end
 
 ---@public 生成寻路数据并保存
@@ -42,27 +30,38 @@ end
 ---@param First FVector@opt 当真实起始点不在寻路范围内而又可接受时, 加入寻路数据并作为一个寻路起始点
 ---@param FindedCallback fun(NavPathData: NavPathData, bSuccess: boolean)
 function NavPathData.GenNavPathData(Chr, Start, End, First, FindedCallback)
-    local data = NavPathData()
-    local finding = UE.UNavPathFinding.FindPathAsync(Chr, Start, End)
-    data._FindingState = NavPathDataFindingState.Finding
+    local data = NavPathData() ---@type NavPathData
+    data:FindNavPath()
+    return data
+end
 
-    if not finding or not finding:IsFindValid() then
-        data._FindingState = NavPathDataFindingState.Failure
+function NavPathData:FindNavPath(Chr, Start, End, First, FindedCallback)
+    local findingObj = UE.UNavPathFinding.FindPathAsync(Chr, Start, End) ---@type UNavPathFinding
+
+    if not findingObj or not findingObj:IsFindValid() then
+        FindedCallback(_, false)
     end
 
-    data:Clear()
+    self:Clear()
 
     if First then
-        data._NavPoints[0]:fromUE(First)
-        data._PointNum = data._PointNum + 1
+        self._NavPoints[0]:fromUE(First)
+        self._PointNum = self._PointNum + 1
     end
 
-    finding.OnPathFindFinishedEvent:Add(Chr, function(_, PathPoints)
-        data:_OnPathFindFinished(PathPoints)
-        FindedCallback(data, data._FindingState == NavPathDataFindingState.Success)
+    findingObj.OnPathFindFinishedEvent:Add(Chr, function(_, PathPoints)
+        local bSuccess = PathPoints:Length() > 1.5
+        self:_OnPathFindFinished(PathPoints)
+        FindedCallback(self, bSuccess)
     end)
-    data._FindingObj = ffi.cast('void*', finding)
-    return data
+    self._FindingObj = ffi.cast('void*', findingObj)
+end
+
+function NavPathData:CancelFind()
+    log.debug('NavPathData:CancelFind()')
+    if self._FindingObj ~= nil then
+        self._FindingObj.CancelFind(self._FindingObj)
+    end
 end
 
 ---@public 推进到下一段
@@ -85,10 +84,6 @@ end
 ---@private
 ---@param PathPoints TArray<FVector>
 function NavPathData:_OnPathFindFinished(PathPoints)
-    if PathPoints:Length() < 2 then
-        self._FindingState = NavPathDataFindingState.Failure
-    end
-    self._FindingState = NavPathDataFindingState.Success
     for i = 1, PathPoints:Length() do
         self._NavPoints[self._PointNum]:fromUE(PathPoints:Get(i))
         self._PointNum = self._PointNum + 1
