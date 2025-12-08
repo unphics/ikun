@@ -39,6 +39,7 @@
 **/Intermediate/
 /ikun/DerivedDataCache/
 /ikun/Saved/
+/ikun/Build/
 
 ## Build Toolchain Config
 !ikun/Save/UnrealBuildTool/BuildConfiguration.xml
