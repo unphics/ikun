@@ -1,5 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+/**
+ * -----------------------------------------------------------------------------
+ *  File        : NavPathData.cpp
+ *  Author      : zhengyanshuai
+ *  Date        : Wed Dec 10 2025 22:54:33 GMT+0800 (中国标准时间)
+ *  Description : 
+ *  License     : MIT License
+ * -----------------------------------------------------------------------------
+ *  Copyright (c) 2025 zhengyanshuai
+ * -----------------------------------------------------------------------------
+ */
 
 #include "NavPathData.h"
 
@@ -39,28 +48,46 @@ void UNavPathData::ClearPathData() {
 	this->_PathQueryId = -1;
 }
 
-bool UNavPathData::IsPathValid() {
+void UNavPathData::AdvanceSeg() {
+	this->_CurSegIdx++;
+}
+
+bool UNavPathData::IsPathValid() const {
 	return this->_NavPoints.IsValidIndex(this->_CurSegIdx);
 }
 
-bool UNavPathData::IsPathFinsihed() {
+bool UNavPathData::IsPathFinsihed() const {
 	int num = this->_NavPoints.Num();
 	return this->_CurSegIdx >= num;
 }
 
-FVector UNavPathData::GetCurSegEnd() {
+FVector UNavPathData::GetCurSegEnd() const {
 	if (this->_NavPoints.IsValidIndex(this->_CurSegIdx)) {
 		return this->_NavPoints[this->_CurSegIdx];
 	}
 	return FVector::ZeroVector;
 }
 
-void UNavPathData::AdvanceSeg() {
-	this->_CurSegIdx++;
+bool UNavPathData::IsFinding() const {
+	return this->_PathQueryId >= 0;
+}
+
+void UNavPathData::CancelFinding() {
+	UNavigationSystemV1* v1 = this->_NavSys.Get();
+	if (v1 && UKismetSystemLibrary::IsValid(v1) && this->_PathQueryId >= 0) {
+		v1->AbortAsyncFindPathRequest(this->_PathQueryId);
+	}
+}
+
+void UNavPathData::BeginDestroy() {
+	UObject::BeginDestroy();
+	if (this->IsFinding()) {
+		this->CancelFinding();
+	}
 }
 
 void UNavPathData::OnPathFound(uint32 InPathId, ENavigationQueryResult::Type InResult,
-	TSharedPtr<FNavigationPath> InNavPath) {
+                               TSharedPtr<FNavigationPath> InNavPath) {
 	if (this->_PathQueryId != InPathId) {
 		return;
 	}

@@ -1,4 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/**
+ * -----------------------------------------------------------------------------
+ *  File        : NavPathData.h
+ *  Author      : zhengyanshuai
+ *  Date        : Wed Dec 10 2025 22:54:33 GMT+0800 (中国标准时间)
+ *  Description : 
+ *  License     : MIT License
+ * -----------------------------------------------------------------------------
+ *  Copyright (c) 2025 zhengyanshuai
+ * -----------------------------------------------------------------------------
+ */
 
 #pragma once
 
@@ -23,13 +33,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ClearPathData();
 	UFUNCTION(BlueprintCallable)
-	bool IsPathValid();
+	void AdvanceSeg();
+	UFUNCTION(BlueprintPure)
+	bool IsPathValid() const;
+	UFUNCTION(BlueprintPure)
+	bool IsPathFinsihed() const;
+	UFUNCTION(BlueprintPure)
+	FVector GetCurSegEnd() const;
+	UFUNCTION(BlueprintPure)
+	bool IsFinding() const;
 	UFUNCTION(BlueprintCallable)
-	bool IsPathFinsihed();
-	UFUNCTION(BlueprintCallable)
-	FVector GetCurSegEnd();
-	UFUNCTION(BlueprintCallable)
-	void AdvanceSeg();	
+	void CancelFinding();
+
+	virtual void BeginDestroy() override;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnPathFoundDelegate OnPathFoundEvent;
