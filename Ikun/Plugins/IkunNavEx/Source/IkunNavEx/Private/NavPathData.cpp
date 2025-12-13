@@ -44,28 +44,28 @@ UNavPathData* UNavPathData::FindPathAsync(ACharacter* InChr, FVector InStart, FV
 }
 
 void UNavPathData::ClearPathData() {
-	this->_NavPoints.Empty();
-	this->_CurSegIdx = 1;
+	this->NavPoints.Empty();
+	this->CurSegIdx = 1;
 	this->_PathQueryId = -1;
 	this->bHasFirst = false;
 }
 
 void UNavPathData::AdvanceSeg() {
-	this->_CurSegIdx++;
+	this->CurSegIdx++;
 }
 
 bool UNavPathData::IsPathValid() const {
-	return this->_NavPoints.IsValidIndex(this->_CurSegIdx);
+	return this->NavPoints.IsValidIndex(this->CurSegIdx);
 }
 
 bool UNavPathData::IsPathFinsihed() const {
-	int num = this->_NavPoints.Num();
-	return this->_CurSegIdx >= num;
+	int num = this->NavPoints.Num();
+	return this->CurSegIdx >= num;
 }
 
 FVector UNavPathData::GetCurSegEnd() const {
-	if (this->_NavPoints.IsValidIndex(this->_CurSegIdx)) {
-		return this->_NavPoints[this->_CurSegIdx];
+	if (this->NavPoints.IsValidIndex(this->CurSegIdx)) {
+		return this->NavPoints[this->CurSegIdx];
 	}
 	return FVector::ZeroVector;
 }
@@ -90,9 +90,9 @@ void UNavPathData::CancelFinding() {
 
 void UNavPathData::SetFirstPoint(const FVector& FirstPoint) {
 	if (this->bHasFirst) {
-		this->_NavPoints[0] = FirstPoint;
+		this->NavPoints[0] = FirstPoint;
 	} else {
-		this->_NavPoints.Insert(FirstPoint, 0);
+		this->NavPoints.Insert(FirstPoint, 0);
 		this->bHasFirst = true;
 	}
 }
@@ -111,9 +111,9 @@ void UNavPathData::OnPathFound(uint32 InPathId, ENavigationQueryResult::Type InR
 	}
 	const TArray<FNavPathPoint>& points = InNavPath->GetPathPoints();
 	for (auto& pt : points) {
-		this->_NavPoints.Add(pt.Location);
+		this->NavPoints.Add(pt.Location);
 	}
-	this->OnPathFoundEvent.Broadcast(this->_NavPoints, ENavigationQueryResult::Success == InResult);
+	this->OnPathFoundEvent.Broadcast(this->NavPoints, ENavigationQueryResult::Success == InResult);
 	this->OnPathFoundEvent.Clear();
 	this->_PathQueryId = -1;
 }

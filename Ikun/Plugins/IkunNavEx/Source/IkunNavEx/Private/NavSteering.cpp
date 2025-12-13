@@ -38,14 +38,14 @@ UNavSteering* UNavSteering::RequestMoveToActor(ACharacter* InOwnerChr, AActor* I
 	}
 	// todo 检查是否已经可以判断抵达
 	UNavSteering* steer = NewObject<UNavSteering>();
-	steer->_OwnerChr = InOwnerChr;
+	steer->OwnerChr = InOwnerChr;
 	steer->_bIsActorTarget = true;
-	steer->_TargetActor = InTargetActor;
-	steer->CachedTarget = fixedLoc;
+	steer->GoalActor = InTargetActor;
+	steer->_CachedGoalLoc = fixedLoc;
 	steer->AcceptRadius = InAcceptRadius;
-	FVector ownerAgentLoc = steer->_OwnerChr->GetNavAgentLocation();
+	FVector ownerAgentLoc = steer->OwnerChr->GetNavAgentLocation();
 	// 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
-	steer->NavPathData = UNavPathData::FindPathAsync(steer->_OwnerChr, ownerAgentLoc, steer->CachedTarget);
+	steer->NavPathData = UNavPathData::FindPathAsync(steer->OwnerChr, ownerAgentLoc, steer->_CachedGoalLoc);
 	if (!steer->NavPathData) {
 		return nullptr;
 	}
@@ -68,14 +68,14 @@ UNavSteering* UNavSteering::RequestMoveToLoc(ACharacter* InOwnerChr, FVector InT
 	}
 	// todo 检查是否已经可以判断抵达
 	UNavSteering* steer = NewObject<UNavSteering>();
-	steer->_OwnerChr = InOwnerChr;
+	steer->OwnerChr = InOwnerChr;
 	steer->_bIsActorTarget = false;
-	steer->_TargetLoc = InTargetLoc;
-	steer->CachedTarget = fixedLoc;
+	steer->GoalLocation = InTargetLoc;
+	steer->_CachedGoalLoc = fixedLoc;
 	steer->AcceptRadius = InAcceptRadius;
-	FVector ownerAgentLoc = steer->_OwnerChr->GetNavAgentLocation();
+	FVector ownerAgentLoc = steer->OwnerChr->GetNavAgentLocation();
 	// 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
-	steer->NavPathData = UNavPathData::FindPathAsync(steer->_OwnerChr, ownerAgentLoc, steer->CachedTarget);
+	steer->NavPathData = UNavPathData::FindPathAsync(steer->OwnerChr, ownerAgentLoc, steer->_CachedGoalLoc);
 	if (!steer->NavPathData) {
 		return nullptr;
 	}
@@ -88,95 +88,95 @@ void UNavSteering::CancelMove() {
 		this->NavPathData->CancelFinding();
 		this->NavPathData = nullptr;
 	}
-	if (this->PendingNavData && this->PendingNavData->IsFinding()) {
-		this->PendingNavData->CancelFinding();
-		this->PendingNavData = nullptr;
+	if (this->_PendingNavData && this->_PendingNavData->IsFinding()) {
+		this->_PendingNavData->CancelFinding();
+		this->_PendingNavData = nullptr;
 	}
 	
-	this->_SteerEnd();
+	this->SteerEnd();
 	this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Cancelled);
 }
 
 void UNavSteering::_OnPathFound_First(const TArray<FVector>& InPathPoints, bool bSuccess) {
 	if (!this->NavPathData->IsPathValid()) {
-		FVector ownerAgentLoc = this->_OwnerChr->GetNavAgentLocation();
+		FVector ownerAgentLoc = this->OwnerChr->GetNavAgentLocation();
 		FVector nearNavPoint;
 		FVector QueryExtent(200, 200, 200);
-		bool bOwnerMovable = UNavigationSystemV1::K2_ProjectPointToNavigation(this->_OwnerChr->GetWorld(), ownerAgentLoc, nearNavPoint, nullptr, nullptr, QueryExtent);
+		bool bOwnerMovable = UNavigationSystemV1::K2_ProjectPointToNavigation(this->OwnerChr->GetWorld(), ownerAgentLoc, nearNavPoint, nullptr, nullptr, QueryExtent);
 		if (bOwnerMovable) {
-			this->NavPathData = UNavPathData::FindPathAsync(this->_OwnerChr, nearNavPoint, this->CachedTarget);
+			this->NavPathData = UNavPathData::FindPathAsync(this->OwnerChr, nearNavPoint, this->_CachedGoalLoc);
 			this->NavPathData->SetFirstPoint(ownerAgentLoc);
 			this->NavPathData->OnPathFoundEvent.AddDynamic(this, &UNavSteering::_OnPathFound_Second);
 		} else {
 			this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Stuck);
 		}
 	} else {
-		this->_SteerBegin();
+		this->SteerBegin();
 	}
 }
 
 void UNavSteering::_OnPathFound_Second(const TArray<FVector>& InPathPoints, bool bSuccess) {
-	this->_SteerBegin();
+	this->SteerBegin();
 }
 
-void UNavSteering::_SteerBegin() {
-	this->CurPathRefreshTime = 0.0f;
-	this->MoveStuckDetector = UMoveStuckDetector::CreateDetector(0.8f, this->_OwnerChr->GetNavAgentLocation());
-	this->_OwnerChr->GetWorld()->GetTimerManager().SetTimer(this->_TimerHandle, this, &UNavSteering::_SteerTick, this->_DeltaTime, true);
+void UNavSteering::SteerBegin() {
+	this->_CurPathRefreshTimeCount = 0.0f;
+	this->MoveStuckDetector = UMoveStuckDetector::CreateDetector(0.8f, this->OwnerChr->GetNavAgentLocation());
+	this->OwnerChr->GetWorld()->GetTimerManager().SetTimer(this->_TimerHandle, this, &UNavSteering::SteerTick, this->DeltaTime, true);
 }
 
-void UNavSteering::_SteerEnd() {
+void UNavSteering::SteerEnd() {
 	this->NavPathData = nullptr;
 	this->MoveStuckDetector = nullptr;
-	this->_TargetActor = nullptr;
-	UKismetSystemLibrary::K2_ClearTimerHandle(this->_OwnerChr, this->_TimerHandle);
+	this->GoalActor = nullptr;
+	UKismetSystemLibrary::K2_ClearTimerHandle(this->OwnerChr, this->_TimerHandle);
 }
 
-void UNavSteering::_SteerTick() {
+void UNavSteering::SteerTick() {
 	if (!UKismetSystemLibrary::IsValid(this->NavPathData)) {
 		UE_LOG(LogTemp, Error, TEXT("SteerTick: NavPathData is invalid!"));
-		this->_SteerEnd();
+		this->SteerEnd();
 		this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Lost);
 		return;
 	}
 	
 	// 判断最后一段抵达
 	if (this->NavPathData->IsPathFinsihed()) {
-		this->_SteerEnd();
+		this->SteerEnd();
 		this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Success);
 		return;
 	}
 
 	// 判断被阻挡
-	FVector agentLoc = this->_OwnerChr->GetNavAgentLocation();
-	if (this->MoveStuckDetector->TickMonitor(this->_DeltaTime,agentLoc)) {
-		this->_SteerEnd();
+	FVector agentLoc = this->OwnerChr->GetNavAgentLocation();
+	if (this->MoveStuckDetector->TickMonitor(this->DeltaTime,agentLoc)) {
+		this->SteerEnd();
 		this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Stuck);
 		return;
 	}
 
 	// Actor目标则刷新路径
-	bool bIsStabilized = (!this->NavPathData->bHasFirst) || (this->NavPathData->_CurSegIdx >= 2);
+	bool bIsStabilized = (!this->NavPathData->bHasFirst) || (this->NavPathData->CurSegIdx >= 2);
 	if (this->_bIsActorTarget && bIsStabilized) {
-		this->CurPathRefreshTime += this->_DeltaTime;
-		if (this->CurPathRefreshTime > this->NavPathRefreshInterval && !UKismetSystemLibrary::IsValid(this->PendingNavData)) {
-			this->CurPathRefreshTime = 0.0f;
+		this->_CurPathRefreshTimeCount += this->DeltaTime;
+		if (this->_CurPathRefreshTimeCount > this->NavPathRefreshInterval && !UKismetSystemLibrary::IsValid(this->_PendingNavData)) {
+			this->_CurPathRefreshTimeCount = 0.0f;
 
-			if (!UKismetSystemLibrary::IsValid(this->_TargetActor)) {
-				this->_SteerEnd();
+			if (!UKismetSystemLibrary::IsValid(this->GoalActor)) {
+				this->SteerEnd();
 				this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Lost);
 				return;
 			}
 
-			FVector actorLoc = this->_TargetActor->K2_GetActorLocation();
+			FVector actorLoc = this->GoalActor->K2_GetActorLocation();
 			FVector fixedLoc;
-			bool bProjected = UNavigationSystemV1::K2_ProjectPointToNavigation(this->_OwnerChr, actorLoc, fixedLoc,nullptr, nullptr, FVector::ZeroVector);
-			FVector cachedLast = this->CachedTarget;
-			this->CachedTarget = bProjected ? fixedLoc : actorLoc;
-			if (UKismetMathLibrary::NotEqual_VectorVector(this->CachedTarget, cachedLast, 0.1)) {
-				this->PendingNavData = UNavPathData::FindPathAsync(this->_OwnerChr, this->_OwnerChr->GetNavAgentLocation(), this->CachedTarget);
-				if (this->PendingNavData) {
-					this->PendingNavData->OnPathFoundEvent.AddDynamic(this, &UNavSteering::_OnPathRefreshed);
+			bool bProjected = UNavigationSystemV1::K2_ProjectPointToNavigation(this->OwnerChr, actorLoc, fixedLoc,nullptr, nullptr, FVector::ZeroVector);
+			FVector cachedLast = this->_CachedGoalLoc;
+			this->_CachedGoalLoc = bProjected ? fixedLoc : actorLoc;
+			if (UKismetMathLibrary::NotEqual_VectorVector(this->_CachedGoalLoc, cachedLast, 0.1)) {
+				this->_PendingNavData = UNavPathData::FindPathAsync(this->OwnerChr, this->OwnerChr->GetNavAgentLocation(), this->_CachedGoalLoc);
+				if (this->_PendingNavData) {
+					this->_PendingNavData->OnPathFoundEvent.AddDynamic(this, &UNavSteering::OnPathRefreshed);
 				}	
 			}
 		}
@@ -184,7 +184,7 @@ void UNavSteering::_SteerTick() {
 
 	// 寻路移动
 	FVector dir = this->NavPathData->CalcDirToSegEnd(agentLoc);
-	this->_OwnerChr->AddMovementInput(dir, 1, true);
+	this->OwnerChr->AddMovementInput(dir, 1, true);
 	
 	// 抵达当前段目标则走下一段
 	if (this->HasReached()) {
@@ -192,16 +192,16 @@ void UNavSteering::_SteerTick() {
 	}
 }
 
-void UNavSteering::_OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bSuccess) {
-	if (!UKismetSystemLibrary::IsValid(this->PendingNavData)) {
+void UNavSteering::OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bSuccess) {
+	if (!UKismetSystemLibrary::IsValid(this->_PendingNavData)) {
 		return;
 	}
-	if (bSuccess && this->PendingNavData->IsPathValid()) {
-		this->NavPathData = this->PendingNavData;
+	if (bSuccess && this->_PendingNavData->IsPathValid()) {
+		this->NavPathData = this->_PendingNavData;
 	} else {
 		UE_LOG(LogTemp, Warning, TEXT("Path refresh failed, keep using old path."));
 	}
-	this->PendingNavData = nullptr;
+	this->_PendingNavData = nullptr;
 }
 
 FVector UNavSteering::GetSteerTargetLoc() const {
@@ -209,19 +209,19 @@ FVector UNavSteering::GetSteerTargetLoc() const {
 		return FVector::ZeroVector;
 	} else {
 		FVector fixedLoc;
-		bool bSuccess = UNavigationSystemV1::K2_ProjectPointToNavigation(this->_OwnerChr->GetWorld(), this->_TargetLoc, fixedLoc,nullptr, nullptr, FVector::ZeroVector);
+		bool bSuccess = UNavigationSystemV1::K2_ProjectPointToNavigation(this->OwnerChr->GetWorld(), this->GoalLocation, fixedLoc,nullptr, nullptr, FVector::ZeroVector);
 		if (bSuccess) {
 			return fixedLoc;
 		} else {
-			return this->_TargetLoc;
+			return this->GoalLocation;
 		}
 	}
 }
 
 bool UNavSteering::HasReached() const {
-	float distSq = FVector::DistSquared(this->_OwnerChr->GetNavAgentLocation(), this->NavPathData->GetCurSegEnd());
+	float distSq = FVector::DistSquared(this->OwnerChr->GetNavAgentLocation(), this->NavPathData->GetCurSegEnd());
 	
-	bool bIsLastPoint = this->NavPathData->_CurSegIdx >= (this->NavPathData->_NavPoints.Num() - 1);
+	bool bIsLastPoint = this->NavPathData->CurSegIdx >= (this->NavPathData->NavPoints.Num() - 1);
 
 	float threshold = bIsLastPoint ? this->AcceptRadius : 100.0f;
 	return distSq < (threshold * threshold);
@@ -231,13 +231,13 @@ void UNavSteering::DrawDebugPath() {
 	if (!this->NavPathData) {
 		return;
 	}
-	UWorld* World = this->_OwnerChr->GetWorld();
+	UWorld* World = this->OwnerChr->GetWorld();
 	if (!World) return;
 
-	const TArray<FVector>& Points = this->NavPathData->_NavPoints;
+	const TArray<FVector>& Points = this->NavPathData->NavPoints;
 	int32 NumPoints = Points.Num();
-	int32 CurIdx = this->NavPathData->_CurSegIdx;
-	FVector AgentLoc = this->_OwnerChr->GetNavAgentLocation();
+	int32 CurIdx = this->NavPathData->CurSegIdx;
+	FVector AgentLoc = this->OwnerChr->GetNavAgentLocation();
 
 	FVector ZOffset(0, 0, 50.0f);
 	// 1. 画整条路径 (绿色 = 未走完, 灰色 = 已走过)

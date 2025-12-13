@@ -55,9 +55,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnPathFoundDelegate OnPathFoundEvent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NavPathData")
-	TArray<FVector> _NavPoints;
+	TArray<FVector> NavPoints;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NavPathData")
-	int _CurSegIdx;
+	int CurSegIdx;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NavPathData")
 	bool bHasFirst;
 	

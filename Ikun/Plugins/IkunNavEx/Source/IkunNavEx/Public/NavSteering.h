@@ -3,7 +3,8 @@
  *  File        : NavSteering.h
  *  Author      : zhengyanshuai
  *  Date        : Thu Dec 11 2025 22:18:27 GMT+0800 (中国标准时间)
- *  Description : 
+ *  Description :
+ *  Todo		: 改造成Base, 让更多导航寻路需求从这里继承
  *  License     : MIT License
  * -----------------------------------------------------------------------------
  *  Copyright (c) 2025 zhengyanshuai
@@ -19,8 +20,8 @@ class ACharacter;
 class UNavPathData;
 class UMoveStuckDetector;
 
-UENUM()
-enum ENavSteerResult: uint8 {
+UENUM(BlueprintType)
+enum class ENavSteerResult: uint8 {
 	Success,
 	Lost,
 	Stuck,
@@ -30,60 +31,71 @@ enum ENavSteerResult: uint8 {
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNavFinishedDelegate, ENavSteerResult, NavSteerResult);
 
 
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, Blueprintable)
 class IKUNNAVEX_API UNavSteering : public UObject {
 	GENERATED_BODY()
 	UNavSteering();
 public:
+	// --- 工厂静态方法 ---
 	UFUNCTION(BlueprintCallable)
 	static UNavSteering* RequestMoveToActor(ACharacter* InOwnerChr, AActor* InTargetActor, float InAcceptRadius);
 	UFUNCTION(BlueprintCallable)
 	static UNavSteering* RequestMoveToLoc(ACharacter* InOwnerChr, FVector InTargetLoc, float InAcceptRadius);
+
+	// --- 公共API ---
 	UFUNCTION(BlueprintCallable)
 	void CancelMove();
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	FVector GetSteerTargetLoc() const;
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	bool HasReached() const;
+	UFUNCTION(BlueprintCallable)
+	void DrawDebugPath();
 	
-public:
+	// --- 委托事件 ---
 	UPROPERTY(BlueprintAssignable)
 	FOnNavFinishedDelegate OnNavFinishedEvent;
-	UPROPERTY(BlueprintReadWrite)
+
+	// --- 核心组件 ---
+	UPROPERTY(BlueprintReadOnly)
 	UNavPathData* NavPathData;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	UMoveStuckDetector* MoveStuckDetector;
 	
-protected:
+	// --- 内部回调 ---
 	UFUNCTION()
 	void _OnPathFound_First(const TArray<FVector>& InPathPoints, bool bSuccess);
 	UFUNCTION()
 	void _OnPathFound_Second(const TArray<FVector>& InPathPoints, bool bSuccess);
-	
-	void _SteerBegin();
-	void _SteerEnd();
-	void _SteerTick();
-	
-protected:
-	float NavPathRefreshInterval = 0.5f;
-	float CurPathRefreshTime = 0.0f;
-	
-	float _DeltaTime = 0.003f;
-	FTimerHandle _TimerHandle;
-	
-	float AcceptRadius;
-	FVector CachedTarget;
-	FVector _TargetLoc;
-	AActor* _TargetActor;
-	bool _bIsActorTarget = false;
-	
-	ACharacter* _OwnerChr;
-
-public:
-	UPROPERTY()
-	UNavPathData* PendingNavData;
 	UFUNCTION()
-	void _OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bSuccess);
+	void OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bSuccess);
 
-	void DrawDebugPath();
+	// --- 内部逻辑虚函数 ---
+	virtual void SteerBegin();
+	virtual void SteerEnd();
+	virtual void SteerTick();
+
+	// --- 配置参数 ---
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float NavPathRefreshInterval = 0.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AcceptRadius = 50.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DeltaTime = 0.003f;
+	
+	// --- 运行时状态 ---
+	UPROPERTY(Transient)
+	ACharacter* OwnerChr;
+	UPROPERTY(Transient)
+	AActor* GoalActor;
+	
+	FVector GoalLocation;
+	FVector _CachedGoalLoc;
+	
+	float _CurPathRefreshTimeCount = 0.0f;
+	FTimerHandle _TimerHandle;
+	bool _bIsActorTarget = false;
+
+	UPROPERTY()
+	UNavPathData* _PendingNavData;
 };
