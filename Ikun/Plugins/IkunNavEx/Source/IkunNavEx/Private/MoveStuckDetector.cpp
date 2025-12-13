@@ -10,19 +10,19 @@
  * -----------------------------------------------------------------------------
  */
 
-#include "MoveStuckMonitor.h"
+#include "MoveStuckDetector.h"
 
 #include "Kismet/KismetMathLibrary.h"
 
-UMoveStuckMonitor* UMoveStuckMonitor::CreateMonitor(float MaxStuckTime, const FVector& ChrAgentLoc) {
-	UMoveStuckMonitor* monitor = NewObject<UMoveStuckMonitor>();
+UMoveStuckDetector* UMoveStuckDetector::CreateDetector(float MaxStuckTime, const FVector& ChrAgentLoc) {
+	UMoveStuckDetector* monitor = NewObject<UMoveStuckDetector>();
 	monitor->_MaxStuckTime = MaxStuckTime;
 	monitor->_MoveStuckLoc = ChrAgentLoc;
 	monitor->_CurStuckTime = 0;
 	return monitor;
 }
 
-bool UMoveStuckMonitor::TickMonitor(float DeltaTime, const FVector& ChrAgentLoc) {
+bool UMoveStuckDetector::TickMonitor(float DeltaTime, const FVector& ChrAgentLoc) {
 	this->_CurStuckTime += DeltaTime;
 	if (UKismetMathLibrary::EqualEqual_VectorVector(this->_MoveStuckLoc, ChrAgentLoc), 10) {
 		if (this->_CurStuckTime > this->_MaxStuckTime) {

@@ -68,6 +68,13 @@ FVector UNavPathData::GetCurSegEnd() const {
 	return FVector::ZeroVector;
 }
 
+FVector UNavPathData::CalcDirToSegEnd(const FVector& Loc) const {
+	FVector dir = Loc - this->GetCurSegEnd();
+	dir.Z = 0.0f;
+	dir.Normalize();
+	return dir;
+}
+
 bool UNavPathData::IsFinding() const {
 	return this->_PathQueryId >= 0;
 }
@@ -77,6 +84,10 @@ void UNavPathData::CancelFinding() {
 	if (v1 && UKismetSystemLibrary::IsValid(v1) && this->_PathQueryId >= 0) {
 		v1->AbortAsyncFindPathRequest(this->_PathQueryId);
 	}
+}
+
+void UNavPathData::AddFirst(const FVector& FirstPoint) {
+	this->_NavPoints.Insert(FirstPoint, 0);
 }
 
 void UNavPathData::BeginDestroy() {
@@ -95,7 +106,7 @@ void UNavPathData::OnPathFound(uint32 InPathId, ENavigationQueryResult::Type InR
 	for (auto& pt : points) {
 		this->_NavPoints.Add(pt.Location);
 	}
-	this->OnPathFoundEvent.Broadcast(this->_NavPoints);
+	this->OnPathFoundEvent.Broadcast(this->_NavPoints, ENavigationQueryResult::Success == InResult);
 	this->OnPathFoundEvent.Clear();
 	this->_PathQueryId = -1;
 }

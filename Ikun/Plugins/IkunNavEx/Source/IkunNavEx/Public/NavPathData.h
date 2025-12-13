@@ -16,7 +16,7 @@
 #include "Object.h"
 #include "NavPathData.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPathFoundDelegate, const TArray<FVector>&, PathPoints);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPathFoundDelegate, const TArray<FVector>&, PathPoints, bool, bSuccess);
 
 class UNavigationSystemV1;
 
@@ -41,9 +41,13 @@ public:
 	UFUNCTION(BlueprintPure)
 	FVector GetCurSegEnd() const;
 	UFUNCTION(BlueprintPure)
+	FVector CalcDirToSegEnd(const FVector& Loc) const;
+	UFUNCTION(BlueprintPure)
 	bool IsFinding() const;
 	UFUNCTION(BlueprintCallable)
 	void CancelFinding();
+	UFUNCTION(BlueprintCallable)
+	void AddFirst(const FVector& FirstPoint);
 
 	virtual void BeginDestroy() override;
 
