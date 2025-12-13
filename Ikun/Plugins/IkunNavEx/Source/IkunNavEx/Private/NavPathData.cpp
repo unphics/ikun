@@ -33,7 +33,7 @@ UNavPathData* UNavPathData::FindPathAsync(ACharacter* InChr, FVector InStart, FV
 	
 	FPathFindingQuery query(InChr, *navData, InStart, InEnd);
 
-	UNavPathData* data = NewObject<UNavPathData>();
+	UNavPathData* data = NewObject<UNavPathData>(InChr);
 	data->ClearPathData();
 	FNavPathQueryDelegate delegate;
 	delegate.BindUObject(data, &UNavPathData::OnPathFound);
@@ -47,6 +47,7 @@ void UNavPathData::ClearPathData() {
 	this->_NavPoints.Empty();
 	this->_CurSegIdx = 1;
 	this->_PathQueryId = -1;
+	this->bHasFirst = false;
 }
 
 void UNavPathData::AdvanceSeg() {

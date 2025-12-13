@@ -155,16 +155,30 @@ void UNavSteering::_SteerTick() {
 		return;
 	}
 
-	// todo 走过了FirstPoint
-	// todo 判断目标在移动
-	this->CurPathRefreshTime += this->_DeltaTime;
-	if (this->CurPathRefreshTime > this->NavPathRefreshInterval && !UKismetSystemLibrary::IsValid(this->PendingNavData)) {
-		this->CurPathRefreshTime = 0.0f;
-		this->UpdateCachedTarget();
+	// Actor目标则刷新路径
+	bool bIsStabilized = (!this->NavPathData->bHasFirst) || (this->NavPathData->_CurSegIdx >= 2);
+	if (this->_bIsActorTarget && bIsStabilized) {
+		this->CurPathRefreshTime += this->_DeltaTime;
+		if (this->CurPathRefreshTime > this->NavPathRefreshInterval && !UKismetSystemLibrary::IsValid(this->PendingNavData)) {
+			this->CurPathRefreshTime = 0.0f;
 
-		this->PendingNavData = UNavPathData::FindPathAsync(this->_OwnerChr, this->_OwnerChr->GetNavAgentLocation(), this->CachedTarget);
-		if (this->PendingNavData) {
-			this->PendingNavData->OnPathFoundEvent.AddDynamic(this, &UNavSteering::_OnPathRefreshed);
+			if (!UKismetSystemLibrary::IsValid(this->_TargetActor)) {
+				this->_SteerEnd();
+				this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Lost);
+				return;
+			}
+
+			FVector actorLoc = this->_TargetActor->K2_GetActorLocation();
+			FVector fixedLoc;
+			bool bProjected = UNavigationSystemV1::K2_ProjectPointToNavigation(this->_OwnerChr, actorLoc, fixedLoc,nullptr, nullptr, FVector::ZeroVector);
+			FVector cachedLast = this->CachedTarget;
+			this->CachedTarget = bProjected ? fixedLoc : actorLoc;
+			if (UKismetMathLibrary::NotEqual_VectorVector(this->CachedTarget, cachedLast, 0.1)) {
+				this->PendingNavData = UNavPathData::FindPathAsync(this->_OwnerChr, this->_OwnerChr->GetNavAgentLocation(), this->CachedTarget);
+				if (this->PendingNavData) {
+					this->PendingNavData->OnPathFoundEvent.AddDynamic(this, &UNavSteering::_OnPathRefreshed);
+				}	
+			}
 		}
 	}
 
@@ -173,7 +187,7 @@ void UNavSteering::_SteerTick() {
 	this->_OwnerChr->AddMovementInput(dir, 1, true);
 	
 	// 抵达当前段目标则走下一段
-	if (this->HasReached(10)) {
+	if (this->HasReached()) {
 		this->NavPathData->AdvanceSeg();
 	}
 }
@@ -190,15 +204,6 @@ void UNavSteering::_OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bS
 	this->PendingNavData = nullptr;
 }
 
-void UNavSteering::UpdateCachedTarget() {
-	if (this->_bIsActorTarget && UKismetSystemLibrary::IsValid(this->_TargetActor)) {
-		FVector actorLoc = this->_TargetActor->K2_GetActorLocation();
-		FVector fixedLoc;
-		bool bProjected = UNavigationSystemV1::K2_ProjectPointToNavigation(this->_OwnerChr, actorLoc, fixedLoc,nullptr, nullptr, FVector::ZeroVector);
-		this->CachedTarget = bProjected ? fixedLoc : actorLoc;
-	}
-}
-
 FVector UNavSteering::GetSteerTargetLoc() const {
 	if (this->_bIsActorTarget) {
 		return FVector::ZeroVector;
@@ -213,12 +218,13 @@ FVector UNavSteering::GetSteerTargetLoc() const {
 	}
 }
 
-bool UNavSteering::HasReached(float RadiusCorr) const {
-	float distance = UKismetMathLibrary::Vector_Distance(this->_OwnerChr->GetNavAgentLocation(), this->NavPathData->GetCurSegEnd());
-	if (distance < this->AcceptRadius * RadiusCorr) {
-		return true;
-	}
-	return false;
+bool UNavSteering::HasReached() const {
+	float distSq = FVector::DistSquared(this->_OwnerChr->GetNavAgentLocation(), this->NavPathData->GetCurSegEnd());
+	
+	bool bIsLastPoint = this->NavPathData->_CurSegIdx >= (this->NavPathData->_NavPoints.Num() - 1);
+
+	float threshold = bIsLastPoint ? this->AcceptRadius : 100.0f;
+	return distSq < (threshold * threshold);
 }
 
 void UNavSteering::DrawDebugPath() {

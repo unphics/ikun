@@ -44,7 +44,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector GetSteerTargetLoc() const;
 	UFUNCTION(BlueprintCallable)
-	bool HasReached(float RadiusCorr = 0.1f) const;
+	bool HasReached() const;
 	
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -84,7 +84,6 @@ public:
 	UNavPathData* PendingNavData;
 	UFUNCTION()
 	void _OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bSuccess);
-	void UpdateCachedTarget();
 
 	void DrawDebugPath();
 };

@@ -27,6 +27,9 @@ UCLASS(BlueprintType)
 class IKUNNAVEX_API UNavPathData : public UObject {
 	GENERATED_BODY()
 public:
+	virtual void BeginDestroy() override;
+	
+public:
 	UFUNCTION(BlueprintCallable)
 	static UNavPathData* FindPathAsync(ACharacter* InChr, FVector InStart, FVector InEnd);
 	
@@ -34,6 +37,10 @@ public:
 	void ClearPathData();
 	UFUNCTION(BlueprintCallable)
 	void AdvanceSeg();
+	UFUNCTION(BlueprintCallable)
+	void CancelFinding();
+	UFUNCTION(BlueprintCallable)
+	void SetFirstPoint(const FVector& FirstPoint);
 	UFUNCTION(BlueprintPure)
 	bool IsPathValid() const;
 	UFUNCTION(BlueprintPure)
@@ -44,12 +51,6 @@ public:
 	FVector CalcDirToSegEnd(const FVector& Loc) const;
 	UFUNCTION(BlueprintPure)
 	bool IsFinding() const;
-	UFUNCTION(BlueprintCallable)
-	void CancelFinding();
-	UFUNCTION(BlueprintCallable)
-	void SetFirstPoint(const FVector& FirstPoint);
-
-	virtual void BeginDestroy() override;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnPathFoundDelegate OnPathFoundEvent;
@@ -58,9 +59,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NavPathData")
 	int _CurSegIdx;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NavPathData")
-	bool bHasFirst = false;
+	bool bHasFirst;
+	
+	virtual void OnPathFound(uint32 InPathId, ENavigationQueryResult::Type InResult, TSharedPtr<FNavigationPath> InNavPath);
 private:
-	void OnPathFound(uint32 InPathId, ENavigationQueryResult::Type InResult, TSharedPtr<FNavigationPath> InNavPath);
 	TWeakObjectPtr<UNavigationSystemV1> _NavSys;
 	int _PathQueryId = -1;
 };
