@@ -23,7 +23,7 @@ class UNavigationSystemV1;
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class IKUNNAVEX_API UNavPathData : public UObject {
 	GENERATED_BODY()
 public:
@@ -47,7 +47,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CancelFinding();
 	UFUNCTION(BlueprintCallable)
-	void AddFirst(const FVector& FirstPoint);
+	void SetFirstPoint(const FVector& FirstPoint);
 
 	virtual void BeginDestroy() override;
 
@@ -57,6 +57,8 @@ public:
 	TArray<FVector> _NavPoints;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NavPathData")
 	int _CurSegIdx;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NavPathData")
+	bool bHasFirst = false;
 private:
 	void OnPathFound(uint32 InPathId, ENavigationQueryResult::Type InResult, TSharedPtr<FNavigationPath> InNavPath);
 	TWeakObjectPtr<UNavigationSystemV1> _NavSys;

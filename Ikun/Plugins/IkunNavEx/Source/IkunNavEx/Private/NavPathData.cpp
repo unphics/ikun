@@ -17,7 +17,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 
 UNavPathData* UNavPathData::FindPathAsync(ACharacter* InChr, FVector InStart, FVector InEnd) {
-	if (!InChr || !UKismetSystemLibrary::IsValid(InChr)) {
+	if (!UKismetSystemLibrary::IsValid(InChr)) {
 		return nullptr;
 	}
 	
@@ -34,12 +34,13 @@ UNavPathData* UNavPathData::FindPathAsync(ACharacter* InChr, FVector InStart, FV
 	FPathFindingQuery query(InChr, *navData, InStart, InEnd);
 
 	UNavPathData* data = NewObject<UNavPathData>();
+	data->ClearPathData();
 	FNavPathQueryDelegate delegate;
 	delegate.BindUObject(data, &UNavPathData::OnPathFound);
 
 	data->_NavSys = v1;
 	data->_PathQueryId = v1->FindPathAsync(InChr->GetNavAgentPropertiesRef(), query, delegate, EPathFindingMode::Regular);
-	return nullptr;
+	return data;
 }
 
 void UNavPathData::ClearPathData() {
@@ -69,7 +70,7 @@ FVector UNavPathData::GetCurSegEnd() const {
 }
 
 FVector UNavPathData::CalcDirToSegEnd(const FVector& Loc) const {
-	FVector dir = Loc - this->GetCurSegEnd();
+	FVector dir = this->GetCurSegEnd() - Loc;
 	dir.Z = 0.0f;
 	dir.Normalize();
 	return dir;
@@ -86,8 +87,13 @@ void UNavPathData::CancelFinding() {
 	}
 }
 
-void UNavPathData::AddFirst(const FVector& FirstPoint) {
-	this->_NavPoints.Insert(FirstPoint, 0);
+void UNavPathData::SetFirstPoint(const FVector& FirstPoint) {
+	if (this->bHasFirst) {
+		this->_NavPoints[0] = FirstPoint;
+	} else {
+		this->_NavPoints.Insert(FirstPoint, 0);
+		this->bHasFirst = true;
+	}
 }
 
 void UNavPathData::BeginDestroy() {

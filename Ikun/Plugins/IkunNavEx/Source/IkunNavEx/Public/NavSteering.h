@@ -17,6 +17,7 @@
 
 class ACharacter;
 class UNavPathData;
+class UMoveStuckDetector;
 
 UENUM()
 enum ENavSteerResult: uint8 {
@@ -26,26 +27,22 @@ enum ENavSteerResult: uint8 {
 	Cancelled,
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNavFinishedDelegate, ENavSteerResult, NavSteerResult)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNavFinishedDelegate, ENavSteerResult, NavSteerResult);
 
 
-UCLASS()
+UCLASS(BlueprintType)
 class IKUNNAVEX_API UNavSteering : public UObject {
 	GENERATED_BODY()
 	UNavSteering();
 public:
 	UFUNCTION(BlueprintCallable)
-	static UNavSteering* RequestMoveToActor(AActor* InTargetActor, float InAcceptRadius);
+	static UNavSteering* RequestMoveToActor(ACharacter* InOwnerChr, AActor* InTargetActor, float InAcceptRadius);
 	UFUNCTION(BlueprintCallable)
-	static UNavSteering* RequestMoveToLoc(ACharacter* InOwnerChr, const FVector& InTargetLoc, float InAcceptRadius);
+	static UNavSteering* RequestMoveToLoc(ACharacter* InOwnerChr, FVector InTargetLoc, float InAcceptRadius);
 	UFUNCTION(BlueprintCallable)
 	void CancelMove();
-	// UFUNCTION(BlueprintCallable)
-	// void PauseMove();
-	// UFUNCTION(BlueprintCallable)
-	// void ContinueMove();
 	UFUNCTION(BlueprintCallable)
-	const FVector& GetSteerTargetLoc() const;
+	FVector GetSteerTargetLoc() const;
 	UFUNCTION(BlueprintCallable)
 	bool HasReached(float RadiusCorr = 0.1f) const;
 	
@@ -62,12 +59,16 @@ protected:
 	void _OnPathFound_First(const TArray<FVector>& InPathPoints, bool bSuccess);
 	UFUNCTION()
 	void _OnPathFound_Second(const TArray<FVector>& InPathPoints, bool bSuccess);
+	
 	void _SteerBegin();
 	void _SteerEnd();
 	void _SteerTick();
 	
 protected:
-	float _DeltaTime = 0.1f;
+	float NavPathRefreshInterval = 0.5f;
+	float CurPathRefreshTime = 0.0f;
+	
+	float _DeltaTime = 0.003f;
 	FTimerHandle _TimerHandle;
 	
 	float AcceptRadius;
@@ -77,4 +78,13 @@ protected:
 	bool _bIsActorTarget = false;
 	
 	ACharacter* _OwnerChr;
+
+public:
+	UPROPERTY()
+	UNavPathData* PendingNavData;
+	UFUNCTION()
+	void _OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bSuccess);
+	void UpdateCachedTarget();
+
+	void DrawDebugPath();
 };

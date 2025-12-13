@@ -18,7 +18,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class IKUNNAVEX_API UMoveStuckDetector : public UObject {
 	GENERATED_BODY()
 public:
