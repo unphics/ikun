@@ -93,8 +93,8 @@ void UNavSteering::CancelMove() {
 		this->_PendingNavData = nullptr;
 	}
 	
-	this->SteerEnd();
 	this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Cancelled);
+	this->SteerEnd();
 }
 
 void UNavSteering::_OnPathFound_First(const TArray<FVector>& InPathPoints, bool bSuccess) {
@@ -109,6 +109,7 @@ void UNavSteering::_OnPathFound_First(const TArray<FVector>& InPathPoints, bool 
 			this->NavPathData->OnPathFoundEvent.AddDynamic(this, &UNavSteering::_OnPathFound_Second);
 		} else {
 			this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Stuck);
+			this->SteerEnd();
 		}
 	} else {
 		this->SteerBegin();
@@ -130,6 +131,7 @@ void UNavSteering::SteerEnd() {
 	this->MoveStuckDetector = nullptr;
 	this->GoalActor = nullptr;
 	this->_bSteeringActive = false;
+	this->OnNavFinishedEvent.Clear();
 }
 
 bool UNavSteering::IsAllowedToTick() const {
@@ -140,23 +142,23 @@ bool UNavSteering::IsAllowedToTick() const {
 void UNavSteering::Tick(float InDeltaTime) {
 	if (!UKismetSystemLibrary::IsValid(this->NavPathData)) {
 		UE_LOG(LogTemp, Error, TEXT("SteerTick: NavPathData is invalid!"));
-		this->SteerEnd();
 		this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Lost);
+		this->SteerEnd();
 		return;
 	}
 	
 	// 判断最后一段抵达
 	if (this->NavPathData->IsPathFinsihed()) {
-		this->SteerEnd();
 		this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Success);
+		this->SteerEnd();
 		return;
 	}
 
 	// 判断被阻挡
 	FVector agentLoc = this->OwnerChr->GetNavAgentLocation();
 	if (this->MoveStuckDetector->TickMonitor(InDeltaTime, agentLoc)) {
-		this->SteerEnd();
 		this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Stuck);
+		this->SteerEnd();
 		return;
 	}
 
@@ -168,8 +170,8 @@ void UNavSteering::Tick(float InDeltaTime) {
 			this->_CurPathRefreshTimeCount = 0.0f;
 
 			if (!UKismetSystemLibrary::IsValid(this->GoalActor)) {
-				this->SteerEnd();
 				this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Lost);
+				this->SteerEnd();
 				return;
 			}
 
