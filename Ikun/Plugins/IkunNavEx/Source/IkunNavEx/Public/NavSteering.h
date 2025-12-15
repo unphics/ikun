@@ -36,13 +36,11 @@ class IKUNNAVEX_API UNavSteering : public UObject, public FTickableObjectBase {
 	GENERATED_BODY()
 	UNavSteering();
 public:
-	// --- 工厂静态方法 ---
-	UFUNCTION(BlueprintCallable)
-	static UNavSteering* RequestMoveToActor(ACharacter* InOwnerChr, AActor* InTargetActor, float InAcceptRadius);
-	UFUNCTION(BlueprintCallable)
-	static UNavSteering* RequestMoveToLoc(ACharacter* InOwnerChr, FVector InTargetLoc, float InAcceptRadius);
-
 	// --- 公共API ---
+	UFUNCTION(BlueprintCallable)
+	bool TryMoveToActor(ACharacter* InOwnerChr, AActor* InTargetActor, float InAcceptRadius);
+	UFUNCTION(BlueprintCallable)
+	bool TryMoveToLoc(ACharacter* InOwnerChr, FVector InTargetLoc, float InAcceptRadius);
 	UFUNCTION(BlueprintCallable)
 	void CancelMove();
 	UFUNCTION(BlueprintPure)
@@ -51,6 +49,8 @@ public:
 	bool HasReached() const;
 	UFUNCTION(BlueprintCallable)
 	void DrawDebugPath();
+
+	void ResetInternal();
 	
 	// --- 委托事件 ---
 	UPROPERTY(BlueprintAssignable)
@@ -71,7 +71,8 @@ public:
 	void OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bSuccess);
 
 	// override
-	virtual bool IsAllowedToTick() const override;
+	virtual bool IsTickable() const override;
+	virtual TStatId GetStatId() const override { RETURN_QUICK_DECLARE_CYCLE_STAT(UNavSteering, STATGROUP_Tickables); }
 	virtual void Tick(float DeltaTime) override;
 
 	// --- 内部逻辑虚函数 ---

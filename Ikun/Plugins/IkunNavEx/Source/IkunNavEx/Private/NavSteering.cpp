@@ -23,78 +23,70 @@ UNavSteering::UNavSteering() {
 	
 }
 
-UNavSteering* UNavSteering::RequestMoveToActor(ACharacter* InOwnerChr, AActor* InTargetActor, float InAcceptRadius) {
+bool UNavSteering::TryMoveToActor(ACharacter* InOwnerChr, AActor* InTargetActor, float InAcceptRadius) {
 	if (!UKismetSystemLibrary::IsValid(InOwnerChr)) {
-		return nullptr;
+		return false;
 	}
 	if (!UKismetSystemLibrary::IsValid(InTargetActor)) {
-		return nullptr;
+		return false;
 	}
 	// 检查目标有效
 	FVector fixedLoc;
 	bool bTargetReachable = UNavigationSystemV1::K2_ProjectPointToNavigation(InOwnerChr, InTargetActor->K2_GetActorLocation(), fixedLoc,nullptr, nullptr, FVector::ZeroVector);
 	if (!bTargetReachable) {
-		return nullptr;
+		return false;
 	}
 	// todo 检查是否已经可以判断抵达
-	UNavSteering* steer = NewObject<UNavSteering>();
-	steer->OwnerChr = InOwnerChr;
-	steer->_bIsActorTarget = true;
-	steer->GoalActor = InTargetActor;
-	steer->_CachedGoalLoc = fixedLoc;
-	steer->AcceptRadius = InAcceptRadius;
-	FVector ownerAgentLoc = steer->OwnerChr->GetNavAgentLocation();
+	
+	this->OwnerChr = InOwnerChr;
+	this->_bIsActorTarget = true;
+	this->GoalActor = InTargetActor;
+	this->_CachedGoalLoc = fixedLoc;
+	this->AcceptRadius = InAcceptRadius;
+	FVector ownerAgentLoc = this->OwnerChr->GetNavAgentLocation();
 	// 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
-	steer->NavPathData = UNavPathData::FindPathAsync(steer->OwnerChr, ownerAgentLoc, steer->_CachedGoalLoc);
-	if (!steer->NavPathData) {
+	this->NavPathData = UNavPathData::FindPathAsync(this->OwnerChr, ownerAgentLoc, this->_CachedGoalLoc);
+	if (!this->NavPathData) {
 		return nullptr;
 	}
-	steer->NavPathData->OnPathFoundEvent.AddDynamic(steer, &UNavSteering::_OnPathFound_First);
-	return steer;
+	this->NavPathData->OnPathFoundEvent.AddDynamic(this, &UNavSteering::_OnPathFound_First);
+	return true;
 }
 
-UNavSteering* UNavSteering::RequestMoveToLoc(ACharacter* InOwnerChr, FVector InTargetLoc, float InAcceptRadius) {
+bool UNavSteering::TryMoveToLoc(ACharacter* InOwnerChr, FVector InTargetLoc, float InAcceptRadius) {
 	if (!UKismetSystemLibrary::IsValid(InOwnerChr)) {
-		return nullptr;
+		return false;
 	}
 	if (InTargetLoc.IsNearlyZero(0.1)) {
-		return nullptr;
+		return false;
 	}
 	// 检查目标有效
 	FVector fixedLoc;
 	bool bTargetReachable = UNavigationSystemV1::K2_ProjectPointToNavigation(InOwnerChr, InTargetLoc, fixedLoc,nullptr, nullptr, FVector::ZeroVector);
 	if (!bTargetReachable) {
-		return nullptr;
+		return false;
 	}
 	// todo 检查是否已经可以判断抵达
-	UNavSteering* steer = NewObject<UNavSteering>();
-	steer->OwnerChr = InOwnerChr;
-	steer->_bIsActorTarget = false;
-	steer->GoalLocation = InTargetLoc;
-	steer->_CachedGoalLoc = fixedLoc;
-	steer->AcceptRadius = InAcceptRadius;
-	FVector ownerAgentLoc = steer->OwnerChr->GetNavAgentLocation();
+	
+	this->OwnerChr = InOwnerChr;
+	this->_bIsActorTarget = false;
+	this->GoalLocation = InTargetLoc;
+	this->_CachedGoalLoc = fixedLoc;
+	this->AcceptRadius = InAcceptRadius;
+	FVector ownerAgentLoc = this->OwnerChr->GetNavAgentLocation();
 	// 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
-	steer->NavPathData = UNavPathData::FindPathAsync(steer->OwnerChr, ownerAgentLoc, steer->_CachedGoalLoc);
-	if (!steer->NavPathData) {
-		return nullptr;
+	this->NavPathData = UNavPathData::FindPathAsync(this->OwnerChr, ownerAgentLoc, this->_CachedGoalLoc);
+	if (!this->NavPathData) {
+		return false;
 	}
-	steer->NavPathData->OnPathFoundEvent.AddDynamic(steer, &UNavSteering::_OnPathFound_First);
-	return steer;
+	this->NavPathData->OnPathFoundEvent.AddDynamic(this, &UNavSteering::_OnPathFound_First);
+	return true;
 }
 
 void UNavSteering::CancelMove() {
-	if (this->NavPathData && this->NavPathData->IsFinding()) {
-		this->NavPathData->CancelFinding();
-		this->NavPathData = nullptr;
-	}
-	if (this->_PendingNavData && this->_PendingNavData->IsFinding()) {
-		this->_PendingNavData->CancelFinding();
-		this->_PendingNavData = nullptr;
-	}
-	
 	this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Cancelled);
 	this->SteerEnd();
+	this->ResetInternal();
 }
 
 void UNavSteering::_OnPathFound_First(const TArray<FVector>& InPathPoints, bool bSuccess) {
@@ -134,10 +126,12 @@ void UNavSteering::SteerEnd() {
 	this->OnNavFinishedEvent.Clear();
 }
 
-bool UNavSteering::IsAllowedToTick() const {
+bool UNavSteering::IsTickable() const {
+	if (this->IsTemplate()) {
+		return false;
+	}
 	return this->_bSteeringActive;
 }
-
 
 void UNavSteering::Tick(float InDeltaTime) {
 	if (!UKismetSystemLibrary::IsValid(this->NavPathData)) {
@@ -275,4 +269,17 @@ void UNavSteering::DrawDebugPath() {
 		FString DebugText = FString::Printf(TEXT("Idx:%d | Dist:%.1f"), CurIdx, Dist);
 		DrawDebugString(World, TargetPt + ZOffset + FVector(0, 0, 50), DebugText, nullptr, FColor::White, 0.0f);
 	}
+}
+
+void UNavSteering::ResetInternal() {
+	if (this->NavPathData && this->NavPathData->IsFinding()) {
+		this->NavPathData->CancelFinding();
+		this->NavPathData = nullptr;
+	}
+	if (this->_PendingNavData && this->_PendingNavData->IsFinding()) {
+		this->_PendingNavData->CancelFinding();
+		this->_PendingNavData = nullptr;
+	}
+	
+	this->SteerEnd();
 }
