@@ -84,6 +84,8 @@ public:
 	float NavPathRefreshInterval = 0.5f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AcceptRadius = 50.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bShowDebugLines = false;
 	
 	// --- 运行时状态 ---
 	UPROPERTY(Transient)

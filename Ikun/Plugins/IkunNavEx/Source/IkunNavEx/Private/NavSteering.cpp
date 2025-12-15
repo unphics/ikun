@@ -85,8 +85,10 @@ bool UNavSteering::TryMoveToLoc(ACharacter* InOwnerChr, FVector InTargetLoc, flo
 
 void UNavSteering::CancelMove() {
 	this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Cancelled);
+	if (this->OwnerChr && this->OwnerChr->GetController()) {
+		this->OwnerChr->GetController()->StopMovement();
+	}
 	this->SteerEnd();
-	this->ResetInternal();
 }
 
 void UNavSteering::_OnPathFound_First(const TArray<FVector>& InPathPoints, bool bSuccess) {
@@ -134,6 +136,11 @@ bool UNavSteering::IsTickable() const {
 }
 
 void UNavSteering::Tick(float InDeltaTime) {
+#if WITH_EDITOR
+	if (this->bShowDebugLines) {
+		this->DrawDebugPath();
+	}
+#endif
 	if (!UKismetSystemLibrary::IsValid(this->NavPathData)) {
 		UE_LOG(LogTemp, Error, TEXT("SteerTick: NavPathData is invalid!"));
 		this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Lost);

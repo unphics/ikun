@@ -66,6 +66,6 @@ void UIkunNavSubsystem::ReturnSteering(UNavSteering* InSteeringObject) {
 	if (this->SteeringPool.Contains(InSteeringObject)) {
 		return;
 	}
-	InSteeringObject->CancelMove();
+	InSteeringObject->ResetInternal();
 	this->SteeringPool.Push(InSteeringObject);
 }
