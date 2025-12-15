@@ -32,7 +32,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNavFinishedDelegate, ENavSteerRes
 
 
 UCLASS(BlueprintType, Blueprintable)
-class IKUNNAVEX_API UNavSteering : public UObject {
+class IKUNNAVEX_API UNavSteering : public UObject, public FTickableObjectBase {
 	GENERATED_BODY()
 	UNavSteering();
 public:
@@ -70,18 +70,19 @@ public:
 	UFUNCTION()
 	void OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bSuccess);
 
+	// override
+	virtual bool IsAllowedToTick() const override;
+	virtual void Tick(float DeltaTime) override;
+
 	// --- 内部逻辑虚函数 ---
 	virtual void SteerBegin();
 	virtual void SteerEnd();
-	virtual void SteerTick();
 
 	// --- 配置参数 ---
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float NavPathRefreshInterval = 0.5f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AcceptRadius = 50.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float DeltaTime = 0.003f;
 	
 	// --- 运行时状态 ---
 	UPROPERTY(Transient)
@@ -91,10 +92,10 @@ public:
 	
 	FVector GoalLocation;
 	FVector _CachedGoalLoc;
-	
-	float _CurPathRefreshTimeCount = 0.0f;
-	FTimerHandle _TimerHandle;
 	bool _bIsActorTarget = false;
+
+	float _CurPathRefreshTimeCount = 0.0f;
+	bool _bSteeringActive = false;
 
 	UPROPERTY()
 	UNavPathData* _PendingNavData;

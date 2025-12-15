@@ -122,17 +122,22 @@ void UNavSteering::_OnPathFound_Second(const TArray<FVector>& InPathPoints, bool
 void UNavSteering::SteerBegin() {
 	this->_CurPathRefreshTimeCount = 0.0f;
 	this->MoveStuckDetector = UMoveStuckDetector::CreateDetector(0.8f, this->OwnerChr->GetNavAgentLocation());
-	this->OwnerChr->GetWorld()->GetTimerManager().SetTimer(this->_TimerHandle, this, &UNavSteering::SteerTick, this->DeltaTime, true);
+	this->_bSteeringActive = true;
 }
 
 void UNavSteering::SteerEnd() {
 	this->NavPathData = nullptr;
 	this->MoveStuckDetector = nullptr;
 	this->GoalActor = nullptr;
-	UKismetSystemLibrary::K2_ClearTimerHandle(this->OwnerChr, this->_TimerHandle);
+	this->_bSteeringActive = false;
 }
 
-void UNavSteering::SteerTick() {
+bool UNavSteering::IsAllowedToTick() const {
+	return this->_bSteeringActive;
+}
+
+
+void UNavSteering::Tick(float InDeltaTime) {
 	if (!UKismetSystemLibrary::IsValid(this->NavPathData)) {
 		UE_LOG(LogTemp, Error, TEXT("SteerTick: NavPathData is invalid!"));
 		this->SteerEnd();
@@ -149,7 +154,7 @@ void UNavSteering::SteerTick() {
 
 	// 判断被阻挡
 	FVector agentLoc = this->OwnerChr->GetNavAgentLocation();
-	if (this->MoveStuckDetector->TickMonitor(this->DeltaTime,agentLoc)) {
+	if (this->MoveStuckDetector->TickMonitor(InDeltaTime, agentLoc)) {
 		this->SteerEnd();
 		this->OnNavFinishedEvent.Broadcast(ENavSteerResult::Stuck);
 		return;
@@ -158,7 +163,7 @@ void UNavSteering::SteerTick() {
 	// Actor目标则刷新路径
 	bool bIsStabilized = (!this->NavPathData->bHasFirst) || (this->NavPathData->CurSegIdx >= 2);
 	if (this->_bIsActorTarget && bIsStabilized) {
-		this->_CurPathRefreshTimeCount += this->DeltaTime;
+		this->_CurPathRefreshTimeCount += InDeltaTime;
 		if (this->_CurPathRefreshTimeCount > this->NavPathRefreshInterval && !UKismetSystemLibrary::IsValid(this->_PendingNavData)) {
 			this->_CurPathRefreshTimeCount = 0.0f;
 
