@@ -71,8 +71,10 @@ public:
 	void OnPathRefreshed(const TArray<FVector>& InPathPoints, bool bSuccess);
 
 	// override
+	virtual bool IsAllowedToTick() const override;
 	virtual bool IsTickable() const override;
 	virtual TStatId GetStatId() const override { RETURN_QUICK_DECLARE_CYCLE_STAT(UNavSteering, STATGROUP_Tickables); }
+	virtual ETickableTickType GetTickableTickType() const override { return ETickableTickType::Always; }
 	virtual void Tick(float DeltaTime) override;
 
 	// --- 内部逻辑虚函数 ---
