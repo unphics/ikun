@@ -32,7 +32,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNavFinishedDelegate, ENavSteerRes
 
 
 UCLASS(BlueprintType, Blueprintable)
-class IKUNNAVEX_API UNavSteering : public UObject, public FTickableObjectBase {
+class IKUNNAVEX_API UNavSteering : public UObject, public FTickableGameObject {
 	GENERATED_BODY()
 	UNavSteering();
 public:
@@ -72,7 +72,7 @@ public:
 
 	// override
 	virtual bool IsAllowedToTick() const override;
-	virtual bool IsTickable() const override;
+	// virtual bool IsTickable() const override;
 	virtual TStatId GetStatId() const override { RETURN_QUICK_DECLARE_CYCLE_STAT(UNavSteering, STATGROUP_Tickables); }
 	virtual ETickableTickType GetTickableTickType() const override { return ETickableTickType::Always; }
 	virtual void Tick(float DeltaTime) override;

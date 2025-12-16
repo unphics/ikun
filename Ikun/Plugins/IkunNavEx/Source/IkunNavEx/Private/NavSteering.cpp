@@ -129,15 +129,10 @@ void UNavSteering::SteerEnd() {
 }
 
 bool UNavSteering::IsAllowedToTick() const {
-	return true;
-}
-
-bool UNavSteering::IsTickable() const {
-	return true;
-	// if (this->IsTemplate()) {
-	// 	return false;
-	// }
-	// return this->_bSteeringActive;
+	if (this->IsTemplate()) {
+		return false;
+	}
+	return this->_bSteeringActive;
 }
 
 void UNavSteering::Tick(float InDeltaTime) {
