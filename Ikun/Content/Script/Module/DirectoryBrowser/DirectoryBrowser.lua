@@ -34,8 +34,8 @@ end
 ---@return DirectoryBrowser
 function DirectoryBrowser.CreateConfigDir()
     local brs = DirectoryBrowser.CreateProjDir()
-    brs:CD('..')
-    brs:CD("Config")
+    brs:CD('Content')
+    brs:CD('Config')
     return brs
 end
 

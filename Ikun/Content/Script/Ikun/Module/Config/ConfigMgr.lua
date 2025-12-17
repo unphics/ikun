@@ -10,7 +10,7 @@ require('Module/DirectoryBrowser/DirectoryBrowser')
 ---@class ConfigMgr
 ---@field _CachedConfigTable table<string, table>
 local ConfigMgr = class.class 'ConfigMgr' {
-    --[[public]]
+--[[public]]
     ctor = function() end,
     GetConfig = function()end,
     LoadConfigTable = function()end,
