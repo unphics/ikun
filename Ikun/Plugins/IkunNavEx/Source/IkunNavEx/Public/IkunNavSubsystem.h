@@ -12,7 +12,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WorldSubsystem.h"
 #include "IkunNavSubsystem.generated.h"
 
 class UNavSteering;

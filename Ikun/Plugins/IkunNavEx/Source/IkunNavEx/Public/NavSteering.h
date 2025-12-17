@@ -13,7 +13,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Object.h"
 #include "NavSteering.generated.h"
 
 class ACharacter;

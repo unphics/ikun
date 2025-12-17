@@ -5,6 +5,8 @@
 ---@data    Fri May 30 2025 22:37:34 GMT+0800 (中国标准时间)
 ---
 
+require('Start')
+
 ---@class BP_GameInst: BP_GameInst_C
 local BP_GameInst = UnLua.Class()
 

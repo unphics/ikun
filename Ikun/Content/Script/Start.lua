@@ -5,6 +5,12 @@
 ---@data    Sat Apr 05 2025 14:07:42 GMT+0800 (中国标准时间)
 ---
 
+local init = false
+if init then
+    return
+end
+init = true
+
 _G.ffi = require ("ffi") ---@type ffilib
 _G.log = require('Core/Log/log') ---@type log
 

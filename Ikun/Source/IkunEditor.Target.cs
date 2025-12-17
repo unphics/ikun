@@ -8,8 +8,10 @@ public class IkunEditorTarget : TargetRules
 	public IkunEditorTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		DefaultBuildSettings = BuildSettingsVersion.V1;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
+		DefaultBuildSettings = BuildSettingsVersion.V2;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_2;
+		WindowsPlatform.Compiler = WindowsCompiler.VisualStudio2022;
+		WindowsPlatform.CompilerVersion = "14.37.32822";
 		ExtraModuleNames.Add("Ikun");
 	}
 }

@@ -14,7 +14,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Object.h"
 #include "NavPathData.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPathFoundDelegate, const TArray<FVector>&, PathPoints, bool, bSuccess);
