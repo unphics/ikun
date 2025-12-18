@@ -19,3 +19,14 @@ void UAttributeSetBase::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	Super::PostGameplayEffectExecute(Data);
 	this->OnPostGameplayEffectExecute(Data.EffectSpec, Data.EvaluatedData, &Data.Target);
 }
+
+FGameplayAttribute UAttributeSetBase::GetAttribute(FName Name) {
+	FProperty* Prop = FindFieldChecked<FProperty>(StaticClass(), Name);
+	return Prop;
+}
+
+float UAttributeSetBase::GetAttrValueByName(FName Name) {
+	FProperty* Prop = FindFieldChecked<FProperty>(StaticClass(), Name);
+	FGameplayAttribute Attr = FGameplayAttribute(Prop);
+	return Attr.GetNumericValueChecked(this);
+}

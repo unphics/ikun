@@ -13,6 +13,11 @@ public:
 	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data) override;
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
+	UFUNCTION(BlueprintCallable)
+	static FGameplayAttribute GetAttribute(FName Name);
+	UFUNCTION(BlueprintCallable)
+	float GetAttrValueByName(FName Name);
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnPreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue);
