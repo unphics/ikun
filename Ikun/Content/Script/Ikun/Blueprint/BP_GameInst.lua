@@ -6,6 +6,7 @@
 ---
 
 require('Start')
+require('Bootstrapper')
 
 ---@class BP_GameInst: BP_GameInst_C
 local BP_GameInst = UnLua.Class()
