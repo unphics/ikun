@@ -18,6 +18,7 @@ function BP_GameInst:ReceiveInit()
 
     UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 't.MaxFPS 1000', nil)
     UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 'stat FPS', nil)
+    gameinit.triggerinit(gameinit.groups.gm_init)
 end
 
 function BP_GameInst:ReceiveOnWorldChanged(OldWorld, NewWorld)
