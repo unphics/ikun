@@ -57,6 +57,7 @@ end
 local keys = {
     luainit     = '[Lua初始化]',
     ueinit      = '[UE初始化]',
+    gameinit    = '[游戏初始化]',
     roleinit    = '[角色初始化]',
     repos       = '[射手站位调整]',
     lich02boom  = '[Lich二技能]',

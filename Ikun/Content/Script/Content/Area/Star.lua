@@ -12,15 +12,7 @@ require("Content.District.DistrictMgr")
 ---@field StarName string 星球的名字
 ---@field StarId number 星球的Id
 ---@field _tbLocationRef table<number, LocationClass>
-local StarClass = class.class "StarClass"{
-    ctor = function()end,
-    RegisterLocation = function()end,
-    FindLocation = function()end,
-    StarId = nil,
-    StarName = nil,
-    DistrictMgr = nil,
-    _tbLocationRef = nil,
-}
+local StarClass = class.class "StarClass"{}
 
 ---@override
 function StarClass:ctor(Id, Name)

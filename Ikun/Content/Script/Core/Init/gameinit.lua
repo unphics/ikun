@@ -5,6 +5,8 @@
 ---@data    Tue Sep 23 2025 11:13:55 GMT+0800 (中国标准时间)
 ---
 
+local log = require('Core/Log/log')
+
 local ring = {
     init_star = 'init_star',
     init_quest = 'init_quest',
@@ -62,6 +64,7 @@ end
 gameinit.triggerinit = function(group)
     for _, key in ipairs(group) do
         local infos = gameinit._initring[key]
+        log.info(log.key.gameinit, 'triggerinit', key)
         for _, info in pairs(infos) do
             if type(info) == "table" and info.callback and info.obj then
                 info.callback(info.obj)

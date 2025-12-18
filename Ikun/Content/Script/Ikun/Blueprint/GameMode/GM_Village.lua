@@ -11,7 +11,8 @@ local GM_Village = UnLua.Class('Ikun/Blueprint/GameMode/GM_Base')
 ---@override
 function GM_Village:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
-
+    
+    log.info(log.key.ueinit..'GM_Village:ReceiveBeginPlay()', net_util.print(self))
     gameinit.triggerinit(gameinit.groups.gm_init)
 end
 
