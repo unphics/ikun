@@ -6,6 +6,9 @@
 ---@todo    改名为Entry
 ---
 
+local EnhInput = require('Ikun/Module/Input/EnhInput')
+local InputMgr = require("Ikun/Module/Input/InputMgr")
+
 ---@class UI_Entry: UI_Entry_C
 local UI_Entry = UnLua.Class()
 
@@ -32,6 +35,12 @@ end
 ---@override
 function UI_Entry:OnShow()
     self.CvsCtrlWindow:SetVisibility(UE.ESlateVisibility.Hidden)
+    self._EntryInputPower = InputMgr.ObtainInputPower(self)
+end
+
+---@override
+function UI_Entry:OnHide()
+    InputMgr.ReliquishInputPower(self._EntryInputPower)
 end
 
 ---@private
