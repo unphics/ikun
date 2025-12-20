@@ -4,7 +4,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "GameplayAbilityBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(OnAbilityEndDelegate, bool, bWasCancelled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilityEndDelegate, bool, bWasCancelled);
 
 class UGameplayTask;
 class UAbilityAsync;
@@ -16,9 +16,9 @@ public:
 	UGameplayAbilityBase(const FObjectInitializer& ObjectInitializer);
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled);
 	UPROPERTY(BlueprintAssignable)
-	OnAbilityEndDelegate OnAbilityEndEvent;
+	FOnAbilityEndDelegate OnAbilityEndEvent;
 	UPROPERTY(BlueprintReadWrite)
-	TArray<UGameplayTask> RefTasks;
+	TArray<UGameplayTask*> RefTasks;
 	UPROPERTY(BlueprintReadWrite)
-	TArray<UAbilityAsync> RefAsyncs;
+	TArray<UAbilityAsync*> RefAsyncs;
 };
