@@ -22,3 +22,7 @@ IN CONNECTION WITH THE PROJECT OR THE USE OR OTHER DEALINGS IN THE PROJECT.
 --------------------------------------------------------------------------------
 This project is not affiliated with or endorsed by Epic Games, Inc.
 "Unreal Engine" is a trademark or registered trademark of Epic Games, Inc.
+
+Note: The media assets (models, animations, etc.) in the 'Content/'
+folders are NOT covered by the MIT License. They are subject to their original 
+licenses (e.g., CC BY, Epic EULA). See README.md for details.
