@@ -44,6 +44,4 @@ local goap = {}
 goap.util = class.GoapUtil
 goap.planner = class.GPlanner
 
-
-
 return goap
