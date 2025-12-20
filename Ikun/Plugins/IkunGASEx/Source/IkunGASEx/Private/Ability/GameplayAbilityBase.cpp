@@ -6,12 +6,12 @@
 UGameplayAbilityBase::UGameplayAbilityBase(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer) {}
 
 void UGameplayAbilityBase::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) {
-	for (auto& task: this->RefTasks) {
-		task.EndTask();
+	for (auto task: this->RefTasks) {
+		task->EndTask();
 	}
 	this->RefTasks.Empty();
-	for (auto& async: this->RefAsyncs) {
-		async.EndAction();
+	for (auto async: this->RefAsyncs) {
+		async->EndAction();
 	}
 	this->RefAsyncs.Empty();
 	this->OnAbilityEndEvent.Broadcast(bWasCancelled);
