@@ -42,6 +42,8 @@ public:
 	bool TryMoveToLoc(ACharacter* InOwnerChr, FVector InTargetLoc, float InAcceptRadius);
 	UFUNCTION(BlueprintCallable)
 	void CancelMove();
+	UFUNCTION(BlueprintCallable)
+	void AllowSteering();
 	UFUNCTION(BlueprintPure)
 	FVector GetSteerTargetLoc() const;
 	UFUNCTION(BlueprintPure)
@@ -100,6 +102,7 @@ public:
 
 	float _CurPathRefreshTimeCount = 0.0f;
 	bool _bSteeringActive = false;
+	bool _bAllowSteering = false;
 
 	UPROPERTY()
 	UNavPathData* _PendingNavData;

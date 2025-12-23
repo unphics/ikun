@@ -91,6 +91,10 @@ void UNavSteering::CancelMove() {
 	this->SteerEnd();
 }
 
+void UNavSteering::AllowSteering() {
+	this->_bAllowSteering = true;
+}
+
 void UNavSteering::_OnPathFound_First(const TArray<FVector>& InPathPoints, bool bSuccess) {
 	if (!this->NavPathData->IsPathValid()) {
 		FVector ownerAgentLoc = this->OwnerChr->GetNavAgentLocation();
@@ -125,6 +129,7 @@ void UNavSteering::SteerEnd() {
 	this->MoveStuckDetector = nullptr;
 	this->GoalActor = nullptr;
 	this->_bSteeringActive = false;
+	this->_bAllowSteering = false;
 	this->OnNavFinishedEvent.Clear();
 }
 
@@ -132,7 +137,7 @@ bool UNavSteering::IsAllowedToTick() const {
 	if (this->IsTemplate()) {
 		return false;
 	}
-	return this->_bSteeringActive;
+	return this->_bAllowSteering && this->_bSteeringActive;
 }
 
 void UNavSteering::Tick(float InDeltaTime) {
