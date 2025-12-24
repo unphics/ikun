@@ -12,10 +12,20 @@ local vec3 = fficlass.define('vec3', [[
 ]])
 
 ---@public
----@param rhs vec3
+---@param rhs vec3 named"rhs" is "right-hand side" 右操作数
 ---@return vec3
 function vec3:__add(rhs)
     return vec3(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
+end
+
+---@public
+---@param out vec3
+---@param a vec3
+---@param b vec3
+function vec3.add_to(out, a, b)
+    out.x = a.x + b.x
+    out.y = a.y + b.y
+    out.z = a.z + b.z
 end
 
 ---@public
@@ -30,10 +40,24 @@ end
 ---@return vec3
 function vec3:__mul(rhs)
     if type(rhs) == "number" then
-        return vec3(self.x * rhs, self.y * rhs, self.z * rhs)
+        return self:mul_scalar(rhs)
     else
-        return vec3(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
+        return self:mul_vec(rhs)
     end
+end
+
+---@public
+---@param num number
+---@return vec3
+function vec3:mul_scalar(num)
+    return vec3(self.x * num, self.y * num, self.z * num)
+end
+
+---@public
+---@param vec vec3
+---@return vec3
+function vec3:mul_vec(vec)
+    return vec3(self.x * vec.x, self.y * vec.y, self.z * vec.z)
 end
 
 ---@public

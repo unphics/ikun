@@ -4,7 +4,9 @@
  *  Author      : zhengyanshuai
  *  Date        : Thu Dec 11 2025 22:18:27 GMT+0800 (中国标准时间)
  *  Description :
- *  Todo		: 改造成Base, 让更多导航寻路需求从这里继承
+ *  Todo		:	1. 改造成Base, 让更多导航寻路需求从这里继承
+ *					2. 由Subsytem控制Tick(这个需要摸清CMC后再处理)
+ *					3. TaskFinsih后自动Return
  *  License     : MIT License
  * -----------------------------------------------------------------------------
  *  Copyright (c) 2025 zhengyanshuai

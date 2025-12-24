@@ -44,7 +44,7 @@ function fficlass.define(c_type_name, c_def)
             __index = self
         })
 
-        return raw_ctor
+        return class_proxy
     end
 
     return mt
