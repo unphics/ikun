@@ -47,7 +47,7 @@ bool UNavSteering::TryMoveToActor(ACharacter* InOwnerChr, AActor* InTargetActor,
 	// 如果目标不在导航网格内, 就在可接受的范围内尝试找一个最近的NavMesh点
 	this->NavPathData = UNavPathData::FindPathAsync(this->OwnerChr, ownerAgentLoc, this->_CachedGoalLoc);
 	if (!this->NavPathData) {
-		return nullptr;
+		return false;
 	}
 	this->NavPathData->OnPathFoundEvent.AddDynamic(this, &UNavSteering::_OnPathFound_First);
 	return true;

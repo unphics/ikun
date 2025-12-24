@@ -24,7 +24,7 @@ UMoveStuckDetector* UMoveStuckDetector::CreateDetector(float MaxStuckTime, const
 
 bool UMoveStuckDetector::TickMonitor(float DeltaTime, const FVector& ChrAgentLoc) {
 	this->_CurStuckTime += DeltaTime;
-	if (UKismetMathLibrary::EqualEqual_VectorVector(this->_MoveStuckLoc, ChrAgentLoc), 1) {
+	if (UKismetMathLibrary::EqualEqual_VectorVector(this->_MoveStuckLoc, ChrAgentLoc, 1)) {
 		if (this->_CurStuckTime > this->_MaxStuckTime) {
 			return true;
 		}
