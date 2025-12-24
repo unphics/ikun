@@ -4,7 +4,7 @@
  *  Author      : zhengyanshuai
  *  Date        : Wed Dec 10 2025 22:54:33 GMT+0800 (中国标准时间)
  *  Description :
- *  Todo		: 放入Pool
+ *  Todo		:	1.放入Pool或称为NavSteering的持久成员或变成结构体
  *  License     : MIT License
  * -----------------------------------------------------------------------------
  *  Copyright (c) 2025 zhengyanshuai

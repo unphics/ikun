@@ -4,7 +4,7 @@
  *  Author      : zhengyanshuai
  *  Date        : Wed Dec 10 2025 22:54:33 GMT+0800 (中国标准时间)
  *  Description :
- *  Todo		: 放入Pool
+ *  Todo		: 放入Pool或变成结构体
  *  License     : MIT License
  * -----------------------------------------------------------------------------
  *  Copyright (c) 2025 zhengyanshuai
