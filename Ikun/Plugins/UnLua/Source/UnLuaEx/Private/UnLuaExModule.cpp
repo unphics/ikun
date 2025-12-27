@@ -88,10 +88,10 @@ void FUnLuaExModule::StartupModule() {
 }
 void FUnLuaExModule::ShutdownModule() {}
 
-bool FUnLuaExModule::Exec(UWorld* World, const TCHAR* Cmd, FOutputDevice&) {
+bool FUnLuaExModule::Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice&) {
 	lua_State* L = UnLua::GetState();
 	if (L && lua_getglobal(L, "UECmd") == LUA_TFUNCTION) {
-		UnLua::FLuaRetValues Ret = UnLua::Call(L, "UECmd", (ANSICHAR*)StringCast<ANSICHAR>(Cmd).Get());
+		UnLua::FLuaRetValues Ret = UnLua::Call(L, "UECmd", (ANSICHAR*)StringCast<ANSICHAR>(Cmd).Get(), InWorld);
 		return Ret.IsValid() && Ret.Num() >= 1 && Ret[0].Value<bool>();
 	}
 	return false;
