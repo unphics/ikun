@@ -38,13 +38,19 @@ Ikun/
 
 ## ⚠️ 资产来源声明 (Asset Provenance Statement)
 
-* 本项目中的 **源代码与自制资源** 采用 MIT License，允许自由使用、修改、分发。
-* **媒体资源（美术、音频、模型等）**：
+* 本项目中的 **源代码与自制资源** 采用 MIT License。
+* **第三方媒体资源（美术、音频、模型等）** 遵循其各自的授权协议：
 
-  * 本项目为个人学习与实验项目，不包含商业用途。
-  * 尽合理努力保证资源为原创或合法授权。
-  * **UE5 Starter Character / Mannequin** 来自 Epic Games，使用遵守 [Unreal Engine EULA](https://www.unrealengine.com/eula)。
-  * 如果您是资源版权所有者，且发现项目中使用了您的作品而未经授权，请通过 [GitHub Issues](https://github.com/your-username/your-repo/issues) 联系我们，我们会 **立即从仓库及历史记录中移除相关文件**。
+  * **Korean Traditional Martial Arts (Characters & Animations)**
+    * **作者**: KCISA (Korea Culture Information Service Agency / 韩国文化信息服务中心)
+    * **协议**: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+    * **来源**: [可以放你下载的链接，如 Sketchfab 链接]
+    * **说明**: 本项目使用了其提供的 3D 模型与动作捕捉数据，并将其转换为虚幻引擎格式。
+
+  * **UE5 Starter Character / Mannequin**
+    * 来自 Epic Games，使用遵守 [Unreal Engine EULA](https://www.unrealengine.com/eula)。
+
+* **移除申请**: 如果您是资源版权所有者，发现本项目使用了您的作品且未获授权或署名不当，请通过 [GitHub Issues] 联系，我们会立即移除相关文件。
 
 ---
 

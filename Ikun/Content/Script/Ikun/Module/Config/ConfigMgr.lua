@@ -1,15 +1,16 @@
+
 ---
 ---@brief   配置管理器
 ---@author  zys
 ---@data    Sun Aug 10 2025 01:30:39 GMT+0800 (中国标准时间)
 ---
 
-require('Ikun/Module/Config/DirBrowser')
+require('Module/DirectoryBrowser/DirectoryBrowser')
 
 ---@class ConfigMgr
 ---@field _CachedConfigTable table<string, table>
 local ConfigMgr = class.class 'ConfigMgr' {
-    --[[public]]
+--[[public]]
     ctor = function() end,
     GetConfig = function()end,
     LoadConfigTable = function()end,
@@ -36,11 +37,11 @@ function ConfigMgr:GetConfig(Name)
 end
 
 ---@public 通过目录和文件名加载配置表并缓存
----@param Drs DirBrowser
+---@param Drs DirectoryBrowser
 ---@param FileName string
 function ConfigMgr:LoadConfigTable(Drs, FileName)
-    -- local brs = class.DirBrowser.create_cfg_dir() ---@as DirBrowser
-    local content = Drs:read_file(FileName .. '.csv')
+    -- local brs = class.DirectoryBrowser.CreateConfigDir() ---@as DirectoryBrowser
+    local content = Drs:ReadFile(FileName .. '.csv')
     local cfg = self:_ParsePipeTable(content)
     self._CachedConfigTable[FileName] = cfg
     return cfg
@@ -58,12 +59,12 @@ end
 function ConfigMgr:_PreloadConfigTable()
     log.info('ConfigMgr:_PreloadConfigTable()', '预加载配置表开始!')
 
-    local brs = class.DirBrowser.create_cfg_dir() ---@type DirBrowser
+    local brs = class.DirectoryBrowser.CreateConfigDir() ---@type DirectoryBrowser
     self:LoadConfigTable(brs, 'GlobalConst')
     local preloadConfig = self:LoadConfigTable(brs, 'Preload')
 
     for dirName, tables in pairs(preloadConfig) do
-        if brs:cd(dirName) then
+        if brs:CD(dirName) then
             local tableIndex = 1
             local cfgTableHead = 'Table'
             while tables[cfgTableHead..tableIndex] do
@@ -77,7 +78,7 @@ function ConfigMgr:_PreloadConfigTable()
                 end
                 tableIndex = tableIndex + 1
             end
-            brs:up()
+            brs:CD('..')
         end
     end
     log.info('ConfigMgr:_PreloadConfigTable()', '预加载配置表结束!')

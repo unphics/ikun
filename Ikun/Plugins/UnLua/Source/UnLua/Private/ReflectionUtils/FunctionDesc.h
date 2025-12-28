@@ -14,13 +14,13 @@
 
 #pragma once
 
-#include "Containers/StaticBitArray.h"
 #include "lua.hpp"
-#include "ParamBufferAllocator.h"
 #include "Registries/FunctionRegistry.h"
-#include "ReflectionUtils/PropertyDesc.h"
+#include "Containers/StaticBitArray.h"
 
+struct lua_State;
 struct FParameterCollection;
+class FPropertyDesc;
 
 /**
  * Function descriptor
@@ -29,6 +29,7 @@ class FFunctionDesc
 {
 public:
     FFunctionDesc(UFunction *InFunction, FParameterCollection *InDefaultParams);
+    ~FFunctionDesc();
 
     /**
      * Check the validity of this function
@@ -57,6 +58,13 @@ public:
      * @return - the number of out properties. out properties means return property or non-const reference properties
      */
     FORCEINLINE uint8 GetNumOutProperties() const { return ReturnPropertyIndex > INDEX_NONE ? OutPropertyIndices.Num() + 1 : OutPropertyIndices.Num(); }
+
+    /**
+     * Get the number of reference properties
+     *
+     * @return - the number of reference properties.
+     */
+    FORCEINLINE uint8 GetNumRefProperties() const { return NumRefProperties; }
 
     /**
      * Get the number of non-const reference properties
@@ -108,21 +116,26 @@ public:
 
 private:
     typedef TStaticBitArray<64U> FFlagArray;
-    void PreCall(lua_State* L, int32 NumParams, int32 FirstParamIndex, FFlagArray& CleanupFlags, void* Params, void* Userdata = nullptr);
+    void* PreCall(lua_State* L, int32 NumParams, int32 FirstParamIndex, FFlagArray& CleanupFlags, void* Userdata = nullptr);
     int32 PostCall(lua_State* L, int32 NumParams, int32 FirstParamIndex, void* Params, const FFlagArray& CleanupFlags);
 
     bool CallLuaInternal(lua_State *L, void *InParams, FOutParmRec *OutParams, void *RetValueAddress) const;
 
-    FORCEINLINE bool CheckObject(UObject* Object, FString& Error) const;
-
     TWeakObjectPtr<UFunction> Function;
     FString FuncName;
-    TSharedPtr<FParamBufferAllocator> Buffer;
+#if ENABLE_PERSISTENT_PARAM_BUFFER
+    void *Buffer;
+#endif
+#if !SUPPORTS_RPC_CALL
+    FOutParmRec *OutParmRec;
+    uint8 NumCalls;                 // RECURSE_LIMIT is 120 or 250 which is less than 256, so use a byte...
+#endif
     TArray<TUniquePtr<FPropertyDesc>> Properties;
     TArray<int32> OutPropertyIndices;
     FParameterCollection *DefaultParams;
     int32 ReturnPropertyIndex;
     int32 LatentPropertyIndex;
+    uint8 NumRefProperties;
     uint8 bStaticFunc : 1;
     uint8 bInterfaceFunc : 1;
     int32 ParmsSize;

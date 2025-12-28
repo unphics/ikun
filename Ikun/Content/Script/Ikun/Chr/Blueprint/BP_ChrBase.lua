@@ -30,7 +30,7 @@ function BP_ChrBase:GetRole()
     if not obj_util.is_valid(self) then
         return log.error('BP_ChrBase:GetRole() Has Released')
     end
-    return self.RoleComp.Role
+    return self.BP_RoleRegisterComp.Role
 end
 
 ---@private Chr开始死亡

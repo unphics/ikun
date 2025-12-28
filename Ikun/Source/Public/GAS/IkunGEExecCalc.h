@@ -20,7 +20,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float ReadAttrValue(FName Name, bool bSource = false);
 	UFUNCTION(BlueprintCallable)
-	void ModiAttrValue(FName Name, float Value, TEnumAsByte<EGameplayModOp::Type> ModOp = EGameplayModOp::Additive);
+	void ModiAttrValue(FName Name, float Value, TEnumAsByte<EGameplayModOp::Type> ModOp);
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGameplayEffectCustomExecutionParameters InExecParams;

@@ -25,37 +25,16 @@ public class UnLua : ModuleRules
 {
     public UnLua(ReadOnlyTargetRules Target) : base(Target)
     {
-#if UE_5_2_OR_LATER
-        IWYUSupport = IWYUSupport.None;
-#else
+        bEnableUndefinedIdentifierWarnings = false;
+
         bEnforceIWYU = false;
-#endif
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicIncludePaths.AddRange(
-            new string[]
-            {
-            }
-        );
+        PublicIncludePaths.AddRange(new string[] {});
 
-        PrivateIncludePaths.AddRange(
-            new[]
-            {
-                "UnLua/Private",
-            }
-        );
+        PrivateIncludePaths.AddRange(new[] {"UnLua/Private",});
 
-        PublicDependencyModuleNames.AddRange(
-            new[]
-            {
-                "Core",
-                "CoreUObject",
-                "Engine",
-                "Slate",
-                "InputCore",
-                "Lua"
-            }
-        );
+        PublicDependencyModuleNames.AddRange(new[] {"Core", "CoreUObject", "Engine", "Slate", "InputCore", "Lua"});
 
         PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Private"));
 
@@ -92,6 +71,7 @@ public class UnLua : ModuleRules
         loadBoolConfig("bEnableDebug", "UNLUA_ENABLE_DEBUG", false);
         loadBoolConfig("bEnablePersistentParamBuffer", "ENABLE_PERSISTENT_PARAM_BUFFER", true);
         loadBoolConfig("bEnableTypeChecking", "ENABLE_TYPE_CHECK", true);
+        loadBoolConfig("bEnableRPCCall", "SUPPORTS_RPC_CALL", true);
         loadBoolConfig("bEnableUnrealInsights", "ENABLE_UNREAL_INSIGHTS", false);
         loadBoolConfig("bEnableCallOverriddenFunction", "ENABLE_CALL_OVERRIDDEN_FUNCTION", true);
         loadBoolConfig("bEnableFText", "UNLUA_ENABLE_FTEXT", false);

@@ -43,7 +43,8 @@ function M.BindAction(Module, ActionPath, TriggerEvent, Handler, Args)
     local Bindings = Module.__UnLuaInputBindings
     table.insert(Bindings, function(Manager, Class)
         local BindingObject = Manager:GetOrAddBindingObject(Class, UE.UEnhancedInputActionDelegateBinding)
-        for _, OldBinding in pairs(BindingObject.InputActionDelegateBindings) do
+        for i = 1, BindingObject.InputActionDelegateBindings:Length() do
+            local OldBinding = BindingObject.InputActionDelegateBindings:Get(i)
             if OldBinding.FunctionNameToBind == FunctionName then
                 -- PIE下这个蓝图可能已经绑定过了
                 Manager:Override(Class, SignatureFunctionName, FunctionName)

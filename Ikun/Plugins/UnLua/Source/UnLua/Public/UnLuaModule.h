@@ -15,11 +15,9 @@
 #pragma once
 #include "LuaEnv.h"
 
-class UNLUA_API IUnLuaModule : public IModuleInterface
-{
+class UNLUA_API IUnLuaModule : public IModuleInterface {
 public:
-    static FORCEINLINE IUnLuaModule& Get()
-    {
+    static FORCEINLINE IUnLuaModule& Get() {
         return FModuleManager::LoadModuleChecked<IUnLuaModule>("UnLua");
     }
 

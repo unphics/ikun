@@ -94,7 +94,7 @@ namespace UnLua
     {
         static void Generate(FString &Buffer, int32 Index)
         {
-            FString TypeName = TTypeIntelliSense<std::conditional_t<TIsPointer<T1>::Value, typename TDecay<typename TRemovePointer<T1>::Type>::Type*, typename TDecay<T1>::Type>>::GetName();
+            FString TypeName = TTypeIntelliSense<typename TChooseClass<TIsPointer<T1>::Value, typename TDecay<typename TRemovePointer<T1>::Type>::Type*, typename TDecay<T1>::Type>::Result>::GetName();
             Buffer += FString::Printf(TEXT("---@param P%d %s %s\r\n"), Index, *TypeName, *TArgumentComment<T1>::Get());
             TArgumentIntelliSense<T2...>::Generate(Buffer, Index + 1);
         }
@@ -123,7 +123,7 @@ namespace UnLua
         }
 
         // return 
-        FString ReturnTypeName = TTypeIntelliSense<std::conditional_t<TIsPointer<RetType>::Value, typename TDecay<typename TRemovePointer<RetType>::Type>::Type*, typename TDecay<RetType>::Type>>::GetName();
+        FString ReturnTypeName = TTypeIntelliSense<typename TChooseClass<TIsPointer<RetType>::Value, typename TDecay<typename TRemovePointer<RetType>::Type>::Type*, typename TDecay<RetType>::Type>::Result>::GetName();
         if (ReturnTypeName.Len() > 0)
         {
             Buffer += FString::Printf(TEXT("---@return %s\r\n"), *ReturnTypeName);
@@ -208,7 +208,7 @@ namespace UnLua
         static int32 Invoke(lua_State *L, const TFunction<RetType(ArgType...)> &Func, TTuple<typename TArgTypeTraits<ArgType>::Type...> &Args, TIndices<N...> ParamIndices)
         {
             int32 Num = 0;
-            std::remove_cv_t<RetType> *RetValPtr = lua_gettop(L) > sizeof...(ArgType) ? UnLua::Get(L, sizeof...(ArgType) + 1, TType<std::remove_cv_t<RetType>*>()) : nullptr;
+            typename TRemoveConst<RetType>::Type *RetValPtr = lua_gettop(L) > sizeof...(ArgType) ? UnLua::Get(L, sizeof...(ArgType) + 1, TType<typename TRemoveConst<RetType>::Type*>()) : nullptr;
             if (RetValPtr)
             {
                 *RetValPtr = UnLua::Invoke(Func, Args, typename TZeroBasedIndices<sizeof...(ArgType)>::Type());
@@ -402,7 +402,7 @@ namespace UnLua
 
         char MetatableName[256];
         memset(MetatableName, 0, sizeof(MetatableName));
-        FCStringAnsi::Snprintf(MetatableName, sizeof(MetatableName), "%hs%hs", TType<SmartPtrType>::GetName(), TType<ClassType>::GetName());
+        FCStringAnsi::Snprintf(MetatableName, sizeof(MetatableName), "%s%s", TType<SmartPtrType>::GetName(), TType<ClassType>::GetName());
 
         int32 Type = luaL_getmetatable(L, MetatableName);
         lua_pop(L, 1);
@@ -440,7 +440,7 @@ namespace UnLua
         const int Actual = lua_gettop(L); 
         if (Actual < Expected)
         {
-            UE_LOG(LogUnLua, Warning, TEXT("Attempted to call constructor of %hs with invalid arguments. %d expected but got %d."), TType<ClassType>::GetName(), Expected, Actual);
+            UE_LOG(LogUnLua, Warning, TEXT("Attempted to call constructor of %s with invalid arguments. %d expected but got %d."), *TType<ClassType>::GetName(), Expected, Actual);
             return 0;
         }
 
@@ -465,7 +465,7 @@ namespace UnLua
     {
         char MetatableName[256];
         memset(MetatableName, 0, sizeof(MetatableName));
-        FCStringAnsi::Snprintf(MetatableName, sizeof(MetatableName), "%hs%hs", TType<SmartPtrType>::GetName(), TType<ClassType>::GetName());
+        FCStringAnsi::Snprintf(MetatableName, sizeof(MetatableName), "%s%s", TType<SmartPtrType>::GetName(), TType<ClassType>::GetName());
         SmartPtrType SharedPtr = SmartPtrType(new ClassType(Args.template Get<N>()...));
         void *Userdata = UnLua::NewSmartPointer(L, sizeof(SmartPtrType), MetatableName);
         if (Userdata)
@@ -880,7 +880,7 @@ namespace UnLua
     template <bool bIsReflected>
     void TExportedClassBase<bIsReflected>::GenerateIntelliSense(FString &Buffer) const
     {
-        GenerateIntelliSenseInternal(Buffer, std::conditional_t<bIsReflected, FTrue, FFalse>());
+        GenerateIntelliSenseInternal(Buffer, typename TChooseClass<bIsReflected, FTrue, FFalse>::Result());
     }
 
     template <bool bIsReflected>
@@ -951,7 +951,7 @@ namespace UnLua
     TExportedClass<bIsReflected, ClassType, CtorArgType...>::TExportedClass(const char *InName, const char *InSuperClassName)
         : FExportedClassBase(InName, InSuperClassName)
     {
-        AddDefaultFunctions(std::conditional_t<bIsReflected, FTrue, FFalse>());
+        AddDefaultFunctions(typename TChooseClass<bIsReflected, FTrue, FFalse>::Result());
     }
 
     template <bool bIsReflected, typename ClassType, typename... CtorArgType>
@@ -1029,14 +1029,14 @@ namespace UnLua
     template <bool bIsReflected, typename ClassType, typename... CtorArgType>
     void TExportedClass<bIsReflected, ClassType, CtorArgType...>::AddDefaultFunctions(FFalse NotReflected)
     {
-        AddConstructor(std::conditional_t<TIsConstructible<ClassType, CtorArgType...>::Value, FTrue, FFalse>());
-        AddDestructor(std::conditional_t<TAnd<TIsDestructible<ClassType>, TNot<TIsTriviallyDestructible<ClassType>>>::Value, FFalse, FTrue>());
+        AddConstructor(typename TChooseClass<TIsConstructible<ClassType, CtorArgType...>::Value, FTrue, FFalse>::Result());
+        AddDestructor(typename TChooseClass<TAnd<TIsDestructible<ClassType>, TNot<TIsTriviallyDestructible<ClassType>>>::Value, FFalse, FTrue>::Result());
     }
 
     template <bool bIsReflected, typename ClassType, typename... CtorArgType>
     void TExportedClass<bIsReflected, ClassType, CtorArgType...>::AddDefaultFunctions(FTrue Reflected)
     {
-        AddDefaultFunctions_Reflected(std::conditional_t<TPointerIsConvertibleFromTo<ClassType, UObject>::Value, FTrue, FFalse>());
+        AddDefaultFunctions_Reflected(typename TChooseClass<TPointerIsConvertibleFromTo<ClassType, UObject>::Value, FTrue, FFalse>::Result());
     }
 
     template <bool bIsReflected, typename ClassType, typename... CtorArgType>
@@ -1045,7 +1045,7 @@ namespace UnLua
         int32 NumArgs = sizeof...(CtorArgType);
         if (NumArgs > 0)
         {
-            AddConstructor(typename std::conditional_t<TIsConstructible<ClassType, CtorArgType...>::Value, FTrue, FFalse>());
+            AddConstructor(typename TChooseClass<TIsConstructible<ClassType, CtorArgType...>::Value, FTrue, FFalse>::Result());
         }
     }
 

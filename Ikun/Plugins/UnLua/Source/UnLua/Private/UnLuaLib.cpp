@@ -15,8 +15,8 @@ namespace UnLua
             FString Message;
             if (!lua_checkstack(L, ArgCount))
             {
-                luaL_error(L, "too many arguments, stack overflow");
-                return Message;
+            	luaL_error(L, "too many arguments, stack overflow");
+            	return Message;
             }
             for (int ArgIndex = 1; ArgIndex <= ArgCount; ArgIndex++)
             {
@@ -88,7 +88,6 @@ namespace UnLua
             {"HotReload", HotReload},
             {"Ref", Ref},
             {"Unref", Unref},
-            {"FTextEnabled", nullptr},
             {NULL, NULL}
         };
 
@@ -217,12 +216,20 @@ namespace UnLua
             )";
 
             lua_register(L, "UEPrint", LogInfo);
+
+#if LUA_VERSION_NUM > 501
             luaL_loadstring(L, Chunk);
             lua_newtable(L);
             lua_getglobal(L, LUA_GNAME);
             lua_setfield(L, -2, LUA_GNAME);
             luaL_setfuncs(L, UnLua_LegacyFunctions, 0);
             lua_setupvalue(L, -2, 1);
+#else
+            lua_register(L, "GetUProperty", GetUProperty);
+            lua_register(L, "SetUProperty", SetUProperty);
+            luaL_loadstring(L, Chunk);
+#endif
+
             lua_pcall(L, 0, LUA_MULTRET, 0);
             lua_getglobal(L, "Class");
             lua_setfield(L, -2, "Class");
@@ -270,7 +277,6 @@ namespace UnLua
 #endif
 
             LegacySupport(L);
-            lua_pop(L, 1);
             return 1;
         }
 

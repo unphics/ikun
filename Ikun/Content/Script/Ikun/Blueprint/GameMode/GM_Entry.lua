@@ -8,7 +8,14 @@
 ---@class GM_Entry: GM_Base
 local GM_Entry = UnLua.Class('Ikun/Blueprint/GameMode/GM_Base')
 
+---@override
+function GM_Entry:ReceiveBeginPlay()
+    self.Overridden.ReceiveBeginPlay(self)
+end
 function GM_Entry:ReceiveTick(DeltaSeconds)
+end
+
+function GM_Entry:ReceiveEndPlay(EndReason)
 end
 
 return GM_Entry

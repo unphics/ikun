@@ -1,0 +1,8 @@
+场景	源数据 (Source)	目标 (Target)	行为/规则	建议
+内部	FFI int/float	Lua 变量	值拷贝	随便用
+内部	FFI Struct	Lua 变量	引用 (指针)	注意，修改变量会影响原始内存
+内部	Lua String	FFI char[]	数据拷贝	用于存储名字，安全
+内部	Lua String	FFI char*	存地址 (危险)	千万别这么做，除非你懂 GC
+外部	FFI int/float	UE 函数参数	自动转换	直接传
+外部	FFI Struct	UE FVector	不兼容	手动转成 UE.FVector(x,y,z)
+外部	UE Actor	FFI void*	ffi.cast	只存指针，不保活 (Actor被销毁指针会悬空)

@@ -26,23 +26,21 @@ namespace UnLua
     public:
         explicit FEnumRegistry(FLuaEnv* Env);
 
-        ~FEnumRegistry();
+        static FEnumDesc* Find(const char* InName);
 
-        void Initialize();
+        static FEnumDesc* StaticRegister(const char* MetatableName);
 
-        FEnumDesc* Find(const char* InName);
+        static bool StaticUnregister(const UObjectBase* Enum);
 
-        FEnumDesc* Find(const UEnum* Enum);
+        static void Cleanup();
 
-        void NotifyUObjectDeleted(UObject* Object);
+        FEnumDesc* Register(const char* MetatableName);
 
-        FEnumDesc* Register(UEnum* Enum, lua_CFunction IndexFunc = nullptr);
-
-        void Unregister(const UEnum* Enum);
+        FEnumDesc* Register(const UEnum* Enum);
 
     private:
-        TMap<UEnum*, FEnumDesc*> Enums;
-        TMap<FString, FEnumDesc*> Name2Enums;
+        static TMap<UEnum*, FEnumDesc*> Enums;
+        static TMap<FName, FEnumDesc*> Name2Enums;
         FLuaEnv* Env;
     };
 }

@@ -89,9 +89,9 @@ bool FUnLuaTest_DynamicBinding::RunTest(const FString& Parameters)
 
         World->Tick(LEVELTICK_All, SMALL_NUMBER);
 
-        const char* Chunk2 = R"(
-                return G_Actor:RunTest()
-                )";
+        const char* Chunk2 = "\
+                return G_Actor:RunTest()\
+                ";
         UnLua::RunChunk(L, Chunk2);
 
         const auto Error = lua_tostring(L, -1);
@@ -142,9 +142,9 @@ bool FUnLuaTest_MultipleBinding::RunTest(const FString& Parameters)
 
         World->Tick(LEVELTICK_All, SMALL_NUMBER);
 
-        const char* Chunk2 = R"(
-                return G_Actor:RunTest()
-                )";
+        const char* Chunk2 = "\
+                return G_Actor:RunTest()\
+                ";
         UnLua::RunChunk(L, Chunk2);
 
         const auto Error = lua_tostring(L, -1);

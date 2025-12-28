@@ -10,6 +10,7 @@
 -- local M = { HOT_RELOAD = true }
 
 local HOT_RELOAD_MARK = "HOT_RELOAD"
+local searchers = package.searchers or package.loaders
 local loaded_modules = setmetatable({}, { __mode = "v" })
 local ignore_modules = {}
 local config = {
@@ -126,7 +127,7 @@ local function make_sandbox()
 
     local function load(module_name)
         local found, chunk
-        for i, searcher in ipairs(package.searchers) do
+        for i, searcher in ipairs(searchers) do
             chunk = searcher(module_name)
             if type(chunk) == "function" then
                 found = true
@@ -338,7 +339,7 @@ local function match_upvalues(value_info_map, old_upvalues)
                         if not ret[id] then
                             local replaced_upvalue = nil
                             if old_upvalues[name] ~= nil then
-                                replaced_upvalue = old_upvalues[name]
+                                replaced_upvalue = new_upvalue
                             else
                                 -- 新增的upvalue
                                 print("ADD NEW UPVALUE : ", tostring(new), name, tostring(new_upvalue))

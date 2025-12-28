@@ -97,9 +97,12 @@ static int32 Global_NewObject(lua_State *L)
         return 0;
     }
 
-    UObject* Outer = UnLua::GetUObject(L, 2);
+    UObject *Outer = NumParams > 1 ? UnLua::GetUObject(L, 2) : (UObject*)GetTransientPackage();
     if (!Outer)
-        Outer = GetTransientPackage();
+    {
+        UNLUA_LOGERROR(L, LogUnLua, Log, TEXT("%s: Invalid outer!"), ANSI_TO_TCHAR(__FUNCTION__));
+        return 0;
+    }
 
     FName Name = NumParams > 2 ? FName(lua_tostring(L, 3)) : NAME_None;
     //EObjectFlags Flags = NumParams > 3 ? EObjectFlags(lua_tointeger(L, 4)) : RF_NoFlags;

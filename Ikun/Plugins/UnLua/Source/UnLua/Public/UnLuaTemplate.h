@@ -15,7 +15,6 @@
 #pragma once
 
 #include "CoreUObject.h"
-#include "Misc/EngineVersionComparison.h"
 #include <type_traits>
 
 namespace UnLua
@@ -39,17 +38,7 @@ namespace UnLua
         template<class T1, class T2>
         static int32 Identical(...);
     };
-    template<typename T1, typename T2 = T1> struct THasEqualityOperator
-    {
-        enum
-        {
-#if UE_VERSION_OLDER_THAN(5, 2, 0)
-            Value = TIsSame<decltype(FHasEqualityOperatorImpl::Identical<T1, T2>(nullptr)), bool>::Value
-#else
-            Value = std::is_same_v<decltype(FHasEqualityOperatorImpl::Identical<T1, T2>(nullptr)), bool>
-#endif
-        };
-    };
+    template<typename T1, typename T2 = T1> struct THasEqualityOperator { enum { Value = TIsSame<decltype(FHasEqualityOperatorImpl::Identical<T1, T2>(nullptr)), bool>::Value }; };
 
 
     /**
@@ -91,7 +80,7 @@ namespace UnLua
     template <typename T> struct TArgTypeTraits
     {
         typedef typename TDecay<T>::Type RT;
-        typedef std::conditional_t<TIsPrimitiveTypeOrPointer<RT>::Value, RT, typename std::remove_cv<T>::type> Type;
+        typedef typename TChooseClass<TIsPrimitiveTypeOrPointer<RT>::Value, RT, typename TRemoveCV<T>::Type>::Result Type;
     };
     
     
@@ -337,9 +326,7 @@ DEFINE_TYPE(double)
 DEFINE_TYPE(bool)
 DEFINE_TYPE(FString)
 DEFINE_TYPE(FName)
-#if !UNLUA_ENABLE_FTEXT
 DEFINE_TYPE(FText)
-#endif
 DEFINE_SMART_POINTER(TSharedPtr)
 DEFINE_SMART_POINTER(TSharedRef)
 DEFINE_SMART_POINTER(TWeakPtr)

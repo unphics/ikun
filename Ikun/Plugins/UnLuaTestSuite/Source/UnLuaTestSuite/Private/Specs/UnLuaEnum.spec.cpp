@@ -65,9 +65,9 @@ void FUnLuaEnumSpec::Define()
             const auto Expected = UEnum::GetDisplayValueAsText(ECR_Overlap);
             TEST_TRUE(Expected.EqualTo(Actual))
 #else
-            const auto Actual = FUTF8ToTCHAR(lua_tostring(L, -1));
+            const auto Actual = UTF8_TO_TCHAR(lua_tostring(L, -1));
             const auto Expected = UEnum::GetDisplayValueAsText(ECR_Overlap).ToString();
-            TEST_EQUAL(Actual.Get(), Expected);
+            TEST_EQUAL(Actual, Expected);
 #endif
         });
 
@@ -78,7 +78,7 @@ void FUnLuaEnumSpec::Define()
             TEST_EQUAL(lua_tointeger(L, -1), 0x7FFFLL);
         });
     });
-
+    
     Describe(TEXT("GetMaxValue"), [this]
     {
         It(TEXT("获取枚举类型的最大值"), EAsyncExecution::TaskGraphMainThread, [this]()

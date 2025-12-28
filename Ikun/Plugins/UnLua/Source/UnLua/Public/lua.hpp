@@ -14,18 +14,27 @@
 
 #pragma once
 
-#ifdef __cplusplus
-#if !LUA_COMPILE_AS_CPP
+#if defined(__cplusplus) && !LUA_COMPILE_AS_CPP
 extern "C" {
-#endif
 #endif
 
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
 
-#ifdef __cplusplus
-#if !LUA_COMPILE_AS_CPP
-}
+#if LUA_VERSION_NUM==501
+#include "compat-5.3.h"
+
+#ifndef LUA_GNAME
+#define LUA_GNAME "_G"
 #endif
+
+#ifndef MAXUPVAL
+#define MAXUPVAL 255
+#endif
+
+#endif
+
+#if defined(__cplusplus) && !LUA_COMPILE_AS_CPP
+}
 #endif

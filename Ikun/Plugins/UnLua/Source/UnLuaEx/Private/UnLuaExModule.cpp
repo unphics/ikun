@@ -7,6 +7,7 @@
 #include "UnLuaPrivate.h"
 
 #include "UnLuaLib.h"
+#include "UnLuaModule.h"
 
 static FString GetMessage(lua_State* L)
 {
@@ -67,21 +68,30 @@ void OnLuaStateCreated(lua_State* L) {
 		lua_pop(L, 1);
 
 		FString FileName = FString::Printf(TEXT("%s%s.lua"), *GLuaSrcFullPath, TEXT("Start"));
+		UE_LOG(LogIkun, Log, TEXT("FUnLuaExModule: Try to find file Start.lua, Name=%s"), *FileName)
 		if (FPaths::FileExists(FileName)) {
 			luaL_dofile(L, TCHAR_TO_ANSI(*FileName));
+		} else {
+			UE_LOG(LogIkun, Error, TEXT("FUnLuaExModule: Failed to find file Start.lua, Name=%s"), *FileName)
 		}
 	}
 }
 
 void FUnLuaExModule::StartupModule() {
 	FUnLuaDelegates::OnLuaStateCreated.AddStatic(&OnLuaStateCreated);
+	if (IUnLuaModule::Get().GetEnv()) {
+		if (lua_State* L = IUnLuaModule::Get().GetEnv()->GetMainState()) {
+			UE_LOG(LogIkun, Log, TEXT("FUnLuaExModule: LuaState already exists, executing manually."));
+			OnLuaStateCreated(L);
+		}
+	}
 }
 void FUnLuaExModule::ShutdownModule() {}
 
-bool FUnLuaExModule::Exec(UWorld* World, const TCHAR* Cmd, FOutputDevice&) {
+bool FUnLuaExModule::Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice&) {
 	lua_State* L = UnLua::GetState();
 	if (L && lua_getglobal(L, "UECmd") == LUA_TFUNCTION) {
-		UnLua::FLuaRetValues Ret = UnLua::Call(L, "UECmd", (ANSICHAR*)StringCast<ANSICHAR>(Cmd).Get());
+		UnLua::FLuaRetValues Ret = UnLua::Call(L, "UECmd", (ANSICHAR*)StringCast<ANSICHAR>(Cmd).Get(), InWorld);
 		return Ret.IsValid() && Ret.Num() >= 1 && Ret[0].Value<bool>();
 	}
 	return false;

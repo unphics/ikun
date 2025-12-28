@@ -20,13 +20,9 @@ public class LuaProtobuf : ModuleRules
 {
     public LuaProtobuf(ReadOnlyTargetRules Target) : base(Target)
     {
-#if UE_5_2_OR_LATER
-        IWYUSupport = IWYUSupport.None;
-#else
         bEnforceIWYU = false;
-#endif
         bUseUnity = false;
-        PCHUsage = PCHUsageMode.NoSharedPCHs;
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         bEnableUndefinedIdentifierWarnings = false;
 
         PublicDependencyModuleNames.AddRange(

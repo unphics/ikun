@@ -31,10 +31,15 @@ public class Lua : ModuleRules
     public Lua(ReadOnlyTargetRules Target) : base(Target)
     {
         Type = ModuleType.External;
+        PCHUsage = ModuleRules.PCHUsageMode.NoPCHs;
+        //bOverrideBuildEnvironment = true;
         bEnableUndefinedIdentifierWarnings = false;
         ShadowVariableWarningLevel = WarningLevel.Off;
+        bUseUnity = false;
+        PublicDefinitions.Add("_CRT_SECURE_NO_WARNINGS");
 
-        m_LuaVersion = GetLuaVersion();
+            m_LuaVersion = GetLuaVersion();
+        m_UsingLuaJit = m_LuaVersion.ToLower().Contains("jit");
         m_Config = GetConfigName();
         m_LibName = GetLibraryName();
         m_BuildSystem = GetBuildSystem();
@@ -42,6 +47,7 @@ public class Lua : ModuleRules
         m_LibDirName = string.Format("lib-{0}", m_CompileAsCpp ? "cpp" : "c");
         m_LuaDirName = m_LuaVersion;
 
+        PublicDefinitions.Add("USING_LUAJIT=" + (m_UsingLuaJit ? 1 : 0));
         PublicIncludePaths.Add(Path.Combine(ModuleDirectory, m_LuaDirName, "src"));
 
         var buildMethodName = "BuildFor" + Target.Platform;
@@ -69,10 +75,19 @@ public class Lua : ModuleRules
 
         if (!dstFiles.All(File.Exists))
         {
-            var buildDir = CMake();
-            CopyDirectory(Path.Combine(buildDir, m_Config), dirPath);
+            if (m_UsingLuaJit)
+            {
+                RunScript();
+            }
+            else
+            {
+                var buildDir = CMake();
+                CopyDirectory(Path.Combine(buildDir, m_Config), dirPath);    
+            }
         }
 
+        if (m_UsingLuaJit)
+            PublicDefinitions.Add("LUAJIT_ENABLE_GC64=1");
         PublicDefinitions.Add("LUA_BUILD_AS_DLL");
         PublicDelayLoadDLLs.Add(m_LibName);
         PublicAdditionalLibraries.Add(libPath);
@@ -84,46 +99,59 @@ public class Lua : ModuleRules
 
     private void BuildForAndroid()
     {
-        var ndkRoot = Environment.GetEnvironmentVariable("NDKROOT");
-        if (ndkRoot == null)
-            throw new BuildException("can't find NDKROOT");
+        // 1. 获取 NDK 路径
+        var NDKRoot = Environment.GetEnvironmentVariable("NDKROOT");
 
-        var toolchain = GetAndroidToolChain();
-        var ndkApiLevel = toolchain.GetNdkApiLevelInt(21);
-        Console.WriteLine("toolchain.GetNdkApiLevelInt=", ndkApiLevel);
+        // 如果环境变量没配，为了防止在 PC 上生成项目报错，最好直接 return，或者只在打包 Android 时抛异常
+        if (string.IsNullOrEmpty(NDKRoot))
+        {
+            // 如果你现在只是为了在 PC 上跑通，直接 return 即可，不用抛异常
+            // throw new BuildException("can't find NDKROOT"); 
+            System.Console.WriteLine("Warning: NDKROOT not found, skipping LuaJIT Android build.");
+            return;
+        }
+
+        // -----------------------------------------------------------------------
+        // 【修复重点】注释掉这两行报错的代码
+        // var toolchain = AndroidExports.CreateToolChain(Target.ProjectFile);
+        // var NdkApiLevel = toolchain.GetNdkApiLevelInt(21);
+
+        // 【替换为】直接写死一个通用的 API Level (比如 21 或 24)
+        // 这通常不会影响兼容性，因为 CMake 会自动处理
+        int NdkApiLevel = 21;
+        // -----------------------------------------------------------------------
+
         var abiNames = new[] { "armeabi-v7a", "arm64-v8a", "x86_64" };
         foreach (var abiName in abiNames)
         {
             var libFile = GetLibraryPath(abiName);
             PublicAdditionalLibraries.Add(libFile);
+
+            // 如果库文件已经存在，就不用重新编译了
             if (File.Exists(libFile))
                 continue;
 
             EnsureDirectoryExists(libFile);
             var args = new Dictionary<string, string>
             {
-                { "CMAKE_TOOLCHAIN_FILE", Path.Combine(ndkRoot, "build/cmake/android.toolchain.cmake") },
+                { "CMAKE_TOOLCHAIN_FILE", Path.Combine(NDKRoot, "build/cmake/android.toolchain.cmake") },
                 { "ANDROID_ABI", abiName },
-                { "ANDROID_PLATFORM", "android-" + ndkApiLevel }
+                { "ANDROID_PLATFORM", "android-" + NdkApiLevel }
             };
-            var buildDir = CMake(args);
-            var buildFile = Path.Combine(buildDir, m_LibName);
-            File.Copy(buildFile, libFile, true);
-        }
-    }
 
-    private IAndroidToolChain GetAndroidToolChain()
-    {
-#if UE_5_2_OR_LATER
-        var ueBuildPlatformType = Assembly.GetAssembly(typeof(IAndroidToolChain)).GetType("UnrealBuildTool.UEBuildPlatform");
-        var getBuildPlatformMethod = ueBuildPlatformType.GetMethod("GetBuildPlatform", BindingFlags.Static | BindingFlags.Public);
-        var androidBuildPlatform = getBuildPlatformMethod.Invoke(null, new object[] { UnrealTargetPlatform.Android });
-        var createTempToolChainForProjectMethod = androidBuildPlatform.GetType().GetMethod("CreateTempToolChainForProject");
-        var toolchain = (IAndroidToolChain)createTempToolChainForProjectMethod.Invoke(androidBuildPlatform, new object[] { Target.ProjectFile });
-#else
-        var toolchain = AndroidExports.CreateToolChain(Target.ProjectFile);
-#endif
-        return toolchain;
+            // 执行 CMake 编译
+            try
+            {
+                var buildDir = CMake(args);
+                var buildFile = Path.Combine(buildDir, m_LibName);
+                File.Copy(buildFile, libFile, true);
+            }
+            catch (Exception ex)
+            {
+                // 捕获编译错误，防止因为 NDK 配置问题导致 VS 工程生成失败
+                System.Console.WriteLine($"Failed to build LuaJIT for Android {abiName}: {ex.Message}");
+            }
+        }
     }
 
     private void BuildForLinux()
@@ -188,18 +216,14 @@ public class Lua : ModuleRules
 
     private void BuildForMac()
     {
-#if UE_5_2_OR_LATER
         var abiName = Target.Architecture.ToString();
-#else
-        var abiName = Target.Architecture;
-#endif
         var libFile = GetLibraryPath(abiName);
         if (!File.Exists(libFile))
         {
             EnsureDirectoryExists(libFile);
             var args = new Dictionary<string, string>
             {
-                { "CMAKE_OSX_ARCHITECTURES", abiName }
+                { "CMAKE_OSX_ARCHITECTURES", Target.Architecture.ToString() }
             };
             var buildDir = CMake(args);
             var buildFile = Path.Combine(buildDir, m_LibName);
@@ -255,7 +279,7 @@ public class Lua : ModuleRules
         var args = new Dictionary<string, string>
         {
             { "CMAKE_TOOLCHAIN_FILE", Path.Combine(sceRootDir, @"Prospero\Tools\CMake\PS5.cmake") },
-            { "PS5", "1" }
+            { "PS5", "1"}
         };
         var buildDir = CMake(args);
         var buildFile = Path.Combine(buildDir, m_Config, m_LibName);
@@ -346,6 +370,37 @@ public class Lua : ModuleRules
         throw new NotSupportedException();
     }
 
+    private void RunScript()
+    {
+        
+        Console.WriteLine("generating {0} library with script...", m_LuaDirName);
+        var osPlatform = Environment.OSVersion.Platform;
+        if (osPlatform == PlatformID.Win32NT)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                WorkingDirectory = ModuleDirectory,
+                RedirectStandardInput = true,
+                UseShellExecute = false
+            };
+            var process = Process.Start(startInfo);
+            using (var writer = process.StandardInput)
+            {
+                var scriptName = "build_" + Target.Platform.ToString().ToLower() + (m_UsingLuaJit ? "_jit.bat" : ".bat"); 
+                writer.WriteLine("cd script");
+                writer.Write(scriptName);
+                writer.Write(" ");
+                writer.WriteLine(m_Config);
+            }
+
+            process.WaitForExit();
+            return;
+        }
+
+        throw new NotSupportedException();
+    }
+    
     private static void CopyDirectory(string srcDir, string dstDir)
     {
         var dir = new DirectoryInfo(srcDir);
@@ -399,7 +454,7 @@ public class Lua : ModuleRules
             return version;
         return "lua-5.4.3";
     }
-
+    
     private void EnsureDirectoryExists(string fileName)
     {
         var dirName = Path.GetDirectoryName(fileName);
@@ -442,14 +497,7 @@ public class Lua : ModuleRules
                 return "Ninja";
             if (Target.Platform.IsInGroup(UnrealPlatformGroup.Windows))
             {
-#if !UE_5_4_OR_LATER
-                if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2019)
-                    return "Visual Studio 16 2019";
-#endif
-#if UE_4_27_OR_LATER
-                if (Target.WindowsPlatform.Compiler == WindowsCompiler.VisualStudio2022)
-                    return "Visual Studio 17 2022";
-#endif
+                return "Visual Studio 17 2022";
             }
         }
 
@@ -473,6 +521,7 @@ public class Lua : ModuleRules
     }
 
     private readonly string m_LuaVersion;
+    private readonly bool m_UsingLuaJit;
     private readonly string m_Config;
     private readonly string m_LibName;
     private readonly string m_LibDirName;

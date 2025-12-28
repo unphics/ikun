@@ -23,20 +23,22 @@
 #include "ReflectionUtils/FieldDesc.h"
 #include "ReflectionUtils/PropertyDesc.h"
 
-#ifdef __cplusplus
-#if !LUA_COMPILE_AS_CPP
+#if defined(__cplusplus) && !LUA_COMPILE_AS_CPP
 extern "C" {
 #endif
+
+#if USING_LUAJIT
+    #include "lj_func.h"
+    #include "lj_state.h"
+    #include "lj_obj.h"
+#else
+    #include "lfunc.h"
+    #include "lstate.h"
+    #include "lobject.h"
 #endif
 
-#include "lfunc.h"
-#include "lstate.h"
-#include "lobject.h"
-
-#ifdef __cplusplus
-#if !LUA_COMPILE_AS_CPP
+#if defined(__cplusplus) && !LUA_COMPILE_AS_CPP
 }
-#endif
 #endif
 
 const FScriptContainerDesc FScriptContainerDesc::Array(sizeof(FLuaArray), "TArray");
@@ -99,126 +101,15 @@ struct FUserdataDesc
 };
 #pragma  pack(pop)
 
-/**
- * Get 'TValue' from Lua stack
- */
-static TValue* GetTValue(lua_State* L, int32 Index)
-{
-#if 504 == LUA_VERSION_NUM
-    CallInfo* ci = L->ci;
-    if (Index > 0)
-    {
-        StkId o = ci->func + Index;
-        check(Index <= L->ci->top - (ci->func + 1));
-        if (o >= L->top)
-        {
-            return &G(L)->nilvalue;
-        }
-        else
-        {
-            return s2v(o);
-        }
-    }
-    else if (LUA_REGISTRYINDEX < Index)
-    {  /* negative index */
-        check(Index != 0 && -Index <= L->top - (ci->func + 1));
-        return s2v(L->top + Index);
-    }
-    else if (Index == LUA_REGISTRYINDEX)
-    {
-        return &G(L)->l_registry;
-    }
-    else
-    {  /* upvalues */
-        Index = LUA_REGISTRYINDEX - Index;
-        check(Index <= MAXUPVAL + 1);
-        if (ttislcf(s2v(ci->func)))
-        {
-            /* light C function? */
-            return &G(L)->nilvalue;  /* it has no upvalues */
-        }
-        else
-        {
-            CClosure* func = clCvalue(s2v(ci->func));
-            return (Index <= func->nupvalues) ? &func->upvalue[Index - 1] : &G(L)->nilvalue;
-        }
-    }
-#else
-    CallInfo* ci = L->ci;
-    if (Index > 0)
-    {
-        TValue* V = ci->func + Index;
-        check(Index <= ci->top - (ci->func + 1));
-        return V >= L->top ? (TValue*)NULL : V;
-    }
-    else if (Index > LUA_REGISTRYINDEX)             // negative
-    {
-        check(Index != 0 && -Index <= L->top - (ci->func + 1));
-        return L->top + Index;
-    }
-    else if (Index == LUA_REGISTRYINDEX)
-    {
-        return &G(L)->l_registry;
-    }
-    else                                            // upvalues
-    {
-        Index = LUA_REGISTRYINDEX - Index;
-        check(Index <= MAXUPVAL + 1);
-        if (ttislcf(ci->func))
-        {
-            return (TValue*)NULL;                   // light C function has no upvalues
-        }
-        else
-        {
-            CClosure* Closure = clCvalue(ci->func);
-            return (Index <= Closure->nupvalues) ? &Closure->upvalue[Index - 1] : (TValue*)NULL;
-        }
-    }
-#endif
-}
-
-static int32 GetTValueType(TValue* Value)
-{
-#if 504 == LUA_VERSION_NUM
-    return ttype(Value);
-#else
-    return ttnov(Value);
-#endif
-}
-
-static Udata* GetUdata(TValue* Value)
-{
-    return uvalue(Value);
-}
-
-static void* GetUdataMem(Udata* U)
-{
-    return getudatamem(U);
-}
-
-static int32 GetUdataMemSize(Udata* U)
-{
-    return U->len;
-}
-
 static uint8 GetUdataHeaderSize()
 {
-    static uint8 HeaderSize = 0;
-    if (0 == HeaderSize)
-    {
-        lua_State* L = luaL_newstate();
-#if 504 == LUA_VERSION_NUM
-        uint8* Userdata = (uint8*)lua_newuserdatauv(L, 0, 0);
+#if USING_LUAJIT
+    return sizeof(GCudata);
+#elif LUA_VERSION_NUM == 501
+    return sizeof(Udata);
 #else
-        uint8* Userdata = (uint8*)lua_newuserdata(L, 0);
+    return udatamemoffset(0);
 #endif
-        TValue* Value = GetTValue(L, -1);
-        Udata* U = GetUdata(Value);
-        HeaderSize = Userdata - (uint8*)U;
-        lua_close(L);
-    }
-
-    return HeaderSize;
 }
 
 /**
@@ -231,23 +122,42 @@ uint8 CalcUserdataPadding(int32 Alignment)
     return (uint8)(Align(HeaderSize, Alignment) - HeaderSize);      // sizeof(UUdata) == 40
 }
 
+#if USING_LUAJIT
+static FUserdataDesc* GetUserdataDesc(GCudata* U)
+{
+    constexpr auto DescSize = sizeof(FUserdataDesc);
+    const auto UdataMemSize = U->len;
+    if (DescSize > UdataMemSize)
+        return nullptr;
+
+    const auto Ret = (FUserdataDesc*)((uint8*)U + sizeof(GCudata));
+    return Ret;
+}
+#else
 static FUserdataDesc* GetUserdataDesc(Udata* U)
 {
-    FUserdataDesc* UserdataDesc = NULL;
+    constexpr auto DescSize = sizeof(FUserdataDesc);
 
-    uint8 DescSize = sizeof(FUserdataDesc);
-    int32 UdataMemSize = GetUdataMemSize(U);
-    if (DescSize <= UdataMemSize)
-    {
-        UserdataDesc = (FUserdataDesc*)((uint8*)GetUdataMem(U) + UdataMemSize - DescSize);
-        if (USERDATA_MAGIC != UserdataDesc->magic)
-        {
-            UserdataDesc = NULL;
-        }
-    }
+#if LUA_VERSION_NUM == 504
+    const auto UdataMemSize = U->len;
+    if (DescSize > UdataMemSize)
+        return nullptr;
 
-    return UserdataDesc;
+    const auto Ret = (FUserdataDesc*)((uint8*)getudatamem(U) + UdataMemSize - DescSize);
+    if (Ret->magic != USERDATA_MAGIC)
+        return nullptr;
+    
+    return Ret;
+#else
+    const auto UdataMemSize = U->uv.len;
+    if (DescSize > UdataMemSize)
+        return nullptr;
+
+    const auto Ret = (FUserdataDesc*)((uint8*)U + sizeof(Udata));
+    return Ret;
+#endif
 }
+#endif
 
 static void* NewUserdataWithDesc(lua_State* L, int Size, uint8 Tag, uint8 Padding)
 {
@@ -283,7 +193,11 @@ void* NewUserdataWithPaddingTag(lua_State* L, int Size, uint8 Padding)
 
 void MarkUserdataTwoLvPtrTag(void* Userdata)
 {
-    Udata* U = (Udata*)((uint8*)Userdata - GetUdataHeaderSize());
+#if USING_LUAJIT
+    auto U = (GCudata*)((uint8*)Userdata - GetUdataHeaderSize());
+#else
+    auto U = (Udata*)((uint8*)Userdata - GetUdataHeaderSize());
+#endif
     FUserdataDesc* UserdataDesc = GetUserdataDesc(U);
     if (UserdataDesc)
     {
@@ -293,7 +207,11 @@ void MarkUserdataTwoLvPtrTag(void* Userdata)
 
 void SetUserdataFlags(void* Userdata, uint8 Flags)
 {
+#if USING_LUAJIT
+    GCudata* U = (GCudata*)((uint8*)Userdata - GetUdataHeaderSize());
+#else
     Udata* U = (Udata*)((uint8*)Userdata - GetUdataHeaderSize());
+#endif
     FUserdataDesc* UserdataDesc = GetUserdataDesc(U);
     if (UserdataDesc)
     {
@@ -314,44 +232,57 @@ void* GetUserdata(lua_State *L, int32 Index, bool *OutTwoLvlPtr, bool *OutClassM
     return UnLua::LowLevel::GetUserdata(L, Index, OutTwoLvlPtr, OutClassMetatable);
 }
 
+FUserdataDesc* GetDescAndUserdata(lua_State* L, int32 Index, void*& Userdata)
+{
+    const auto UserdataOnStack = (uint8*)lua_touserdata(L, Index);
+    if (!UserdataOnStack)
+    {
+        Userdata = nullptr;
+        return nullptr;
+    }
+
+#if USING_LUAJIT
+    const auto UdataHeader = (GCudata*)(UserdataOnStack - GetUdataHeaderSize());
+    const auto UserdataMemSize = UdataHeader->len;
+#else
+    const auto UdataHeader = (Udata*)(UserdataOnStack - GetUdataHeaderSize());
+    #if LUA_VERSION_NUM == 501 && !USING_LUAJIT 
+        const auto UserdataMemSize = UdataHeader->uv.len;
+    #else
+        const auto UserdataMemSize = UdataHeader->len;
+    #endif
+#endif
+    const auto Desc = (FUserdataDesc*)(UserdataOnStack + UserdataMemSize - sizeof(FUserdataDesc));
+    if (!Desc || Desc->magic != USERDATA_MAGIC)
+    {
+        Userdata = nullptr;
+        return nullptr;
+    }
+
+    Userdata = UserdataOnStack;
+    return Desc;
+}
+
 /**
  * Get the address of userdata, fast path
  */
-void* GetUserdataFast(lua_State *L, int32 Index, bool *OutTwoLvlPtr)
+void* GetUserdataFast(lua_State* L, int32 Index, bool* OutTwoLvlPtr)
 {
     bool bTwoLvlPtr = false;
     void* Userdata = nullptr;
 
-    TValue* Value = GetTValue(L, Index);
-    int32 Type = GetTValueType(Value);
-    if (Type == LUA_TUSERDATA)
+    const auto Desc = GetDescAndUserdata(L, Index, Userdata);
+    if (LIKELY(Desc && Desc->tag & BIT_VARIANT_TAG))
     {
-        Udata* U = GetUdata(Value);
-        uint8* Buffer = (uint8*)GetUdataMem(U);
-        FUserdataDesc* UserdataDesc = GetUserdataDesc(U);
-        if ((UserdataDesc)
-            && (UserdataDesc->tag & BIT_VARIANT_TAG))// if the userdata has a variant tag
-        {
-            bTwoLvlPtr = (UserdataDesc->tag & BIT_TWOLEVEL_PTR) != 0;        // test if the userdata is a two level pointer
-            if (UserdataDesc->tag & BIT_RELEASED_TAG)
-                Userdata = nullptr;
-            else
-                Userdata = bTwoLvlPtr ? Buffer : Buffer + UserdataDesc->padding;    // add padding to userdata if it's not a two level pointer
-        }
+        bTwoLvlPtr = Desc->tag & BIT_TWOLEVEL_PTR;
+        if (Desc->tag & BIT_RELEASED_TAG)
+            Userdata = nullptr;
         else
-        {
-            Userdata = Buffer;
-        }
-    }
-    else if (Type == LUA_TLIGHTUSERDATA)
-    {
-        Userdata = pvalue(Value);                                 // get the light userdata
+            Userdata = bTwoLvlPtr ? Userdata : (uint8*)Userdata + Desc->padding;
     }
 
     if (OutTwoLvlPtr)
-    {
-        *OutTwoLvlPtr = bTwoLvlPtr;                                 // set two level pointer flag
-    }
+        *OutTwoLvlPtr = bTwoLvlPtr;
 
     return Userdata;
 }
@@ -361,7 +292,7 @@ void* GetUserdataFast(lua_State *L, int32 Index, bool *OutTwoLvlPtr)
  */
 bool TryToSetMetatable(lua_State* L, const char* MetatableName, UObject* Object)
 {
-    const auto Registry = UnLua::FLuaEnv::FindEnv(L)->GetClassRegistry();
+    const auto Registry = UnLua::FClassRegistry::Find(L);
     if (!Registry)
         return false;
 
@@ -477,54 +408,21 @@ void* CacheScriptContainer(lua_State *L, void *Key, const FScriptContainerDesc &
     return Userdata;            // return null if container is already cached, or the new created userdata otherwise
 }
 
-
-void* CacheScriptContainer(lua_State *L, void *Key, const FScriptContainerDesc &Desc, const TFunctionRef<bool (void*)>& Validator)
-{
-    if (!Key)
-    {
-        UNLUA_LOGERROR(L, LogUnLua, Warning, TEXT("%s, Invalid key!"), ANSI_TO_TCHAR(__FUNCTION__));
-        return nullptr;
-    }
-
-    // return null if container is already cached, or create/cache/return a new ud
-    void *Userdata = nullptr;
-    lua_getfield(L, LUA_REGISTRYINDEX, "ScriptContainerMap");
-    lua_pushlightuserdata(L, Key);
-    int32 Type = lua_rawget(L, -2);
-    if (Type == LUA_TNIL || !Validator(lua_touserdata(L, -1)))
-    {
-        lua_pop(L, 1);
-
-        Userdata = NewUserdataWithContainerTag(L, Desc.GetSize());      // create new userdata
-        luaL_setmetatable(L, Desc.GetName());               // set metatable
-        lua_pushlightuserdata(L, Key);
-        lua_pushvalue(L, -2);
-        lua_rawset(L, -4);                                  // cache it in 'ScriptContainerMap'
-        UnLua::FLuaEnv::FindEnv(L)->GetDanglingCheck()->CaptureContainer(L, Key);
-    }
-
-    lua_remove(L, -2);
-    return Userdata;            // return null if container is already cached, or the new created userdata otherwise
-}
-
 /**
  * Get a script container at the given stack index
  */
-void* GetScriptContainer(lua_State *L, int32 Index)
+void* GetScriptContainer(lua_State* L, int32 Index)
 {
-    TValue* Value = GetTValue(L, Index);
-    if ((Value->tt_ & 0x0F) == LUA_TUSERDATA)
-    {
-        uint8 Flag = (BIT_VARIANT_TAG | BIT_SCRIPT_CONTAINER);              // variant tags
+    void* Ret;
+    const auto Desc = GetDescAndUserdata(L, Index, Ret);
+    if (!Desc)
+        return nullptr;
 
-        Udata* U = GetUdata(Value);
-        FUserdataDesc* UserdataDesc = GetUserdataDesc(U);
-        if (UserdataDesc)
-        {
-            return (UserdataDesc->tag & Flag) == Flag ? *((void**)GetUdataMem(U)) : nullptr;
-        }
-    }
-    return nullptr;
+    constexpr auto Flag = BIT_VARIANT_TAG | BIT_SCRIPT_CONTAINER;
+    if (!(Desc->magic & Flag))
+        return nullptr;
+
+    return *static_cast<void**>(Ret);
 }
 
 /**
@@ -986,7 +884,7 @@ static void GetFieldInternal(lua_State* L)
     lua_pop(L, 1);
 
     // TODO: refactor
-    const auto Registry = UnLua::FLuaEnv::FindEnv(L)->GetClassRegistry();
+    const auto Registry = UnLua::FClassRegistry::Find(L);
     FClassDesc* ClassDesc = Registry->Register(ClassName);
     TSharedPtr<FFieldDesc> Field = ClassDesc->RegisterField(FieldName, ClassDesc);
     if (Field && Field->IsValid())
@@ -1001,23 +899,6 @@ static void GetFieldInternal(lua_State* L)
             lua_pushvalue(L, 2);
             Type = lua_rawget(L, -2);
             bCached = Type != LUA_TNIL;
-            // check cached property from non-native class
-            if (bCached && !Field->OuterClass->IsNative())
-            {
-                auto Ptr = lua_touserdata(L, -1);
-                if (Ptr)
-                {
-                    auto Property = static_cast<TSharedPtr<UnLua::ITypeOps>*>(Ptr);
-                    if (Property && Property->IsValid())
-                    {
-                        auto PropertyDesc = static_cast<FPropertyDesc*>((*Property).Get());
-                        if (!PropertyDesc->IsValid())
-                        {
-                            bCached = false;
-                        }
-                    }
-                }
-            }
             if (!bCached)
             {
                 lua_pop(L, 1);
@@ -1067,6 +948,95 @@ FORCEINLINE static int32 GetField(lua_State* L)
         GetFieldInternal(L);
     lua_remove(L, -2);
     return 1;
+}
+
+/**
+ * Get collision related enums
+ */
+static bool RegisterCollisionEnum(lua_State *L, const char *Name, lua_CFunction IndexFunc)
+{
+    int32 Type = luaL_getmetatable(L, Name);
+    if (Type == LUA_TTABLE)
+    {
+        lua_pop(L, 1);
+        return true;
+    }
+
+    UnLua::FEnumRegistry::StaticRegister(Name);
+
+    lua_pop(L, 1);
+    luaL_newmetatable(L, Name);
+    lua_pushvalue(L, -1);
+    lua_setmetatable(L, -2);
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, IndexFunc);
+    lua_rawset(L, -3);
+    SetTableForClass(L, Name);
+    return true;
+}
+
+/**
+ * __index meta methods for collision related enums
+ */
+static int32 CollisionEnum_Index(lua_State *L, int32(*Converter)(FName))
+{
+    const char *Name = lua_tostring(L, -1);
+    if (Name)
+    {
+        int32 Value = Converter(FName(Name));
+        if (Value == INDEX_NONE)
+        {
+            UNLUA_LOGERROR(L, LogUnLua, Warning, TEXT("%s: Cann't find enum %s!"), ANSI_TO_TCHAR(__FUNCTION__), ANSI_TO_TCHAR(Name));
+        }
+        lua_pushvalue(L, 2);
+        lua_pushinteger(L, Value);
+        lua_rawset(L, 1);
+        lua_pushinteger(L, Value);
+    }
+    else
+    {
+        lua_pushinteger(L, INDEX_NONE);
+    }
+    return 1;
+}
+
+static int32 ECollisionChannel_Index(lua_State *L)
+{
+    return CollisionEnum_Index(L, &FCollisionHelper::ConvertToCollisionChannel);
+}
+
+static int32 EObjectTypeQuery_Index(lua_State *L)
+{
+    return CollisionEnum_Index(L, &FCollisionHelper::ConvertToObjectType);
+}
+
+static int32 ETraceTypeQuery_Index(lua_State *L)
+{
+    return CollisionEnum_Index(L, &FCollisionHelper::ConvertToTraceType);
+}
+
+/**
+ * Register ECollisionChannel
+ */
+bool RegisterECollisionChannel(lua_State *L)
+{
+    return RegisterCollisionEnum(L, "ECollisionChannel", ECollisionChannel_Index);
+}
+
+/**
+ * Register EObjectTypeQuery
+ */
+bool RegisterEObjectTypeQuery(lua_State *L)
+{
+    return RegisterCollisionEnum(L, "EObjectTypeQuery", EObjectTypeQuery_Index);
+}
+
+/**
+ * Register ETraceTypeQuery
+ */
+bool RegisterETraceTypeQuery(lua_State *L)
+{
+    return RegisterCollisionEnum(L, "ETraceTypeQuery", ETraceTypeQuery_Index);
 }
 
 /**
@@ -1188,6 +1158,159 @@ int32 TraverseTable(lua_State *L, int32 Index, void *Userdata, bool(*TraverseWor
         return NumElements;
     }
     return INDEX_NONE;
+}
+
+/**
+ * __index meta methods for enum
+ */
+int32 Enum_Index(lua_State *L)
+{
+    const auto NumParams = lua_gettop(L);
+    if (NumParams < 2)
+        return 0;
+
+    // 1: meta table of the Enum; 2: entry name in Enum
+    if (lua_type(L, 1) != LUA_TTABLE)
+        return 0;
+
+    if (lua_type(L, 2) != LUA_TSTRING)
+        return 0;
+
+    lua_pushstring(L, "__name");
+    lua_rawget(L, 1);
+    check(lua_isstring(L, -1));
+
+    const auto Enum = UnLua::FEnumRegistry::Find(lua_tostring(L, -1));
+    if (!Enum)
+    {
+        lua_pop(L, 1);
+        return 0;
+    }
+
+    Enum->Load();
+
+    const auto Value = Enum->GetValue(lua_tostring(L, 2));
+
+    lua_pop(L, 1);
+    lua_pushvalue(L, 2);
+    lua_pushinteger(L, Value);
+    lua_rawset(L, 1);
+    lua_pushinteger(L, Value);
+
+    return 1;
+}
+
+int32 Enum_Delete(lua_State *L)
+{
+    return 0;
+}
+
+int32 Enum_GetMaxValue(lua_State* L)
+{   
+    int32 MaxValue = 0;
+    
+    lua_pushvalue(L, lua_upvalueindex(1));
+    if (lua_type(L,-1) == LUA_TTABLE)
+    {
+		lua_pushstring(L, "__name");
+		int32 Type = lua_rawget(L, -2);
+		if (Type == LUA_TSTRING)
+		{
+			const char* EnumName = lua_tostring(L, -1);
+            const auto EnumDesc = UnLua::FEnumRegistry::Find(EnumName);
+			if (EnumDesc)
+			{
+				UEnum* Enum = EnumDesc->GetEnum();
+				if (Enum)
+				{
+					MaxValue = Enum->GetMaxEnumValue();
+				}
+			}
+		}
+		lua_pop(L, 1);
+    }
+    lua_pop(L, 1);
+
+    lua_pushinteger(L, MaxValue);
+    return 1;
+}
+
+int32 Enum_GetNameStringByValue(lua_State* L)
+{
+    if (lua_gettop(L) < 1)
+    {
+        return 0;
+    }
+
+    FString ValueName;
+
+    lua_pushvalue(L, lua_upvalueindex(1));
+    if (lua_type(L, -1) == LUA_TTABLE)
+    {
+        // enum value
+        int64 Value = lua_tointegerx(L, -2, nullptr);
+
+        lua_pushstring(L, "__name");
+        int32 Type = lua_rawget(L, -2);
+        if (Type == LUA_TSTRING)
+        {
+            const char* EnumName = lua_tostring(L, -1);
+            const auto EnumDesc = UnLua::FEnumRegistry::Find(EnumName);
+            if (EnumDesc)
+            {
+                UEnum* Enum = EnumDesc->GetEnum();
+                if (Enum)
+                {   
+                    ValueName = Enum->GetNameStringByValue(Value);
+                }
+            }
+        }
+        lua_pop(L, 1);
+    }
+    lua_pop(L, 1);
+
+    UnLua::Push(L, ValueName);
+
+    return 1;
+}
+
+int32 Enum_GetDisplayNameTextByValue(lua_State* L)
+{
+    if (lua_gettop(L) < 1)
+    {
+        return 0;
+    }
+
+    FText ValueName;
+
+    lua_pushvalue(L, lua_upvalueindex(1));
+    if (lua_type(L, -1) == LUA_TTABLE)
+    {
+        // enum value
+        int64 Value = lua_tointegerx(L, -2, nullptr);
+
+        lua_pushstring(L, "__name");
+        int32 Type = lua_rawget(L, -2);
+        if (Type == LUA_TSTRING)
+        {
+            const char* EnumName = lua_tostring(L, -1);
+            const auto EnumDesc = UnLua::FEnumRegistry::Find(EnumName);
+            if (EnumDesc)
+            {
+                UEnum* Enum = EnumDesc->GetEnum();
+                if (Enum)
+                {   
+                    ValueName = Enum->GetDisplayNameTextByValue(Value);
+                }
+            }
+        }
+        lua_pop(L, 1);
+    }
+    lua_pop(L, 1);
+
+    UnLua::Push(L, ValueName);
+
+    return 1;
 }
 
 /**

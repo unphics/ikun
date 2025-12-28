@@ -31,9 +31,7 @@ function PC_Base:ReceiveBeginPlay()
 
     self:InitInputSystem()
     self:InitPlayerInput()
-    if net_util.is_client(self) then
-    end
-
+    
     ui_util.init_ui_module(self:GetWorld())
 end
 

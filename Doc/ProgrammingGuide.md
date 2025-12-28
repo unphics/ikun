@@ -12,7 +12,7 @@ BP_IkunPC 玩家控制器
     ChatComp 为对话模块和对话UI提供网络互通接口
     CameraViewComp 相机
 BP_ChrBase 角色基类
-    RoleComp 角色组件
+    BP_RoleRegisterComp 角色组件
     AnimComp 动画组件
     InFightComp 战斗状态组件, 入战状态/武备状态
     SkillComp 技能组件
@@ -146,3 +146,5 @@ Script/
     ECS:数据与行为分离
 ```
 ---
+## 命名
+给一个类命名取决于他的生命周期以及他在架构中扮演的角色还有使用时的语感

@@ -5,6 +5,8 @@
 ---@data    Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
 ---
 
+local GameWorld = nil
+local Unpack = table.unpack or _G.unpack
 log.info("debug_util Loaded")
 
 ---@class debug_util
@@ -59,15 +61,16 @@ local function parse_args(cmd_str)
     return args
 end
 
-UECmd = function(Cmd)
+UECmd = function(Cmd, InWorld)
     Cmd = Cmd:match('lua (.+)')
     if Cmd then
+        GameWorld = InWorld
         local args = parse_args(Cmd)
         local field_name = table.remove(args, 1)
         local field = debug_util[field_name]
         if field and type(field) == 'function' then
             xpcall(function()
-                field(table.unpack(args))
+                field(Unpack(args))
             end, function(err)
                 log.error("LuaCmdError:", err, '\n', debug.traceback())
             end)
