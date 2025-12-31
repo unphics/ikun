@@ -15,6 +15,8 @@
 #pragma once
 #include "LuaEnv.h"
 
+UNLUA_API void RegisterCustomLuaModule(lua_State* L, const char* Name, lua_CFunction InitFunc);
+
 class UNLUA_API IUnLuaModule : public IModuleInterface {
 public:
     static FORCEINLINE IUnLuaModule& Get() {
