@@ -9,6 +9,7 @@
 local enet = require("enet")
 local ffi = require("ffi")
 local log = require("Core/Log/log")
+local Protocols = require('System/Net/Protocols')
 
 ---@class NetSystem
 ---@param Host table
@@ -107,9 +108,17 @@ function NetSystem:DispatchMessage(peer, data)
     local msg_id = header.msg_id
 
     local handler = self.Handlers[msg_id]
+
     if handler then
         -- 将数据指针偏移header大小, 传递给具体处理器
         local payload_ptr = ffi.cast('char*', data) + ffi.sizeof('net_header_t')
+
+        local type_name = Protocols.ID_TO_TYPE[msg_id]
+        local final_data = payload_ptr
+        if type_name then
+            final_data = ffi.cast(type_name..'*', payload_ptr)
+        end
+        
         handler(peer, payload_ptr, header)
     else
         log.warn("NetSystem", "No handler for MsgID: " .. msg_id)
