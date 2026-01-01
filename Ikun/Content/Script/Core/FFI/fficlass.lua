@@ -7,6 +7,16 @@
 
 local ffi = require('ffi')
 
+local function CDefErrpr(InErrMsg, InCTypeName, InCDef)
+    local err_msg = tostring(InErrMsg)
+    local str = "\n============================================================================================\n"
+    str = str .. "❌ [FFI Error] Failed to define struct: " .. tostring(InCTypeName) .. '\n'
+    str = str .. "Error Message: " .. err_msg .. "\n"
+    str = str .. "Context (C Code):\n" .. InCDef .. "\n"
+    str = str .. "============================================================================================"
+    error(str)
+end
+
 ---@class fficlass
 local fficlass = {}
 
@@ -17,13 +27,7 @@ function fficlass.define(c_type_name, c_def)
     if c_def then
         local ok, err = pcall(ffi.cdef, c_def)
         if not ok then
-            local err_msg = tostring(err)
-            local str = "\n============================================================================================\n"
-            str = str .. "❌ [FFI Error] Failed to define struct: " .. tostring(c_type_name) .. '\n'
-            str = str .. "Error Message: " .. err_msg .. "\n"
-            str = str .. "Context (C Code):\n" .. c_def .. "\n"
-            str = str .. "============================================================================================"
-            log.error(str)
+            CDefErrpr(err, c_type_name, c_def)
         end
     end
 
