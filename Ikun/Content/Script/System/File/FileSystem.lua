@@ -88,4 +88,9 @@ function FileSystem:ReadStringFile(InDirectory, InFileName)
     return content
 end
 
+---@public
+---@param InContext FileContextClass
+function FileSystem:ReleaseContext(InContext)
+end
+
 return FileSystem

@@ -59,4 +59,12 @@ function FileContextClass:GetCurrentDirectory()
     return self._CurrentDirectory
 end
 
+---@public
+function FileContextClass:ReleaseContext()
+    local system = self._System
+    self._System = nil
+    self._CurrentDirectory = nil
+    system:ReleaseContext(self)
+end
+
 return FileContextClass
