@@ -1,4 +1,10 @@
 
+---
+---@brief   FileSystemInterface
+---@author  zys
+---@data    Sat Jan 03 2026 00:06:07 GMT+0800 (中国标准时间)
+---
+
 local Class3 = require('Core/Class/Class3')
 
 ---@class IFileSystem
