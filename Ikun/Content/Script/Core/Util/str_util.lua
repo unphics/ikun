@@ -94,6 +94,18 @@ str_util.split_exact = function(InStr, InDelimiter)
     return result
 end
 
+---@public
+---@return boolean
+str_util.is_empty = function(InStr)
+    if not InStr then
+        return true
+    end
+    if InStr == '' or InStr == ' ' then
+        return true
+    end
+    return false
+end
+
 ---@public 去掉空格, 排查字符串中前两个字符和后两个字符
 ---@param InStr string
 ---@return string
