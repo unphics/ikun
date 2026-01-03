@@ -24,3 +24,13 @@ bool UENetSubsystem::OnNetTick(float DeltaTime) {
 	}
 	return true;
 }
+
+#include <chrono>
+
+extern "C" {
+	__declspec(dllexport) int64_t GetUnixTimestampMS() {
+		auto now = std::chrono::system_clock::now();
+		auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+		return (int64_t)ms;
+	}
+}
