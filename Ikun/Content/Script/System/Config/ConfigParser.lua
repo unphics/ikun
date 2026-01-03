@@ -74,7 +74,9 @@ function ConfigParserClass:CastNumCol(InHeaders)
     for _, row in pairs(self._Data) do
         for _, name in ipairs(InHeaders) do
             local gridStr = row[name]
-            row[name] = tonumber(gridStr)
+            if gridStr then
+                row[name] = tonumber(gridStr)
+            end
         end
     end
     return self
@@ -87,15 +89,17 @@ function ConfigParserClass:CastMapCol(InHeaders)
     for _, row in pairs(self._Data) do
         for _, name in ipairs(InHeaders) do
             local gridStr = row[name]
-            local arr = str_util.split_simple(gridStr, ',')
-            local gridData = {}
-            for _, pair in ipairs(arr) do
-                local key, value = pair:match("^([^=]+)=([^=]+)$")
-                key = str_util.trim(key)
-                value = str_util.trim(value)
-                gridData[key] = tonumber(value) or value
+            if gridStr then
+                local arr = str_util.split_simple(gridStr, ',')
+                local gridData = {}
+                for _, pair in ipairs(arr) do
+                    local key, value = pair:match("^([^=]+)=([^=]+)$")
+                    key = str_util.trim(key)
+                    value = str_util.trim(value)
+                    gridData[key] = tonumber(value) or value
+                end
+                row[name] = gridData
             end
-            row[name] = gridData
         end
     end
     return self
@@ -108,13 +112,15 @@ function ConfigParserClass:CastArrCol(InHeaders)
     for _, row in pairs(self._Data) do
         for _, name in ipairs(InHeaders) do
             local gridStr = row[name]
-            local arr = str_util.split_simple(gridStr, ',')
-            local gridData = {}
-            for _, item in ipairs(arr) do
-                item = str_util.trim(item)
-                table.insert(gridData, tonumber(item) or item)
+            if gridStr then
+                local arr = str_util.split_simple(gridStr, ',')
+                local gridData = {}
+                for _, item in ipairs(arr) do
+                    item = str_util.trim(item)
+                    table.insert(gridData, tonumber(item) or item)
+                end
+                row[name] = gridData
             end
-            row[name] = gridData
         end
     end
     return self
@@ -127,10 +133,12 @@ function ConfigParserClass:CastPairCol(InHeaders)
     for _, row in pairs(self._Data) do
         for _, name in ipairs(InHeaders) do
             local gridStr = row[name]
-            local key, value = gridStr:match("^([^=]+)=([^=]+)$")
-            key = str_util.trim(key)
-            value = str_util.trim(value)
-            row[key] = tonumber(value) or value
+            if gridStr then
+                local key, value = gridStr:match("^([^=]+)=([^=]+)$")
+                key = str_util.trim(key)
+                value = str_util.trim(value)
+                row[key] = tonumber(value) or value
+            end
         end
     end
     return self
