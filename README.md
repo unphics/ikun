@@ -44,7 +44,7 @@ Ikun/
   * **Korean Traditional Martial Arts (Characters & Animations)**
     * **作者**: KCISA (Korea Culture Information Service Agency / 韩国文化信息服务中心)
     * **协议**: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-    * **来源**: [可以放你下载的链接，如 Sketchfab 链接]
+    * **来源**: [https://fab.com/s/67ee4349df23]
     * **说明**: 本项目使用了其提供的 3D 模型与动作捕捉数据，并将其转换为虚幻引擎格式。
 
   * **UE5 Starter Character / Mannequin**
@@ -68,7 +68,8 @@ Ikun/
 
 * [Tencent UnLua](https://github.com/Tencent/UnLua)
 * 博客园、Zenn 等技术文章
-* ChatGPT (GPT-4) 文本辅助建议
+* [Google Gemini](https://aistudio.google.com/) 逻辑优化与技术文档建议
+* ChatGPT (GPT-4) 逻辑优化与技术文档建议
 
 ---
 
