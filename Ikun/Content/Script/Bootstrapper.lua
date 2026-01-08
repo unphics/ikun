@@ -36,3 +36,5 @@ _G.ffi = require ("ffi") ---@type ffilib
 _G.log = require('Core/Log/log') ---@type log
 
 require('SharedPCH')
+
+require('System/Skill/Core/Test')

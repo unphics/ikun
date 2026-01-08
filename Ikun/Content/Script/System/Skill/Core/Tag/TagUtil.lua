@@ -5,7 +5,7 @@
 --  File        : TagUtil.lua
 --  Author      : zhengyanshuai
 --  Date        : Sat Jan 03 2026 21:50:43 GMT+0800 (中国标准时间)
---  Description : 表工具方法
+--  Description : Tag工具方法
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
 --  Copyright (c) 2026 zhengyanshuai

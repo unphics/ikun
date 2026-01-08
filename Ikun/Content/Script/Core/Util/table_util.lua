@@ -63,6 +63,17 @@ end
 
 ---@public
 ---@param InTable table
+---@param InFn fun(InItem):boolean
+table_util.remove = function(InTable, InItem)
+    for i = 1, #InTable do
+        if InTable[i] == InItem then
+            table.remove(InTable, InItem)
+        end
+    end
+end
+
+---@public
+---@param InTable table
 ---@param InItem any
 table_util.add_unique = function(InTable, InItem)
     for i = 1, #InTable do
