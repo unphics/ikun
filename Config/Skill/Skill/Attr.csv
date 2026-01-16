@@ -1,0 +1,3 @@
+AttrKey|AttrName|AttrId|IsFake|Formula
+|||直接读属性or检查Dirty执行公式|
+Health|生命值|1010|false|(#1011 + #3010 * 10) * (1 + #1012) + #1013
