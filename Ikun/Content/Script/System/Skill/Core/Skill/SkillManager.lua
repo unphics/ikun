@@ -34,11 +34,11 @@ end
 
 ---@public
 function SkillManager:InitSkillManager()
-    self:LoadConfig()
+    self:_LoadConfig()
 end
 
----@public [Config]
-function SkillManager:LoadConfig()
+---@protected [Config]
+function SkillManager:_LoadConfig()
     local file = FileSystem.Get():CreateConfigContext()
     if not file then
         return
@@ -52,20 +52,6 @@ function SkillManager:LoadConfig()
     local skillParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile('Skill.csv'))
     self.SkillConfig = skillParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastPairCol({'Param1', 'Param2', 'Param3', 'Param4', 'Param5', 'Param6', 'Param7', 'Param8', 'Param9', }):GetResult()
     skillParser:ReleaseParser()
-end
-
----@public [Config]
----@param InArmsKey string
----@return ArmsConfig
-function SkillManager:LookupArmsConfig(InArmsKey)
-    return self.ArmsConfig[InArmsKey]
-end
-
----@public [Config]
----@param InSkillKey string
----@return SkillConfig
-function SkillManager:LookupSkillConfig(InSkillKey)
-    return self.SkillConfig[InSkillKey]
 end
 
 ---@public
@@ -95,6 +81,20 @@ function SkillManager:UpdateSkillManager(DeltaTime)
     end
 
     ---@todo DeadList
+end
+
+---@public [Config]
+---@param InArmsKey string
+---@return ArmsConfig
+function SkillManager:LookupArmsConfig(InArmsKey)
+    return self.ArmsConfig[InArmsKey]
+end
+
+---@public [Config]
+---@param InSkillKey string
+---@return SkillConfig
+function SkillManager:LookupSkillConfig(InSkillKey)
+    return self.SkillConfig[InSkillKey]
 end
 
 return SkillManager
