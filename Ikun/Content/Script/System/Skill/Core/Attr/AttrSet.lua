@@ -1,0 +1,39 @@
+
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : 技能系统-属性集
+--  File        : AttrSet.lua
+--  Author      : zhengyanshuai
+--  Date        : Sun Jan 18 2026 13:41:39 GMT+0800 (中国标准时间)
+--  Description : 修改与读取属性
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
+
+local Class3 = require('Core/Class/Class3')
+
+---@class AttrSetClass
+---@field protected _Attributes table<number, number>
+---@field protected _Dirty number[]
+---@field protected _Manager AttrManager
+local AttrSetClass = Class3.Class('AttrSetClass')
+
+---@public
+---@param InManager AttrManager
+function AttrSetClass:Ctor(InManager)
+    self._Manager = InManager
+    self._Attributes = {}
+    self._Dirty = {}
+end
+
+---@public
+function AttrSetClass:AddAttrValue()
+end
+
+---@public
+function AttrSetClass:GetAttrValue()
+end
+
+return AttrSetClass
