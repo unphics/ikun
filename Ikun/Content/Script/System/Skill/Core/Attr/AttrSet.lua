@@ -29,11 +29,19 @@ function AttrSetClass:Ctor(InManager)
 end
 
 ---@public
-function AttrSetClass:AddAttrValue()
+function AttrSetClass:AddModifier()
 end
 
 ---@public
-function AttrSetClass:GetAttrValue()
+function AttrSetClass:RemoveModifier()
+end
+
+---@public
+function AttrSetClass:RemoveModifierBySource()
+end
+
+---@public
+function AttrSetClass:RemoveModifierByBuff()
 end
 
 return AttrSetClass
