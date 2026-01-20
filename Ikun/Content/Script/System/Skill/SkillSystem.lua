@@ -14,7 +14,7 @@ local AttrManager = require('System/Skill/Core/Attr/AttrManager')
 ---@field AttrManager AttrManager
 local SkillSystem = Class3.Class('SkillSystem')
 
-local system = nil
+local system = nil ---@type SkillSystem
 
 ---@public
 function SkillSystem:Ctor()
@@ -33,8 +33,8 @@ end
 
 ---@public
 function SkillSystem:InitSkillSystem()
-    self.SkillManager:InitSkillManager()
     self.AttrManager:InitAttrManager()
+    self.SkillManager:InitSkillManager()
 end
 
 ---@public

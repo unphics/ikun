@@ -13,10 +13,12 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
+local Modifier = require('System/Skill/Core/Attr/Modifier')
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<number, number>
 ---@field protected _Dirty number[]
+---@field protected _Modifiers ModifierClass[]
 ---@field protected _Manager AttrManager
 local AttrSetClass = Class3.Class('AttrSetClass')
 
@@ -26,14 +28,28 @@ function AttrSetClass:Ctor(InManager)
     self._Manager = InManager
     self._Attributes = {}
     self._Dirty = {}
+    self._Modifiers = {}
 end
 
 ---@public
-function AttrSetClass:AddModifier()
+function AttrSetClass:GetAttrValue(InAttrKey)
+    
 end
 
 ---@public
-function AttrSetClass:RemoveModifier()
+---@param InModifier ModifierClass
+function AttrSetClass:AddModifier(InModifier)
+    table.insert(self._Modifiers, InModifier)
+end
+
+---@public
+function AttrSetClass:RemoveModifier(InModifier)
+    for i = 1, #self._Modifiers do
+        if self._Modifiers[i] == InModifier then
+            table.remove(self._Modifiers, i)
+            break
+        end
+    end
 end
 
 ---@public

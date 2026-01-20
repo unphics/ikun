@@ -15,9 +15,18 @@
 local Class3 = require('Core/Class/Class3')
 
 ---@class ModifierClass
+---@field AttrKey number
+---@field ModOp string
+---@field ModValue number
+---@field ModSource table
 local ModifierClass = Class3.Class('AttrSetClass')
 
-function ModifierClass:Ctor()
+---@public
+function ModifierClass:Ctor(InAttrKey, InModOp, InModValue, InModSource)
+    self.AttrKey = InAttrKey
+    self.ModOp = InModOp
+    self.ModValue = InModValue
+    self.ModSource = InModSource
 end
 
 return ModifierClass
