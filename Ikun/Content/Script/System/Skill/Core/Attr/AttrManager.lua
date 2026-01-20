@@ -17,6 +17,7 @@ local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local ExpLib = require('System/Skill/Core/Attr/Exp')
 local AttrSetClass = require('System/Skill/Core/Attr/AttrSet')
+local AttrDef = require('System/Skill/Core/Attr/AttrDef')
 
 ---@class AttrConfig
 ---@field AttrKey string

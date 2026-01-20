@@ -33,7 +33,7 @@ end
 
 ---@public
 function AttrSetClass:GetAttrValue(InAttrKey)
-    
+    return self._Attributes[InAttrKey]
 end
 
 ---@public
