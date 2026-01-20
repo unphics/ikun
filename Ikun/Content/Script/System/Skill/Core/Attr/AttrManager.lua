@@ -19,6 +19,8 @@ local ExpLib = require('System/Skill/Core/Attr/Exp')
 local AttrSetClass = require('System/Skill/Core/Attr/AttrSet')
 local AttrDef = require('System/Skill/Core/Attr/AttrDef')
 
+---@alias FormulaFunction fun(Attributes: table<number, number>):number
+
 ---@class AttrConfig
 ---@field AttrKey string
 ---@field AttrName string
@@ -28,7 +30,7 @@ local AttrDef = require('System/Skill/Core/Attr/AttrDef')
 ---@class AttrManager
 ---@field protected _System SkillSystem
 ---@field protected AttrConfig AttrConfig
----@field protected AttrFormula table<number, fun(Attributes: table<number, number>):number>
+---@field protected AttrFormula table<number, FormulaFunction>
 ---@field protected _AttrDependencies table<number, number[]>
 local AttrManager = Class3.Class('AttrManager')
 
@@ -52,13 +54,14 @@ end
 
 ---@public
 ---@param InAttrKey number
----@return fun(Attributes: table<number, number>):number
+---@return FormulaFunction
 function AttrManager:GetAttrFormula(InAttrKey)
     return self.AttrFormula[InAttrKey]
 end
 
 ---@protected
 function AttrManager:_LoadAttrConfig()
+    -- 解析属性配置表原文
     local file = FileSystem.Get():CreateConfigContext()
     if not file then
         return
@@ -76,19 +79,22 @@ function AttrManager:_LoadAttrConfig()
     self.AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
     attrParser:ReleaseParser()
 
+    local attrFormula = {}
+    local attrDeps = {}
     ---@param config AttrConfig
     for key, config in pairs(self.AttrConfig) do
         local func, deps = ExpLib.Compile(config.AttrFormula)
         if func then
-            self.AttrFormula[key] = func
+            attrFormula[key] = func
             for _, src in ipairs(deps) do
-                if not self._AttrDependencies[src] then
-                    self._AttrDependencies[src] = {}
+                if not attrDeps[src] then
+                    attrDeps[src] = {}
                 end
-                table.insert(self._AttrDependencies[src], src)
+                table.insert(attrDeps[src], src)
             end
         end
     end
+    
 end
 
 return AttrManager
