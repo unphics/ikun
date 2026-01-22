@@ -1,3 +1,9 @@
-AttrKey|AttrName|IsFake|AttrFormula
+AttrKey|AttrName|IsFake|AttrFormula|
 |||直接读属性or检查Dirty执行表达式|
-10|生命值|false|(#1011 + #3010 * 10) * (1 + #1012) + #1013
+MaxHealth|生命值|false|(#BaseHealth + #FlatHealth * 10) * (1 + #PercentHealth) + #ExtraHealth|
+BaseHealth ||false||
+FlatHealth||false||
+PercentHealth||false||
+ExtraHealth||false||
+Attack||false|#BaseAttack + #MaxHealth|
+BaseAttack||false||

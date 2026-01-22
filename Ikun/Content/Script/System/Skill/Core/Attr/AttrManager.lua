@@ -43,6 +43,7 @@ end
 ---@public
 function AttrManager:InitAttrManager()
     self:_LoadAttrConfig()
+    self:_BuildAttrDependencies()
 end
 
 ---@public
@@ -79,22 +80,39 @@ function AttrManager:_LoadAttrConfig()
     self.AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
     attrParser:ReleaseParser()
 
-    local attrFormula = {}
-    local attrDeps = {}
+    -- local attrFormula = {}
+    -- ---@param config AttrConfig
+    -- for key, config in pairs(self.AttrConfig) do
+    --     local func, deps = ExpLib.Compile(config.AttrFormula)
+    --     if func then
+    --         attrFormula[key] = func
+    --     end
+    -- end
+end
+
+---@protected
+function AttrManager:_BuildAttrDependencies()
+    if not self.AttrConfig or not next(self.AttrConfig) then
+        return
+    end
+
+    local attrDeps = {} ---@type table<string, string[]>
     ---@param config AttrConfig
     for key, config in pairs(self.AttrConfig) do
-        local func, deps = ExpLib.Compile(config.AttrFormula)
-        if func then
-            attrFormula[key] = func
+        local deps = ExpLib.CollectDeps(config.AttrFormula)
+        if deps then
             for _, src in ipairs(deps) do
-                if not attrDeps[src] then
-                    attrDeps[src] = {}
+                if not attrDeps[key] then
+                    attrDeps[key] = {}
                 end
-                table.insert(attrDeps[src], src)
+                table.insert(attrDeps[key], src)
             end
         end
     end
+
+    local sorted = ExpLib.TopologicalSortDFS(attrDeps)
     
+    -- self._AttrDependencies = attrDeps
 end
 
 return AttrManager
