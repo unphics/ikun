@@ -15,6 +15,6 @@
 ---@class AttrDef
 local AttrDef = {}
 
-AttrDef.Health = 1
+AttrDef.MaxHealth = 1
 
 return AttrDef

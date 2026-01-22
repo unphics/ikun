@@ -110,7 +110,10 @@ function AttrManager:_BuildAttrDependencies()
         end
     end
 
-    local sorted = ExpLib.TopologicalSortDFS(attrDeps)
+    local sorted = ExpLib.TopologicalSortDFS(attrDeps) ---@type string[]
+    for i = #sorted, 1, -1 do
+        AttrDef[sorted[i]] = #sorted - i + 1
+    end
     
     -- self._AttrDependencies = attrDeps
 end
