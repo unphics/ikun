@@ -44,6 +44,7 @@ end
 function AttrManager:InitAttrManager()
     self:_LoadAttrConfig()
     self:_BuildAttrDependencies()
+    self:_BuildAttrFormulas()
 end
 
 ---@public
@@ -79,15 +80,6 @@ function AttrManager:_LoadAttrConfig()
     end
     self.AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
     attrParser:ReleaseParser()
-
-    -- local attrFormula = {}
-    -- ---@param config AttrConfig
-    -- for key, config in pairs(self.AttrConfig) do
-    --     local func, deps = ExpLib.Compile(config.AttrFormula)
-    --     if func then
-    --         attrFormula[key] = func
-    --     end
-    -- end
 end
 
 ---@protected
@@ -115,7 +107,29 @@ function AttrManager:_BuildAttrDependencies()
         AttrDef[sorted[i]] = #sorted - i + 1
     end
     
-    -- self._AttrDependencies = attrDeps
+    local attrNumDeps = {}
+    for key, deps in pairs(attrDeps) do
+        local tb = {}
+        for _, dep in ipairs(deps) do
+            table.insert(tb, AttrDef[dep])
+        end
+        attrNumDeps[AttrDef[key]] = tb
+    end
+    
+    self._AttrDependencies = attrNumDeps
+end
+
+---@protected
+function AttrManager:_BuildAttrFormulas()
+    local attrFormula = {}
+    ---@param config AttrConfig
+    for key, config in pairs(self.AttrConfig) do
+        local func = ExpLib.Compile(config.AttrFormula)
+        if func then
+            attrFormula[AttrDef[key]] = func
+        end
+    end
+    self.AttrFormula = attrFormula
 end
 
 return AttrManager
