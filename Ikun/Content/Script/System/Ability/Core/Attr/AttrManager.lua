@@ -15,9 +15,9 @@
 local Class3 = require('Core/Class/Class3')
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
-local ExpLib = require('System/Skill/Core/Attr/Exp')
-local AttrSetClass = require('System/Skill/Core/Attr/AttrSet')
-local AttrDef = require('System/Skill/Core/Attr/AttrDef')
+local ExpLib = require('System/Ability/Core/Attr/Exp')
+local AttrSetClass = require('System/Ability/Core/Attr/AttrSet')
+local AttrDef = require('System/Ability/Core/Attr/AttrDef')
 
 ---@alias FormulaFunction fun(Attributes: table<number, number>):number
 
@@ -28,14 +28,14 @@ local AttrDef = require('System/Skill/Core/Attr/AttrDef')
 ---@field AttrFormula string
 
 ---@class AttrManager
----@field protected _System SkillSystem
+---@field protected _System AbilitySystem
 ---@field protected AttrConfig AttrConfig
 ---@field protected AttrFormula table<number, FormulaFunction>
 ---@field protected _AttrDependencies table<number, number[]>
 local AttrManager = Class3.Class('AttrManager')
 
 ---@private
----@param InSystem SkillSystem
+---@param InSystem AbilitySystem
 function AttrManager:Ctor(InSystem)
     self._System = InSystem
 end
@@ -68,7 +68,7 @@ function AttrManager:_LoadAttrConfig()
     if not file then
         return
     end
-    file:ChangeDirectory('Skill')
+    file:ChangeDirectory('Ability')
     file:ChangeDirectory('Attr')
     local attrFileContent = file:ReadStringFile('Attr.csv')
     if not attrFileContent then

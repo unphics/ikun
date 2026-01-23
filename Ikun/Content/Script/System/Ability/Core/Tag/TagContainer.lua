@@ -7,7 +7,7 @@
 
 local ffi = require('ffi')
 local fficlass = require('Core/FFI/fficlass')
-local TagManager = require('System/Skill/Core/Tag/TagManager')
+local TagManager = require('System/Ability/Core/Tag/TagManager')
 
 ffi.cdef [[
     typedef struct {

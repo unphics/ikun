@@ -46,4 +46,4 @@ _G.log = require('Core/Log/log') ---@type log
 
 require('SharedPCH')
 
-require('System/Skill/Core/Test')
+require('System/Ability/Core/Test')

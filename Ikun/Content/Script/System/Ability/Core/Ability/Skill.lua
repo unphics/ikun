@@ -20,21 +20,21 @@ local Class3 = require('Core/Class/Class3')
 
 ---@class SkillClass
 ---@field _SkillKey string
----@field _Arms ArmsClass
----@field _Manager SkillManager
+---@field _Ability AbilityClass
+---@field _Manager AbilityManager
 local SkillClass = Class3.Class('SkillClass')
 
----@param InManager SkillManager
+---@param InManager AbilityManager
 function SkillClass:Ctor(InManager)
     self._Manager = InManager
 end
 
 ---@public
----@param InArms ArmsClass
+---@param InAbility AbilityClass
 ---@param InSkillKey string
 ---@param InParams table
-function SkillClass:DoBeginSkill(InArms, InSkillKey, InParams)
-    self._Arms = InArms
+function SkillClass:DoBeginSkill(InAbility, InSkillKey, InParams)
+    self._Ability = InAbility
     self._SkillKey = InSkillKey
     self:OnBeginSkill(InParams)
 end
@@ -67,7 +67,7 @@ end
 function SkillClass:OnPostEndSkill()
     local manager = self._Manager
     self._Manager = nil
-    self._Arms = nil
+    self._Ability = nil
     manager:RecycleSkill(self)
 end
 

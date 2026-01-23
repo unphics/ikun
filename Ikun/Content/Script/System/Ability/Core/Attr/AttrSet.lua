@@ -13,7 +13,7 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
-local Modifier = require('System/Skill/Core/Attr/Modifier')
+local Modifier = require('System/Ability/Core/Attr/Modifier')
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<number, number>

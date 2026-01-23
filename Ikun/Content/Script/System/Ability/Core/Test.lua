@@ -1,9 +1,9 @@
 
-local SkillSystem = require('System/Skill/SkillSystem')
-local TagUtil = require("System/Skill/Core/Tag/TagUtil")
-local SkillPart = require('System/Skill/Core/Skill/SkillPart')
+local AbilitySystem = require('System/Ability/AbilitySystem')
+local TagUtil = require("System/Ability/Core/Tag/TagUtil")
+local AbilityPart = require('System/Ability/Core/Ability/AbilityPart')
 
-SkillSystem.Get():InitSkillSystem()
+AbilitySystem.Get():InitAbilitySystem()
 
 if false then
     local tag = TagUtil.RequestTag('skill.type.active')
@@ -20,11 +20,10 @@ if false then
 end
 
 if true then
-    
 end
 
-if false then
-    local part = SkillPart:New() ---@as SkillPartClass
-    part:AddArmsToSlot('Arms1', 2)
-    part:UseArms('Arms1', {a = 1})
+if true then
+    local part = AbilityPart:New() ---@as AbilityPartClass
+    part:AddAbilityToSlot('Ability1', 2)
+    part:UseAbility('Ability1', {a = 1})
 end

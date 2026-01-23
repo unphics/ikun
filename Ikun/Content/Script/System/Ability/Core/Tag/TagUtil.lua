@@ -13,8 +13,8 @@
 --]]
 
 
-local TagContainer = require('System/Skill/Core/Tag/TagContainer')
-local TagDefine = require('System/Skill/Core/Tag/TagDefine')
+local TagContainer = require('System/Ability/Core/Tag/TagContainer')
+local TagDefine = require('System/Ability/Core/Tag/TagDefine')
 
 ---@class TagUtil
 local TagUtil = {}

@@ -5,7 +5,7 @@
 ---@data    Sat Jan 03 2026 20:28:06 GMT+0800 (中国标准时间)
 ---
 
-local TagManager = require('System/Skill/Core/Tag/TagManager').Get()
+local TagManager = require('System/Ability/Core/Tag/TagManager').Get()
 
 local Tags = {
     'skill.type.active',
