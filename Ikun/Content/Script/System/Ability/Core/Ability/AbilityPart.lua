@@ -34,7 +34,6 @@ function AbilityPartClass:Ctor(InOwner)
     self._SlotInfos = {}
     self._AbilityInfos = {}
     self._RefAbilityToSlots = {}
-
 end
 
 ---@public

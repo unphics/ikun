@@ -21,6 +21,9 @@ if false then
 end
 
 if true then
+    local attrMgr = AbilitySystem.Get():GetAttrManager()
+    local set = attrMgr:CreateAttrSet()
+    local a = 1
 end
 
 if true then

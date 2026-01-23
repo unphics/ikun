@@ -13,8 +13,39 @@
 --]]
 
 ---@class AttrDef
+---@field protected RefIdToKey table<number, string>
 local AttrDef = {}
 
 AttrDef.MaxHealth = 1
+
+---@public
+---@param InKey string
+---@return number
+AttrDef.ToId = function(InKey)
+    local id = tonumber(InKey)
+    if not id then
+        id = AttrDef[InKey]
+    end
+    return id
+end
+
+---@public
+---@param InId number
+---@return string
+AttrDef.ToKey = function(InId)
+    if type(InId) == 'string' then
+        return InId
+    end
+    return AttrDef.RefIdToKey[InId]
+end
+
+---@public [Init]
+AttrDef.BuildIdToKey = function()
+    for k, v in AttrDef do
+        if type(k) == "string" then
+            AttrDef.RefIdToKey[v] = k
+        end
+    end
+end
 
 return AttrDef

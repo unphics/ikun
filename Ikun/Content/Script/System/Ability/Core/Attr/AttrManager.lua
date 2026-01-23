@@ -29,7 +29,7 @@ local AttrDef = require('System/Ability/Core/Attr/AttrDef')
 
 ---@class AttrManager
 ---@field protected _System AbilitySystem
----@field protected _AttrConfig AttrConfig
+---@field protected _AttrConfig table<string, AttrConfig>
 ---@field protected _AttrFormula table<number, FormulaFunction>
 ---@field protected _AttrDependencies table<number, number[]> 查找表
 local AttrManager = Class3.Class('AttrManager')
@@ -50,15 +50,28 @@ end
 ---@public
 ---@return AttrSetClass
 function AttrManager:CreateAttrSet()
-    local set = AttrSetClass:New() ---@type AttrSetClass
+    local attributes = {}
+    for key, _ in pairs(self._AttrConfig) do
+        local id = AttrDef[key]
+        if id then
+            attributes[id] = 0
+        end
+    end
+    local set = AttrSetClass:New(self, attributes) ---@type AttrSetClass
     return set
 end
 
 ---@public
----@param InAttrKey number
+---@param InAttrKey number|string
 ---@return FormulaFunction
 function AttrManager:GetAttrFormula(InAttrKey)
-    return self._AttrFormula[InAttrKey]
+    return self._AttrFormula[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey number|string
+function AttrManager:GetAttrDependencies(InAttrKey)
+    return self._AttrDependencies[AttrDef.ToId(InAttrKey)]
 end
 
 ---@protected
@@ -106,6 +119,7 @@ function AttrManager:_BuildAttrDependencies()
     for i = #sorted, 1, -1 do
         AttrDef[sorted[i]] = #sorted - i + 1
     end
+    AttrDef.BuildIdToKey()
     
     local attrNumDeps = {}
     for key, deps in pairs(attrDeps) do

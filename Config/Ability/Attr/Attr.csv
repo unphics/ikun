@@ -1,7 +1,7 @@
 AttrKey|AttrName|IsFake|AttrFormula|
 |||直接读属性or检查Dirty执行表达式|
 MaxHealth|生命值|false|(#BaseHealth + #FlatHealth * 10) * (1 + #PercentHealth) + #ExtraHealth|
-BaseHealth ||false||
+BaseHealth||false||
 FlatHealth||false||
 PercentHealth||false||
 ExtraHealth||false||

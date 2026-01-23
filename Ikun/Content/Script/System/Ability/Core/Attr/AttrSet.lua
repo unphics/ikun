@@ -14,6 +14,7 @@
 
 local Class3 = require('Core/Class/Class3')
 local Modifier = require('System/Ability/Core/Attr/Modifier')
+local AttrDef = require("System/Ability/Core/Attr/AttrDef")
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<number, number>
@@ -24,16 +25,17 @@ local AttrSetClass = Class3.Class('AttrSetClass')
 
 ---@public
 ---@param InManager AttrManager
-function AttrSetClass:Ctor(InManager)
+function AttrSetClass:Ctor(InManager, InAttributes)
     self._Manager = InManager
-    self._Attributes = {}
+    self._Attributes = InAttributes
     self._Dirty = {}
     self._Modifiers = {}
 end
 
 ---@public
+---@param InAttrKey number|string
 function AttrSetClass:GetAttrValue(InAttrKey)
-    return self._Attributes[InAttrKey]
+    return self._Attributes[AttrDef.ToId(InAttrKey)]
 end
 
 ---@public
