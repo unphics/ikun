@@ -29,9 +29,9 @@ local AttrDef = require('System/Ability/Core/Attr/AttrDef')
 
 ---@class AttrManager
 ---@field protected _System AbilitySystem
----@field protected AttrConfig AttrConfig
----@field protected AttrFormula table<number, FormulaFunction>
----@field protected _AttrDependencies table<number, number[]>
+---@field protected _AttrConfig AttrConfig
+---@field protected _AttrFormula table<number, FormulaFunction>
+---@field protected _AttrDependencies table<number, number[]> 查找表
 local AttrManager = Class3.Class('AttrManager')
 
 ---@private
@@ -58,7 +58,7 @@ end
 ---@param InAttrKey number
 ---@return FormulaFunction
 function AttrManager:GetAttrFormula(InAttrKey)
-    return self.AttrFormula[InAttrKey]
+    return self._AttrFormula[InAttrKey]
 end
 
 ---@protected
@@ -78,19 +78,19 @@ function AttrManager:_LoadAttrConfig()
     if not attrParser then
         return
     end
-    self.AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
+    self._AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
     attrParser:ReleaseParser()
 end
 
 ---@protected
 function AttrManager:_BuildAttrDependencies()
-    if not self.AttrConfig or not next(self.AttrConfig) then
+    if not self._AttrConfig or not next(self._AttrConfig) then
         return
     end
 
     local attrDeps = {} ---@type table<string, string[]>
     ---@param config AttrConfig
-    for key, config in pairs(self.AttrConfig) do
+    for key, config in pairs(self._AttrConfig) do
         local deps = ExpLib.CollectDeps(config.AttrFormula)
         if deps then
             for _, src in ipairs(deps) do
@@ -123,13 +123,13 @@ end
 function AttrManager:_BuildAttrFormulas()
     local attrFormula = {}
     ---@param config AttrConfig
-    for key, config in pairs(self.AttrConfig) do
+    for key, config in pairs(self._AttrConfig) do
         local func = ExpLib.Compile(config.AttrFormula)
         if func then
             attrFormula[AttrDef[key]] = func
         end
     end
-    self.AttrFormula = attrFormula
+    self._AttrFormula = attrFormula
 end
 
 return AttrManager

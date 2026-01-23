@@ -2,6 +2,7 @@
 local AbilitySystem = require('System/Ability/AbilitySystem')
 local TagUtil = require("System/Ability/Core/Tag/TagUtil")
 local AbilityPart = require('System/Ability/Core/Ability/AbilityPart')
+-- local log = require('Core/Log/log') ---@as log
 
 AbilitySystem.Get():InitAbilitySystem()
 
