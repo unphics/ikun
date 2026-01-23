@@ -5,7 +5,7 @@
 --  File        : AbilityPart.lua
 --  Author      : zhengyanshuai
 --  Date        : Sat Jan 03 2026 16:06:37 GMT+0800 (中国标准时间)
---  Description : 技能系统-技能部件
+--  Description : 能力系统-技能部件
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
 --  Copyright (c) 2026 zhengyanshuai

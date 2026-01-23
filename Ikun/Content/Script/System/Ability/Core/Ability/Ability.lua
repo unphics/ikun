@@ -5,7 +5,7 @@
 --  File        : Ability.lua
 --  Author      : zhengyanshuai
 --  Date        : Fri Jan 02 2026 22:29:35 GMT+0800 (中国标准时间)
---  Description : 技能系统-能力类
+--  Description : 能力系统-能力类
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
 --  Copyright (c) 2026 zhengyanshuai
