@@ -18,6 +18,7 @@ local ConfigSystem = require("System/Config/ConfigSystem")
 local ExpLib = require('System/Ability/Core/Attr/Exp')
 local AttrSetClass = require('System/Ability/Core/Attr/AttrSet')
 local AttrDef = require('System/Ability/Core/Attr/AttrDef')
+local ModifierClass = require('System/Ability/Core/Attr/Modifier')
 
 ---@alias FormulaFunction fun(Attributes: table<number, number>):number
 

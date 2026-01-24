@@ -5,7 +5,7 @@
 --  File        : AttrSet.lua
 --  Author      : zhengyanshuai
 --  Date        : Sun Jan 18 2026 13:41:39 GMT+0800 (中国标准时间)
---  Description : 修改与读取属性
+--  Description : 属性存储, 属性计算
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
 --  Copyright (c) 2026 zhengyanshuai
