@@ -16,6 +16,7 @@
 ---@field protected RefIdToKey table<number, string>
 local AttrDef = {}
 
+AttrDef.RefIdToKey = {}
 AttrDef.MaxHealth = 1
 
 ---@public
@@ -41,7 +42,7 @@ end
 
 ---@public [Init]
 AttrDef.BuildIdToKey = function()
-    for k, v in AttrDef do
+    for k, v in pairs(AttrDef) do
         if type(k) == "string" then
             AttrDef.RefIdToKey[v] = k
         end

@@ -32,19 +32,19 @@ function AttrSetClass:Ctor(InManager, InAttributes)
     self._Modifiers = {}
 end
 
----@public
+---@public [Get] [Attribute]
 ---@param InAttrKey number|string
 function AttrSetClass:GetAttrValue(InAttrKey)
     return self._Attributes[AttrDef.ToId(InAttrKey)]
 end
 
----@public
+---@public [Add] [Modifier]
 ---@param InModifier ModifierClass
 function AttrSetClass:AddModifier(InModifier)
     table.insert(self._Modifiers, InModifier)
 end
 
----@public
+---@public [Remove] [Modifier]
 function AttrSetClass:RemoveModifier(InModifier)
     for i = 1, #self._Modifiers do
         if self._Modifiers[i] == InModifier then
@@ -54,12 +54,12 @@ function AttrSetClass:RemoveModifier(InModifier)
     end
 end
 
----@public
+---@public [Remove] [Modifier]
 function AttrSetClass:RemoveModifierBySource()
 end
 
----@public
-function AttrSetClass:RemoveModifierByBuff()
+---@public [Remove] [Modifier]
+function AttrSetClass:RemoveModifierById()
 end
 
 return AttrSetClass

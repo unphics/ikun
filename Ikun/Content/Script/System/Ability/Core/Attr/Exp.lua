@@ -75,8 +75,8 @@ ExpLib.Compile = function(InFormulaStr)
     return func
 end
 
-
-ExpLib.TopologicalSortDFS = function(InAttrDeps)
+---@todo zys: 回头仔细研究一下
+ExpLib.TopoSortDFS = function(InAttrDeps)
     -- visited: 永久标记，表示这个节点已经完全处理完毕
     local visited = {}
     -- tempMarked: 临时标记，表示这个节点正在处理中（用于检测环）
