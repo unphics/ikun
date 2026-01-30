@@ -73,7 +73,7 @@ end
 ---@public
 ---@todo zys 补全逻辑
 ---@return ModifierClass
-function AttrManager:CreateModifier(InAttrKey, InModOp, InModValue, InModSource)
+function AttrManager:RentModifier(InAttrKey, InModOp, InModValue, InModSource)
     return ModifierClass:New(InAttrKey, InModOp, InModValue, InModSource)
 end
 
@@ -94,6 +94,12 @@ end
 ---@param InAttrKey number|string
 function AttrManager:GetAttrDependencies(InAttrKey)
     return self._AttrDependencies[AttrDef.ToId(InAttrKey)]
+end
+
+---@public [Pure] [Dependence]
+---@param InAttrKey number|string
+function AttrManager:GetAttrDependents(InAttrKey)
+    return self._AttrDependents[AttrDef.ToId(InAttrKey)]
 end
 
 ---@protected [Init]

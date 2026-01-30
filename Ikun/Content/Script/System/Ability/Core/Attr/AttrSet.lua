@@ -15,6 +15,7 @@
 local Class3 = require('Core/Class/Class3')
 local Modifier = require('System/Ability/Core/Attr/Modifier')
 local AttrDef = require("System/Ability/Core/Attr/AttrDef")
+local ModOpDef = require("System/Ability/Core/Attr/ModOpDef")
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<number, number>
@@ -30,63 +31,109 @@ function AttrSetClass:Ctor(InManager, InAttributes)
     self._Attributes = InAttributes
     self._Dirty = {}
     self._Modifiers = {}
+
+    for id, _ in pairs(AttrDef.RefIdToKey) do
+        self._Dirty[id] = true
+    end
 end
 
 ---@public [Get] [Attribute]
 ---@param InAttrKey number|string
 function AttrSetClass:GetAttrValue(InAttrKey)
-    return self._Attributes[AttrDef.ToId(InAttrKey)]
+    local id = AttrDef.ToId(InAttrKey)
+    if self._Dirty[id] then
+        self:_UpdateAttribute(id)
+    end
+    return self._Attributes[id]
 end
 
 ---@public [Add] [Modifier]
 ---@param InModifier ModifierClass
 function AttrSetClass:AddModifier(InModifier)
-    table.insert(self._Modifiers, InModifier)
+    local id = AttrDef.ToId(InModifier.AttrKey)
+    self:AddDirty(id)
+    if not self._Modifiers[id] then
+        self._Modifiers[id] = {}
+    end
+    table.insert(self._Modifiers[id], InModifier)
 end
 
 ---@public [Remove] [Modifier]
 ---@param InModifier ModifierClass
 function AttrSetClass:RemoveModifier(InModifier)
-    for i = 1, #self._Modifiers do
-        if self._Modifiers[i] == InModifier then
-            table.remove(self._Modifiers, i)
+    local id = AttrDef.ToId(InModifier.AttrKey)
+    local mods = self._Modifiers[id]
+    for i = 1, #mods do
+        if mods[i] == InModifier then
+            table.remove(mods, i)
             break
         end
     end
-end
-
----@public [Remove] [Modifier]
----@param InSource any
-function AttrSetClass:RemoveModifierBySource(InSource)
-    for i = 1, #self._Modifiers do
-        if self._Modifiers[i].ModSource == InSource then
-            table.remove(self._Modifiers, i)
-            break
-        end
-    end
-end
-
----@public [Remove] [Modifier]
----@param InId number
-function AttrSetClass:RemoveModifierById(InId)
-    for i = 1, #self._Modifiers do
-        if self._Modifiers[i].ModId == InId then
-            table.remove(self._Modifiers, i)
-            break
-        end
-    end
+    self:AddDirty(id)
 end
 
 ---@public [Dirty]
 ---@param InAttrKey number
 function AttrSetClass:AddDirty(InAttrKey)
-    self._Dirty[InAttrKey] = true
+    local id = AttrDef.ToId(InAttrKey)
+    if self._Dirty[id] then
+        return
+    end
+    self._Dirty[id] = true
+    local deps = self._Manager:GetAttrDependents(id)
+    if deps then
+        for _, dep in ipairs(deps) do
+            self:AddDirty(dep)
+        end
+    end
 end
 
 ---@public [Dirty]
 ---@param InAttrKey number
 function AttrSetClass:RemoveDirty(InAttrKey)
     self._Dirty[InAttrKey] = false
+end
+
+---@protected
+---@param InAttrId number
+function AttrSetClass:_UpdateAttribute(InAttrId)
+    local formula = self._Manager:GetAttrFormula(InAttrId)
+    local baseValue = 0
+    if formula then
+        baseValue = formula(self._Attributes)
+    else
+        baseValue = 0
+    end
+
+    local totalAdd = 0
+    local totalMulti = 1
+    local overrideVal = nil
+    ---@param mod ModifierClass
+    for _, mod in ipairs(self._Modifiers[InAttrId]) do
+        if mod.ModOp == ModOpDef.Add then
+            totalAdd = totalAdd + mod.ModValue
+        elseif mod.ModOp == ModOpDef.Multi then
+            totalMulti = totalMulti * (1 + mod.ModValue)
+        elseif mod.ModOp == ModOpDef.Override then
+            overrideVal = mod.ModValue
+        end
+    end
+    local finalValue = overrideVal or (baseValue + totalAdd) * totalMulti
+    
+    self._Attributes[InAttrId] = finalValue
+    self._Dirty[InAttrId] = false
+end
+
+---@protected
+function AttrSetClass:_GetFormulaProxy()
+    if not self._Proxy then
+        self._Proxy = setmetatable({}, {
+            __index = function(_, k)
+                return self:GetAttrValue(k)
+            end
+        })
+    end
+    return self._Proxy
 end
 
 return AttrSetClass

@@ -18,7 +18,7 @@ local Class3 = require('Core/Class/Class3')
 ---@class ModifierClass
 ---@field public ModId number 修改器的唯一Id
 ---@field public AttrKey number 修改的属性类型
----@field public ModOp string 修改操作符, 加/乘/覆盖
+---@field public ModOp ModOpDef 修改操作符, 加/乘/覆盖
 ---@field public ModValue number 修改值
 ---@field public ModSource any 修改源, 可以是Buff实例或者武器实例或者角色等信息的混合
 local ModifierClass = Class3.Class('AttrSetClass')
