@@ -1,4 +1,5 @@
 # IkunGame游戏策划文档
+构筑一个鲜活, 充满生命力的世界
 ```
 author: zys
 data: Sat Oct 18 2025 14:09:06 GMT+0800 (中国标准时间)

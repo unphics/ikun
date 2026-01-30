@@ -70,6 +70,19 @@ function AttrManager:CreateAttrSet()
     return set
 end
 
+---@public
+---@todo zys 补全逻辑
+---@return ModifierClass
+function AttrManager:CreateModifier(InAttrKey, InModOp, InModValue, InModSource)
+    return ModifierClass:New(InAttrKey, InModOp, InModValue, InModSource)
+end
+
+---@public
+---@todo zys 补全逻辑
+---@param InModifier ModifierClass
+function AttrManager:ReturnModifier(InModifier)
+end
+
 ---@public [Pure] [Formula]
 ---@param InAttrKey number|string
 ---@return FormulaFunction

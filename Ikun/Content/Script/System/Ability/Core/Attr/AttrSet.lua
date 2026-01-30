@@ -18,7 +18,7 @@ local AttrDef = require("System/Ability/Core/Attr/AttrDef")
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<number, number>
----@field protected _Dirty number[]
+---@field protected _Dirty table<number, boolean> 后面用位运算
 ---@field protected _Modifiers ModifierClass[]
 ---@field protected _Manager AttrManager
 local AttrSetClass = Class3.Class('AttrSetClass')
@@ -45,6 +45,7 @@ function AttrSetClass:AddModifier(InModifier)
 end
 
 ---@public [Remove] [Modifier]
+---@param InModifier ModifierClass
 function AttrSetClass:RemoveModifier(InModifier)
     for i = 1, #self._Modifiers do
         if self._Modifiers[i] == InModifier then
@@ -55,11 +56,37 @@ function AttrSetClass:RemoveModifier(InModifier)
 end
 
 ---@public [Remove] [Modifier]
-function AttrSetClass:RemoveModifierBySource()
+---@param InSource any
+function AttrSetClass:RemoveModifierBySource(InSource)
+    for i = 1, #self._Modifiers do
+        if self._Modifiers[i].ModSource == InSource then
+            table.remove(self._Modifiers, i)
+            break
+        end
+    end
 end
 
 ---@public [Remove] [Modifier]
-function AttrSetClass:RemoveModifierById()
+---@param InId number
+function AttrSetClass:RemoveModifierById(InId)
+    for i = 1, #self._Modifiers do
+        if self._Modifiers[i].ModId == InId then
+            table.remove(self._Modifiers, i)
+            break
+        end
+    end
+end
+
+---@public [Dirty]
+---@param InAttrKey number
+function AttrSetClass:AddDirty(InAttrKey)
+    self._Dirty[InAttrKey] = true
+end
+
+---@public [Dirty]
+---@param InAttrKey number
+function AttrSetClass:RemoveDirty(InAttrKey)
+    self._Dirty[InAttrKey] = false
 end
 
 return AttrSetClass

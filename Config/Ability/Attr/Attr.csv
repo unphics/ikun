@@ -1,9 +1,10 @@
 AttrKey|AttrName|IsFake|AttrFormula|
 |||直接读属性or检查Dirty执行表达式|
-MaxHealth|生命值|false|(#BaseHealth + #FlatHealth * 10) * (1 + #PercentHealth) + #ExtraHealth|
-BaseHealth||false||
-FlatHealth||false||
-PercentHealth||false||
-ExtraHealth||false||
-Attack||false|#BaseAttack + #MaxHealth|
-BaseAttack||false||
+IncomingDamage|伤害|true||
+MaxHealth|最大生命值|false|(#BaseHealth + #FlatHealth * 10) * (1 + #PercentHealth) + #ExtraHealth|
+BaseHealth|基础生命值|false||
+FlatHealth|附加生命值|false||
+PercentHealth|生命值百分比|false||
+ExtraHealth|额外生命值|false||
+Attack|攻击力|false|#BaseAttack + #MaxHealth|
+BaseAttack|基础攻击力|false||
