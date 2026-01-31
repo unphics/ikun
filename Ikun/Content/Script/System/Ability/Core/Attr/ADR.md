@@ -18,5 +18,6 @@
 - 整个技能系统, 包括其属性系统/技能系统/Buff系统的Tick应该像GAS一样由Actor驱动还是应该让其主控也就是技能系统单例来驱动?
     使用管理器驱动
 - 属性集不挂载Tick, 全部使用事件驱动
+    那么OnChanged怎么办
 - 属性修改器是否需要被Tick, 如面对某个Buff会持续增加ExtraHealth这样的情况?
     否, 让Buff来Tick添加Modifier
