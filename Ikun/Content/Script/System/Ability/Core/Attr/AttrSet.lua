@@ -76,9 +76,6 @@ end
 ---@param InAttrKey number
 function AttrSetClass:AddDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
-    -- if self._Dirty[id] then
-    --     return
-    -- end
     self._Dirty[id] = true
     local deps = self._Manager:GetAttrDependents(id)
     if deps then
