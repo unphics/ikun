@@ -2,6 +2,7 @@
 local AbilitySystem = require('System/Ability/AbilitySystem')
 local TagUtil = require("System/Ability/Core/Tag/TagUtil")
 local AbilityPart = require('System/Ability/Core/Ability/AbilityPart')
+local ModOpDef = require("System/Ability/Core/Attr/ModOpDef")
 -- local log = require('Core/Log/log') ---@as log
 
 AbilitySystem.Get():InitAbilitySystem()
@@ -22,7 +23,11 @@ end
 
 if true then
     local attrMgr = AbilitySystem.Get():GetAttrManager()
-    local set = attrMgr:CreateAttrSet()
+    local set = attrMgr:CreateAttrSet() ---@type AttrSetClass
+    local modi = attrMgr:RentModifier('BaseHealth', ModOpDef.Add, 10)
+    set:AddModifier(modi)
+    print('attr', set:GetAttrValue('BaseHealth'))
+    print('attr', set:GetAttrValue('MaxHealth'))
     local a = 1
 end
 

@@ -13,6 +13,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
+local AttrDef = require("System/Ability/Core/Attr/AttrDef")
 local ExpLib = {}
 
 -- 允许策划在表达式里使用的函数
@@ -52,8 +53,17 @@ ExpLib.Compile = function(InFormulaStr)
         return nil
     end
 
-    -- 语法转换, 将#1011转换为(v[1011] or 0)
-    local luaCode = string.gsub(InFormulaStr, "#(%d+)", "(v[%1] or 0)")
+    -- 语法转换：支持 #101 或 #MaxHealth
+    -- 将 #Key 转换为 (v['Key'] or 0)
+    local luaCode = string.gsub(InFormulaStr, "#([%w_]+)", function(attrName)
+        -- 如果是纯数字，就转换成数字索引，否则保留字符串索引
+        local id = tonumber(attrName)
+        if not id then
+            id = AttrDef.ToId(attrName)
+        end
+        local c = string.format("(v[%d] or 0)", id)
+        return c
+    end)
 
     -- 包装函数体
     local script = "return function(v) return "..luaCode.." end"

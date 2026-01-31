@@ -97,6 +97,7 @@ end
 ---@protected
 ---@param InAttrId number
 function AttrSetClass:_UpdateAttribute(InAttrId)
+    local attr = AttrDef.ToKey(InAttrId)
     local formula = self._Manager:GetAttrFormula(InAttrId)
     local baseValue = 0
     if formula then
@@ -108,14 +109,17 @@ function AttrSetClass:_UpdateAttribute(InAttrId)
     local totalAdd = 0
     local totalMulti = 1
     local overrideVal = nil
-    ---@param mod ModifierClass
-    for _, mod in ipairs(self._Modifiers[InAttrId]) do
-        if mod.ModOp == ModOpDef.Add then
-            totalAdd = totalAdd + mod.ModValue
-        elseif mod.ModOp == ModOpDef.Multi then
-            totalMulti = totalMulti * (1 + mod.ModValue)
-        elseif mod.ModOp == ModOpDef.Override then
-            overrideVal = mod.ModValue
+    local mods = self._Modifiers[InAttrId]
+    if mods then
+        ---@param mod ModifierClass
+        for _, mod in ipairs(mods) do
+            if mod.ModOp == ModOpDef.Add then
+                totalAdd = totalAdd + mod.ModValue
+            elseif mod.ModOp == ModOpDef.Multi then
+                totalMulti = totalMulti * (1 + mod.ModValue)
+            elseif mod.ModOp == ModOpDef.Override then
+                overrideVal = mod.ModValue
+            end
         end
     end
     local finalValue = overrideVal or (baseValue + totalAdd) * totalMulti
@@ -129,7 +133,8 @@ function AttrSetClass:_GetFormulaProxy()
     if not self._Proxy then
         self._Proxy = setmetatable({}, {
             __index = function(_, k)
-                return self:GetAttrValue(k)
+                local value = self:GetAttrValue(k)
+                return value
             end
         })
     end

@@ -14,6 +14,7 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
+local AttrDef = require("System/Ability/Core/Attr/AttrDef")
 
 ---@class ModifierClass
 ---@field public ModId number 修改器的唯一Id
@@ -25,7 +26,7 @@ local ModifierClass = Class3.Class('AttrSetClass')
 
 ---@public
 function ModifierClass:Ctor(InAttrKey, InModOp, InModValue, InModSource)
-    self.AttrKey = InAttrKey
+    self.AttrKey = AttrDef.ToId(InAttrKey)
     self.ModOp = InModOp
     self.ModValue = InModValue
     self.ModSource = InModSource
