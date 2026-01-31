@@ -21,3 +21,5 @@
     那么OnChanged怎么办
 - 属性修改器是否需要被Tick, 如面对某个Buff会持续增加ExtraHealth这样的情况?
     否, 让Buff来Tick添加Modifier
+# 2026/1/31
+- 懒加载计算与变更回调之间的矛盾怎么办?
