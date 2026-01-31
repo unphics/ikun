@@ -24,8 +24,23 @@ end
 if true then
     local attrMgr = AbilitySystem.Get():GetAttrManager()
     local set = attrMgr:CreateAttrSet() ---@type AttrSetClass
-    local modi = attrMgr:RentModifier('BaseHealth', ModOpDef.Add, 10)
-    set:AddModifier(modi)
+
+    local mod_baseHealth_add_10 = attrMgr:RentModifier('BaseHealth', ModOpDef.Add, 10)
+
+    print('attr add modi (BaseHealth Add 10)')
+    set:AddModifier(mod_baseHealth_add_10)
+    print('attr', set:GetAttrValue('BaseHealth'))
+    print('attr', set:GetAttrValue('MaxHealth'))
+
+    local mod_FlatHealth_add_10 = attrMgr:RentModifier('FlatHealth', ModOpDef.Add, 10)
+    print('attr add modi (FlatHealth Add 10)')
+    set:AddModifier(mod_FlatHealth_add_10)
+    print('attr', set:IsDirty('MaxHealth'))
+    print('attr', set:GetAttrValue('FlatHealth'))
+    print('attr', set:GetAttrValue('MaxHealth'))
+    
+    set:RemoveModifier(mod_baseHealth_add_10)
+    print('attr remove modi (BaseHealth Add 10)')
     print('attr', set:GetAttrValue('BaseHealth'))
     print('attr', set:GetAttrValue('MaxHealth'))
     local a = 1

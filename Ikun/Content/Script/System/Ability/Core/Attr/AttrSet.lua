@@ -76,9 +76,9 @@ end
 ---@param InAttrKey number
 function AttrSetClass:AddDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
-    if self._Dirty[id] then
-        return
-    end
+    -- if self._Dirty[id] then
+    --     return
+    -- end
     self._Dirty[id] = true
     local deps = self._Manager:GetAttrDependents(id)
     if deps then
@@ -91,7 +91,15 @@ end
 ---@public [Dirty]
 ---@param InAttrKey number
 function AttrSetClass:RemoveDirty(InAttrKey)
-    self._Dirty[InAttrKey] = false
+    local id = AttrDef.ToId(InAttrKey)
+    self._Dirty[id] = false
+end
+
+---@public [Dirty]
+---@param InAttrKey number
+function AttrSetClass:IsDirty(InAttrKey)
+    local id = AttrDef.ToId(InAttrKey)
+    return self._Dirty[id]
 end
 
 ---@protected
