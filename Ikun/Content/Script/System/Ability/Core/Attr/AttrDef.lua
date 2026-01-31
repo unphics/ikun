@@ -17,7 +17,6 @@
 local AttrDef = {}
 
 AttrDef.RefIdToKey = {}
-AttrDef.MaxHealth = 1
 
 ---@public
 ---@param InKey string

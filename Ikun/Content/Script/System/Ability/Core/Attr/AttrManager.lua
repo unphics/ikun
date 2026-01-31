@@ -134,6 +134,13 @@ function AttrManager:_BuildAttrDependencies()
     end
 
     local attrDeps = {} ---@type table<string, string[]>
+
+    for key, _ in pairs(self._AttrConfig) do
+        if not attrDeps[key] then
+            attrDeps[key] = {}
+        end
+    end
+
     ---@param config AttrConfig
     for key, config in pairs(self._AttrConfig) do
         local deps = ExpLib.CollectDeps(config.AttrFormula)

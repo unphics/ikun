@@ -22,7 +22,7 @@ local AttrDef = require("System/Ability/Core/Attr/AttrDef")
 ---@field public ModOp ModOpDef 修改操作符, 加/乘/覆盖
 ---@field public ModValue number 修改值
 ---@field public ModSource any 修改源, 可以是Buff实例或者武器实例或者角色等信息的混合
-local ModifierClass = Class3.Class('AttrSetClass')
+local ModifierClass = Class3.Class('ModifierClass')
 
 ---@public
 function ModifierClass:Ctor(InAttrKey, InModOp, InModValue, InModSource)

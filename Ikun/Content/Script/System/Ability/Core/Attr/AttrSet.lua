@@ -106,7 +106,7 @@ function AttrSetClass:_UpdateAttribute(InAttrId)
     local formula = self._Manager:GetAttrFormula(InAttrId)
     local baseValue = 0
     if formula then
-        baseValue = formula(self._Attributes)
+        baseValue = formula(self:_GetFormulaProxy())
     else
         baseValue = 0
     end
