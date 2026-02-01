@@ -3,6 +3,7 @@ local AbilitySystem = require('System/Ability/AbilitySystem')
 local TagUtil = require("System/Ability/Core/Tag/TagUtil")
 local AbilityPart = require('System/Ability/Core/Ability/AbilityPart')
 local ModOpDef = require("System/Ability/Core/Attr/ModOpDef")
+local AttrDef = require("System/Ability/Core/Attr/AttrDef")
 -- local log = require('Core/Log/log') ---@as log
 
 AbilitySystem.Get():InitAbilitySystem()
@@ -26,22 +27,26 @@ if true then
     local set = attrMgr:CreateAttrSet() ---@type AttrSetClass
 
     local mod_baseHealth_add_10 = attrMgr:RentModifier('BaseHealth', ModOpDef.Add, 10)
-
     print('attr add modi (BaseHealth Add 10)')
     set:AddModifier(mod_baseHealth_add_10)
     print('attr', set:GetAttrValue('BaseHealth'))
     print('attr', set:GetAttrValue('MaxHealth'))
 
-    local mod_FlatHealth_add_10 = attrMgr:RentModifier('FlatHealth', ModOpDef.Add, 10)
-    print('attr add modi (FlatHealth Add 10)')
-    set:AddModifier(mod_FlatHealth_add_10)
-    print('attr', set:IsDirty('MaxHealth'))
-    print('attr', set:GetAttrValue('FlatHealth'))
-    print('attr', set:GetAttrValue('MaxHealth'))
+    -- local mod_FlatHealth_add_10 = attrMgr:RentModifier('FlatHealth', ModOpDef.Add, 10)
+    -- print('attr add modi (FlatHealth Add 10)')
+    -- set:AddModifier(mod_FlatHealth_add_10)
+    -- print('attr', set:IsDirty('MaxHealth'))
+    -- print('attr', set:GetAttrValue('FlatHealth'))
+    -- print('attr', set:GetAttrValue('MaxHealth'))
     
-    set:RemoveModifier(mod_baseHealth_add_10)
-    print('attr remove modi (BaseHealth Add 10)')
-    print('attr', set:GetAttrValue('BaseHealth'))
+    -- set:RemoveModifier(mod_baseHealth_add_10)
+    -- print('attr remove modi (BaseHealth Add 10)')
+    -- print('attr', set:GetAttrValue('BaseHealth'))
+    -- print('attr', set:GetAttrValue('MaxHealth'))
+
+    local mod_perH_add_10 = attrMgr:RentModifier(AttrDef.PercentHealth, ModOpDef.Add, 0.1)
+    set:AddModifier(mod_perH_add_10)
+    print('attr', set:GetAttrValue(AttrDef.PercentHealth))
     print('attr', set:GetAttrValue('MaxHealth'))
     local a = 1
 end

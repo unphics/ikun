@@ -121,7 +121,7 @@ function AttrSetClass:_UpdateAttribute(InAttrId)
             if mod.ModOp == ModOpDef.Add then
                 totalAdd = totalAdd + mod.ModValue
             elseif mod.ModOp == ModOpDef.Multi then
-                totalMulti = totalMulti * (1 + mod.ModValue)
+                totalMulti = totalMulti + mod.ModValue
             elseif mod.ModOp == ModOpDef.Override then
                 overrideVal = mod.ModValue
             end
