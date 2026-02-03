@@ -13,14 +13,13 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
-local Modifier = require('System/Ability/Core/Attr/Modifier')
 local AttrDef = require("System/Ability/Core/Attr/AttrDef")
 local ModOpDef = require("System/Ability/Core/Attr/ModOpDef")
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<number, number>
 ---@field protected _Dirty table<number, boolean> 后面用位运算
----@field protected _Modifiers ModifierClass[]
+---@field protected _Modifiers AttrModifierClass[]
 ---@field protected _Manager AttrManager
 local AttrSetClass = Class3.Class('AttrSetClass')
 
@@ -48,7 +47,7 @@ function AttrSetClass:GetAttrValue(InAttrKey)
 end
 
 ---@public [Add] [Modifier]
----@param InModifier ModifierClass
+---@param InModifier AttrModifierClass
 function AttrSetClass:AddModifier(InModifier)
     local id = AttrDef.ToId(InModifier.AttrKey)
     self:AddDirty(id)
@@ -59,7 +58,7 @@ function AttrSetClass:AddModifier(InModifier)
 end
 
 ---@public [Remove] [Modifier]
----@param InModifier ModifierClass
+---@param InModifier AttrModifierClass
 function AttrSetClass:RemoveModifier(InModifier)
     local id = AttrDef.ToId(InModifier.AttrKey)
     local mods = self._Modifiers[id]
@@ -116,7 +115,7 @@ function AttrSetClass:_UpdateAttribute(InAttrId)
     local overrideVal = nil
     local mods = self._Modifiers[InAttrId]
     if mods then
-        ---@param mod ModifierClass
+        ---@param mod AttrModifierClass
         for _, mod in ipairs(mods) do
             if mod.ModOp == ModOpDef.Add then
                 totalAdd = totalAdd + mod.ModValue

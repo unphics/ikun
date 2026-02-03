@@ -18,7 +18,7 @@ local ConfigSystem = require("System/Config/ConfigSystem")
 local ExpLib = require('System/Ability/Core/Attr/Exp')
 local AttrSetClass = require('System/Ability/Core/Attr/AttrSet')
 local AttrDef = require('System/Ability/Core/Attr/AttrDef')
-local ModifierClass = require('System/Ability/Core/Attr/Modifier')
+local AttrModifierClass = require('System/Ability/Core/Attr/AttrModifier')
 local log = require('Core/Log/log')
 
 ---@alias FormulaFunction fun(Attributes: table<number, number>):number
@@ -72,14 +72,14 @@ end
 
 ---@public
 ---@todo zys 补全逻辑
----@return ModifierClass
+---@return AttrModifierClass
 function AttrManager:RentModifier(InAttrKey, InModOp, InModValue, InModSource)
-    return ModifierClass:New(InAttrKey, InModOp, InModValue, InModSource)
+    return AttrModifierClass:New(InAttrKey, InModOp, InModValue, InModSource)
 end
 
 ---@public
 ---@todo zys 补全逻辑
----@param InModifier ModifierClass
+---@param InModifier AttrModifierClass
 function AttrManager:ReturnModifier(InModifier)
 end
 

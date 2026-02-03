@@ -2,7 +2,7 @@
 --[[
 -- -----------------------------------------------------------------------------
 --  Brief       : 能力系统-属性修改器
---  File        : Modifier.lua
+--  File        : AttrModifier.lua
 --  Author      : zhengyanshuai
 --  Date        : Tue Jan 20 2026 22:56:40 GMT+0800 (中国标准时间)
 --  Description : 修改属性
@@ -16,20 +16,20 @@
 local Class3 = require('Core/Class/Class3')
 local AttrDef = require("System/Ability/Core/Attr/AttrDef")
 
----@class ModifierClass
+---@class AttrModifierClass
 ---@field public ModId number 修改器的唯一Id
 ---@field public AttrKey number 修改的属性类型
 ---@field public ModOp ModOpDef 修改操作符, 加/乘/覆盖
 ---@field public ModValue number 修改值
 ---@field public ModSource any 修改源, 可以是Buff实例或者武器实例或者角色等信息的混合
-local ModifierClass = Class3.Class('ModifierClass')
+local AttrModifierClass = Class3.Class('AttrModifierClass')
 
 ---@public
-function ModifierClass:Ctor(InAttrKey, InModOp, InModValue, InModSource)
+function AttrModifierClass:Ctor(InAttrKey, InModOp, InModValue, InModSource)
     self.AttrKey = AttrDef.ToId(InAttrKey)
     self.ModOp = InModOp
     self.ModValue = InModValue
     self.ModSource = InModSource
 end
 
-return ModifierClass
+return AttrModifierClass
