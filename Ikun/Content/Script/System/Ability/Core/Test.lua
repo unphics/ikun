@@ -1,7 +1,7 @@
 
 local AbilitySystem = require('System/Ability/AbilitySystem')
 local TagUtil = require("System/Ability/Core/Tag/TagUtil")
-local AbilityPart = require('System/Ability/Core/Ability/AbilityPart')
+local AbilityPart = require('System/Ability/Core/Part/AbilityPart')
 local ModOpDef = require("System/Ability/Core/Attr/ModOpDef")
 local AttrDef = require("System/Ability/Core/Attr/AttrDef")
 -- local log = require('Core/Log/log') ---@as log
