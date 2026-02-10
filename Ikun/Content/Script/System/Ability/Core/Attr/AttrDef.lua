@@ -41,8 +41,9 @@ end
 
 ---@public [Init]
 AttrDef.BuildIdToKey = function()
+    AttrDef.RefIdToKey = {}
     for k, v in pairs(AttrDef) do
-        if type(k) == "string" then
+        if type(k) == "string" and type(v) == "number" then
             AttrDef.RefIdToKey[v] = k
         end
     end

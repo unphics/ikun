@@ -62,10 +62,12 @@ end
 function AttrSetClass:RemoveModifier(InModifier)
     local id = AttrDef.ToId(InModifier.AttrKey)
     local mods = self._Modifiers[id]
-    for i = 1, #mods do
-        if mods[i] == InModifier then
-            table.remove(mods, i)
-            break
+    if mods then
+        for i = 1, #mods do
+            if mods[i] == InModifier then
+                table.remove(mods, i)
+                break
+            end
         end
     end
     self:AddDirty(id)
@@ -101,7 +103,6 @@ end
 ---@protected
 ---@param InAttrId number
 function AttrSetClass:_UpdateAttribute(InAttrId)
-    local attr = AttrDef.ToKey(InAttrId)
     local formula = self._Manager:GetAttrFormula(InAttrId)
     local baseValue = 0
     if formula then

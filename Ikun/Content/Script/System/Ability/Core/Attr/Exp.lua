@@ -14,6 +14,7 @@
 --]]
 
 local AttrDef = require("System/Ability/Core/Attr/AttrDef")
+local log = require('Core/Log/log')
 local ExpLib = {}
 
 -- 允许策划在表达式里使用的函数
@@ -68,15 +69,22 @@ ExpLib.Compile = function(InFormulaStr)
     -- 包装函数体
     local script = "return function(v) return "..luaCode.." end"
 
-    -- 编译加载
-    local chunk, err = loadstring(script, "FormulaChunk")
-    if not chunk then
-        log.warn(string.format("[FormulaError] 编译失败: %s\n原始公式:%s", err, InFormulaStr))
-        return nil
+    local chunk, err
+    if setfenv then
+        chunk, err = loadstring(script, "FormulaChunk")
+        if not chunk then
+            log.warn(string.format("[FormulaError] 编译失败: %s\n原始公式:%s", err, InFormulaStr))
+            return nil
+        end
+        setfenv(chunk, Env)
+    else
+        chunk, err = load(script, "FormulaChunk", "t", Env)
+        if not chunk then
+            log.warn(string.format("[FormulaError] 编译失败: %s\n原始公式:%s", err, InFormulaStr))
+            return nil
+        end
     end
-    setfenv(chunk, Env)
 
-    -- 执行chunk生成闭包
     local status, func = pcall(chunk)
     if not status then
         log.warn(string.format("[FormulaError] 生成闭包失败: %s", func))
