@@ -20,7 +20,7 @@ local log = require('Core/Log/log')
 
 ---@class AbilityPartClass
 ---@field _Owner any
----@field _SkillTagContainer TagContainer
+---@field _PartTagContainer TagContainer
 ---@field _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
 ---@field _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
 ---@field _RefAbilityToSlots table<string, string[]> (AbilityKey:number[])
@@ -29,18 +29,18 @@ local AbilityPartClass = Class3.Class('AbilityPartClass')
 ---@public
 function AbilityPartClass:Ctor(InOwner)
     self._Owner = InOwner
-    self._SkillTagContainer = TagUtil.MakeContainer()
+    self._PartTagContainer = TagUtil.MakeContainer()
 
     self._SlotInfos = {}
     self._AbilityInfos = {}
     self._RefAbilityToSlots = {}
 end
 
----@public
+---@public [Ability]
 function AbilityPartClass:InitAbilitySlot()
 end
 
----@public
+---@public [Ability]
 ---@param InAbilityKey string
 ---@param InSlotTag number
 function AbilityPartClass:AddAbilityToSlot(InAbilityKey, InSlotTag)
@@ -68,7 +68,7 @@ function AbilityPartClass:AddAbilityToSlot(InAbilityKey, InSlotTag)
     table.insert(self._RefAbilityToSlots[InAbilityKey], InSlotTag)
 end
 
----@public
+---@public [Ability]
 ---@param InAbilityKey string
 ---@param InSlotTag number
 function AbilityPartClass:RemoveAbilityFromSlot(InAbilityKey, InSlotTag)
@@ -88,7 +88,7 @@ function AbilityPartClass:RemoveAbilityFromSlot(InAbilityKey, InSlotTag)
     end
 end
 
----@public
+---@public [Ability]
 ---@param InAbilityKey string
 function AbilityPartClass:RemoveAbilityByKey(InAbilityKey)
     local slots = self._RefAbilityToSlots[InAbilityKey]
@@ -106,7 +106,7 @@ function AbilityPartClass:RemoveAbilityByKey(InAbilityKey)
     end
 end
 
----@public
+---@public [Ability]
 ---@param InSlotTag number
 ---@return AbilityClass[]
 function AbilityPartClass:GetSlotAbility(InSlotTag)
@@ -121,14 +121,14 @@ function AbilityPartClass:GetSlotAbility(InSlotTag)
     return tbAbility
 end
 
----@public
+---@public [Ability]
 ---@param InAbilityKey string
 ---@return AbilityClass?
 function AbilityPartClass:GetAbilityByKey(InAbilityKey)
     return self._AbilityInfos[InAbilityKey]
 end
 
----@public
+---@public [Ability]
 ---@param InAbilityKey string
 ---@param Params table
 ---@return boolean
@@ -144,6 +144,24 @@ function AbilityPartClass:UseAbility(InAbilityKey, Params)
 
     ability:UseSkill(Params)
     return true
+end
+
+---@public [Tag]
+---@param InTag string
+function AbilityPartClass:AddTag(InTag)
+    self._PartTagContainer:AddTag(InTag)
+end
+
+---@public [Tag]
+---@param InTag string
+function AbilityPartClass:RemoveTag(InTag)
+    self._PartTagContainer:RemoveTag(InTag)
+end
+
+---@public [Tag]
+---@param InTag string
+function AbilityPartClass:HasTag(InTag)
+    return self._PartTagContainer:HasTag(InTag)
 end
 
 return AbilityPartClass
