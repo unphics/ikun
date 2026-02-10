@@ -28,6 +28,10 @@ function BuffManager:Ctor(InSystem)
 end
 
 ---@public
+function BuffManager:InitBuffManager()
+end
+
+---@public
 ---@return number
 function BuffManager:GetNowMS()
     return self._System:GetNowMS()
@@ -60,11 +64,17 @@ local function applyCancelByTags(self, target, cancelTags)
     end
 end
 
-function BuffManager:AddOrRefresh(target, source, buff)
+---@public
+---@param InTarget AbilityPartClass
+---@param InSource AbilityPartClass
+---@param InBuffInst BuffClass
+function BuffManager:AddOrRefreshBuff(InTarget, InSource, InBuffInst)
     local now = self:GetNowMS()
     -- Block 检查
-    local ok, reason = buff:TryApply(self, target, source)
-    if not ok then return false, reason end
+    local ok = InBuffInst:CanApplyBuff(InTarget, InSource)
+    if not ok then
+        return false
+    end
     -- Cancel 检查
     applyCancelByTags(self, target, buff.CancelTags)
 

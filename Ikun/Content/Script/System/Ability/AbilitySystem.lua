@@ -8,19 +8,22 @@
 local Class3 = require('Core/Class/Class3')
 local AbilityManager = require('System/Ability/Core/Ability/AbilityManager')
 local AttrManager = require('System/Ability/Core/Attr/AttrManager')
+local BuffManager = require('System/Ability/Core/Buff/BuffManager')
 local Time = require("Core/Util/Time")
 
 ---@class AbilitySystem
 ---@field AbilityManager AbilityManager
 ---@field AttrManager AttrManager
+---@field BuffManager BuffManager
 local AbilitySystem = Class3.Class('AbilitySystem')
 
 local system = nil ---@type AbilitySystem
 
 ---@public
 function AbilitySystem:Ctor()
-    self.AbilityManager = AbilityManager:New(self)
     self.AttrManager = AttrManager:New(self)
+    self.BuffManager = BuffManager:New(self)
+    self.AbilityManager = AbilityManager:New(self)
 end
 
 ---@public
@@ -35,6 +38,7 @@ end
 ---@public
 function AbilitySystem:InitAbilitySystem()
     self.AttrManager:InitAttrManager()
+    self.BuffManager:InitBuffManager()
     self.AbilityManager:InitAbilityManager()
 end
 
@@ -48,6 +52,12 @@ end
 ---@return AttrManager
 function AbilitySystem:GetAttrManager()
     return self.AttrManager
+end
+
+---@public
+---@return BuffManager
+function AbilitySystem:GetBuffManager()
+    return self.BuffManager
 end
 
 ---@public

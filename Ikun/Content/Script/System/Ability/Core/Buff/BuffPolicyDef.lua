@@ -18,4 +18,5 @@ local BuffPolicyDef = {
     HasDuration = 2,
     Infinite = 3,
 }
+
 return BuffPolicyDef

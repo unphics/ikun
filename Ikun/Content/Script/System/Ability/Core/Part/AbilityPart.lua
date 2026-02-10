@@ -19,11 +19,12 @@ local TagUtil = require("System/Ability/Core/Tag/TagUtil")
 local log = require('Core/Log/log')
 
 ---@class AbilityPartClass
----@field _Owner any
----@field _PartTagContainer TagContainer
----@field _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
----@field _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
----@field _RefAbilityToSlots table<string, string[]> (AbilityKey:number[])
+---@field protected _Owner any
+---@field protected _ActivedBuffs BuffClass[]
+---@field protected _PartTagContainer TagContainer
+---@field protected _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
+---@field protected _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
+---@field protected _RefAbilityToSlots table<string, string[]> (AbilityKey:number[])
 local AbilityPartClass = Class3.Class('AbilityPartClass')
 
 ---@public
@@ -169,4 +170,16 @@ end
 function AbilityPartClass:HasAnyTags(InTags)
     return self._PartTagContainer:HasAnyTags(InTags)
 end
+
+---@public [Buff]
+---@param InBuffKey string
+function AbilityPartClass:TryApplyBuff(InBuffKey)
+    local BuffManager = AbilitySystem.Get():GetBuffManager()
+    local buff = BuffManager:LookupBuffConfig(InBuffKey)
+    if not buff then
+        log.warn('AbilityPartClass:TryApplyBuff(): Invalid InBuffKey')
+        return false
+    end
+end
+
 return AbilityPartClass

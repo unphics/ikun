@@ -48,8 +48,9 @@ end
 
 ---@public
 ---@param InBuffTarget AbilityPartClass
+---@param InBuffSource AbilityPartClass
 ---@return boolean
-function BuffClass:CanApplyBuff(InBuffTarget)
+function BuffClass:CanApplyBuff(InBuffTarget, InBuffSource)
     -- Block
     if self.BlockTags and #self.BlockTags > 0 then
         local target = InBuffTarget ---@type AbilityPartClass
