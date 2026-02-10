@@ -14,9 +14,16 @@
 
 local Class3 = require('Core/Class/Class3')
 local TagUtil = require('System/Ability/Core/Tag/TagUtil')
+local FileSystem = require('System/File/FileSystem')
+local ConfigSystem = require('System/Config/ConfigSystem')
+
+---@class BuffConfig
+---@field BuffKey string
+---@field BuffName string
 
 ---@class BuffManager
 ---@field protected _System AbilitySystem
+---@field protected _BuffConfigs table<string, BuffConfig> -- Key -> Config
 ---@field _Active table<any, table<string, Buff>> -- Target -> Key -> Buff
 local BuffManager = Class3.Class('BuffManager')
 
@@ -29,6 +36,31 @@ end
 
 ---@public
 function BuffManager:InitBuffManager()
+    self:_LoadBuffConfig()
+end
+
+---@private
+function BuffManager:_LoadBuffConfig()
+    local file = FileSystem.Get():CreateConfigContext()
+    if not file then
+        log.error('zys BuffManager:_LoadBuffConfig(): Failed to create FileContext!')
+        return
+    end
+    file:ChangeDirectory('Buff')
+    local buffParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile('Buff.csv'))
+    if not buffParser then
+        log.error('zys BuffManager:_LoadBuffConfig(): Failed to create CSVParser!')
+        return
+    end
+    self._BuffConfigs = buffParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
+    buffParser:ReleaseParser()
+end
+
+---@public
+---@param InBuffKey string
+---@return BuffConfig?
+function BuffManager:LookupBuffConfig(InBuffKey)
+    return self._BuffConfigs[InBuffKey]
 end
 
 ---@public

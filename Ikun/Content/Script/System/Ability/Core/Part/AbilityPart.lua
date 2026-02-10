@@ -180,6 +180,7 @@ function AbilityPartClass:TryApplyBuff(InBuffKey)
         log.warn('AbilityPartClass:TryApplyBuff(): Invalid InBuffKey')
         return false
     end
+    
 end
 
 return AbilityPartClass
