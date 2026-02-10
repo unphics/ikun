@@ -8,6 +8,7 @@
 local Class3 = require('Core/Class/Class3')
 local AbilityManager = require('System/Ability/Core/Ability/AbilityManager')
 local AttrManager = require('System/Ability/Core/Attr/AttrManager')
+local Time = require("Core/Util/Time")
 
 ---@class AbilitySystem
 ---@field AbilityManager AbilityManager
@@ -47,6 +48,12 @@ end
 ---@return AttrManager
 function AbilitySystem:GetAttrManager()
     return self.AttrManager
+end
+
+---@public
+---@return number
+function AbilitySystem:GetNowMS()
+    return Time.GetTimestampMS()
 end
 
 return AbilitySystem

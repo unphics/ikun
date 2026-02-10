@@ -1,17 +1,36 @@
+
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : 能力系统-增益-增益管理器
+--  File        : BuffManager.lua
+--  Author      : zhengyanshuai
+--  Date        : Tue Feb 10 2026 14:19:55 GMT+0800 (中国标准时间)
+--  Description : 负责增益的生命周期管理, 统一调度, "规则执行", 归档与查询
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
+
 local Class3 = require('Core/Class/Class3')
 local TagUtil = require('System/Ability/Core/Tag/TagUtil')
 
 ---@class BuffManager
+---@field protected _System AbilitySystem
 ---@field _Active table<any, table<string, Buff>> -- Target -> Key -> Buff
 local BuffManager = Class3.Class('BuffManager')
 
-function BuffManager:Ctor(system)
-    self._System = system
+---@public
+---@param InSystem AbilitySystem
+function BuffManager:Ctor(InSystem)
+    self._System = InSystem
     self._Active = {}
 end
 
-function BuffManager:Now()
-    return self._System:Now() -- 或使用 UE 时间源
+---@public
+---@return number
+function BuffManager:GetNowMS()
+    return self._System:GetNowMS()
 end
 
 local function ensureTargetTable(self, target)
@@ -42,7 +61,7 @@ local function applyCancelByTags(self, target, cancelTags)
 end
 
 function BuffManager:AddOrRefresh(target, source, buff)
-    local now = self:Now()
+    local now = self:GetNowMS()
     -- Block 检查
     local ok, reason = buff:TryApply(self, target, source)
     if not ok then return false, reason end
@@ -70,16 +89,16 @@ function BuffManager:RemoveBuff(target, buffKey)
 end
 
 ---@public
----@param DeltaTime number
-function BuffManager:Tick(InDeltaTime)
-    local now = self:Now()
-    for target, tBuffs in pairs(self._Active) do
-        for key, buff in pairs(tBuffs) do
-            if buff:IsExpired(now) then
-                self:RemoveBuff(target, key)
-            else
-                buff:TickBuff(InDeltaTime)
-            end
+---@param InDeltaTime number
+function BuffManager:TickBuffManager(InDeltaTime)
+    local now = self:GetNowMS()
+    local allBuffs = {} ---@type BuffClass[]
+    for i = 1, #allBuffs do
+        local buff = allBuffs[i]
+        if buff:IsBuffExpired(now) then
+            self:RemoveBuff(buff.Target, buff.BuffKey)
+        else
+            buff:TickBuff(InDeltaTime)
         end
     end
 end
