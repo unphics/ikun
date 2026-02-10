@@ -33,7 +33,7 @@ local function applyCancelByTags(self, target, cancelTags)
         if cont then
             for i = 1, #cancelTags do
                 if cont:HasTag(cancelTags[i]) then
-                    self:RemoveBuff(target, buff.Key)
+                    self:RemoveBuff(target, buff.BuffKey)
                     break
                 end
             end
@@ -44,18 +44,18 @@ end
 function BuffManager:AddOrRefresh(target, source, buff)
     local now = self:Now()
     -- Block 检查
-    local ok, reason = buff:TryApply(self, target, source, buff.Context)
+    local ok, reason = buff:TryApply(self, target, source)
     if not ok then return false, reason end
     -- Cancel 检查
     applyCancelByTags(self, target, buff.CancelTags)
 
     local tBuffs = ensureTargetTable(self, target)
-    local exist = tBuffs[buff.Key]
+    local exist = tBuffs[buff.BuffKey]
     if exist then
-        exist:Refresh(self, target, source, buff.Context, now)
+        exist:RefreshBuff(now)
     else
-        tBuffs[buff.Key] = buff
-        buff:Apply(self, target, source, buff.Context, now)
+        tBuffs[buff.BuffKey] = buff
+        buff:Apply(self, target, source, now)
     end
     return true
 end
@@ -69,14 +69,16 @@ function BuffManager:RemoveBuff(target, buffKey)
     tBuffs[buffKey] = nil
 end
 
-function BuffManager:Tick(dt)
+---@public
+---@param DeltaTime number
+function BuffManager:Tick(InDeltaTime)
     local now = self:Now()
     for target, tBuffs in pairs(self._Active) do
         for key, buff in pairs(tBuffs) do
             if buff:IsExpired(now) then
                 self:RemoveBuff(target, key)
             else
-                buff:Tick(self, dt, now)
+                buff:TickBuff(InDeltaTime)
             end
         end
     end

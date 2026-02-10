@@ -26,110 +26,88 @@ local BuffPolicyDef = require('System/Ability/Core/Buff/BuffPolicyDef')
 ---@field public GrantedTags number[]        -- TagId[]
 ---@field public BlockTags number[]          -- TagId[]
 ---@field public CancelTags number[]         -- TagId[]
+---@field public BuffSource AbilityPartClass
+---@field public BuffTarget AbilityPartClass
 ---@field protected _StartTime number
 ---@field protected _EndTime number
----@field NextTickTime number
----@field StackCount number
----@field MaxStacks number
----@field Source any
----@field Target any
----@field Context table
 local BuffClass = Class3.Class('BuffClass')
 
+---@public
 function BuffClass:Ctor(spec)
     self.BuffKey = spec.Key
     self.BuffName = spec.BuffName
     self.BuffPolicy = spec.BuffPolicy or BuffPolicyDef.Instant
     self.BuffDuration = spec.BuffDuration or 0
     self.Period = spec.Period or 0
-    self.StackCount = spec.StackCount or 1
-    self.MaxStacks = spec.MaxStacks or 1
     self.GrantedTags = spec.GrantedTags or {}
     self.BlockTags = spec.BlockTags or {}
     self.CancelTags = spec.CancelTags or {}
     self._StartTime = 0
     self._EndTime = 0
-    self.NextTickTime = 0
 end
 
--- 可覆写
-function BuffClass:OnActive(sys, target, source, ctx) end
-function BuffClass:OnRefresh(sys, target, source, ctx) end
-function BuffClass:OnDeactivate(sys, target, source, ctx) end
-function BuffClass:OnTick(sys, target, source, ctx, dt) end
-
-local function hasAnyTag(container, tags)
-    for i = 1, #tags do
-        if container:HasTag(tags[i]) then
-            return true
-        end
-    end
-    return false
-end
-
-function BuffClass:TryApply(sys, target, source, ctx)
+---@public
+---@param InBuffTarget AbilityPartClass
+---@return boolean
+function BuffClass:CanApplyBuff(InBuffTarget)
     -- Block
     if self.BlockTags and #self.BlockTags > 0 then
-        local tCont = target.TagContainer
-        if tCont and hasAnyTag(tCont, self.BlockTags) then
-            return false, 'BlockedByTag'
+        local target = InBuffTarget ---@type AbilityPartClass
+        if target and target:HasAnyTags(self.BlockTags) then
+            return false
         end
     end
     -- Cancel 由 BuffManager 统一处理（互斥组/CancelTags）
     return true
 end
 
-function BuffClass:Apply(sys, target, source, ctx, now)
-    self.Source, self.Target, self.Context = source, target, ctx
-    self._StartTime = now or sys:Now()
+---@public
+---@param InTarget AbilityPartClass
+---@param InSource AbilityPartClass
+---@param InNowMS number
+function BuffClass:ApplyBuff(InTarget, InSource, InNowMS)
+    self.BuffTarget = InTarget
+    self.BuffSource = InSource
+    self._StartTime = InNowMS
     if self.BuffPolicy == BuffPolicyDef.HasDuration then
         self._EndTime = self._StartTime + self.BuffDuration
     else
         self._EndTime = math.huge
     end
     -- GrantedTags
-    local tCont = target.TagContainer
-    if tCont then
-        for i = 1, #self.GrantedTags do
-            tCont:AddTag(self.GrantedTags[i])
-        end
+    for i = 1, #self.GrantedTags do
+        self.BuffTarget:AddTag(self.GrantedTags[i])
     end
-    -- Period
-    self.NextTickTime = self.Period > 0 and (self._StartTime + self.Period) or math.huge
-    self:OnActive(sys, target, source, ctx)
 end
 
-function BuffClass:Refresh(sys, target, source, ctx, now)
-    -- 默认：叠层（不超过上限），重置持续时间
-    self.StackCount = math.min(self.StackCount + 1, self.MaxStacks)
+---@public
+function BuffClass:RefreshBuff(InNowMS)
     if self.BuffPolicy == BuffPolicyDef.HasDuration then
-        self._StartTime = now or sys:Now()
+        self._StartTime = InNowMS
         self._EndTime = self._StartTime + self.BuffDuration
-        self.NextTickTime = self.Period > 0 and (self._StartTime + self.Period) or math.huge
-    end
-    self:OnRefresh(sys, target, source, ctx)
-end
-
-function BuffClass:IsExpired(now)
-    return self.BuffPolicy ~= BuffPolicyDef.Infinite and now >= self._EndTime
-end
-
-function BuffClass:Tick(sys, dt, now)
-    if self.Period > 0 and now >= self.NextTickTime then
-        self:OnTick(sys, self.Target, self.Source, self.Context, dt)
-        self.NextTickTime = now + self.Period
     end
 end
 
-function BuffClass:Deactivate(sys)
+---@public 判断是否过期
+---@param InNowMS number
+---@return boolean
+function BuffClass:IsBuffExpired(InNowMS)
+    return self.BuffPolicy ~= BuffPolicyDef.Infinite and InNowMS >= self._EndTime
+end
+
+---@public
+---@param InDeltaTime number
+function BuffClass:TickBuff(InDeltaTime)
+end
+
+---@public
+function BuffClass:DeactivateBuff()
     -- 移除 GrantedTags
-    local tCont = self.Target and self.Target.TagContainer
-    if tCont then
+    if self.BuffTarget then
         for i = 1, #self.GrantedTags do
-            tCont:RemoveTag(self.GrantedTags[i])
+            self.BuffTarget:RemoveTag(self.GrantedTags[i])
         end
     end
-    self:OnDeactivate(sys, self.Target, self.Source, self.Context)
 end
 
 return BuffClass

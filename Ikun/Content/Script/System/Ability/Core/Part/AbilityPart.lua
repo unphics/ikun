@@ -147,21 +147,26 @@ function AbilityPartClass:UseAbility(InAbilityKey, Params)
 end
 
 ---@public [Tag]
----@param InTag string
+---@param InTag number
 function AbilityPartClass:AddTag(InTag)
     self._PartTagContainer:AddTag(InTag)
 end
 
 ---@public [Tag]
----@param InTag string
+---@param InTag number
 function AbilityPartClass:RemoveTag(InTag)
     self._PartTagContainer:RemoveTag(InTag)
 end
 
 ---@public [Tag]
----@param InTag string
+---@param InTag number
 function AbilityPartClass:HasTag(InTag)
     return self._PartTagContainer:HasTag(InTag)
 end
 
+---@public [Tag]
+---@param InTags number[]
+function AbilityPartClass:HasAnyTags(InTags)
+    return self._PartTagContainer:HasAnyTags(InTags)
+end
 return AbilityPartClass
