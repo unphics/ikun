@@ -34,12 +34,12 @@ function BuffManager:Ctor(InSystem)
     self._Active = {}
 end
 
----@public
+---@public [Init]
 function BuffManager:InitBuffManager()
     self:_LoadBuffConfig()
 end
 
----@private
+---@private [Config]
 function BuffManager:_LoadBuffConfig()
     local file = FileSystem.Get():CreateConfigContext()
     if not file then
@@ -56,14 +56,29 @@ function BuffManager:_LoadBuffConfig()
     buffParser:ReleaseParser()
 end
 
----@public
+---@public [Config]
 ---@param InBuffKey string
 ---@return BuffConfig?
 function BuffManager:LookupBuffConfig(InBuffKey)
     return self._BuffConfigs[InBuffKey]
 end
 
----@public
+---@public [Tick]
+---@param InDeltaTime number
+function BuffManager:TickBuffManager(InDeltaTime)
+    local now = self:GetNowMS()
+    local allBuffs = {} ---@type BuffClass[]
+    for i = 1, #allBuffs do
+        local buff = allBuffs[i]
+        if buff:IsBuffExpired(now) then
+            self:RemoveBuff(buff.Target, buff.BuffKey)
+        else
+            buff:TickBuff(InDeltaTime)
+        end
+    end
+end
+
+---@public [Pure]
 ---@return number
 function BuffManager:GetNowMS()
     return self._System:GetNowMS()
@@ -128,21 +143,6 @@ function BuffManager:RemoveBuff(target, buffKey)
     if not b then return end
     b:Deactivate(self)
     tBuffs[buffKey] = nil
-end
-
----@public
----@param InDeltaTime number
-function BuffManager:TickBuffManager(InDeltaTime)
-    local now = self:GetNowMS()
-    local allBuffs = {} ---@type BuffClass[]
-    for i = 1, #allBuffs do
-        local buff = allBuffs[i]
-        if buff:IsBuffExpired(now) then
-            self:RemoveBuff(buff.Target, buff.BuffKey)
-        else
-            buff:TickBuff(InDeltaTime)
-        end
-    end
 end
 
 return BuffManager
