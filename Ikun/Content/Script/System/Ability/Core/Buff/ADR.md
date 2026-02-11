@@ -21,3 +21,5 @@
   - 字段：BuffSource / BuffTarget 私有 + getter
   - 构造：参数式优先（保留旧表式兼容）
   - 叠加：不在基类；玩法侧脚本钩子实现
+- 2026-02-11 抽象BuffContainer类
+  - 原因: 为了后续扩展Buff系统，抽象出BuffContainer类，用于管理Buff的添加、移除、查询等操作。

@@ -82,21 +82,6 @@ function BuffClass:ApplyBuff(InTarget, InSource, InNowMS)
 end
 
 ---@public
-function BuffClass:RefreshBuff(InNowMS)
-    if self.BuffPolicy == BuffPolicyDef.HasDuration then
-        self._StartTime = InNowMS
-        self._EndTime = self._StartTime + self.BuffDuration
-    end
-end
-
----@public 判断是否过期
----@param InNowMS number
----@return boolean
-function BuffClass:IsBuffExpired(InNowMS)
-    return self.BuffPolicy ~= BuffPolicyDef.Infinite and InNowMS >= self._EndTime
-end
-
----@public
 ---@param InDeltaTime number
 function BuffClass:TickBuff(InDeltaTime)
 end
@@ -109,6 +94,21 @@ function BuffClass:DeactivateBuff()
             self.BuffTarget:RemoveTag(self.GrantedTags[i])
         end
     end
+end
+
+---@public
+function BuffClass:RefreshBuff(InNowMS)
+    if self.BuffPolicy == BuffPolicyDef.HasDuration then
+        self._StartTime = InNowMS
+        self._EndTime = self._StartTime + self.BuffDuration
+    end
+end
+
+---@public 判断是否过期
+---@param InNowMS number
+---@return boolean
+function BuffClass:IsBuffExpired(InNowMS)
+    return self.BuffPolicy ~= BuffPolicyDef.Infinite and InNowMS >= self._EndTime
 end
 
 return BuffClass
