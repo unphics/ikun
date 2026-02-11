@@ -68,7 +68,7 @@ function SkillClass:OnPostEndSkill()
     local manager = self._Manager
     self._Manager = nil
     self._Ability = nil
-    manager:RecycleSkill(self)
+    manager:ReleaseSkill(self)
 end
 
 return SkillClass

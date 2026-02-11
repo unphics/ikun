@@ -53,7 +53,7 @@ function AbilityClass:UseSkill(InParams)
     self:StartCooldown()
     local config = self:GetAbilityConfig()
     local key = config.AbilitySkills.EntrySkill
-    local skill = self._Manager:SpawnSkill(key)
+    local skill = self._Manager:AcquireSkill(key)
     self._AbilitySkills.EntrySkill = skill
     self:OnUseSkill(skill, key, InParams)
 end

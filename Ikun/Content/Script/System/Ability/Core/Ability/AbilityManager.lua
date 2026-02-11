@@ -57,7 +57,7 @@ end
 ---@public
 ---@param InSkillKey string
 ---@return SkillClass
-function AbilityManager:SpawnSkill(InSkillKey)
+function AbilityManager:AcquireSkill(InSkillKey)
     local config = self:LookupSkillConfig(InSkillKey)
     local tmplClass = SkillClass
     local skill = tmplClass:New(self) ---@type SkillClass
@@ -68,7 +68,7 @@ end
 ---@public
 ---@todo pool
 ---@param InSkillClass SkillClass
-function AbilityManager:RecycleSkill(InSkillClass)
+function AbilityManager:ReleaseSkill(InSkillClass)
     table_util.remove(self._UpdateSkillList, InSkillClass)
 end
 
