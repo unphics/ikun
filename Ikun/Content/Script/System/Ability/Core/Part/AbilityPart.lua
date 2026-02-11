@@ -15,6 +15,7 @@
 local Class3 = require('Core/Class/Class3')
 local AbilitySystem = require('System/Ability/AbilitySystem')
 local AbilityClass = require('System/Ability/Core/Ability/Ability')
+local BuffClass = require('System/Ability/Core/Buff/Buff')
 local TagUtil = require("System/Ability/Core/Tag/TagUtil")
 local log = require('Core/Log/log')
 
@@ -173,14 +174,23 @@ end
 
 ---@public [Buff]
 ---@param InBuffKey string
-function AbilityPartClass:TryApplyBuff(InBuffKey)
-    local BuffManager = AbilitySystem.Get():GetBuffManager()
-    local buff = BuffManager:LookupBuffConfig(InBuffKey)
-    if not buff then
+---@param InInstigator AbilityPartClass
+function AbilityPartClass:TryApplyBuffToSelf(InBuffKey, InInstigator)
+    local manager = AbilitySystem.Get():GetBuffManager()
+    local cfg = manager:LookupBuffConfig(InBuffKey)
+    if not cfg then
         log.warn('AbilityPartClass:TryApplyBuff(): Invalid InBuffKey')
         return false
     end
-    
+    local buff = BuffClass:New({
+        Key = cfg.BuffKey or InBuffKey,
+        BuffName = cfg.BuffName or InBuffKey,
+    })
+    local ok = buff:CanApplyBuff(InInstigator, self)
+    if not ok then
+        return false
+    end
+    return manager:AddOrRefreshBuff(self, InInstigator, buff)
 end
 
 return AbilityPartClass
