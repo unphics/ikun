@@ -24,14 +24,12 @@ local ConfigSystem = require('System/Config/ConfigSystem')
 ---@class BuffManager
 ---@field protected _System AbilitySystem
 ---@field protected _BuffConfigs table<string, BuffConfig> -- Key -> Config
----@field _Active table<any, table<string, Buff>> -- Target -> Key -> Buff
 local BuffManager = Class3.Class('BuffManager')
 
 ---@public
 ---@param InSystem AbilitySystem
 function BuffManager:Ctor(InSystem)
     self._System = InSystem
-    self._Active = {}
 end
 
 ---@public [Init]
@@ -136,10 +134,15 @@ function BuffManager:AddOrRefreshBuff(InTarget, InSource, InBuffInst)
     return true
 end
 
-function BuffManager:RemoveBuff(target, buffKey)
-    local tBuffs = self._Active[target]
+---@public
+---@param InTarget AbilityPartClass
+---@param InBuffKey string
+function BuffManager:RemoveBuff(InTarget, InBuffKey)
+    
+
+    local tBuffs = self._Active[InTarget]
     if not tBuffs then return end
-    local b = tBuffs[buffKey]
+    local b = tBuffs[InBuffKey]
     if not b then return end
     b:Deactivate(self)
     tBuffs[buffKey] = nil
