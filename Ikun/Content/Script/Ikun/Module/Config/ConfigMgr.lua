@@ -71,7 +71,7 @@ function ConfigMgr:_PreloadConfigTable()
                 local tableName = tables[cfgTableHead..tableIndex]
                 if tableName then
                     if self:LoadConfigTable(brs, tableName) then
-                        log.info('ConfigMgr:_PreloadConfigTable()', '加载成功:', tableName)
+                        -- log.info('ConfigMgr:_PreloadConfigTable()', '加载成功:', tableName)
                     else
                         log.error('ConfigMgr:_PreloadConfigTable()', '加载失败:', tableName)
                     end

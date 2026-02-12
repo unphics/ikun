@@ -9,7 +9,7 @@ local Class3 = require('Core/Class/Class3')
 local AbilityManager = require('System/Ability/Core/Ability/AbilityManager')
 local AttrManager = require('System/Ability/Core/Attr/AttrManager')
 local BuffManager = require('System/Ability/Core/Buff/BuffManager')
-local Time = require("Core/Util/Time")
+local Time = require("Core/Time")
 
 ---@class AbilitySystem
 ---@field AbilityManager AbilityManager
