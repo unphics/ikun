@@ -172,25 +172,35 @@ function AbilityPartClass:HasAnyTags(InTags)
     return self._PartTagContainer:HasAnyTags(InTags)
 end
 
----@public [Buff]
+---@public
 ---@param InBuffKey string
----@param InInstigator AbilityPartClass
-function AbilityPartClass:TryApplyBuffToSelf(InBuffKey, InInstigator)
-    local manager = AbilitySystem.Get():GetBuffManager()
-    local cfg = manager:LookupBuffConfig(InBuffKey)
+---@return BuffClass?
+function AbilityPartClass:MakeBuff(InBuffKey)
+    local mgr = AbilitySystem.Get():GetBuffManager()
+    local cfg = mgr:LookupBuffConfig(InBuffKey)
     if not cfg then
         log.warn('AbilityPartClass:TryApplyBuff(): Invalid InBuffKey')
-        return false
+        return nil
     end
+    ---@type BuffClass
     local buff = BuffClass:New({
         Key = cfg.BuffKey or InBuffKey,
         BuffName = cfg.BuffName or InBuffKey,
     })
-    local ok = buff:CanApplyBuff(InInstigator, self)
+    buff.BuffSource = self
+    return buff
+end
+
+---@public [Buff]
+---@param InBuffInst BuffClass
+---@param InCaster AbilityPartClass
+function AbilityPartClass:TryApplyBuffToSelf(InBuffInst, InCaster)
+    local mgr = AbilitySystem.Get():GetBuffManager()
+    local ok = InBuffInst:CanApplyBuff(InCaster, self)
     if not ok then
         return false
     end
-    return manager:AddOrRefreshBuff(self, InInstigator, buff)
+    return mgr:AddOrRefreshBuff(self, InCaster, InBuffInst)
 end
 
 return AbilityPartClass

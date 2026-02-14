@@ -97,11 +97,7 @@ function BuffClass:DeactivateBuff()
 end
 
 ---@public
-function BuffClass:RefreshBuff(InNowMS)
-    if self.BuffPolicy == BuffPolicyDef.HasDuration then
-        self._StartTime = InNowMS
-        self._EndTime = self._StartTime + self.BuffDuration
-    end
+function BuffClass:ReapplyBuff(InNowMS)
 end
 
 ---@public 判断是否过期
