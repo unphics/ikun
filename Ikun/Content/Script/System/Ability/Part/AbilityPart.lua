@@ -39,18 +39,26 @@ function AbilityPartClass:Ctor(InOwner)
     self._RefAbilityToSlots = {}
 end
 
-
-
 ---@public [Ability]
-function AbilityPartClass:InitAbilitySlot()
+---@param InAbilitySlotInfo table<string, string>
+function AbilityPartClass:InitAbilitySlot(InAbilitySlotInfo)
+    for tagName, abilityKey in pairs(InAbilitySlotInfo) do
+        local slot = TagUtil.RequestTag('Ability.Slot.'..tagName)
+        if not slot then
+            log.error_fmt("AbilityPartClass:InitAbilitySlot(): InValid tag, name = [%s]", string(tagName))
+            goto continue
+        end
+        self:AddAbilityToSlot(slot, abilityKey)
+        ::continue::
+    end
 end
 
 ---@public [Ability]
 ---@param InAbilityKey string
 ---@param InSlotTag number
-function AbilityPartClass:AddAbilityToSlot(InAbilityKey, InSlotTag)
-    local AbilityManager = AbilitySystem.Get():GetAbilityManager()
-    local config = AbilityManager:LookupAbilityConfig(InAbilityKey)
+function AbilityPartClass:AddAbilityToSlot(InSlotTag, InAbilityKey)
+    local mgr = AbilitySystem.Get():GetAbilityManager()
+    local config = mgr:LookupAbilityConfig(InAbilityKey)
     if not config then
         log.warn('AbilityPartClass:AddAbilityToSlot(): Invalid InAbilityKey')
         return
@@ -61,7 +69,7 @@ function AbilityPartClass:AddAbilityToSlot(InAbilityKey, InSlotTag)
     end
     
     if not self._AbilityInfos[InAbilityKey] then
-        local ability = AbilityClass:New(AbilityManager, InAbilityKey) ---@type AbilityClass
+        local ability = AbilityClass:New(mgr, InAbilityKey) ---@type AbilityClass
         self._AbilityInfos[InAbilityKey] = ability
     end
     

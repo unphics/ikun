@@ -66,7 +66,7 @@ end
 
 if false then
     local part = AbilityPart:New() ---@as AbilityPartClass
-    part:AddAbilityToSlot('Ability1', 2)
+    part:AddAbilityToSlot(2, 'Ability1')
     part:UseAbility('Ability1', {a = 1})
 end
 

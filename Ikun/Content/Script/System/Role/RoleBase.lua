@@ -24,6 +24,7 @@ require("System/Role/RoleHoldLocation")
 ---@field RoleDesc string
 ---@field bUniqueRole boolean
 ---@field BelongKingdom number
+---@field RoleAbility table<string, string>
 ---@field RoleSkills number[]
 ---@field GoapKey string
 ---@field RoleChat number[]
@@ -78,8 +79,6 @@ function RoleBaseClass:InitBaseInfo(InRoleCfgId, InConfig)
     
     local DistrictMgr = Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
     self._BelongKingdom = DistrictMgr:FindKingdomByCfgId(InConfig.BelongKingdom) ---@type Kingdom
-
-
 end
 
 ---@public [Init-Step2] 复杂组件初始化. 此阶段已有有效的实例ID.
@@ -91,6 +90,10 @@ function RoleBaseClass:InitComplexPart()
     if not str_util.is_empty(config.GoapKey) then
         local agent = class.new 'GAgent' (self) ---@as GAgent
         self.Agent = agent
+    end
+
+    if next(config.RoleAbility) then
+        self.AbilityPart:InitAbilitySlot(config.RoleAbility)
     end
 end
 
