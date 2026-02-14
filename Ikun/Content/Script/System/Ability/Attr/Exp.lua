@@ -13,7 +13,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local AttrDef = require("System/Ability/Core/Attr/AttrDef")
+local AttrDef = require("System/Ability/Attr/AttrDef")
 local log = require('Core/Log/log')
 local ExpLib = {}
 

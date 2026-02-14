@@ -14,7 +14,7 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
-local AttrDef = require("System/Ability/Core/Attr/AttrDef")
+local AttrDef = require("System/Ability/Attr/AttrDef")
 
 ---@class AttrModifierClass
 ---@field public ModId number 修改器的唯一Id

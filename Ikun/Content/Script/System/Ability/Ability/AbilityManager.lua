@@ -13,10 +13,10 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
-local Ability = require('System/Ability/Core/Ability/Ability')
+local Ability = require('System/Ability/Ability/Ability')
 local FileSystem = require('System/File/FileSystem')
 local ConfigSystem = require('System/Config/ConfigSystem')
-local SkillClass = require('System/Ability/Core/Ability/Skill')
+local SkillClass = require('System/Ability/Ability/Skill')
 
 ---@class AbilityManager
 ---@field _System AbilitySystem

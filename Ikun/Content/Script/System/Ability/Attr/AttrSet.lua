@@ -13,8 +13,8 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
-local AttrDef = require("System/Ability/Core/Attr/AttrDef")
-local ModOpDef = require("System/Ability/Core/Attr/ModOpDef")
+local AttrDef = require("System/Ability/Attr/AttrDef")
+local ModOpDef = require("System/Ability/Attr/ModOpDef")
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<number, number>

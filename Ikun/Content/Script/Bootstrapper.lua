@@ -44,7 +44,7 @@ _G.log = require('Core/Log/log') ---@type log
 
 require('SharedPCH')
 
-require('System/Ability/Core/Test')
+require('System/Ability/Test')
 local AbilitySystem = require('System/Ability/AbilitySystem')
 function ENetTick(dt, world)
     AbilitySystem.Get():TickAbilitySystem(dt)

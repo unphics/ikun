@@ -14,8 +14,8 @@
 
 
 local Class3 = require('Core/Class/Class3')
-local TagUtil = require('System/Ability/Core/Tag/TagUtil')
-local BuffPolicyDef = require('System/Ability/Core/Buff/BuffPolicyDef')
+local TagUtil = require('System/Ability/Tag/TagUtil')
+local BuffPolicyDef = require('System/Ability/Buff/BuffPolicyDef')
 
 ---@class BuffConfig
 ---@field public BuffKey string

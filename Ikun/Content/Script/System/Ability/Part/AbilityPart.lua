@@ -14,10 +14,10 @@
 
 local Class3 = require('Core/Class/Class3')
 local AbilitySystem = require('System/Ability/AbilitySystem')
-local AbilityClass = require('System/Ability/Core/Ability/Ability')
-local BuffBaseClass = require('System/Ability/Core/Buff/BuffBase')
-local TagUtil = require("System/Ability/Core/Tag/TagUtil")
-local BuffContainer = require("System/Ability/Core/Buff/BuffContainer")
+local AbilityClass = require('System/Ability/Ability/Ability')
+local BuffBaseClass = require('System/Ability/Buff/BuffBase')
+local TagUtil = require("System/Ability/Tag/TagUtil")
+local BuffContainer = require("System/Ability/Buff/BuffContainer")
 local log = require("Core/Log/log")
 
 ---@class AbilityPartClass

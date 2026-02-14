@@ -15,10 +15,10 @@
 local Class3 = require('Core/Class/Class3')
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
-local ExpLib = require('System/Ability/Core/Attr/Exp')
-local AttrSetClass = require('System/Ability/Core/Attr/AttrSet')
-local AttrDef = require('System/Ability/Core/Attr/AttrDef')
-local AttrModifierClass = require('System/Ability/Core/Attr/AttrModifier')
+local ExpLib = require('System/Ability/Attr/Exp')
+local AttrSetClass = require('System/Ability/Attr/AttrSet')
+local AttrDef = require('System/Ability/Attr/AttrDef')
+local AttrModifierClass = require('System/Ability/Attr/AttrModifier')
 local log = require('Core/Log/log')
 
 ---@alias FormulaFunction fun(Attributes: table<number, number>):number

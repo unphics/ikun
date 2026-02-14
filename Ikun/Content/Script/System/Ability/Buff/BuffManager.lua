@@ -13,10 +13,10 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
-local TagUtil = require('System/Ability/Core/Tag/TagUtil')
+local TagUtil = require('System/Ability/Tag/TagUtil')
 local FileSystem = require('System/File/FileSystem')
 local ConfigSystem = require('System/Config/ConfigSystem')
-local BuffContainer = require("System/Ability/Core/Buff/BuffContainer")
+local BuffContainer = require("System/Ability/Buff/BuffContainer")
 
 ---@class BuffManager
 ---@field protected _System AbilitySystem
