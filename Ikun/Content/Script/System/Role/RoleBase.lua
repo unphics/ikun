@@ -13,7 +13,7 @@
 --]]
 
 local NpcChat = require("Content/Chat/NpcChat")
-require('Module/Role/RoleHoldLocation')
+require('System/Role/RoleHoldLocation')
 
 ---@class RoleConfig
 ---@field RoleId number

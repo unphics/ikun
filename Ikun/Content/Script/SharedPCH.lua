@@ -41,7 +41,7 @@ do
     require('Ikun/Module/Config/ConfigMgr')
     require('Content/Time/TimeMgr')
     require('Content/Item/ItemMgr')
-    require('Module/Role/RoleMgr')
+    require('System/Role/RoleMgr')
     require('Content/Quest/QuestMgr')
     require("Content/Area/Cosmos")
 
@@ -57,7 +57,7 @@ do
 end
 
 do
-    rolelib = require('Module/Role/RoleLib') ---@type rolelib
+    rolelib = require('System/Role/RoleLib') ---@type rolelib
 end
 
 do

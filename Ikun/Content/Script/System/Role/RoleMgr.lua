@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-require('Module/Role/RoleBase')
+require('System/Role/RoleBase')
 
 ---@class RoleMgrClass
 ---@field _AllRoles table<integer, RoleBaseClass>
