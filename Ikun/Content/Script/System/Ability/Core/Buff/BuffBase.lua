@@ -17,7 +17,7 @@ local Class3 = require('Core/Class/Class3')
 local TagUtil = require('System/Ability/Core/Tag/TagUtil')
 local BuffPolicyDef = require('System/Ability/Core/Buff/BuffPolicyDef')
 
----@class BuffClass
+---@class BuffBaseClass
 ---@field public BuffKey string
 ---@field public BuffName string
 ---@field public BuffPolicy number
@@ -30,10 +30,10 @@ local BuffPolicyDef = require('System/Ability/Core/Buff/BuffPolicyDef')
 ---@field public BuffTarget AbilityPartClass
 ---@field protected _StartTime number
 ---@field protected _EndTime number
-local BuffClass = Class3.Class('BuffClass')
+local BuffBaseClass = Class3.Class('BuffBaseClass')
 
 ---@public
-function BuffClass:Ctor(spec)
+function BuffBaseClass:Ctor(spec)
     self.BuffKey = spec.Key
     self.BuffName = spec.BuffName
     self.BuffPolicy = spec.BuffPolicy or BuffPolicyDef.Instant
@@ -50,7 +50,7 @@ end
 ---@param InBuffTarget AbilityPartClass
 ---@param InBuffSource AbilityPartClass
 ---@return boolean
-function BuffClass:CanApplyBuff(InBuffTarget, InBuffSource)
+function BuffBaseClass:CanApplyBuff(InBuffTarget, InBuffSource)
     -- Block
     if self.BlockTags and #self.BlockTags > 0 then
         local target = InBuffTarget ---@type AbilityPartClass
@@ -66,7 +66,7 @@ end
 ---@param InTarget AbilityPartClass
 ---@param InSource AbilityPartClass
 ---@param InNowMS number
-function BuffClass:ApplyBuff(InTarget, InSource, InNowMS)
+function BuffBaseClass:ApplyBuff(InTarget, InSource, InNowMS)
     self.BuffTarget = InTarget
     self.BuffSource = InSource
     self._StartTime = InNowMS
@@ -83,11 +83,11 @@ end
 
 ---@public
 ---@param InDeltaTime number
-function BuffClass:TickBuff(InDeltaTime)
+function BuffBaseClass:TickBuff(InDeltaTime)
 end
 
 ---@public
-function BuffClass:DeactivateBuff()
+function BuffBaseClass:DeactivateBuff()
     -- 移除 GrantedTags
     if self.BuffTarget then
         for i = 1, #self.GrantedTags do
@@ -97,14 +97,14 @@ function BuffClass:DeactivateBuff()
 end
 
 ---@public
-function BuffClass:ReapplyBuff(InNowMS)
+function BuffBaseClass:ReapplyBuff(InNowMS)
 end
 
 ---@public 判断是否过期
 ---@param InNowMS number
 ---@return boolean
-function BuffClass:IsBuffExpired(InNowMS)
+function BuffBaseClass:IsBuffExpired(InNowMS)
     return self.BuffPolicy ~= BuffPolicyDef.Infinite and InNowMS >= self._EndTime
 end
 
-return BuffClass
+return BuffBaseClass

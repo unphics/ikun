@@ -16,8 +16,8 @@ local Class3 = require('Core/Class/Class3')
 
 ---@class BuffContainerClass
 ---@field protected _OwnerPart AbilityPartClass
----@field protected _Buffs BuffClass[]
-local BuffContainerClass = Class3.Class('BuffClass')
+---@field protected _Buffs BuffBaseClass[]
+local BuffContainerClass = Class3.Class('BuffBaseClass')
 
 ---@param InPart AbilityPartClass
 function BuffContainerClass:Ctor(InPart)
@@ -26,7 +26,7 @@ function BuffContainerClass:Ctor(InPart)
 end
 
 ---@public
----@param InBuff BuffClass
+---@param InBuff BuffBaseClass
 function BuffContainerClass:AddBuff(InBuff)
     table.insert(self._Buffs, InBuff)
 end

@@ -65,7 +65,7 @@ end
 ---@param InDeltaTime number
 function BuffManager:TickBuffManager(InDeltaTime)
     local now = self:GetNowMS()
-    local allBuffs = {} ---@type BuffClass[]
+    local allBuffs = {} ---@type BuffBaseClass[]
     for i = 1, #allBuffs do
         local buff = allBuffs[i]
         if buff:IsBuffExpired(now) then
@@ -112,7 +112,7 @@ end
 ---@public
 ---@param InTarget AbilityPartClass
 ---@param InSource AbilityPartClass
----@param InBuffInst BuffClass
+---@param InBuffInst BuffBaseClass
 function BuffManager:AddOrRefreshBuff(InTarget, InSource, InBuffInst)
     local now = self:GetNowMS()
     -- Block 检查

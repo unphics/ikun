@@ -26,6 +26,7 @@
 	- 方法: AddBuff, 
 - AbilityPart:
 	- 作用: 角色在技能系统下的代理
+	- 方法: MakeBuff, TryApplyBuffToSelf
 
 历史记录
 - 2026-02-10 基础落地

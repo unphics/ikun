@@ -15,13 +15,12 @@
 local Class3 = require('Core/Class/Class3')
 local AbilitySystem = require('System/Ability/AbilitySystem')
 local AbilityClass = require('System/Ability/Core/Ability/Ability')
-local BuffClass = require('System/Ability/Core/Buff/Buff')
+local BuffBaseClass = require('System/Ability/Core/Buff/BuffBase')
 local TagUtil = require("System/Ability/Core/Tag/TagUtil")
 local log = require('Core/Log/log')
 
 ---@class AbilityPartClass
 ---@field protected _Owner any
----@field protected _ActivedBuffs BuffClass[]
 ---@field protected _PartTagContainer TagContainer
 ---@field protected _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
 ---@field protected _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
@@ -174,7 +173,7 @@ end
 
 ---@public
 ---@param InBuffKey string
----@return BuffClass?
+---@return BuffBaseClass?
 function AbilityPartClass:MakeBuff(InBuffKey)
     local mgr = AbilitySystem.Get():GetBuffManager()
     local cfg = mgr:LookupBuffConfig(InBuffKey)
@@ -182,8 +181,8 @@ function AbilityPartClass:MakeBuff(InBuffKey)
         log.warn('AbilityPartClass:TryApplyBuff(): Invalid InBuffKey')
         return nil
     end
-    ---@type BuffClass
-    local buff = BuffClass:New({
+    ---@type BuffBaseClass
+    local buff = BuffBaseClass:New({
         Key = cfg.BuffKey or InBuffKey,
         BuffName = cfg.BuffName or InBuffKey,
     })
@@ -192,7 +191,7 @@ function AbilityPartClass:MakeBuff(InBuffKey)
 end
 
 ---@public [Buff]
----@param InBuffInst BuffClass
+---@param InBuffInst BuffBaseClass
 ---@param InCaster AbilityPartClass
 function AbilityPartClass:TryApplyBuffToSelf(InBuffInst, InCaster)
     local mgr = AbilitySystem.Get():GetBuffManager()
