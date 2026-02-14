@@ -134,7 +134,7 @@ function ConfigParserClass:CastPairCol(InHeaders)
     for _, row in pairs(self._Data) do
         for _, name in ipairs(InHeaders) do
             local gridStr = row[name]
-            if gridStr then
+            if not str_util.is_empty(gridStr) then
                 local key, value = gridStr:match("^([^=]+)=([^=]+)$")
                 key = str_util.trim(key)
                 value = str_util.trim(value)
