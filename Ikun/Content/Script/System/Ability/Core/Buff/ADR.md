@@ -19,14 +19,18 @@
 - BuffBase:
 	- BuffKey, BuffDuration, _StartTime, _EndTime
 	- 作用: 处理Buff的实际修改作用, 处理Buff重入(未定)
-	- 方法: CanApplyBuff, ApplyBuff, TickBuff, DeactivateBuff, ReapplyBuff, IsBuffExpired
+	- 方法: 
+		CanApplyBuff, ApplyBuff, TickBuff, DeactivateBuff, IsBuffExpired
+		ReapplyBuff: 处理Buff的重入(重置/增强/独立/忽略/叠加), 此项搞一个Buff重入处理策略方法库
 - BuffContainer:
 	- 作用: Part上的Buff容器, 
 	- 字段: _Buffs, 
 	- 方法: AddBuff, 
 - AbilityPart:
 	- 作用: 角色在技能系统下的代理
-	- 方法: MakeBuff, TryApplyBuffToSelf
+	- 方法:
+		MakeBuff: 生成一个Buff并且设置Source为自己
+		TryApplyBuffToSelf: 应用一个Buff到自己身上
 
 历史记录
 - 2026-02-10 基础落地

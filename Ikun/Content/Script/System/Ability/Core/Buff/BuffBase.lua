@@ -17,15 +17,26 @@ local Class3 = require('Core/Class/Class3')
 local TagUtil = require('System/Ability/Core/Tag/TagUtil')
 local BuffPolicyDef = require('System/Ability/Core/Buff/BuffPolicyDef')
 
----@class BuffBaseClass
+---@class BuffConfig
 ---@field public BuffKey string
 ---@field public BuffName string
----@field public BuffPolicy number
+---@field public BuffPolicy BuffPolicyDef
 ---@field public BuffDuration number
 ---@field public Period number
 ---@field public GrantedTags number[]        -- TagId[]
 ---@field public BlockTags number[]          -- TagId[]
 ---@field public CancelTags number[]         -- TagId[]
+
+---@class BuffBaseClass
+---@field public BuffKey string
+---@field public BuffName string
+---@field public BuffPolicy BuffPolicyDef
+---@field public BuffDuration number
+---@field public Period number
+---@field public GrantedTags number[]        -- TagId[]
+---@field public BlockTags number[]          -- TagId[]
+---@field public CancelTags number[]         -- TagId[]
+---@field public BuffConfig BuffConfig
 ---@field public BuffSource AbilityPartClass
 ---@field public BuffTarget AbilityPartClass
 ---@field protected _StartTime number
@@ -47,13 +58,13 @@ function BuffBaseClass:Ctor(spec)
 end
 
 ---@public
----@param InBuffTarget AbilityPartClass
----@param InBuffSource AbilityPartClass
 ---@return boolean
-function BuffBaseClass:CanApplyBuff(InBuffTarget, InBuffSource)
+function BuffBaseClass:CanApplyBuff()
+    local buffSource = self.BuffSource
+    local buffTarget = self.BuffTarget
     -- Block
     if self.BlockTags and #self.BlockTags > 0 then
-        local target = InBuffTarget ---@type AbilityPartClass
+        local target = buffTarget ---@type AbilityPartClass
         if target and target:HasAnyTags(self.BlockTags) then
             return false
         end

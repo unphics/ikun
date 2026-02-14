@@ -192,14 +192,14 @@ end
 
 ---@public [Buff]
 ---@param InBuffInst BuffBaseClass
----@param InCaster AbilityPartClass
-function AbilityPartClass:TryApplyBuffToSelf(InBuffInst, InCaster)
+function AbilityPartClass:TryApplyBuffToSelf(InBuffInst)
+    InBuffInst.BuffTarget = self
     local mgr = AbilitySystem.Get():GetBuffManager()
-    local ok = InBuffInst:CanApplyBuff(InCaster, self)
+    local ok = InBuffInst:CanApplyBuff()
     if not ok then
         return false
     end
-    return mgr:AddOrRefreshBuff(self, InCaster, InBuffInst)
+    return mgr:AddOrRefreshBuff(self)
 end
 
 return AbilityPartClass

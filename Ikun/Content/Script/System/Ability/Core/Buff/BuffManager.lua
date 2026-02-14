@@ -17,10 +17,6 @@ local TagUtil = require('System/Ability/Core/Tag/TagUtil')
 local FileSystem = require('System/File/FileSystem')
 local ConfigSystem = require('System/Config/ConfigSystem')
 
----@class BuffConfig
----@field BuffKey string
----@field BuffName string
-
 ---@class BuffManager
 ---@field protected _System AbilitySystem
 ---@field protected _BuffConfigs table<string, BuffConfig> -- Key -> Config
