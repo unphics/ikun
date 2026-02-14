@@ -17,6 +17,7 @@ local TagUtil = require('System/Ability/Tag/TagUtil')
 local FileSystem = require('System/File/FileSystem')
 local ConfigSystem = require('System/Config/ConfigSystem')
 local BuffContainer = require("System/Ability/Buff/BuffContainer")
+local log = require("Core/Log/log")
 
 ---@class BuffManager
 ---@field protected _System AbilitySystem
