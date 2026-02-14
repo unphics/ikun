@@ -100,32 +100,32 @@ function RoleBaseClass:LateAtNight()
     end
 end
 
----@public [Pure]
+---@public
 ---@return integer
-function RoleBaseClass:GetRoleId()
+function RoleBaseClass:GetRoleId() -- const
     return self._RoleId
 end
 
----@public [Pure]
+---@public
 ---@return integer
-function RoleBaseClass:GetRoleCfgId()
+function RoleBaseClass:GetRoleCfgId() -- const
     return self._RoleCfgId
 end
 
----@public [Pure]
+---@public
 ---@return string
-function RoleBaseClass:RoleName()
+function RoleBaseClass:RoleName() -- const
     return self._RoleName
 end
 
----@public [Pure]
+---@public
 ---@return Kingdom
-function RoleBaseClass:GetBelongKingdom()
+function RoleBaseClass:GetBelongKingdom() -- const
     return self._BelongKingdom
 end
 
----@public [Pure] [Debug]
-function RoleBaseClass:PrintRole()
+---@public [Debug]
+function RoleBaseClass:PrintRole() -- const
     return string.format('{Role:%s:%i}', self:GetRoleId(), self:RoleName())
 end
 
