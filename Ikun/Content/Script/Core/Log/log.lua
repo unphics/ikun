@@ -16,7 +16,7 @@ local sys_print = _G.IkunLog
 local sys_warn = _G.IkunWarn
 local sys_error = _G.IkunError
 local string = _G.string
-local debug_traceback = _G.debug.traceback()
+local debug_traceback = _G.debug.traceback
 local select = _G.select
 
 -- 内部辅助：处理字符串格式化
