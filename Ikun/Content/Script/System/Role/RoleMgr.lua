@@ -12,11 +12,15 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-require('System/Role/RoleBase')
+require("System/Role/RoleBase")
+local FileSystem = require("System/File/FileSystem")
+local ConfigSystem = require("System/Config/ConfigSystem")
+local log = require("Core/Log/log")
 
 ---@class RoleMgrClass
 ---@field _AllRoles table<integer, RoleBaseClass>
 ---@field _AllConfigRoles table<integer, RoleBaseClass[]>
+---@field _RoleConfigData table<number, RoleConfig>
 local RoleMgrClass = class.class 'RoleMgrClass'{
     ctor = function()end,
     GetOrCreateRole = function()end,
@@ -31,6 +35,7 @@ local RoleMgrClass = class.class 'RoleMgrClass'{
 function RoleMgrClass:ctor()
     self._AllRoles = {}
     self._AllConfigRoles = {}
+    self:_LoadConfig()
 end
 
 ---@public 获取或创建一个角色实例
@@ -104,11 +109,28 @@ function RoleMgrClass:FindRole(Id)
     return self._AllRoles[Id]
 end
 
----@public [Pure] 根据配置Id获取配置表
+---@public [Config] 根据配置Id获取配置表
 ---@return RoleConfig
-function RoleMgrClass:GetRoleConfig(InRoleCfgId)
-    local config = ConfigMgr:GetConfig('Role')[InRoleCfgId] ---@type RoleConfig
+function RoleMgrClass:GetRoleConfig(InRoleCfgId) -- const
+    local config = self._RoleConfigData[tostring(InRoleCfgId)] ---@type RoleConfig
     return config
+end
+
+---@public [Config] 加载角色相关配置表
+function RoleMgrClass:_LoadConfig() -- const
+    local file = FileSystem.Get():CreateConfigContext()
+    if not file then
+        log.fatal("RoleMgrClass:_LoadConfig(): Failed to CreateConfigContext !")
+        return
+    end
+    file:ChangeDirectory("Role")
+    local roleParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Role.csv"))
+    self._RoleConfigData = roleParser:ToRows():ExtractHeaders():ToGrid():ToMap()
+        :CastMapCol({"RoleSkills"})
+        :CastArrCol({"HoldLocations"})
+        :CastNumCol({"BelongKingdom", "RoleId"})
+        :GetResult()
+    roleParser:ReleaseParser()
 end
 
 return

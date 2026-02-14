@@ -81,7 +81,7 @@ function RoleBaseClass:InitComplexPart()
 
     self.HoldLocation = class.new 'RoleHoldLocationClass'(self, self._RoleCfgId)
 
-    if config.GoapKey then
+    if not str_util.is_empty(config.GoapKey) then
         local agent = class.new 'GAgent' (self) ---@as GAgent
         self.Agent = agent
     end

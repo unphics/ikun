@@ -58,9 +58,10 @@ function ConfigParserClass:ToMap(InPrimaryCol)
         if not str_util.is_empty(cells[InPrimaryCol]) then
             local rowMap = {}
             for j, key in ipairs(self._Header) do
-                rowMap[key] = cells[j]
+                rowMap[key] = tonumber(cells[j]) or cells[j] ---@warn 此处默认做tonumber处理
             end
-            resultMap[cells[InPrimaryCol]] = rowMap
+            local mainKey = cells[InPrimaryCol]
+            resultMap[mainKey] = tonumber(rowMap) or rowMap ---@warn 此处默认做tonumber处理
         end
     end
     self._Data = resultMap

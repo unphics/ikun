@@ -77,7 +77,7 @@ function DistrictMgr:FindKingdomByCfgId(KingdomCfgId)
             return kingdom
         end
     end
-    log.error('DistrictMgr:FindKingdomByCfgId', '没有找到此国家, config id:', KingdomCfgId)
+    log.error('DistrictMgr:FindKingdomByCfgId', '没有找到此国家, config id:', KingdomCfgId, type(KingdomCfgId))
 end
 
 ---@public [Init] 初始化此行星所有国家
