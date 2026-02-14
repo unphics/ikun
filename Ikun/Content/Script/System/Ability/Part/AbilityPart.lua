@@ -39,6 +39,8 @@ function AbilityPartClass:Ctor(InOwner)
     self._RefAbilityToSlots = {}
 end
 
+
+
 ---@public [Ability]
 function AbilityPartClass:InitAbilitySlot()
 end

@@ -26,6 +26,8 @@ TagUtil.MakeContainer = function()
 end
 
 ---@public
+---@param InTagName string
+---@return number
 TagUtil.RequestTag = function(InTagName)
     return TagDefine[InTagName]
 end

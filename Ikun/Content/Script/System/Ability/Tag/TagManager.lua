@@ -1,9 +1,16 @@
 
----
----@brief   TagManager
----@author  zys
----@data    Sat Jan 03 2026 20:28:06 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : TagManager
+--  File        : TagManager.lua
+--  Author      : zhengyanshuai
+--  Date        : Sat Jan 03 2026 20:28:06 GMT+0800 (中国标准时间)
+--  Description : 能力系统-标签管理器
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local ffi = require('ffi')
 local Class3 = require('Core/Class/Class3')
