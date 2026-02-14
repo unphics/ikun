@@ -4,33 +4,39 @@ local TagUtil = require("System/Ability/Core/Tag/TagUtil")
 local AbilityPart = require('System/Ability/Core/Part/AbilityPart')
 local ModOpDef = require("System/Ability/Core/Attr/ModOpDef")
 local AttrDef = require("System/Ability/Core/Attr/AttrDef")
--- local log = require('Core/Log/log') ---@as log
+local log = require('Core/Log/log') ---@as log
+
+local testlog = function(...)
+    log.log(...)
+end
+
+testlog('------------- AbilitySystem BeginTest -------------')
 
 AbilitySystem.Get():InitAbilitySystem()
 
 if false then
     local tag = TagUtil.RequestTag('skill.type.active')
     local container = TagUtil.MakeContainer()
-    print('xxx', container:HasTag(tag))
+    testlog('xxx', container:HasTag(tag))
     container:AddTag(tag)
-    print('xxx', container:HasTag(tag))
+    testlog('xxx', container:HasTag(tag))
     container:AddTag(tag)
-    print('xxx', container:HasTag(tag))
+    testlog('xxx', container:HasTag(tag))
     container:RemoveTag(tag)
-    print('xxx', container:HasTag(tag))
+    testlog('xxx', container:HasTag(tag))
     container:RemoveTag(tag)
-    print('xxx', container:HasTag(tag))
+    testlog('xxx', container:HasTag(tag))
 end
 
-if true then
+if false then
     local attrMgr = AbilitySystem.Get():GetAttrManager()
     local set = attrMgr:CreateAttrSet() ---@type AttrSetClass
 
     local mod_baseHealth_add_10 = attrMgr:RentModifier('BaseHealth', ModOpDef.Add, 10)
-    print('attr add modi (BaseHealth Add 10)')
+    testlog('attr add modi (BaseHealth Add 10)')
     set:AddModifier(mod_baseHealth_add_10)
-    print('attr', set:GetAttrValue('BaseHealth'))
-    print('attr', set:GetAttrValue('MaxHealth'))
+    testlog('attr', set:GetAttrValue('BaseHealth'))
+    testlog('attr', set:GetAttrValue('MaxHealth'))
 
     -- local mod_FlatHealth_add_10 = attrMgr:RentModifier('FlatHealth', ModOpDef.Add, 10)
     -- print('attr add modi (FlatHealth Add 10)')
@@ -46,13 +52,22 @@ if true then
 
     local mod_perH_add_10 = attrMgr:RentModifier(AttrDef.PercentHealth, ModOpDef.Add, 0.1)
     set:AddModifier(mod_perH_add_10)
-    print('attr', set:GetAttrValue(AttrDef.PercentHealth))
-    print('attr', set:GetAttrValue('MaxHealth'))
+    testlog('attr', set:GetAttrValue(AttrDef.PercentHealth))
+    testlog('attr', set:GetAttrValue('MaxHealth'))
     local a = 1
 end
 
 if true then
+    local part = AbilityPart:New(nil) ---@type AbilityPartClass
+    local buff = part:MakeBuff('Buff1')
+    part:ApplyBuffToSelf()
+    testlog('buff', buff)
+end
+
+if false then
     local part = AbilityPart:New() ---@as AbilityPartClass
     part:AddAbilityToSlot('Ability1', 2)
     part:UseAbility('Ability1', {a = 1})
 end
+
+testlog('------------- AbilitySystem EndTest -------------')

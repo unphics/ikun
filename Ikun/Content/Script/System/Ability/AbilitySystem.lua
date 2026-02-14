@@ -62,7 +62,7 @@ end
 
 ---@public
 ---@return number
-function AbilitySystem:GetNowMS()
+function AbilitySystem:GetNowMs()
     return Time.GetTimestampMS()
 end
 

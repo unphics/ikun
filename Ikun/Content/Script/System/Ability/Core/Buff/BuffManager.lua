@@ -16,21 +16,31 @@ local Class3 = require('Core/Class/Class3')
 local TagUtil = require('System/Ability/Core/Tag/TagUtil')
 local FileSystem = require('System/File/FileSystem')
 local ConfigSystem = require('System/Config/ConfigSystem')
+local BuffContainer = require("System/Ability/Core/Buff/BuffContainer")
 
 ---@class BuffManager
 ---@field protected _System AbilitySystem
 ---@field protected _BuffConfigs table<string, BuffConfig> -- Key -> Config
+---@field protected _BuffContainers BuffContainerClass[]
 local BuffManager = Class3.Class('BuffManager')
 
 ---@public
 ---@param InSystem AbilitySystem
 function BuffManager:Ctor(InSystem)
     self._System = InSystem
+    self._BuffContainers = {}
 end
 
 ---@public [Init]
 function BuffManager:InitBuffManager()
     self:_LoadBuffConfig()
+end
+
+---@public [Config]
+---@param InBuffKey string
+---@return BuffConfig?
+function BuffManager:LookupBuffConfig(InBuffKey)
+    return self._BuffConfigs[InBuffKey]
 end
 
 ---@private [Config]
@@ -40,6 +50,7 @@ function BuffManager:_LoadBuffConfig()
         log.error('zys BuffManager:_LoadBuffConfig(): Failed to create FileContext!')
         return
     end
+    file:ChangeDirectory('Ability')
     file:ChangeDirectory('Buff')
     local buffParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile('Buff.csv'))
     if not buffParser then
@@ -50,98 +61,48 @@ function BuffManager:_LoadBuffConfig()
     buffParser:ReleaseParser()
 end
 
----@public [Config]
----@param InBuffKey string
----@return BuffConfig?
-function BuffManager:LookupBuffConfig(InBuffKey)
-    return self._BuffConfigs[InBuffKey]
-end
-
 ---@public [Tick]
 ---@param InDeltaTime number
 function BuffManager:TickBuffManager(InDeltaTime)
-    local now = self:GetNowMS()
-    local allBuffs = {} ---@type BuffBaseClass[]
-    for i = 1, #allBuffs do
-        local buff = allBuffs[i]
-        if buff:IsBuffExpired(now) then
-            self:RemoveBuff(buff.Target, buff.BuffKey)
-        else
-            buff:TickBuff(InDeltaTime)
+    local now = self:GetNowMs()
+    self:_TickBuffManager(InDeltaTime, now)
+end
+
+---@public [BuffContainer]
+---@param InOwnerPart AbilityPartClass
+---@return BuffContainerClass
+function BuffManager:AcquireBuffContainer(InOwnerPart)
+    local container= BuffContainer:New(self, InOwnerPart)
+    table.insert(self._BuffContainers, container)
+    return container
+end
+
+---@public [BuffContainer]
+---@param InBuffContainer BuffContainerClass
+function BuffManager:ReleaseBuffContainer(InBuffContainer)
+    for i = 1, #self._BuffContainers do
+        local container = self._BuffContainers[i]
+        if container == InBuffContainer then
+            table.remove(self._BuffContainers, i)
+            break
         end
+    end
+end
+
+---@public [BuffContainer]
+---@param InDeltaTime number
+---@param InNowMs number
+function BuffManager:_TickBuffManager(InDeltaTime, InNowMs)
+    for i = 1, #self._BuffContainers do
+        local container = self._BuffContainers[i]
+        container:TickBuffContainer(InDeltaTime, InNowMs)
     end
 end
 
 ---@public [Pure]
 ---@return number
-function BuffManager:GetNowMS()
-    return self._System:GetNowMS()
-end
-
-local function ensureTargetTable(self, target)
-    local t = self._Active[target]
-    if not t then
-        t = {}
-        self._Active[target] = t
-    end
-    return t
-end
-
--- 互斥 / CancelTags：在施加前根据目标现有 Buff 的 Tag 进行取消
-local function applyCancelByTags(self, target, cancelTags)
-    if not cancelTags or #cancelTags == 0 then return end
-    local tBuffs = self._Active[target]
-    if not tBuffs then return end
-    for _, buff in pairs(tBuffs) do
-        local cont = target.TagContainer
-        if cont then
-            for i = 1, #cancelTags do
-                if cont:HasTag(cancelTags[i]) then
-                    self:RemoveBuff(target, buff.BuffKey)
-                    break
-                end
-            end
-        end
-    end
-end
-
----@public
----@param InTarget AbilityPartClass
----@param InSource AbilityPartClass
----@param InBuffInst BuffBaseClass
-function BuffManager:AddOrRefreshBuff(InTarget, InSource, InBuffInst)
-    local now = self:GetNowMS()
-    -- Block 检查
-    local ok = InBuffInst:CanApplyBuff(InTarget, InSource)
-    if not ok then
-        return false
-    end
-    -- Cancel 检查
-    applyCancelByTags(self, target, buff.CancelTags)
-
-    local tBuffs = ensureTargetTable(self, target)
-    local exist = tBuffs[buff.BuffKey]
-    if exist then
-        exist:RefreshBuff(now)
-    else
-        tBuffs[buff.BuffKey] = buff
-        buff:Apply(self, target, source, now)
-    end
-    return true
-end
-
----@public
----@param InTarget AbilityPartClass
----@param InBuffKey string
-function BuffManager:RemoveBuff(InTarget, InBuffKey)
-    
-
-    local tBuffs = self._Active[InTarget]
-    if not tBuffs then return end
-    local b = tBuffs[InBuffKey]
-    if not b then return end
-    b:Deactivate(self)
-    tBuffs[buffKey] = nil
+function BuffManager:GetNowMs()
+    return self._System:GetNowMs()
 end
 
 return BuffManager

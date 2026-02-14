@@ -30,7 +30,7 @@
 	- 作用: 角色在技能系统下的代理
 	- 方法:
 		MakeBuff: 生成一个Buff并且设置Source为自己
-		TryApplyBuffToSelf: 应用一个Buff到自己身上
+		ApplyBuffToSelf: 应用一个Buff到自己身上
 
 历史记录
 - 2026-02-10 基础落地

@@ -19,16 +19,39 @@ local Class3 = require('Core/Class/Class3')
 ---@field protected _Buffs BuffBaseClass[]
 local BuffContainerClass = Class3.Class('BuffBaseClass')
 
+---@public
+---@param InBuffManager BuffManager
 ---@param InPart AbilityPartClass
-function BuffContainerClass:Ctor(InPart)
+function BuffContainerClass:Ctor(InBuffManager, InPart)
+    self._BuffManager = InBuffManager
     self._OwnerPart = InPart
     self._Buffs = {}
 end
 
 ---@public
----@param InBuff BuffBaseClass
-function BuffContainerClass:AddBuff(InBuff)
-    table.insert(self._Buffs, InBuff)
+---@param InDeltaTime number
+---@param InNowMs number
+function BuffContainerClass:TickBuffContainer(InDeltaTime, InNowMs)
+    for i = 1, #self._Buffs do
+        local buff = self._Buffs[i]
+        if buff:IsBuffExpired(InNowMs) then
+            self:RemoveBuff(buff)
+        else
+            buff:TickBuff(InDeltaTime)
+        end
+    end
+end
+
+---@public
+---@param InBuffInst BuffBaseClass
+function BuffContainerClass:AddBuff(InBuffInst)
+    table.insert(self._Buffs, InBuffInst)
+end
+
+---@public
+---@param InBuffInst BuffBaseClass
+function BuffContainerClass:RemoveBuff(InBuffInst)
+    
 end
 
 return BuffContainerClass

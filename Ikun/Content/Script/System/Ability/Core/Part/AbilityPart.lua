@@ -17,7 +17,8 @@ local AbilitySystem = require('System/Ability/AbilitySystem')
 local AbilityClass = require('System/Ability/Core/Ability/Ability')
 local BuffBaseClass = require('System/Ability/Core/Buff/BuffBase')
 local TagUtil = require("System/Ability/Core/Tag/TagUtil")
-local log = require('Core/Log/log')
+local BuffContainer = require("System/Ability/Core/Buff/BuffContainer")
+local log = require("Core/Log/log")
 
 ---@class AbilityPartClass
 ---@field protected _Owner any
@@ -31,6 +32,7 @@ local AbilityPartClass = Class3.Class('AbilityPartClass')
 function AbilityPartClass:Ctor(InOwner)
     self._Owner = InOwner
     self._PartTagContainer = TagUtil.MakeContainer()
+    self._BuffContainer = AbilitySystem.Get():GetBuffManager():AcquireBuffContainer()
 
     self._SlotInfos = {}
     self._AbilityInfos = {}
@@ -192,14 +194,13 @@ end
 
 ---@public [Buff]
 ---@param InBuffInst BuffBaseClass
-function AbilityPartClass:TryApplyBuffToSelf(InBuffInst)
+function AbilityPartClass:ApplyBuffToSelf(InBuffInst)
     InBuffInst.BuffTarget = self
-    local mgr = AbilitySystem.Get():GetBuffManager()
     local ok = InBuffInst:CanApplyBuff()
     if not ok then
         return false
     end
-    return mgr:AddOrRefreshBuff(self)
+    -- self.buff
 end
 
 return AbilityPartClass
