@@ -1,10 +1,17 @@
 
----
----@brief   角色相关的帮助函数
----@author  zys
----@data    Sun Jul 06 2025 19:22:01 GMT+0800 (中国标准时间)
----@todo    从RoleLib改成RoleUtil
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : rolelib
+--  File        : RoleLib.lua
+--  Author      : zhengyanshuai
+--  Date        : Sun Jul 06 2025 19:22:01 GMT+0800 (中国标准时间)
+--  Todo        : 从RoleLib改成RoleUtil
+--  Description : 角色系统-角色相关方法库
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 ---@class rolelib
 local rolelib = {}

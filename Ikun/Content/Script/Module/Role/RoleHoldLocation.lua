@@ -1,10 +1,17 @@
 
----
----@brief   角色持有的地点
----@todo    name: HoldLocation -> RoleLocation
----@author  zys
----@data    Tue Sep 23 2025 01:03:41 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : RoleHoldLocationClass
+--  File        : RoleHoldLocation.lua
+--  Author      : zhengyanshuai
+--  Date        : Tue Sep 23 2025 01:03:41 GMT+0800 (中国标准时间)
+--  Todo        : name: HoldLocation -> RoleLocation
+--  Description : 角色系统-角色持有的地点
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 ---@class RoleHoldLocationClass
 ---@field _OwnerRole RoleBaseClass

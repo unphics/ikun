@@ -1,26 +1,18 @@
 
----
----@brief   角色管理器
----@author  zys
----@data    Fri May 30 2025 23:46:56 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : RoleMgrClass
+--  File        : RoleMgr.lua
+--  Author      : zhengyanshuai
+--  Date        : Fri May 30 2025 23:46:56 GMT+0800 (中国标准时间)
+--  Description : 角色系统-角色管理器
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 require('Module/Role/RoleBase')
-
----@class RoleConfig
----@field RoleId number
----@field RoleName string
----@field RoleDesc string
----@field bUniqueRole boolean
----@field BelongKingdom number
----@field RoleSkills number[]
----@field InitBT string
----@field GoapKey string
----@field SpecialClass string
----@field FightPosAssign FightPosDef[]
----@field BTCfg table<BTType, string>
----@field RoleChat number[]
----@field HoldLocations number[]
 
 ---@class RoleMgrClass
 ---@field _AllRoles table<integer, RoleBaseClass>

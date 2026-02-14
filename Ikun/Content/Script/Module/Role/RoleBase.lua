@@ -1,12 +1,30 @@
 
----
----@brief   角色的基类
----@author  zys
----@data    Sun Nov 09 2025 09:27:37 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : RoleBaseClass
+--  File        : RoleBase.lua
+--  Author      : zhengyanshuai
+--  Date        : Sun Nov 09 2025 09:27:37 GMT+0800 (中国标准时间)
+--  Description : 角色系统-角色的基类
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local NpcChat = require("Content/Chat/NpcChat")
 require('Module/Role/RoleHoldLocation')
+
+---@class RoleConfig
+---@field RoleId number
+---@field RoleName string
+---@field RoleDesc string
+---@field bUniqueRole boolean
+---@field BelongKingdom number
+---@field RoleSkills number[]
+---@field GoapKey string
+---@field RoleChat number[]
+---@field HoldLocations number[]
 
 ---@class RoleBaseClass
 ---@field public Avatar BP_ChrBase UE表演对象
