@@ -60,7 +60,7 @@ end
 if true then
     local part = AbilityPart:New(nil) ---@type AbilityPartClass
     local buff = part:MakeBuff('Buff1')
-    part:ApplyBuffToSelf()
+    part:ApplyBuffToSelf(buff)
     testlog('buff', buff)
 end
 

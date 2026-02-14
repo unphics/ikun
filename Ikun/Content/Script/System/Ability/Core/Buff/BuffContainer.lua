@@ -28,7 +28,7 @@ function BuffContainerClass:Ctor(InBuffManager, InPart)
     self._Buffs = {}
 end
 
----@public
+---@public [Tick]
 ---@param InDeltaTime number
 ---@param InNowMs number
 function BuffContainerClass:TickBuffContainer(InDeltaTime, InNowMs)
@@ -51,7 +51,13 @@ end
 ---@public
 ---@param InBuffInst BuffBaseClass
 function BuffContainerClass:RemoveBuff(InBuffInst)
-    
+    for i = 1, #self._Buffs do
+        local buff = self._Buffs[i]
+        if buff == InBuffInst then
+            table.remove(self._Buffs, i)
+            break
+        end
+    end
 end
 
 return BuffContainerClass

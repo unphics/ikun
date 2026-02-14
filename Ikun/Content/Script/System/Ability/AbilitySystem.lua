@@ -43,6 +43,12 @@ function AbilitySystem:InitAbilitySystem()
 end
 
 ---@public
+---@param InDeltaTime number
+function AbilitySystem:TickAbilitySystem(InDeltaTime)
+    self.BuffManager:TickBuffManager(InDeltaTime)
+end
+
+---@public
 ---@return AbilityManager
 function AbilitySystem:GetAbilityManager()
     return self.AbilityManager

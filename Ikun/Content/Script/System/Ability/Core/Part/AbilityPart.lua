@@ -198,9 +198,9 @@ function AbilityPartClass:ApplyBuffToSelf(InBuffInst)
     InBuffInst.BuffTarget = self
     local ok = InBuffInst:CanApplyBuff()
     if not ok then
-        return false
+        return
     end
-    -- self.buff
+    self._BuffContainer:AddBuff(InBuffInst)
 end
 
 return AbilityPartClass

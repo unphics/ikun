@@ -54,9 +54,9 @@ function NetSystem:StartClient(ip, port)
     log.info('NetSystem', 'Client connecting to '..ip..':'..port)
 end
 
-function ENetTick(dt, world)
-    NetSystem:OnTick(dt, world)
-end
+-- function ENetTick(dt, world)
+--     NetSystem:OnTick(dt, world)
+-- end
 
 ---@param DeltaTime number
 ---@param InWorld UWorld

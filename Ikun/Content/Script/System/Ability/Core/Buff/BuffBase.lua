@@ -115,7 +115,7 @@ end
 ---@param InNowMS number
 ---@return boolean
 function BuffBaseClass:IsBuffExpired(InNowMS)
-    return self.BuffPolicy ~= BuffPolicyDef.Infinite and InNowMS >= self._EndTime
+    return (self.BuffPolicy ~= BuffPolicyDef.Infinite) and (InNowMS >= self._EndTime)
 end
 
 return BuffBaseClass
