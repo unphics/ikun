@@ -19,9 +19,12 @@ require('System/Role/RoleBase')
 ---@field _AllConfigRoles table<integer, RoleBaseClass[]>
 local RoleMgrClass = class.class 'RoleMgrClass'{
     ctor = function()end,
+    GetOrCreateRole = function()end,
+    RegisterRole = function()end,
     FindRole = function()end,
-    NewRole = function()end,
     GetRoleConfig = function()end,
+    LateAtNight = function()end,
+    _CreateRoleInst = function()end,
     _AllRoles = nil,
 }
 
