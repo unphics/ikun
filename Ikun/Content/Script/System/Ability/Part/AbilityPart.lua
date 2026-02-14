@@ -21,7 +21,7 @@ local BuffContainer = require("System/Ability/Buff/BuffContainer")
 local log = require("Core/Log/log")
 
 ---@class AbilityPartClass
----@field protected _Owner any
+---@field protected _Owner RoleBaseClass
 ---@field protected _PartTagContainer TagContainer
 ---@field protected _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
 ---@field protected _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)

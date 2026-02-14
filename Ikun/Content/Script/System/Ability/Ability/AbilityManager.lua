@@ -12,18 +12,18 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
-local Ability = require('System/Ability/Ability/Ability')
-local FileSystem = require('System/File/FileSystem')
-local ConfigSystem = require('System/Config/ConfigSystem')
-local SkillClass = require('System/Ability/Ability/Skill')
+local Class3 = require("Core/Class/Class3")
+local Ability = require("System/Ability/Ability/Ability")
+local FileSystem = require("System/File/FileSystem")
+local ConfigSystem = require("System/Config/ConfigSystem")
+local SkillClass = require("System/Ability/Ability/Skill")
 
 ---@class AbilityManager
 ---@field _System AbilitySystem
 ---@field _UpdateSkillList SkillClass[]
 ---@field AbilityConfig table<string, AbilityConfig>
 ---@field SkillConfig table<string, SkillConfig>
-local AbilityManager = Class3.Class('AbilityManager')
+local AbilityManager = Class3.Class("AbilityManager")
 
 ---@public
 ---@param InSystem AbilitySystem
@@ -43,14 +43,14 @@ function AbilityManager:_LoadConfig()
     if not file then
         return
     end
-    file:ChangeDirectory('Ability')
-    file:ChangeDirectory('Ability')
-    local abilityParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile('Ability.csv'))
-    self.AbilityConfig = abilityParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastMapCol({'AbilitySkills'}):GetResult()
+    file:ChangeDirectory("Ability")
+    file:ChangeDirectory("Ability")
+    local abilityParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Ability.csv"))
+    self.AbilityConfig = abilityParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastMapCol({"AbilitySkills"}):GetResult()
     abilityParser:ReleaseParser()
 
-    local skillParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile('Skill.csv'))
-    self.SkillConfig = skillParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastPairCol({'Param1', 'Param2', 'Param3', 'Param4', 'Param5', 'Param6', 'Param7', 'Param8', 'Param9', }):GetResult()
+    local skillParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Skill.csv"))
+    self.SkillConfig = skillParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastPairCol({"Param1", "Param2", "Param3", "Param4", "Param5", "Param6", "Param7", "Param8", "Param9", }):GetResult()
     skillParser:ReleaseParser()
 end
 

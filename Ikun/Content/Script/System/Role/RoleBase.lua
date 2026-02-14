@@ -5,6 +5,7 @@
 --  File        : RoleBase.lua
 --  Author      : zhengyanshuai
 --  Date        : Sun Nov 09 2025 09:27:37 GMT+0800 (中国标准时间)
+--  Todo        : 构造时起码必须要有ConfigId
 --  Description : 角色系统-角色的基类
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
@@ -13,7 +14,9 @@
 --]]
 
 local NpcChat = require("Content/Chat/NpcChat")
-require('System/Role/RoleHoldLocation')
+local AbilityPart = require("System/Ability/Part/AbilityPart")
+local str_util = require("Core/Util/str_util")
+require("System/Role/RoleHoldLocation")
 
 ---@class RoleConfig
 ---@field RoleId number
@@ -33,6 +36,7 @@ require('System/Role/RoleHoldLocation')
 ---@field public QuestGiver QuestGiverClass, 预计处理 todo zys
 ---@field public HoldLocation RoleHoldLocationClass todo zys 角色持有的地点
 ---@field public NpcChat NpcChatClass
+---@field public AbilityPart AbilityPartClass 能力部件
 ---@field private _RoleId integer
 ---@field private _RoleCfgId integer
 ---@field private _RoleName string
@@ -53,6 +57,7 @@ function RoleBaseClass:ctor()
     self.QuestGiver = class.new 'QuestGiverClass'(self)
     self.Bag = class.new 'BagClass'(self)
     self.NpcChat = class.new 'NpcChatClass'(self)
+    self.AbilityPart = AbilityPart:New(self)
 end
 
 ---@override
@@ -73,6 +78,8 @@ function RoleBaseClass:InitBaseInfo(InRoleCfgId, InConfig)
     
     local DistrictMgr = Cosmos:GetStar().DistrictMgr ---@type DistrictMgr
     self._BelongKingdom = DistrictMgr:FindKingdomByCfgId(InConfig.BelongKingdom) ---@type Kingdom
+
+
 end
 
 ---@public [Init-Step2] 复杂组件初始化. 此阶段已有有效的实例ID.
