@@ -1,56 +1,99 @@
 
----
----@biref   log
----@author  zys
----@data    Sun May 04 2025 14:19:28 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : log
+--  File        : Log.lua
+--  Author      : zhengyanshuai
+--  Date        : Sun May 04 2025 14:19:28 GMT+0800 (中国标准时间)
+--  Description : 游戏日志
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local sys_print = _G.IkunLog
 local sys_warn = _G.IkunWarn
 local sys_error = _G.IkunError
+local string = _G.string
+local debug_traceback = _G.debug.traceback()
+local select = _G.select
+
+-- 内部辅助：处理字符串格式化
+local function fmt_out(fmt, ...)
+    if select("#", ...) == 0 then
+        return tostring(fmt)
+    end
+    local status, result = pcall(string.format, fmt, ...)
+    return status and result or string.format("LogFormatError: result=[%s] | raw=[%s]", tostring(result), tostring(fmt))
+end
 
 ---@class log
 ---@field key logkeys
 local log = {}
 
----@public 开发期临时使用的print,由于其高亮功能方便精准查看日志
+---@public 开发期临时高亮日志
 function log.dev(...)
     sys_error("[DEV]", ...)
 end
 
----@public 开发期功能占位
+---@public 开发期占位
 function log.todo(...)
     sys_error("[TODO]", ...)
 end
 
----@public 日志
+---@public 基础日志
 function log.log(...)
     sys_print("[LOG]", ...)
 end
+---@public 格式化日志
+function log.log_fmt(fmt, ...)
+    log.log(fmt_out(fmt, ...))
+end
 
----@public 细的调试信息, 记录变量值, 方法调用链路等细节; 生产环境通常关闭, 仅用于开发阶段定位问题
+---@public 调试信息
 function log.debug(...)
     sys_print("[DEBUG]", ...)
 end
+---@public 格式化调试信息
+function log.debug_fmt(fmt, ...)
+    log.debug(fmt_out(fmt, ...))
+end
 
----@public 记录游戏运行的关键节点和正常状态(如登录, 场景加载完成, 系统启动等), 需保证信息对运维人员有意义且可读性强
+---@public 关键节点信息
 function log.info(...)
     sys_print("[INFO]", ...)
 end
+---@public 格式化关键节点信息
+function log.info_fmt(fmt, ...)
+    log.info(fmt_out(fmt, ...))
+end
 
----@public 潜在异常单微营销核心功能(如配置文件缺失使用默认值, 网络延迟超过阈值, 资源加载超时重试), 需要后续关注但无需立即处理
+---@public 警告信息
 function log.warn(...)
     sys_warn("[WARN]", ...)
 end
+---@public 格式化警告信息
+function log.warn_fmt(fmt, ...)
+    log.warn(fmt_out(fmt, ...))
+end
 
----@public 功能异常但游戏仍可运行(如数据库查询失败, 协议解析错误, 支付验证失败), 必须及时修复以避免问题扩大
+---@public 错误信息
 function log.error(...)
     sys_error("[ERROR]", ...)
 end
+---@public 格式化错误信息
+function log.error_fmt(fmt, ...)
+    log.error(fmt_out(fmt, ...))
+end
 
----@public 导致游戏崩溃或服务终止的致命错误(如内存泄漏达到临界值, 关键线程死锁, 服务器集群失联), 需立即触发警告并人工干预
+---@public 致命错误（带堆栈）
 function log.fatal(...)
-    sys_error("[FATAL]", ..., debug.traceback())
+    sys_error("[FATAL]", ..., debug_traceback("", 2)) -- 使用level_2可以让堆栈直接从调用log.fatal的那个逻辑文件开始显示，排查问题更直观
+end
+---@public 格式化致命错误
+function log.fatal_fmt(fmt, ...)
+    log.fatal(fmt_out(fmt, ...))
 end
 
 ---@class logkeys
