@@ -29,13 +29,15 @@ local Time = require('Core/Time')
 ---@field protected _Manager AbilityManager
 ---@field protected _AbilityConfigData AbilityConfig
 ---@field protected _AbilitySkills table<string, SkillClass>
+---@field protected _Owner table
 ---@field protected _UseSkillTimeStamp number
 local AbilityClass = Class3.Class('AbilityClass')
 
 ---@public
-function AbilityClass:Ctor(InManager,InAbilityConfig)
+function AbilityClass:Ctor(InManager, InAbilityConfig, InOwner)
     self._Manager = InManager
     self._AbilityConfigData = InAbilityConfig
+    self._Owner = InOwner
 
     self._AbilitySkills = {}
     self._UseSkillTimeStamp = 0
@@ -96,6 +98,12 @@ end
 ---@return AbilityConfig
 function AbilityClass:GetAbilityConfig() -- const
     return self._AbilityConfigData
+end
+
+---@public
+---@return table
+function AbilityClass:GetAbilityOwner() -- const
+    return self._Owner
 end
 
 return AbilityClass

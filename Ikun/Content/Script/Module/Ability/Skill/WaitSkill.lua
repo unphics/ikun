@@ -24,6 +24,8 @@ function WaitSkillClass:BeginSkill(InAbility, InParams)
     SkillClass.BeginSkill(self, InAbility, InParams)
     self.WaitTotalTime = self:GetSkillConfig().WaitTime
     self.WaitTiming = 0.0
+
+    local part = self:GetSkillOwner() ---@as AbilityPartClass
     return true
 end
 

@@ -60,15 +60,16 @@ end
 
 ---@public
 ---@param InAbilityKey string
+---@param InOwner table
 ---@return AbilityClass?
-function AbilityManager:CreateAbility(InAbilityKey)
+function AbilityManager:CreateAbility(InAbilityKey, InOwner)
     local config = self:LookupAbilityConfig(InAbilityKey)
     if not config then
         log.warn_fmt("AbilityManager:CreateAbility(): Invalid AbilityKey = [%s]", InAbilityKey)
         return nil
     end
     local abilityClass = self:_LoadAbilityClass(config.AbilityTemplate)
-    local ability = abilityClass:New(self, config)
+    local ability = abilityClass:New(self, config, InOwner)
     return ability
 end
 

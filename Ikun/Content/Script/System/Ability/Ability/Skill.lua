@@ -55,8 +55,14 @@ end
 
 ---@public
 ---@return SkillConfig
-function SkillClass:GetSkillConfig()
+function SkillClass:GetSkillConfig() --const
     return self._ConfigData
+end
+
+---@public
+---@return table
+function SkillClass:GetSkillOwner() -- const
+    return self._Ability:GetAbilityOwner()
 end
 
 return SkillClass
