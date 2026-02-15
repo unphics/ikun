@@ -21,6 +21,7 @@ local BuffContainer = require("System/Ability/Buff/BuffContainer")
 local log = require("Core/Log/log")
 
 ---@class AbilityPartClass
+---@field protected _AttrSet AttrSetClass
 ---@field protected _Owner RoleBaseClass
 ---@field protected _PartTagContainer TagContainer
 ---@field protected _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
@@ -37,6 +38,20 @@ function AbilityPartClass:Ctor(InOwner)
     self._SlotInfos = {}
     self._AbilityInfos = {}
     self._RefAbilityToSlots = {}
+end
+
+---@public [AttrSet]
+---@param InAttrSetConfig string[]
+function AbilityPartClass:InitAttrSet(InAttrSetConfig)
+    local mgr = AbilitySystem.Get():GetAttrManager()
+    local set = mgr:CreateAttrSet(InAttrSetConfig)
+    self._AttrSet = set
+end
+
+---@public [AttrSet]
+---@return AttrSetClass
+function AbilityPartClass:GetAttrSet()
+    return self._AttrSet
 end
 
 ---@public [Ability]
