@@ -19,10 +19,10 @@ local ConfigSystem = require("System/Config/ConfigSystem")
 local SkillClass = require("System/Ability/Ability/Skill")
 
 ---@class AbilityManager
----@field _System AbilitySystem
----@field _UpdateSkillList SkillClass[]
----@field AbilityConfig table<string, AbilityConfig>
----@field SkillConfig table<string, SkillConfig>
+---@field protected _System AbilitySystem
+---@field protected _UpdateSkillList SkillClass[]
+---@field protected _AbilityConfigData table<string, AbilityConfig>
+---@field protected _SkillConfigData table<string, SkillConfig>
 local AbilityManager = Class3.Class("AbilityManager")
 
 ---@public
@@ -46,11 +46,11 @@ function AbilityManager:_LoadConfig()
     file:ChangeDirectory("Ability")
     file:ChangeDirectory("Ability")
     local abilityParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Ability.csv"))
-    self.AbilityConfig = abilityParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastMapCol({"AbilitySkills"}):GetResult()
+    self._AbilityConfigData = abilityParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastMapCol({"AbilitySkills"}):GetResult()
     abilityParser:ReleaseParser()
 
     local skillParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Skill.csv"))
-    self.SkillConfig = skillParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastPairCol({"Param1", "Param2", "Param3", "Param4", "Param5", "Param6", "Param7", "Param8", "Param9", }):GetResult()
+    self._SkillConfigData = skillParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastPairCol({"Param1", "Param2", "Param3", "Param4", "Param5", "Param6", "Param7", "Param8", "Param9", }):GetResult()
     skillParser:ReleaseParser()
 end
 
@@ -74,10 +74,10 @@ end
 
 ---@public
 ---@param DeltaTime number
-function AbilityManager:UpdateAbilityManager(DeltaTime)
+function AbilityManager:TickAbilityManager(DeltaTime)
     for i = #self._UpdateSkillList, 1, -1 do
         local skill = self._UpdateSkillList[i]
-        skill:UpdateSkill(DeltaTime)
+        skill:TickSkill(DeltaTime)
     end
 
     ---@todo DeadList
@@ -87,14 +87,14 @@ end
 ---@param InAbilityKey string
 ---@return AbilityConfig
 function AbilityManager:LookupAbilityConfig(InAbilityKey)
-    return self.AbilityConfig[InAbilityKey]
+    return self._AbilityConfigData[InAbilityKey]
 end
 
 ---@public [Config]
 ---@param InSkillKey string
 ---@return SkillConfig
 function AbilityManager:LookupSkillConfig(InSkillKey)
-    return self.SkillConfig[InSkillKey]
+    return self._SkillConfigData[InSkillKey]
 end
 
 return AbilityManager

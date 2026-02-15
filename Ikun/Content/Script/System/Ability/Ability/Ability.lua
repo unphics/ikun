@@ -77,9 +77,9 @@ function AbilityClass:OnSkillComplete()
 end
 
 ---@public
----@param Params table
+---@param InParams table
 ---@return boolean
-function AbilityClass:CanUse(Params)
+function AbilityClass:CanUse(InParams)
     if (Time.GetTimestampSec() - self._UseSkillTimeStamp) < self._AbilityCooldown then
         return false
     end

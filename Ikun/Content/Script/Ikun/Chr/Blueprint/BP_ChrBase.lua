@@ -1,8 +1,11 @@
+
 ---
 ---@brief   角色(chr)的基类
 ---@author  zys
 ---@data    Sun Mar 02 2025 02:19:44 GMT+0800 (中国标准时间)
----
+---  
+
+local TagUtil = require("System/Ability/Tag/TagUtil")
 
 ---@class BP_ChrBase: BP_ChrBase_C
 ---@field Role RoleBaseClass

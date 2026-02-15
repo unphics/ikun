@@ -46,13 +46,13 @@ end
 
 ---@public
 ---@param DeltaTime number
-function SkillClass:UpdateSkill(DeltaTime)
-    self:OnUpdateSkill(DeltaTime)
+function SkillClass:TickSkill(DeltaTime)
+    self:OnTickSkill(DeltaTime)
 end
 
 ---@protected
 ---@param DeltaTime number
-function SkillClass:OnUpdateSkill(DeltaTime)
+function SkillClass:OnTickSkill(DeltaTime)
 end
 
 ---@protected

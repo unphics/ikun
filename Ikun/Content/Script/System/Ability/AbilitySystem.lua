@@ -46,6 +46,7 @@ end
 ---@param InDeltaTime number
 function AbilitySystem:TickAbilitySystem(InDeltaTime)
     self.BuffManager:TickBuffManager(InDeltaTime)
+    self.AbilityManager:TickAbilityManager(InDeltaTime)
 end
 
 ---@public
