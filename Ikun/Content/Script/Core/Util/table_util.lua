@@ -67,7 +67,8 @@ end
 table_util.remove = function(InTable, InItem)
     for i = 1, #InTable do
         if InTable[i] == InItem then
-            table.remove(InTable, InItem)
+            table.remove(InTable, i)
+            break
         end
     end
 end

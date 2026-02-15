@@ -12,11 +12,12 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require("Core/Class/Class3")
+local Class3 = require("Core/Class/class3")
 local Ability = require("System/Ability/Ability/Ability")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local SkillClass = require("System/Ability/Ability/Skill")
+local str_util = require("Core/Util/str_util")
 
 ---@class AbilityManager
 ---@field protected _System AbilitySystem
@@ -50,17 +51,20 @@ function AbilityManager:_LoadConfig()
     abilityParser:ReleaseParser()
 
     local skillParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Skill.csv"))
-    self._SkillConfigData = skillParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastPairCol({"Param1", "Param2", "Param3", "Param4", "Param5", "Param6", "Param7", "Param8", "Param9", }):GetResult()
+    self._SkillConfigData = skillParser:ToRows():ExtractHeaders():ToGrid():ToMap()
+        :CastPairCol({"Param1", "Param2", "Param3", "Param4", "Param5", "Param6", "Param7", "Param8", "Param9"})
+        :GetResult()
     skillParser:ReleaseParser()
 end
 
 ---@public
 ---@param InSkillKey string
+---@param InAbility AbilityClass
 ---@return SkillClass
-function AbilityManager:AcquireSkill(InSkillKey)
+function AbilityManager:AcquireSkill(InSkillKey, InAbility)
     local config = self:LookupSkillConfig(InSkillKey)
-    local tmplClass = SkillClass
-    local skill = tmplClass:New(self) ---@type SkillClass
+    local tmplClass = self:_LoadSkillClass(config.SkillTemplate)
+    local skill = tmplClass:New(self, config) ---@type SkillClass
     table.insert(self._SkillList, skill)
     return skill
 end
@@ -95,6 +99,19 @@ end
 ---@return SkillConfig
 function AbilityManager:LookupSkillConfig(InSkillKey) -- const
     return self._SkillConfigData[InSkillKey]
+end
+
+---@public
+---@param InSkillClassName string
+---@return SkillClass
+function AbilityManager:_LoadSkillClass(InSkillClassName) -- const
+    if str_util.is_empty(InSkillClassName) then 
+        return SkillClass
+    else
+        local pathHeader = "Module/Ability/Skill/"
+        local class = require(pathHeader..InSkillClassName) ---@type SkillClass
+        return class
+    end
 end
 
 return AbilityManager

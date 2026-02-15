@@ -12,37 +12,37 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
+local Class3 = require('Core/Class/class3')
 
 ---@class SkillConfig
 ---@field SkillKey string
 ---@field SkillName string
+---@field SkillTemplate string
 
 ---@class SkillClass
----@field _SkillKey string
----@field _Ability AbilityClass
----@field _Manager AbilityManager
+---@field protected _Manager AbilityManager
+---@field protected _ConfigData SkillConfig
+---@field protected _Ability AbilityClass
 local SkillClass = Class3.Class('SkillClass')
 
 ---@param InManager AbilityManager
-function SkillClass:Ctor(InManager)
+function SkillClass:Ctor(InManager, InConfigData)
     self._Manager = InManager
+    self._ConfigData = InConfigData
 end
 
 ---@public
 ---@param InAbility AbilityClass
----@param InSkillKey string
 ---@param InParams table
 ---@return boolean
-function SkillClass:BeginSkill(InAbility, InSkillKey, InParams)
+function SkillClass:BeginSkill(InAbility, InParams)
     self._Ability = InAbility
-    self._SkillKey = InSkillKey
     return true
 end
 
 ---@public
----@param DeltaTime number
-function SkillClass:TickSkill(DeltaTime)
+---@param InDeltaTime number
+function SkillClass:TickSkill(InDeltaTime)
 end
 
 ---@public
@@ -51,6 +51,12 @@ function SkillClass:EndSkill()
     self._Manager = nil
     self._Ability = nil
     manager:ReleaseSkill(self)
+end
+
+---@public
+---@return SkillConfig
+function SkillClass:GetSkillConfig()
+    return self._ConfigData
 end
 
 return SkillClass

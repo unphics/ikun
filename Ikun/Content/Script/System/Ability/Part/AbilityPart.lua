@@ -69,7 +69,7 @@ function AbilityPartClass:AddAbilityToSlot(InSlotTag, InAbilityKey)
     end
     
     if not self._AbilityInfos[InAbilityKey] then
-        local ability = AbilityClass:New(mgr, InAbilityKey) ---@type AbilityClass
+        local ability = AbilityClass:New(mgr, config) ---@type AbilityClass
         self._AbilityInfos[InAbilityKey] = ability
     end
     

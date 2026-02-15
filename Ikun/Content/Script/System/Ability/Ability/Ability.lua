@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
+local Class3 = require('Core/Class/class3')
 local Time = require('Core/Time')
 
 ---@class AbilityConfig
@@ -32,7 +32,7 @@ local Time = require('Core/Time')
 local AbilityClass = Class3.Class('AbilityClass')
 
 ---@public
-function AbilityClass:Ctor(InManager, InAbilityConfig)
+function AbilityClass:Ctor(InManager,InAbilityConfig)
     self._Manager = InManager
     self._AbilityConfigData = InAbilityConfig
 
@@ -56,9 +56,9 @@ end
 function AbilityClass:UseSkill(InParams)
     self:StartCooldown()
     local key = self:GetAbilityConfig().AbilitySkills.EntrySkill
-    local skill = self._Manager:AcquireSkill(key)
+    local skill = self._Manager:AcquireSkill(key, self)
     self._AbilitySkills.EntrySkill = skill
-    if skill:BeginSkill(self, key, InParams) then
+    if skill:BeginSkill(self, InParams) then
         self:StartCooldown()
         return true
     else
