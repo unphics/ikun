@@ -20,6 +20,7 @@ local BuffPolicyDef = require('System/Ability/Buff/BuffPolicyDef')
 ---@class BuffConfig
 ---@field public BuffKey string
 ---@field public BuffName string
+---@field public BuffTemplate string
 ---@field public BuffPolicy BuffPolicyDef
 ---@field public BuffDuration number
 ---@field public Period number
@@ -28,31 +29,16 @@ local BuffPolicyDef = require('System/Ability/Buff/BuffPolicyDef')
 ---@field public CancelTags number[]         -- TagId[]
 
 ---@class BuffBaseClass
----@field public BuffKey string
----@field public BuffName string
----@field public BuffPolicy BuffPolicyDef
----@field public BuffDuration number
----@field public Period number
----@field public GrantedTags number[]        -- TagId[]
----@field public BlockTags number[]          -- TagId[]
----@field public CancelTags number[]         -- TagId[]
----@field public BuffConfig BuffConfig
 ---@field public BuffSource AbilityPartClass
 ---@field public BuffTarget AbilityPartClass
+---@field protected _BuffConfig BuffConfig
 ---@field protected _StartTime number
 ---@field protected _EndTime number
 local BuffBaseClass = Class3.Class('BuffBaseClass')
 
 ---@public
-function BuffBaseClass:Ctor(spec)
-    self.BuffKey = spec.Key
-    self.BuffName = spec.BuffName
-    self.BuffPolicy = spec.BuffPolicy or BuffPolicyDef.Instant
-    self.BuffDuration = spec.BuffDuration or 0
-    self.Period = spec.Period or 0
-    self.GrantedTags = spec.GrantedTags or {}
-    self.BlockTags = spec.BlockTags or {}
-    self.CancelTags = spec.CancelTags or {}
+function BuffBaseClass:Ctor(InConfig)
+    self._BuffConfig = InConfig
     self._StartTime = 0
     self._EndTime = 0
 end
@@ -63,9 +49,9 @@ function BuffBaseClass:CanApplyBuff()
     local buffSource = self.BuffSource
     local buffTarget = self.BuffTarget
     -- Block
-    if self.BlockTags and #self.BlockTags > 0 then
+    if self:GetBuffConfig().BlockTags and #self:GetBuffConfig().BlockTags > 0 then
         local target = buffTarget ---@type AbilityPartClass
-        if target and target:HasAnyTags(self.BlockTags) then
+        if target and target:HasAnyTags(self:GetBuffConfig().BlockTags) then
             return false
         end
     end
@@ -81,14 +67,14 @@ function BuffBaseClass:ApplyBuff(InTarget, InSource, InNowMS)
     self.BuffTarget = InTarget
     self.BuffSource = InSource
     self._StartTime = InNowMS
-    if self.BuffPolicy == BuffPolicyDef.HasDuration then
-        self._EndTime = self._StartTime + self.BuffDuration
+    if self:GetBuffConfig().BuffPolicy == BuffPolicyDef.HasDuration then
+        self._EndTime = self._StartTime + self:GetBuffConfig().BuffDuration
     else
         self._EndTime = math.huge
     end
     -- GrantedTags
-    for i = 1, #self.GrantedTags do
-        self.BuffTarget:AddTag(self.GrantedTags[i])
+    for i = 1, #self:GetBuffConfig().GrantedTags do
+        self.BuffTarget:AddTag(self:GetBuffConfig().GrantedTags[i])
     end
 end
 
@@ -101,8 +87,8 @@ end
 function BuffBaseClass:DeactivateBuff()
     -- 移除 GrantedTags
     if self.BuffTarget then
-        for i = 1, #self.GrantedTags do
-            self.BuffTarget:RemoveTag(self.GrantedTags[i])
+        for i = 1, #self:GetBuffConfig().GrantedTags do
+            self.BuffTarget:RemoveTag(self:GetBuffConfig().GrantedTags[i])
         end
     end
 end
@@ -115,7 +101,13 @@ end
 ---@param InNowMS number
 ---@return boolean
 function BuffBaseClass:IsBuffExpired(InNowMS)
-    return (self.BuffPolicy ~= BuffPolicyDef.Infinite) and (InNowMS >= self._EndTime)
+    return (self:GetBuffConfig() ~= BuffPolicyDef.Infinite) and (InNowMS >= self._EndTime)
+end
+
+---@public
+---@return BuffConfig
+function BuffBaseClass:GetBuffConfig()
+    return self._BuffConfig
 end
 
 return BuffBaseClass

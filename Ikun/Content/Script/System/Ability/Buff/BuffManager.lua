@@ -17,7 +17,9 @@ local TagUtil = require('System/Ability/Tag/TagUtil')
 local FileSystem = require('System/File/FileSystem')
 local ConfigSystem = require('System/Config/ConfigSystem')
 local BuffContainer = require("System/Ability/Buff/BuffContainer")
+local str_util = require("Core/Util/str_util")
 local log = require("Core/Log/log")
+local BuffBaseClass = require("System/Ability/Buff/BuffBase")
 
 ---@class BuffManager
 ---@field protected _System AbilitySystem
@@ -97,6 +99,32 @@ function BuffManager:_TickBuffManager(InDeltaTime, InNowMs)
     for i = 1, #self._BuffContainers do
         local container = self._BuffContainers[i]
         container:TickBuffContainer(InDeltaTime, InNowMs)
+    end
+end
+
+---@public
+---@param InBuffKey string
+---@return BuffBaseClass?
+function BuffManager:CreateBuff(InBuffKey)
+    local config = self:LookupBuffConfig(InBuffKey)
+    if not config then
+        log.error_fmt("BuffManager:CreateBuff(): Invalid BuffKey = [%s]", InBuffKey)
+        return
+    end
+    local buffClass = self:_LoadBuffClass(config.BuffTemplate)
+    local buff = buffClass:New(config)
+    return buff
+end
+
+---@protected
+---@return BuffBaseClass
+function BuffManager:_LoadBuffClass(InBuffClassName)
+    if str_util.is_empty(InBuffClassName) then 
+        return BuffBaseClass
+    else
+        local pathHeader = "Module/Ability/Buff/"
+        local buffClass = require(pathHeader..InBuffClassName) ---@type BuffBaseClass
+        return buffClass
     end
 end
 

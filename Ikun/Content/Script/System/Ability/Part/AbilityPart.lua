@@ -198,17 +198,10 @@ end
 ---@return BuffBaseClass?
 function AbilityPartClass:MakeBuff(InBuffKey)
     local mgr = AbilitySystem.Get():GetBuffManager()
-    local cfg = mgr:LookupBuffConfig(InBuffKey)
-    if not cfg then
-        log.warn('AbilityPartClass:TryApplyBuff(): Invalid InBuffKey')
-        return nil
+    local buff = mgr:CreateBuff(InBuffKey)
+    if buff then
+        buff.BuffSource = self
     end
-    ---@type BuffBaseClass
-    local buff = BuffBaseClass:New({
-        Key = cfg.BuffKey or InBuffKey,
-        BuffName = cfg.BuffName or InBuffKey,
-    })
-    buff.BuffSource = self
     return buff
 end
 

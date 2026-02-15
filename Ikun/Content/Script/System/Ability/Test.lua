@@ -57,7 +57,7 @@ if true then
     local a = 1
 end
 
-if true then
+if false then
     local part = AbilityPart:New(nil) ---@type AbilityPartClass
     local buff = part:MakeBuff('Buff1')
     part:ApplyBuffToSelf(buff)
