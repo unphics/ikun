@@ -28,9 +28,9 @@ if false then
     testlog('xxx', container:HasTag(tag))
 end
 
-if false then
+if true then
     local attrMgr = AbilitySystem.Get():GetAttrManager()
-    local set = attrMgr:CreateAttrSet() ---@type AttrSetClass
+    local set = attrMgr:CreateAttrSet({"Health"}) ---@type AttrSetClass
 
     local mod_baseHealth_add_10 = attrMgr:RentModifier('BaseHealth', ModOpDef.Add, 10)
     testlog('attr add modi (BaseHealth Add 10)')

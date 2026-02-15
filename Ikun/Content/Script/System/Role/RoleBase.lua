@@ -25,6 +25,7 @@ require("System/Role/RoleHoldLocation")
 ---@field bUniqueRole boolean
 ---@field BelongKingdom number
 ---@field RoleAbility table<string, string>
+---@field RoleAttrSet string[]
 ---@field RoleSkills number[]
 ---@field GoapKey string
 ---@field RoleChat number[]

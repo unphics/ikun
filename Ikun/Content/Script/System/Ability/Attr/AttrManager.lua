@@ -23,6 +23,11 @@ local log = require('Core/Log/log')
 
 ---@alias FormulaFunction fun(Attributes: table<number, number>):number
 
+---@class SetConfig
+---@field SetKey string
+---@field SetDesc string
+---@field SetAttrs string[]
+
 ---@class AttrConfig
 ---@field AttrKey string
 ---@field AttrName string
@@ -32,6 +37,7 @@ local log = require('Core/Log/log')
 ---@class AttrManager
 ---@field protected _System AbilitySystem
 ---@field protected _AttrConfig table<string, AttrConfig>
+---@field protected _SetConfigData table<string, SetConfig>
 ---@field protected _AttrFormula table<number, FormulaFunction>
 ---@field protected _AttrDependencies table<number, number[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
 ---@field protected _AttrDependents table<number, number[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
@@ -40,32 +46,38 @@ local AttrManager = Class3.Class('AttrManager')
 ---@private
 ---@param InSystem AbilitySystem
 function AttrManager:Ctor(InSystem)
+    self._System = InSystem
     self._AttrConfig = {}
     self._AttrFormula = {}
     self._AttrDependencies = {}
     self._AttrDependents = {}
-    
-    self._System = InSystem
 end
 
 ---@public [Init]
 function AttrManager:InitAttrManager()
     self:_LoadAttrConfig()
+    self:_LoadSetConfig()
     self:_BuildAttrDependencies()
     self:_BuildAttrDependents()
     self:_BuildAttrFormulas()
 end
 
 ---@public
+---@param InSets string[]
 ---@return AttrSetClass
-function AttrManager:CreateAttrSet()
+function AttrManager:CreateAttrSet(InSets)
     local attributes = {}
-    for key, _ in pairs(self._AttrConfig) do
-        local id = AttrDef.Attr[key]
-        if id then
-            attributes[id] = 0
+    for i = 1, #InSets do
+        local set = self._SetConfigData[InSets[i]] ---@type SetConfig
+        for j = 1, #set.SetAttrs do
+            local attr = set.SetAttrs[j]
+            local id = AttrDef.Attr[attr]
+            if id then
+                attributes[id] = 0
+            end
         end
     end
+    
     local set = AttrSetClass:New(self, attributes) ---@type AttrSetClass
     return set
 end
@@ -124,6 +136,29 @@ function AttrManager:_LoadAttrConfig()
     end
     self._AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
     attrParser:ReleaseParser()
+end
+
+---@protected [Init]
+function AttrManager:_LoadSetConfig()
+    local file = FileSystem.Get():CreateConfigContext()
+    if not file then
+        log.error('zys AttrManager:_LoadSetConfig(): Failed to create config file context!')
+        return
+    end
+    file:ChangeDirectory("Ability")
+    file:ChangeDirectory("Attr")
+    local setFileContent = file:ReadStringFile("Set.csv")
+    if not setFileContent then
+        log.error("zys AttrManager:_LoadSetConfig(): Failed to create csv parser!")
+        return
+    end
+    local setParser = ConfigSystem.Get():CreateCSVParser(setFileContent)
+    if not setParser then
+        log.error('zys AttrManager:_LoadSetConfig(): Failed to create csv parser!')
+        return
+    end
+    self._SetConfigData = setParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastArrCol({"SetAttrs"}):GetResult()
+    setParser:ReleaseParser()
 end
 
 ---@protected [Init]
