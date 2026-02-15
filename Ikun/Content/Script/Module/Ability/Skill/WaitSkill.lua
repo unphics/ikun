@@ -17,7 +17,7 @@ local SkillClass = require("System/Ability/Ability/Skill")
 local log = require("Core/Log/log")
 
 ---@class WaitSkillClass: SkillClass
-local WaitSkillClass = Class3.Class('SkillClass', SkillClass)
+local WaitSkillClass = Class3.Class('WaitSkillClass', SkillClass)
 
 ---@override
 function WaitSkillClass:BeginSkill(InAbility, InParams)
