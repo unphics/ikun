@@ -20,7 +20,7 @@ local SkillClass = require("System/Ability/Ability/Skill")
 
 ---@class AbilityManager
 ---@field protected _System AbilitySystem
----@field protected _UpdateSkillList SkillClass[]
+---@field protected _SkillList SkillClass[]
 ---@field protected _AbilityConfigData table<string, AbilityConfig>
 ---@field protected _SkillConfigData table<string, SkillConfig>
 local AbilityManager = Class3.Class("AbilityManager")
@@ -29,7 +29,7 @@ local AbilityManager = Class3.Class("AbilityManager")
 ---@param InSystem AbilitySystem
 function AbilityManager:Ctor(InSystem)
     self._System = InSystem
-    self._UpdateSkillList = {}
+    self._SkillList = {}
 end
 
 ---@public
@@ -61,7 +61,7 @@ function AbilityManager:AcquireSkill(InSkillKey)
     local config = self:LookupSkillConfig(InSkillKey)
     local tmplClass = SkillClass
     local skill = tmplClass:New(self) ---@type SkillClass
-    table.insert(self._UpdateSkillList, skill)
+    table.insert(self._SkillList, skill)
     return skill
 end
 
@@ -69,14 +69,14 @@ end
 ---@todo pool
 ---@param InSkillClass SkillClass
 function AbilityManager:ReleaseSkill(InSkillClass)
-    table_util.remove(self._UpdateSkillList, InSkillClass)
+    table_util.remove(self._SkillList, InSkillClass)
 end
 
 ---@public
 ---@param DeltaTime number
 function AbilityManager:TickAbilityManager(DeltaTime)
-    for i = #self._UpdateSkillList, 1, -1 do
-        local skill = self._UpdateSkillList[i]
+    for i = #self._SkillList, 1, -1 do
+        local skill = self._SkillList[i]
         skill:TickSkill(DeltaTime)
     end
 

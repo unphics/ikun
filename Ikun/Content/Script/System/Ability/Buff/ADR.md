@@ -1,7 +1,5 @@
 # ADR: Buff 模块
 
-- 状态：Accepted
-
 现状
 - 时效：Instant / HasDuration / Infinite
 - Tick：统一 FixedUpdate 驱动；基类不持有时间调度状态

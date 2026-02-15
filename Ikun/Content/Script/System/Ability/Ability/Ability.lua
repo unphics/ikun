@@ -25,37 +25,38 @@ local Time = require('Core/Time')
 ---@field Projectiles table<string, string>
 
 ---@class AbilityClass
----@field _AbilityKey string
----@field _Manager AbilityManager
----@field _AbilityCooldown number 武器的冷却
----@field _AbilitySkills table<string, SkillClass>
----@field _UseSkillTimeStamp number
+---@field protected _Manager AbilityManager
+---@field protected _AbilitySkills table<string, SkillClass>
+---@field protected _UseSkillTimeStamp number
+---@field protected _AbilityConfigData AbilityConfig
 local AbilityClass = Class3.Class('AbilityClass')
 
 ---@public
-function AbilityClass:Ctor(InManager, InAbilityKey)
+function AbilityClass:Ctor(InManager, InAbilityConfig)
     self._Manager = InManager
-    self._AbilityKey = InAbilityKey
+    self._AbilityConfigData = InAbilityConfig
+
     self._AbilitySkills = {}
     self._UseSkillTimeStamp = 0
-    self:InitAbility(InAbilityKey)
 end
 
 ---@public
-function AbilityClass:InitAbility(InAbilityKey)
-    local config = self:GetAbilityConfig()
-    self._AbilityCooldown = tonumber(config.AbilityCooldown)
+---@param InParams table
+---@return boolean
+function AbilityClass:CanUse(InParams)
+    if (Time.GetTimestampSec() - self._UseSkillTimeStamp) < self:GetAbilityConfig().AbilityCooldown then
+        return false
+    end
+    return true
 end
 
 ---@public
 ---@param InParams table
 function AbilityClass:UseSkill(InParams)
     self:StartCooldown()
-    local config = self:GetAbilityConfig()
-    local key = config.AbilitySkills.EntrySkill
+    local key = self:GetAbilityConfig().AbilitySkills.EntrySkill
     local skill = self._Manager:AcquireSkill(key)
     self._AbilitySkills.EntrySkill = skill
-
     skill:BeginSkill(self, key, InParams)
 end
 
@@ -67,16 +68,6 @@ function AbilityClass:FollowSkill(InSkillKey)
 end
 
 ---@public
----@param InParams table
----@return boolean
-function AbilityClass:CanUse(InParams)
-    if (Time.GetTimestampSec() - self._UseSkillTimeStamp) < self._AbilityCooldown then
-        return false
-    end
-    return true
-end
-
----@public
 function AbilityClass:StartCooldown()
     self._UseSkillTimeStamp = Time.GetTimestampSec()
 end
@@ -84,10 +75,10 @@ end
 ---@public
 ---@return number
 function AbilityClass:GetCooldown()
-    if self._AbilityCooldown < 0.01 then
+    if self:GetAbilityConfig().AbilityCooldown < 0.01 then
         return 0
     end
-    return math.max(0, self._AbilityCooldown - (Time.GetTimestampSec() - self._UseSkillTimeStamp))
+    return math.max(0, self:GetAbilityConfig().AbilityCooldown - (Time.GetTimestampSec() - self._UseSkillTimeStamp))
 end
 
 ---@public
@@ -97,7 +88,7 @@ end
 ---@public
 ---@return AbilityConfig
 function AbilityClass:GetAbilityConfig()
-    return self._Manager:LookupAbilityConfig(self._AbilityKey)
+    return self._AbilityConfigData
 end
 
 return AbilityClass
