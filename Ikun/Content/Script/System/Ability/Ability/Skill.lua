@@ -33,38 +33,18 @@ end
 ---@param InAbility AbilityClass
 ---@param InSkillKey string
 ---@param InParams table
-function SkillClass:DoBeginSkill(InAbility, InSkillKey, InParams)
+function SkillClass:BeginSkill(InAbility, InSkillKey, InParams)
     self._Ability = InAbility
     self._SkillKey = InSkillKey
-    self:OnBeginSkill(InParams)
-end
-
----@protected
----@param InParams table
-function SkillClass:OnBeginSkill(InParams)
 end
 
 ---@public
 ---@param DeltaTime number
 function SkillClass:TickSkill(DeltaTime)
-    self:OnTickSkill(DeltaTime)
-end
-
----@protected
----@param DeltaTime number
-function SkillClass:OnTickSkill(DeltaTime)
-end
-
----@protected
-function SkillClass:DoEndSkill()
 end
 
 ---@public
-function SkillClass:OnEndSkill()
-end
-
----@protected
-function SkillClass:OnPostEndSkill()
+function SkillClass:EndSkill()
     local manager = self._Manager
     self._Manager = nil
     self._Ability = nil

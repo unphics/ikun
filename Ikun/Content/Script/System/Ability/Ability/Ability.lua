@@ -55,25 +55,15 @@ function AbilityClass:UseSkill(InParams)
     local key = config.AbilitySkills.EntrySkill
     local skill = self._Manager:AcquireSkill(key)
     self._AbilitySkills.EntrySkill = skill
-    self:OnUseSkill(skill, key, InParams)
-end
 
----@public
----@param InSkill SkillClass
----@param InSkillKey string
----@param InParams table
-function AbilityClass:OnUseSkill(InSkill, InSkillKey, InParams)
-    InSkill:DoBeginSkill(self, InSkillKey, InParams)
+    skill:BeginSkill(self, key, InParams)
 end
 
 ---@public 由入口技能激活其他技能
 ---@param InSkillKey string
 ---@return boolean
 function AbilityClass:FollowSkill(InSkillKey)
-end
-
----@public
-function AbilityClass:OnSkillComplete()
+    return false
 end
 
 ---@public
