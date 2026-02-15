@@ -61,7 +61,7 @@ end
 function AttrManager:CreateAttrSet()
     local attributes = {}
     for key, _ in pairs(self._AttrConfig) do
-        local id = AttrDef[key]
+        local id = AttrDef.Attr[key]
         if id then
             attributes[id] = 0
         end
@@ -156,7 +156,7 @@ function AttrManager:_BuildAttrDependencies()
 
     local sorted = ExpLib.TopoSortDFS(attrDeps) ---@type string[]
     for i = #sorted, 1, -1 do
-        AttrDef[sorted[i]] = #sorted - i + 1
+        AttrDef.Attr[sorted[i]] = #sorted - i + 1
     end
     AttrDef.BuildIdToKey()
     
@@ -164,9 +164,9 @@ function AttrManager:_BuildAttrDependencies()
     for key, deps in pairs(attrDeps) do
         local tb = {}
         for _, dep in ipairs(deps) do
-            table.insert(tb, AttrDef[dep])
+            table.insert(tb, AttrDef.Attr[dep])
         end
-        attrNumDeps[AttrDef[key]] = tb
+        attrNumDeps[AttrDef.Attr[key]] = tb
     end
     
     self._AttrDependencies = attrNumDeps
@@ -201,7 +201,7 @@ function AttrManager:_BuildAttrFormulas()
     for key, config in pairs(self._AttrConfig) do
         local func = ExpLib.Compile(config.AttrFormula)
         if func then
-            attrFormula[AttrDef[key]] = func
+            attrFormula[AttrDef.Attr[key]] = func
         end
     end
     self._AttrFormula = attrFormula

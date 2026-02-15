@@ -14,8 +14,10 @@
 
 ---@class AttrDef
 ---@field protected RefIdToKey table<number, string>
+---@field public Attr table<string, number>
 local AttrDef = {}
 
+AttrDef.Attr = {}
 AttrDef.RefIdToKey = {}
 
 ---@public
@@ -24,7 +26,7 @@ AttrDef.RefIdToKey = {}
 AttrDef.ToId = function(InKey)
     local id = tonumber(InKey)
     if not id then
-        id = AttrDef[InKey]
+        id = AttrDef.Attr[InKey]
     end
     return id
 end
@@ -42,7 +44,7 @@ end
 ---@public [Init]
 AttrDef.BuildIdToKey = function()
     AttrDef.RefIdToKey = {}
-    for k, v in pairs(AttrDef) do
+    for k, v in pairs(AttrDef.Attr) do
         if type(k) == "string" and type(v) == "number" then
             AttrDef.RefIdToKey[v] = k
         end

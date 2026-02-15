@@ -50,9 +50,9 @@ if false then
     -- print('attr', set:GetAttrValue('BaseHealth'))
     -- print('attr', set:GetAttrValue('MaxHealth'))
 
-    local mod_perH_add_10 = attrMgr:RentModifier(AttrDef.PercentHealth, ModOpDef.Add, 0.1)
+    local mod_perH_add_10 = attrMgr:RentModifier(AttrDef.Attr.PercentHealth, ModOpDef.Add, 0.1)
     set:AddModifier(mod_perH_add_10)
-    testlog('attr', set:GetAttrValue(AttrDef.PercentHealth))
+    testlog('attr', set:GetAttrValue(AttrDef.Attr.PercentHealth))
     testlog('attr', set:GetAttrValue('MaxHealth'))
     local a = 1
 end
