@@ -18,6 +18,7 @@ local Time = require('Core/Time')
 ---@class AbilityConfig
 ---@field AbilityKey string
 ---@field AbilityName string
+---@field AbilityTemplate string
 ---@field AbilityCooldown number
 ---@field AbilitySkills table<string, string>
 ---@field AbilityTargetings table<string, string>

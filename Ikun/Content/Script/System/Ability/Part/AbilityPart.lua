@@ -57,20 +57,15 @@ end
 ---@param InAbilityKey string
 ---@param InSlotTag number
 function AbilityPartClass:AddAbilityToSlot(InSlotTag, InAbilityKey)
-    local mgr = AbilitySystem.Get():GetAbilityManager()
-    local config = mgr:LookupAbilityConfig(InAbilityKey)
-    if not config then
-        log.warn('AbilityPartClass:AddAbilityToSlot(): Invalid InAbilityKey')
-        return
-    end
-
     if not self._SlotInfos[InSlotTag] then
         self._SlotInfos[InSlotTag] = {}
     end
-    
     if not self._AbilityInfos[InAbilityKey] then
-        local ability = AbilityClass:New(mgr, config) ---@type AbilityClass
-        self._AbilityInfos[InAbilityKey] = ability
+        local mgr = AbilitySystem.Get():GetAbilityManager()
+        local ability = mgr:CreateAbility(InAbilityKey)
+        if ability then
+            self._AbilityInfos[InAbilityKey] = ability
+        end
     end
     
     table_util.add_unique(self._SlotInfos[InSlotTag], InAbilityKey)

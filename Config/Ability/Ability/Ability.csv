@@ -1,4 +1,4 @@
-AbilityKey|AbilityName|AbilityCooldown|AbilitySkills|AbilityTargetings|AbilityEffects|Projectiles|
-|||||||
-Ability1|默认能力|0|EntrySkill=Skill1||||
-AAMelee|近战攻击能力|3|EntrySkill=ASMelee||||
+AbilityKey|AbilityName|AbilityTemplate|AbilityCooldown|AbilitySkills|AbilityTargetings|AbilityEffects|Projectiles|
+||||||||
+Ability1|默认能力||0|EntrySkill=Skill1||||
+AAMelee|近战攻击能力||3|EntrySkill=ASMelee||||

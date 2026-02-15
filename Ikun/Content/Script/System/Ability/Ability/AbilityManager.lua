@@ -13,11 +13,12 @@
 --]]
 
 local Class3 = require("Core/Class/class3")
-local Ability = require("System/Ability/Ability/Ability")
+local AbilityClass = require("System/Ability/Ability/Ability")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local SkillClass = require("System/Ability/Ability/Skill")
 local str_util = require("Core/Util/str_util")
+local log = require("Core/Log/log")
 
 ---@class AbilityManager
 ---@field protected _System AbilitySystem
@@ -58,6 +59,33 @@ function AbilityManager:_LoadConfig()
 end
 
 ---@public
+---@param InAbilityKey string
+---@return AbilityClass?
+function AbilityManager:CreateAbility(InAbilityKey)
+    local config = self:LookupAbilityConfig(InAbilityKey)
+    if not config then
+        log.warn_fmt("AbilityManager:CreateAbility(): Invalid AbilityKey = [%s]", InAbilityKey)
+        return nil
+    end
+    local abilityClass = self:_LoadAbilityClass(config.AbilityTemplate)
+    local ability = abilityClass:New(self, config)
+    return ability
+end
+
+---@public
+---@param InAbilityClassName string
+---@return AbilityClass
+function AbilityManager:_LoadAbilityClass(InAbilityClassName)
+    if str_util.is_empty(InAbilityClassName) then 
+        return AbilityClass
+    else
+        local pathHeader = "Module/Ability/Ability/"
+        local abilityClass = require(pathHeader..InAbilityClassName) ---@type AbilityClass
+        return abilityClass
+    end
+end
+
+---@public
 ---@param InSkillKey string
 ---@param InAbility AbilityClass
 ---@return SkillClass
@@ -74,6 +102,19 @@ end
 ---@param InSkillClass SkillClass
 function AbilityManager:ReleaseSkill(InSkillClass)
     table_util.remove(self._SkillList, InSkillClass)
+end
+
+---@public
+---@param InSkillClassName string
+---@return SkillClass
+function AbilityManager:_LoadSkillClass(InSkillClassName) -- const
+    if str_util.is_empty(InSkillClassName) then 
+        return SkillClass
+    else
+        local pathHeader = "Module/Ability/Skill/"
+        local skillClass = require(pathHeader..InSkillClassName) ---@type SkillClass
+        return skillClass
+    end
 end
 
 ---@public
@@ -99,19 +140,6 @@ end
 ---@return SkillConfig
 function AbilityManager:LookupSkillConfig(InSkillKey) -- const
     return self._SkillConfigData[InSkillKey]
-end
-
----@public
----@param InSkillClassName string
----@return SkillClass
-function AbilityManager:_LoadSkillClass(InSkillClassName) -- const
-    if str_util.is_empty(InSkillClassName) then 
-        return SkillClass
-    else
-        local pathHeader = "Module/Ability/Skill/"
-        local class = require(pathHeader..InSkillClassName) ---@type SkillClass
-        return class
-    end
 end
 
 return AbilityManager
