@@ -52,6 +52,18 @@ debug_util.IsChrDebug = function(Chr)
     return false
 end
 
+debug_util.skill = function()
+    local role = RoleMgr:FindRoleByName("鸽鸽")
+    if role then
+        local part = role.AbilityPart
+        local abilities = part:GetSlotAbility(TagUtil.RequestTag('Ability.Slot.Melee'))
+        local aa = abilities[1] ---@type AbilityClass
+        if aa:CanUse(_) then
+            aa:UseSkill(_)
+        end
+    end
+end
+
 local function parse_args(cmd_str)
     local args = {}
     for arg in cmd_str:gmatch("%S+") do

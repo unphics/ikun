@@ -15,6 +15,8 @@
 require("System/Role/RoleBase")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
+local table_util = require("Core/Util/table_util")
+local TagUtil = require("System/Ability/Tag/TagUtil")
 local log = require("Core/Log/log")
 
 ---@class RoleMgrClass
@@ -105,8 +107,20 @@ end
 ---@public [Pure] 根据实例Id查找角色
 ---@param Id integer RoleInstId
 ---@return RoleBaseClass
-function RoleMgrClass:FindRole(Id)
+function RoleMgrClass:FindRole(Id) -- const
     return self._AllRoles[Id]
+end
+
+---@public
+---@param InRoleName string
+---@return RoleBaseClass?
+function RoleMgrClass:FindRoleByName(InRoleName)
+    ---@param role RoleBaseClass
+    for id, role in pairs(self._AllRoles) do
+        if role:RoleName() == InRoleName then
+            return role
+        end
+    end
 end
 
 ---@public [Config] 根据配置Id获取配置表
