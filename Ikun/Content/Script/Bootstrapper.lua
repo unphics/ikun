@@ -17,6 +17,7 @@
 local ffi = require ("ffi") ---@type ffilib
 local log = require('Core/Log/log') ---@type log
 local ffistate = require("Core/FFI/ffistate")
+local Time = require('Core/Time')
 
 _G.log = require('Core/Log/log') ---@type log
 
@@ -25,5 +26,5 @@ require('SharedPCH')
 require('System/Ability/Test')
 local AbilitySystem = require('System/Ability/AbilitySystem')
 function ENetTick(dt, world)
-    AbilitySystem.Get():TickAbilitySystem(dt)
+    AbilitySystem.Get():TickAbilitySystem(0.033)
 end

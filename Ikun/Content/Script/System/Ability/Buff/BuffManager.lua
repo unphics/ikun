@@ -20,6 +20,7 @@ local BuffContainer = require("System/Ability/Buff/BuffContainer")
 local str_util = require("Core/Util/str_util")
 local log = require("Core/Log/log")
 local BuffBaseClass = require("System/Ability/Buff/BuffBase")
+local Time = require('Core/Time')
 
 ---@class BuffManager
 ---@field protected _System AbilitySystem
@@ -67,7 +68,7 @@ end
 ---@public [Tick]
 ---@param InDeltaTime number
 function BuffManager:TickBuffManager(InDeltaTime)
-    local now = self:GetNowMs()
+    local now = self:GetTimestampSec()
     self:_TickBuffManager(InDeltaTime, now)
 end
 
@@ -94,11 +95,11 @@ end
 
 ---@public [BuffContainer]
 ---@param InDeltaTime number
----@param InNowMs number
-function BuffManager:_TickBuffManager(InDeltaTime, InNowMs)
+---@param InTimestampSec number
+function BuffManager:_TickBuffManager(InDeltaTime, InTimestampSec)
     for i = 1, #self._BuffContainers do
         local container = self._BuffContainers[i]
-        container:TickBuffContainer(InDeltaTime, InNowMs)
+        container:TickBuffContainer(InDeltaTime, InTimestampSec)
     end
 end
 
@@ -130,8 +131,8 @@ end
 
 ---@public [Pure]
 ---@return number
-function BuffManager:GetNowMs()
-    return self._System:GetNowMs()
+function BuffManager:GetTimestampSec()
+    return self._System:GetTimestampSec()
 end
 
 return BuffManager

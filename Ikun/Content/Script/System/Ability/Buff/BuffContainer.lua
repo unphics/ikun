@@ -13,6 +13,7 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
+local Time = require('Core/Time')
 
 ---@class BuffContainerClass
 ---@field protected _OwnerPart AbilityPartClass
@@ -30,11 +31,11 @@ end
 
 ---@public [Tick]
 ---@param InDeltaTime number
----@param InNowMs number
-function BuffContainerClass:TickBuffContainer(InDeltaTime, InNowMs)
+---@param InTimestampSec number
+function BuffContainerClass:TickBuffContainer(InDeltaTime, InTimestampSec)
     for i = 1, #self._Buffs do
         local buff = self._Buffs[i]
-        if buff:IsBuffExpired(InNowMs) then
+        if buff:IsBuffExpired(InTimestampSec) then
             self:RemoveBuff(buff)
         else
             buff:TickBuff(InDeltaTime)
@@ -45,6 +46,7 @@ end
 ---@public
 ---@param InBuffInst BuffBaseClass
 function BuffContainerClass:AddBuff(InBuffInst)
+    InBuffInst:ApplyBuff(Time.GetTimestampSec())
     table.insert(self._Buffs, InBuffInst)
 end
 

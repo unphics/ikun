@@ -76,8 +76,8 @@ end
 
 ---@public
 ---@return number
-function AbilitySystem:GetNowMs()
-    return Time.GetTimestampMS()
+function AbilitySystem:GetTimestampSec()
+    return Time.GetTimestampSec()
 end
 
 return AbilitySystem

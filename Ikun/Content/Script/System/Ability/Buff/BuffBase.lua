@@ -16,6 +16,7 @@
 local Class3 = require('Core/Class/Class3')
 local TagUtil = require('System/Ability/Tag/TagUtil')
 local BuffPolicyDef = require('System/Ability/Buff/BuffPolicyDef')
+local Time = require('Core/Time')
 
 ---@class BuffConfig
 ---@field public BuffKey string
@@ -60,13 +61,9 @@ function BuffBaseClass:CanApplyBuff()
 end
 
 ---@public
----@param InTarget AbilityPartClass
----@param InSource AbilityPartClass
----@param InNowMS number
-function BuffBaseClass:ApplyBuff(InTarget, InSource, InNowMS)
-    self.BuffTarget = InTarget
-    self.BuffSource = InSource
-    self._StartTime = InNowMS
+---@param InTimestampSec number
+function BuffBaseClass:ApplyBuff(InTimestampSec)
+    self._StartTime = InTimestampSec
     if self:GetBuffConfig().BuffPolicy == BuffPolicyDef.HasDuration then
         self._EndTime = self._StartTime + self:GetBuffConfig().BuffDuration
     else
@@ -94,14 +91,14 @@ function BuffBaseClass:DeactivateBuff()
 end
 
 ---@public
-function BuffBaseClass:ReapplyBuff(InNowMS)
+function BuffBaseClass:ReapplyBuff(InTimestampSec)
 end
 
 ---@public 判断是否过期
----@param InNowMS number
+---@param InTimestampSec number
 ---@return boolean
-function BuffBaseClass:IsBuffExpired(InNowMS)
-    return (self:GetBuffConfig() ~= BuffPolicyDef.Infinite) and (InNowMS >= self._EndTime)
+function BuffBaseClass:IsBuffExpired(InTimestampSec)
+    return (self:GetBuffConfig().BuffPolicy ~= BuffPolicyDef.Infinite) and (InTimestampSec >= self._EndTime)
 end
 
 ---@public
