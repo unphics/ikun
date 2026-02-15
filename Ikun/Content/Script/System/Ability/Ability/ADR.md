@@ -18,4 +18,14 @@
 - Ability:
     - 作用: 处理广义上技能的冷却/消耗/伤害评估等与过程无关内容
     - 字段:
-        
+        _AbilityConfigData: 能力的配置表数据
+        _AbilitySkills: 活动技能实例
+        _UseSkillTimeStamp: 上次该能力激活时间
+    - 方法:
+        CanUse: 可以使用技能
+        UseSkill: 使用技能
+        FollowSkill: 跟随使用技能, 技能实例中调用, 实现链式调用或一对多调用等
+        StartCooldown: 开始冷却
+        GetCooldown: 获取冷却时间
+        GetTargetsInRange: 评估范围内的目标
+        GetAbilityConfig: 获取配置数据

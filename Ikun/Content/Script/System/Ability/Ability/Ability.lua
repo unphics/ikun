@@ -26,9 +26,9 @@ local Time = require('Core/Time')
 
 ---@class AbilityClass
 ---@field protected _Manager AbilityManager
+---@field protected _AbilityConfigData AbilityConfig
 ---@field protected _AbilitySkills table<string, SkillClass>
 ---@field protected _UseSkillTimeStamp number
----@field protected _AbilityConfigData AbilityConfig
 local AbilityClass = Class3.Class('AbilityClass')
 
 ---@public
@@ -43,7 +43,7 @@ end
 ---@public
 ---@param InParams table
 ---@return boolean
-function AbilityClass:CanUse(InParams)
+function AbilityClass:CanUse(InParams) -- const
     if (Time.GetTimestampSec() - self._UseSkillTimeStamp) < self:GetAbilityConfig().AbilityCooldown then
         return false
     end
@@ -74,7 +74,7 @@ end
 
 ---@public
 ---@return number
-function AbilityClass:GetCooldown()
+function AbilityClass:GetCooldown() -- const
     if self:GetAbilityConfig().AbilityCooldown < 0.01 then
         return 0
     end
@@ -82,12 +82,12 @@ function AbilityClass:GetCooldown()
 end
 
 ---@public
-function AbilityClass:GetTargetsInRange()
+function AbilityClass:GetTargetsInRange() -- const
 end
 
 ---@public
 ---@return AbilityConfig
-function AbilityClass:GetAbilityConfig()
+function AbilityClass:GetAbilityConfig() -- const
     return self._AbilityConfigData
 end
 
