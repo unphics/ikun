@@ -108,7 +108,7 @@ function AbilityPartClass:RemoveAbilityByKey(InAbilityKey)
     
     for i = 1, #slots do
         local slotName = slots[i]
-        local slot = self._SlotInfos[slotName]
+        local slot = self._SlotInfos[slotName] ---@type table<number, string>
         ---@param InItem string
         table_util.remove_if(slot, function (InItem) return InItem == InAbilityKey end)
     end
