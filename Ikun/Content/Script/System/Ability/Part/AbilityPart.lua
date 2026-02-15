@@ -21,8 +21,8 @@ local BuffContainer = require("System/Ability/Buff/BuffContainer")
 local log = require("Core/Log/log")
 
 ---@class AbilityPartClass
----@field protected _AttrSet AttrSetClass
 ---@field protected _Owner RoleBaseClass
+---@field protected _AttrSet AttrSetClass
 ---@field protected _PartTagContainer TagContainer
 ---@field protected _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
 ---@field protected _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
@@ -77,7 +77,7 @@ function AbilityPartClass:AddAbilityToSlot(InSlotTag, InAbilityKey)
     end
     if not self._AbilityInfos[InAbilityKey] then
         local mgr = AbilitySystem.Get():GetAbilityManager()
-        local ability = mgr:CreateAbility(InAbilityKey)
+        local ability = mgr:CreateAbility(InAbilityKey, self)
         if ability then
             self._AbilityInfos[InAbilityKey] = ability
         end
