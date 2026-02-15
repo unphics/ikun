@@ -52,12 +52,18 @@ end
 
 ---@public
 ---@param InParams table
+---@return boolean
 function AbilityClass:UseSkill(InParams)
     self:StartCooldown()
     local key = self:GetAbilityConfig().AbilitySkills.EntrySkill
     local skill = self._Manager:AcquireSkill(key)
     self._AbilitySkills.EntrySkill = skill
-    skill:BeginSkill(self, key, InParams)
+    if skill:BeginSkill(self, key, InParams) then
+        self:StartCooldown()
+        return true
+    else
+        return false
+    end
 end
 
 ---@public 由入口技能激活其他技能

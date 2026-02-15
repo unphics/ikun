@@ -33,9 +33,11 @@ end
 ---@param InAbility AbilityClass
 ---@param InSkillKey string
 ---@param InParams table
+---@return boolean
 function SkillClass:BeginSkill(InAbility, InSkillKey, InParams)
     self._Ability = InAbility
     self._SkillKey = InSkillKey
+    return true
 end
 
 ---@public
