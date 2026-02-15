@@ -86,14 +86,14 @@ end
 ---@public [Config]
 ---@param InAbilityKey string
 ---@return AbilityConfig
-function AbilityManager:LookupAbilityConfig(InAbilityKey)
+function AbilityManager:LookupAbilityConfig(InAbilityKey) -- const
     return self._AbilityConfigData[InAbilityKey]
 end
 
 ---@public [Config]
 ---@param InSkillKey string
 ---@return SkillConfig
-function AbilityManager:LookupSkillConfig(InSkillKey)
+function AbilityManager:LookupSkillConfig(InSkillKey) -- const
     return self._SkillConfigData[InSkillKey]
 end
 
