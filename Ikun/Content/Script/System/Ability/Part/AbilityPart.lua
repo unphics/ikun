@@ -12,10 +12,10 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
-local AbilitySystem = require('System/Ability/AbilitySystem')
-local AbilityClass = require('System/Ability/Ability/Ability')
-local BuffBaseClass = require('System/Ability/Buff/BuffBase')
+local Class3 = require("Core/Class/Class3")
+local AbilitySystem = require("System/Ability/AbilitySystem")
+local AbilityClass = require("System/Ability/Ability/Ability")
+local BuffBaseClass = require("System/Ability/Buff/BuffBase")
 local TagUtil = require("System/Ability/Tag/TagUtil")
 local BuffContainer = require("System/Ability/Buff/BuffContainer")
 local log = require("Core/Log/log")
@@ -27,7 +27,7 @@ local log = require("Core/Log/log")
 ---@field protected _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
 ---@field protected _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
 ---@field protected _RefAbilityToSlots table<string, string[]> (AbilityKey:number[])
-local AbilityPartClass = Class3.Class('AbilityPartClass')
+local AbilityPartClass = Class3.Class("AbilityPartClass")
 
 ---@public
 function AbilityPartClass:Ctor(InOwner)
@@ -58,7 +58,7 @@ end
 ---@param InAbilitySlotInfo table<string, string>
 function AbilityPartClass:InitAbilitySlot(InAbilitySlotInfo)
     for tagName, abilityKey in pairs(InAbilitySlotInfo) do
-        local slot = TagUtil.RequestTag('Ability.Slot.'..tagName)
+        local slot = TagUtil.RequestTag("Ability.Slot."..tagName)
         if not slot then
             log.error_fmt("AbilityPartClass:InitAbilitySlot(): InValid tag, name = [%s]", string(tagName))
             goto continue

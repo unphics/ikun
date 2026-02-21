@@ -12,11 +12,11 @@
 -- -----------------------------------------------------------------------------
 --]]
 
----@class BuffPolicyDef
+---@enum BuffPolicyDef
 local BuffPolicyDef = {
-    Instant = 1,
-    HasDuration = 2,
-    Infinite = 3,
+    Instant = "Instant",
+    HasDuration = "HasDuration",
+    Infinite = "Infinite",
 }
 
 return BuffPolicyDef

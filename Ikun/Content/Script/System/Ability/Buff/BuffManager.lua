@@ -12,21 +12,21 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
-local TagUtil = require('System/Ability/Tag/TagUtil')
-local FileSystem = require('System/File/FileSystem')
-local ConfigSystem = require('System/Config/ConfigSystem')
+local Class3 = require("Core/Class/Class3")
+local TagUtil = require("System/Ability/Tag/TagUtil")
+local FileSystem = require("System/File/FileSystem")
+local ConfigSystem = require("System/Config/ConfigSystem")
 local BuffContainer = require("System/Ability/Buff/BuffContainer")
 local str_util = require("Core/Util/str_util")
 local log = require("Core/Log/log")
 local BuffBaseClass = require("System/Ability/Buff/BuffBase")
-local Time = require('Core/Time')
+local Time = require("Core/Time")
 
 ---@class BuffManager
 ---@field protected _System AbilitySystem
 ---@field protected _BuffConfigs table<string, BuffConfig> -- Key -> Config
 ---@field protected _BuffContainers BuffContainerClass[]
-local BuffManager = Class3.Class('BuffManager')
+local BuffManager = Class3.Class("BuffManager")
 
 ---@public
 ---@param InSystem AbilitySystem
@@ -51,14 +51,14 @@ end
 function BuffManager:_LoadBuffConfig()
     local file = FileSystem.Get():CreateConfigContext()
     if not file then
-        log.error('zys BuffManager:_LoadBuffConfig(): Failed to create FileContext!')
+        log.error("zys BuffManager:_LoadBuffConfig(): Failed to create FileContext!")
         return
     end
-    file:ChangeDirectory('Ability')
-    file:ChangeDirectory('Buff')
-    local buffParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile('Buff.csv'))
+    file:ChangeDirectory("Ability")
+    file:ChangeDirectory("Buff")
+    local buffParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Buff.csv"))
     if not buffParser then
-        log.error('zys BuffManager:_LoadBuffConfig(): Failed to create CSVParser!')
+        log.error("zys BuffManager:_LoadBuffConfig(): Failed to create CSVParser!")
         return
     end
     self._BuffConfigs = buffParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()

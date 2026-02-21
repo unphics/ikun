@@ -12,13 +12,13 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
-local Time = require('Core/Time')
+local Class3 = require("Core/Class/Class3")
+local Time = require("Core/Time")
 
 ---@class BuffContainerClass
 ---@field protected _OwnerPart AbilityPartClass
 ---@field protected _Buffs BuffBaseClass[]
-local BuffContainerClass = Class3.Class('BuffBaseClass')
+local BuffContainerClass = Class3.Class("BuffBaseClass")
 
 ---@public
 ---@param InBuffManager BuffManager

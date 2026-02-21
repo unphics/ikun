@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
----@class ModOpDef
+---@enum ModOpDef
 local ModOpDef = {
     Add = "Add",
     Multi = "Multi",
