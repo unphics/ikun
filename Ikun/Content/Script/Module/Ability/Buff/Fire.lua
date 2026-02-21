@@ -14,14 +14,15 @@
 
 local Class3 = require("Core/Class/class3")
 local BuffBaseClass = require("System/Ability/Buff/BuffBase")
-local Time = require('Core/Time')
+local Time = require("Core/Time")
 local log = require("Core/Log/log")
 
 ---@class FireClass: BuffBaseClass
-local FireClass = Class3.Class('FireClass', BuffBaseClass)
+local FireClass = Class3.Class("FireClass", BuffBaseClass)
 
 function FireClass:TickBuff(InDeltaTime)
     BuffBaseClass.TickBuff(self, InDeltaTime)
+    log.dev('qqq')
 end
 
 return FireClass

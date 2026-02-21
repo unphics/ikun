@@ -5,6 +5,9 @@
 ---@data    Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
 ---
 
+local TagUtil = require("System/Ability/Tag/TagUtil")
+local log = require("Core/Log/log")
+
 local GameWorld = nil
 local Unpack = table.unpack or _G.unpack
 log.info("debug_util Loaded")
@@ -74,22 +77,22 @@ local function parse_args(cmd_str)
 end
 
 UECmd = function(Cmd, InWorld)
-    Cmd = Cmd:match('lua (.+)')
+    Cmd = Cmd:match("lua (.+)")
     if Cmd then
         GameWorld = InWorld
         local args = parse_args(Cmd)
         local field_name = table.remove(args, 1)
         local field = debug_util[field_name]
-        if field and type(field) == 'function' then
+        if field and type(field) == "function" then
             xpcall(function()
                 field(Unpack(args))
             end, function(err)
-                log.error("LuaCmdError:", err, '\n', debug.traceback())
+                log.error("LuaCmdError:", err, "\n", debug.traceback())
             end)
-        elseif field and (type(field) == 'string' or type(field) == "number" or type(field) == "boolean") then
+        elseif field and (type(field) == "string" or type(field) == "number" or type(field) == "boolean") then
             local value = table.remove(args, 1)
             debug_util[field_name] = tonumber(value) or value
-            log.error('LuaCmd: Set debug field [' .. field_name .. '] : ' ..  value)
+            log.error("LuaCmd: Set debug field [" .. field_name .. ""] : " ..  value)
         else
             log.error("debug_util找不到这个函数:" .. Cmd)
         end

@@ -12,11 +12,11 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-
-local Class3 = require('Core/Class/Class3')
-local TagUtil = require('System/Ability/Tag/TagUtil')
-local BuffPolicyDef = require('System/Ability/Buff/BuffPolicyDef')
-local Time = require('Core/Time')
+local Class3 = require("Core/Class/Class3")
+local TagUtil = require("System/Ability/Tag/TagUtil")
+local BuffPolicyDef = require("System/Ability/Buff/BuffPolicyDef")
+local log = require("Core/Log/log")
+local Time = require("Core/Time")
 
 ---@class BuffConfig
 ---@field public BuffKey string
@@ -35,7 +35,7 @@ local Time = require('Core/Time')
 ---@field protected _BuffConfig BuffConfig
 ---@field protected _StartTime number
 ---@field protected _EndTime number
-local BuffBaseClass = Class3.Class('BuffBaseClass')
+local BuffBaseClass = Class3.Class("BuffBaseClass")
 
 ---@public
 function BuffBaseClass:Ctor(InConfig)
@@ -97,13 +97,13 @@ end
 ---@public 判断是否过期
 ---@param InTimestampSec number
 ---@return boolean
-function BuffBaseClass:IsBuffExpired(InTimestampSec)
+function BuffBaseClass:IsBuffExpired(InTimestampSec) -- const
     return (self:GetBuffConfig().BuffPolicy ~= BuffPolicyDef.Infinite) and (InTimestampSec >= self._EndTime)
 end
 
 ---@public
 ---@return BuffConfig
-function BuffBaseClass:GetBuffConfig()
+function BuffBaseClass:GetBuffConfig() -- const
     return self._BuffConfig
 end
 
