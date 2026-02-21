@@ -92,7 +92,7 @@ UECmd = function(Cmd, InWorld)
         elseif field and (type(field) == "string" or type(field) == "number" or type(field) == "boolean") then
             local value = table.remove(args, 1)
             debug_util[field_name] = tonumber(value) or value
-            log.error("LuaCmd: Set debug field [" .. field_name .. ""] : " ..  value)
+            log.error("LuaCmd: Set debug field [" .. field_name .. "] : " ..  value)
         else
             log.error("debug_util找不到这个函数:" .. Cmd)
         end

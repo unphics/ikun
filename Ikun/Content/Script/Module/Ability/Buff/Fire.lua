@@ -16,13 +16,29 @@ local Class3 = require("Core/Class/class3")
 local BuffBaseClass = require("System/Ability/Buff/BuffBase")
 local Time = require("Core/Time")
 local log = require("Core/Log/log")
+local AbilitySystem = require('System/Ability/AbilitySystem')
+local ModOpDef = require("System/Ability/Attr/ModOpDef")
+local AttrDef = require("System/Ability/Attr/AttrDef")
 
 ---@class FireClass: BuffBaseClass
 local FireClass = Class3.Class("FireClass", BuffBaseClass)
 
-function FireClass:TickBuff(InDeltaTime)
-    BuffBaseClass.TickBuff(self, InDeltaTime)
-    log.dev('qqq')
+function FireClass:ApplyBuff(InTimestampSec)
+    BuffBaseClass.ApplyBuff(self, InTimestampSec)
+    local modifier = AbilitySystem.Get():GetAttrManager():AcquireModifier('BaseHealth', ModOpDef.Add, 10)
+    self.fireModifier = modifier
+    self.BuffTarget:GetAttrSet():AddModifier(modifier)
+    -- self.BuffTarget:GetAttrSet():PrintModifiers()
+end
+
+function FireClass:TickBuff(InDeltaTime, InTimestampSec)
+    BuffBaseClass.TickBuff(self, InDeltaTime, InTimestampSec)
+end
+
+function FireClass:DeactivateBuff()
+    BuffBaseClass.DeactivateBuff(self)
+    self.BuffTarget:GetAttrSet():RemoveModifier(self.fireModifier)
+    -- self.BuffTarget:GetAttrSet():PrintModifiers()
 end
 
 return FireClass

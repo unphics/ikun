@@ -85,14 +85,14 @@ end
 ---@public
 ---@todo zys 补全逻辑
 ---@return AttrModifierClass
-function AttrManager:RentModifier(InAttrKey, InModOp, InModValue, InModSource)
+function AttrManager:AcquireModifier(InAttrKey, InModOp, InModValue, InModSource)
     return AttrModifierClass:New(InAttrKey, InModOp, InModValue, InModSource)
 end
 
 ---@public
 ---@todo zys 补全逻辑
 ---@param InModifier AttrModifierClass
-function AttrManager:ReturnModifier(InModifier)
+function AttrManager:ReleaseModifier(InModifier)
 end
 
 ---@public [Pure] [Formula]

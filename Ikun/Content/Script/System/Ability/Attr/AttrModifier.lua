@@ -27,6 +27,7 @@ local AttrModifierClass = Class3.Class('AttrModifierClass')
 ---@public
 function AttrModifierClass:Ctor(InAttrKey, InModOp, InModValue, InModSource)
     self.AttrKey = AttrDef.ToId(InAttrKey)
+    self.ModId = -1
     self.ModOp = InModOp
     self.ModValue = InModValue
     self.ModSource = InModSource

@@ -14,9 +14,9 @@
 
 ---@class ModOpDef
 local ModOpDef = {
-    Add = 1,
-    Multi = 2,
-    Override = 3,
+    Add = "Add",
+    Multi = "Multi",
+    Override = "Override",
 }
 
 return ModOpDef

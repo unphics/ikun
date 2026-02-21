@@ -12,16 +12,17 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
+local Class3 = require("Core/Class/Class3")
 local AttrDef = require("System/Ability/Attr/AttrDef")
 local ModOpDef = require("System/Ability/Attr/ModOpDef")
+local log = require("Core/Log/log")
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<number, number>
 ---@field protected _Dirty table<number, boolean> 后面用位运算
 ---@field protected _Modifiers AttrModifierClass[]
 ---@field protected _Manager AttrManager
-local AttrSetClass = Class3.Class('AttrSetClass')
+local AttrSetClass = Class3.Class("AttrSetClass")
 
 ---@public
 ---@param InManager AttrManager
@@ -144,6 +145,18 @@ function AttrSetClass:_GetFormulaProxy()
         })
     end
     return self._Proxy
+end
+
+---@public
+function AttrSetClass:PrintModifiers()
+    local str = string.format("\nBuffs:")
+    for id, modifiers in pairs(self._Modifiers) do
+        for i = 1, #modifiers do
+            local modi = modifiers[i] ---@type AttrModifierClass
+            str = string.format("%s\nId=%i, Attr=%s, Op=%s, Value=%i", str, modi.ModId, AttrDef.ToKey(modi.AttrKey), modi.ModOp, modi.ModValue)
+        end
+    end
+    log.dev(str)
 end
 
 return AttrSetClass

@@ -32,13 +32,13 @@ if true then
     local attrMgr = AbilitySystem.Get():GetAttrManager()
     local set = attrMgr:CreateAttrSet({"Health"}) ---@type AttrSetClass
 
-    local mod_baseHealth_add_10 = attrMgr:RentModifier('BaseHealth', ModOpDef.Add, 10)
+    local mod_baseHealth_add_10 = attrMgr:AcquireModifier('BaseHealth', ModOpDef.Add, 10)
     testlog('attr add modi (BaseHealth Add 10)')
     set:AddModifier(mod_baseHealth_add_10)
     testlog('attr', set:GetAttrValue('BaseHealth'))
     testlog('attr', set:GetAttrValue('MaxHealth'))
 
-    -- local mod_FlatHealth_add_10 = attrMgr:RentModifier('FlatHealth', ModOpDef.Add, 10)
+    -- local mod_FlatHealth_add_10 = attrMgr:AcquireModifier('FlatHealth', ModOpDef.Add, 10)
     -- print('attr add modi (FlatHealth Add 10)')
     -- set:AddModifier(mod_FlatHealth_add_10)
     -- print('attr', set:IsDirty('MaxHealth'))
@@ -50,7 +50,7 @@ if true then
     -- print('attr', set:GetAttrValue('BaseHealth'))
     -- print('attr', set:GetAttrValue('MaxHealth'))
 
-    local mod_perH_add_10 = attrMgr:RentModifier(AttrDef.Attr.PercentHealth, ModOpDef.Add, 0.1)
+    local mod_perH_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.PercentHealth, ModOpDef.Add, 0.1)
     set:AddModifier(mod_perH_add_10)
     testlog('attr', set:GetAttrValue(AttrDef.Attr.PercentHealth))
     testlog('attr', set:GetAttrValue('MaxHealth'))

@@ -38,7 +38,7 @@ function BuffContainerClass:TickBuffContainer(InDeltaTime, InTimestampSec)
         if buff:IsBuffExpired(InTimestampSec) then
             self:RemoveBuff(buff)
         else
-            buff:TickBuff(InDeltaTime)
+            buff:TickBuff(InDeltaTime, InTimestampSec)
         end
     end
 end
@@ -56,6 +56,7 @@ function BuffContainerClass:RemoveBuff(InBuffInst)
     for i = 1, #self._Buffs do
         local buff = self._Buffs[i]
         if buff == InBuffInst then
+            InBuffInst:DeactivateBuff()
             table.remove(self._Buffs, i)
             break
         end

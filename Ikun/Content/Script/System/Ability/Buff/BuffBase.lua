@@ -77,7 +77,8 @@ end
 
 ---@public
 ---@param InDeltaTime number
-function BuffBaseClass:TickBuff(InDeltaTime)
+---@param InTimestampSec number
+function BuffBaseClass:TickBuff(InDeltaTime, InTimestampSec)
 end
 
 ---@public
