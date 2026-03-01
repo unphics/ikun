@@ -6,6 +6,7 @@
 --  Author      : zhengyanshuai
 --  Date        : Sat Jan 03 2026 16:06:37 GMT+0800 (中国标准时间)
 --  Description : 能力系统-技能部件
+--  Todo        : 把Slot相关的挪到AP的derive中, 留一个业务无关的AP
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
 --  Copyright (c) 2026 zhengyanshuai
