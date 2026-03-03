@@ -148,3 +148,9 @@ Script/
 ---
 ## 命名
 给一个类命名取决于他的生命周期以及他在架构中扮演的角色还有使用时的语感
+## VsCode插件
+- EmmyLua: Lua调试, Lua开发智能提示
+- Reload: 重启VsCode
+- SynthWave'84: 常用主题
+- EditCSV: 好用的csv查看与编辑插件
+- MarkdownPreview: 支持md的侧边预览等
