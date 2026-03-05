@@ -12,6 +12,8 @@
 -- -----------------------------------------------------------------------------
 --]]
 
+local table_util = require("Core/Util/table_util")
+
 ---@class AttrDef
 ---@field protected RefIdToKey table<number, string>
 ---@field public Attr table<string, number>
@@ -43,7 +45,8 @@ end
 
 ---@public [Init]
 AttrDef.BuildIdToKey = function()
-    AttrDef.RefIdToKey = {}
+    local len = table_util.map_len(AttrDef.Attr)
+    AttrDef.RefIdToKey = table_util.make_arr(len, "Undefined")
     for k, v in pairs(AttrDef.Attr) do
         if type(k) == "string" and type(v) == "number" then
             AttrDef.RefIdToKey[v] = k

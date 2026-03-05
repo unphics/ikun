@@ -39,12 +39,57 @@ table_util.deep_copy = function(Table)
     return tb
 end
 
+---@public 判断表是数组
+---@param InTable table
+---@return boolean
+table_util.is_arr = function(InTable)
+    if not InTable and type(InTable) ~= "table" then
+        return false
+    end
+    for _, _ in ipairs(InTable) do
+        return true
+    end
+    return false
+end
+
+---@public 判断表是字典
+---@param InTable table
+---@return boolean
+table_util.is_map = function(InTable)
+    if not InTable and type(InTable) ~= "table" then
+        return false
+    end
+    for _,_ in ipairs(InTable) do
+        return false
+    end
+    return (next(InTable) ~= nil) and true or false
+end
+
+---@public 构造一个数组
+---@param InLength integer
+---@param InDefaultValue any @[opt]
+---@return table
+table_util.make_arr = function(InLength, InDefaultValue)
+    if not InLength or type(InLength) ~= "number" or InLength < 1 then
+        return {}
+    end
+    InDefaultValue = InDefaultValue or false
+    local tb = {}
+    for i = 1, InLength do
+        table.insert(tb, InDefaultValue)
+    end
+    return tb
+end
+
 ---@public 获取字典的长度
----@param Table table
----@return number
-table_util.map_len = function(Table)
+---@param InTable table
+---@return integer
+table_util.map_len = function(InTable)
+    if not InTable or type(InTable) ~= "table" then
+        return 0
+    end
     local len = 0
-    for _ in pairs(Table) do
+    for _ in pairs(InTable) do
         len = len + 1
     end
     return len
