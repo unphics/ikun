@@ -15,19 +15,25 @@
     复杂的叠加规则: 毒可以叠5层, 每层独立计时; 点燃再次施加时刷新时间不增加层数; 怒气叠满10层自动变成'狂暴'状态
     标签互动与状态互斥: 开了无敌就不能中流血; 使用了净化药水, 移除所有毒类型的Buff; 处于眩晕技能无法使用位移技能
     属性依赖与快照: 造成施法者攻击力50%的伤害; 根据目标当前已损失生命值造成额外伤害; 施法瞬间攻击力是多少, 后续流血就按多少算(快照)
+多来源毒层重入:
+    一个周期效果器打底, 然后第一层正常应用, 第二层在Reapply中打包Source信息压入层级队列, 每帧全部刷时间, 时间结束从队列头弹出, 具体效果自己处理(如: for队列每层获取Source信息,处理后走伤害计算流程)
 属性集:
     字段: Attrs, Modifiers, DirtyMask
-    属性的配置: Formula, bInstantModify, bInstantPostChanged
+    配置: Formula, bInstantModify, bInstantPostChanged
 属性修改器:
     字段: ModId, AttrKey, ModOp, ModValue, EffectId
 效果器:
-    字段: EffectId, Modifiers, BelongBuff, bPeroid, PeroidTime, Source, Target
+    字段: EffectId, Modifiers, BelongBuff, PeroidTime, Source, Target
 增益:
     字段: Effects
+    配置: MainEffect
 伤害:
     配在效果器中, 应用时执行计算, 结束后丢出数据包Handle, 以修改器的形式作用在IncomingDamage上, 在OnPostChanged中处理伤害应用并且发消息把数据包丢出去并且清Handle数据
     这样的话就需要一个DamageManager, 还能做集中数据分析
-50个属性就是50个i32, 就是200B, 加上一个i64的mask就是208B, 100个人就是20KB
+内存:
+    50个属性就是50个i32, 就是200B, 加上一个i64的mask就是208B
+    Modifier(ModId-u32,AttrKey-u8,ModOp-u8,ModValue-i32,ModSource-u32,sum-14B对齐到16B), 预留50个就是800B
+    1000个人就是1MB
 ```
 # 战斗系统
 - 战斗系统包含的模块: Attr, Skill, Damage, Buff, Effect, Event, Targeting, Tag
