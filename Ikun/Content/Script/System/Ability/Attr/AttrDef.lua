@@ -23,7 +23,7 @@ AttrDef.Attr = {}
 AttrDef.RefIdToKey = {}
 
 ---@public
----@param InKey string
+---@param InKey number|string
 ---@return number
 AttrDef.ToId = function(InKey)
     local id = tonumber(InKey)
@@ -34,7 +34,7 @@ AttrDef.ToId = function(InKey)
 end
 
 ---@public
----@param InId number
+---@param InId number|string
 ---@return string
 AttrDef.ToKey = function(InId)
     if type(InId) == 'string' then

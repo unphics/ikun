@@ -37,7 +37,7 @@ function AttrSetClass:Ctor(InManager, InAttributes)
     end
 end
 
----@public [Get] [Attribute]
+---@public
 ---@param InAttrKey number|string
 function AttrSetClass:GetAttrValue(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
@@ -47,7 +47,7 @@ function AttrSetClass:GetAttrValue(InAttrKey)
     return self._Attributes[id]
 end
 
----@public [Add] [Modifier]
+---@public
 ---@param InModifier AttrModifierClass
 function AttrSetClass:AddModifier(InModifier)
     local id = AttrDef.ToId(InModifier.AttrKey)
@@ -58,7 +58,7 @@ function AttrSetClass:AddModifier(InModifier)
     table.insert(self._Modifiers[id], InModifier)
 end
 
----@public [Remove] [Modifier]
+---@public
 ---@param InModifier AttrModifierClass
 function AttrSetClass:RemoveModifier(InModifier)
     local id = AttrDef.ToId(InModifier.AttrKey)
@@ -74,7 +74,7 @@ function AttrSetClass:RemoveModifier(InModifier)
     self:AddDirty(id)
 end
 
----@public [Dirty]
+---@public
 ---@param InAttrKey number
 function AttrSetClass:AddDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
@@ -87,14 +87,14 @@ function AttrSetClass:AddDirty(InAttrKey)
     end
 end
 
----@public [Dirty]
+---@public
 ---@param InAttrKey number
 function AttrSetClass:RemoveDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
     self._Dirty[id] = false
 end
 
----@public [Dirty]
+---@public
 ---@param InAttrKey number
 function AttrSetClass:IsDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
