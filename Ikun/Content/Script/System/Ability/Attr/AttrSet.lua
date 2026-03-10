@@ -49,7 +49,7 @@ end
 ---@public
 ---@param InModifier AttrModifierClass
 function AttrSetClass:AddModifier(InModifier)
-    local id = AttrDef.ToId(InModifier.AttrKey)
+    local id = AttrDef.ToId(InModifier.ModAttrKey)
     self:AddDirty(id)
     if not self._Modifiers[id] then
         self._Modifiers[id] = {}
@@ -60,7 +60,7 @@ end
 ---@public
 ---@param InModifier AttrModifierClass
 function AttrSetClass:RemoveModifier(InModifier)
-    local id = AttrDef.ToId(InModifier.AttrKey)
+    local id = AttrDef.ToId(InModifier.ModAttrKey)
     local mods = self._Modifiers[id]
     if mods then
         for i = 1, #mods do
@@ -103,13 +103,7 @@ end
 ---@protected
 ---@param InAttrId number
 function AttrSetClass:_UpdateAttribute(InAttrId)
-    local formula = self._Manager:GetAttrFormula(InAttrId)
     local baseValue = 0
-    if formula then
-        baseValue = formula(self:_GetFormulaProxy())
-    else
-        baseValue = 0
-    end
 
     local totalAdd = 0
     local mods = self._Modifiers[InAttrId]
@@ -119,7 +113,10 @@ function AttrSetClass:_UpdateAttribute(InAttrId)
             totalAdd = totalAdd + mod.ModValue
         end
     end
-    
+
+    local formula = self._Manager:GetAttrFormula(InAttrId)
+    baseValue = formula and formula(self:_GetFormulaProxy()) or 0
+
     self._Attributes[InAttrId] = baseValue + totalAdd
     self._Dirty[InAttrId] = false
 end
@@ -143,7 +140,7 @@ function AttrSetClass:PrintModifiers()
     for id, modifiers in pairs(self._Modifiers) do
         for i = 1, #modifiers do
             local modi = modifiers[i] ---@type AttrModifierClass
-            str = string.format("%s\nId=%i, Attr=%s, Op=%s, Value=%i", str, modi.ModId, AttrDef.ToKey(modi.AttrKey), modi.ModOp, modi.ModValue)
+            str = string.format("%s\nId=%i, Attr=%s, Op=%s, Value=%i", str, modi.ModId, AttrDef.ToKey(modi.ModAttrKey), modi.ModOp, modi.ModValue)
         end
     end
     log.dev(str)
