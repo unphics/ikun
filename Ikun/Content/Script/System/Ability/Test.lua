@@ -29,15 +29,15 @@ AbilitySystem.Get():InitAbilitySystem()
 if true then
     local tag = TagUtil.RequestTag('skill.type.active')
     local container = TagUtil.MakeContainer()
-    assert(container:HasTag(tag) == false, "Failed to init Tag")
+    assert(container:HasTag(tag) == false)
     container:AddTag(tag)
-    assert(container:HasTag(tag) == true, "Failed to AddTag")
+    assert(container:HasTag(tag) == true)
     container:AddTag(tag)
-    assert(container:HasTag(tag) == true, "Failed to AddTag")
+    assert(container:HasTag(tag) == true)
     container:RemoveTag(tag)
-    assert(container:HasTag(tag) == true, "Failed to RemoveTag")
+    assert(container:HasTag(tag) == true)
     container:RemoveTag(tag)
-    assert(container:HasTag(tag) == false, "Failed to RemoveTag")
+    assert(container:HasTag(tag) == false)
 end
 
 if true then
@@ -45,26 +45,26 @@ if true then
     local set = attrMgr:CreateAttrSet({"Health"}) ---@type AttrSetClass
 
     local mod_baseHealth_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.BaseHealth, 10)
-    assert(mod_baseHealth_add_10.ModValue == 10 and mod_baseHealth_add_10.ModAttrKey == AttrDef.Attr.BaseHealth, "Failed to new"..tostring(mod_baseHealth_add_10))
+    assert(mod_baseHealth_add_10.ModValue == 10 and mod_baseHealth_add_10.ModAttrKey == AttrDef.Attr.BaseHealth)
     set:AddModifier(mod_baseHealth_add_10)
-    assert(set:GetAttrValue(AttrDef.Attr.BaseHealth) == 10, "Failed to AddModifier or UpdateAttribute")
-    assert(set:GetAttrValue(AttrDef.Attr.MaxHealth) == 10, "UpdateAttribute失败")
+    assert(set:GetAttrValue(AttrDef.Attr.BaseHealth) == 10)
+    assert(set:GetAttrValue(AttrDef.Attr.MaxHealth) == 10)
 
     local mod_FlatHealth_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.FlatHealth, 10)
-    assert(mod_FlatHealth_add_10.ModValue == 10 and mod_FlatHealth_add_10.ModAttrKey == AttrDef.Attr.FlatHealth, "Faild to new "..tostring(mod_FlatHealth_add_10))
+    assert(mod_FlatHealth_add_10.ModValue == 10 and mod_FlatHealth_add_10.ModAttrKey == AttrDef.Attr.FlatHealth)
     set:AddModifier(mod_FlatHealth_add_10)
-    assert(set:IsDirty(AttrDef.Attr.MaxHealth) == true, "Failed to MarkDity or AddModifier")
-    assert(set:GetAttrValue(AttrDef.Attr.FlatHealth) == 10, "Failed to AddModifier")
-    assert(set:GetAttrValue(AttrDef.Attr.MaxHealth) == 110, "Failed to UpdateAttribute")
+    assert(set:IsDirty(AttrDef.Attr.MaxHealth) == true)
+    assert(set:GetAttrValue(AttrDef.Attr.FlatHealth) == 10)
+    assert(set:GetAttrValue(AttrDef.Attr.MaxHealth) == 110)
     
     set:RemoveModifier(mod_baseHealth_add_10)
-    assert(set:GetAttrValue(AttrDef.Attr.BaseHealth) == 0, "Failed to RemoveModifier")
-    assert(set:GetAttrValue(AttrDef.Attr.MaxHealth) == 100, "Failed to RemoveModifier")
+    assert(set:GetAttrValue(AttrDef.Attr.BaseHealth) == 0)
+    assert(set:GetAttrValue(AttrDef.Attr.MaxHealth) == 100)
 
     local mod_perH_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.PercentHealth, 10)
     set:AddModifier(mod_perH_add_10)
-    assert(set:GetAttrValue(AttrDef.Attr.PercentHealth) == 10, "Failed to AddModifier")
-    assert(math.floor(set:GetAttrValue(AttrDef.Attr.MaxHealth)) == 110, "Failed to AddModifier")
+    assert(set:GetAttrValue(AttrDef.Attr.PercentHealth) == 10)
+    assert(math.floor(set:GetAttrValue(AttrDef.Attr.MaxHealth)) == 110)
 end
 
 if false then
