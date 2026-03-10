@@ -14,7 +14,6 @@
 
 local Class3 = require("Core/Class/Class3")
 local AttrDef = require("System/Ability/Attr/AttrDef")
-local ModOpDef = require("System/Ability/Attr/ModOpDef")
 local log = require("Core/Log/log")
 
 ---@class AttrSetClass
@@ -113,24 +112,15 @@ function AttrSetClass:_UpdateAttribute(InAttrId)
     end
 
     local totalAdd = 0
-    local totalMulti = 1
-    local overrideVal = nil
     local mods = self._Modifiers[InAttrId]
     if mods then
         ---@param mod AttrModifierClass
         for _, mod in ipairs(mods) do
-            if mod.ModOp == ModOpDef.Add then
-                totalAdd = totalAdd + mod.ModValue
-            elseif mod.ModOp == ModOpDef.Multi then
-                totalMulti = totalMulti + mod.ModValue
-            elseif mod.ModOp == ModOpDef.Override then
-                overrideVal = mod.ModValue
-            end
+            totalAdd = totalAdd + mod.ModValue
         end
     end
-    local finalValue = overrideVal or (baseValue + totalAdd) * totalMulti
     
-    self._Attributes[InAttrId] = finalValue
+    self._Attributes[InAttrId] = baseValue + totalAdd
     self._Dirty[InAttrId] = false
 end
 

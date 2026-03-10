@@ -17,7 +17,6 @@ local BuffBaseClass = require("System/Ability/Buff/BuffBase")
 local Time = require("Core/Time")
 local log = require("Core/Log/log")
 local AbilitySystem = require('System/Ability/AbilitySystem')
-local ModOpDef = require("System/Ability/Attr/ModOpDef")
 local AttrDef = require("System/Ability/Attr/AttrDef")
 
 ---@class FireClass: BuffBaseClass

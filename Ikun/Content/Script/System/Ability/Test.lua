@@ -15,7 +15,6 @@
 local AbilitySystem = require('System/Ability/AbilitySystem')
 local TagUtil = require("System/Ability/Tag/TagUtil")
 local AbilityPart = require('System/Ability/Part/AbilityPart')
-local ModOpDef = require("System/Ability/Attr/ModOpDef")
 local AttrDef = require("System/Ability/Attr/AttrDef")
 local log = require('Core/Log/log') ---@as log
 local assert = _G.assert
