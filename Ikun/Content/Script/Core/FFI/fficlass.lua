@@ -1,9 +1,17 @@
 
----
----@brief   luaffi oop
----@author  zys
----@data    Sat Dec 06 2025 09:09:25 GMT+0800 (中国标准时间)
----
+
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : Core-FFI-Class
+--  File        : fficlass.lua
+--  Author      : zhengyanshuai
+--  Date        : Sat Dec 06 2025 09:09:25 GMT+0800 (中国标准时间)
+--  Description : LuaJitFFI的OOP实现
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local ffi = require('ffi')
 
@@ -34,8 +42,8 @@ function fficlass.define(c_type_name, c_def)
     local mt = {}
     mt.__index = mt
 
-    function mt:Register()
-        self.Register = nil
+    function mt:RegisterClass()
+        self.RegisterClass = nil
 
         local raw_ctor = ffi.metatype(c_type_name, self)
 

@@ -21,7 +21,7 @@ local AttrDef = require('System/Ability/Attr/AttrDef')
 local AttrModifierClass = require('System/Ability/Attr/AttrModifier')
 local log = require('Core/Log/log')
 
----@alias FormulaFunction fun(Attributes: table<number, number>):number
+---@alias FormulaFunction fun(Attributes: table<integer, number>):number
 
 ---@class SetConfig
 ---@field SetKey string
@@ -84,9 +84,12 @@ end
 
 ---@public
 ---@todo zys 补全逻辑
+---@param InAttrKey integer|string
+---@param InModValue number
+---@param InPriority integer@opt
 ---@return AttrModifierClass
-function AttrManager:AcquireModifier(InAttrKey, InModOp, InModValue, InModSource)
-    return AttrModifierClass:New(InAttrKey, InModOp, InModValue, InModSource)
+function AttrManager:AcquireModifier(InAttrKey, InModValue, InPriority)
+    return AttrModifierClass(-1, InModValue, AttrDef.ToId(InAttrKey), InPriority or 0)
 end
 
 ---@public

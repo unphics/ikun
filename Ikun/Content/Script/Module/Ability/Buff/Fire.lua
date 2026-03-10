@@ -25,7 +25,7 @@ local FireClass = Class3.Class("FireClass", BuffBaseClass)
 
 function FireClass:ApplyBuff(InTimestampSec)
     BuffBaseClass.ApplyBuff(self, InTimestampSec)
-    local modifier = AbilitySystem.Get():GetAttrManager():AcquireModifier('BaseHealth', ModOpDef.Add, 10)
+    local modifier = AbilitySystem.Get():GetAttrManager():AcquireModifier('BaseHealth', 10)
     self.fireModifier = modifier
     self.BuffTarget:GetAttrSet():AddModifier(modifier)
     -- self.BuffTarget:GetAttrSet():PrintModifiers()

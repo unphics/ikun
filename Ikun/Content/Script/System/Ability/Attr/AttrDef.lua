@@ -15,16 +15,16 @@
 local table_util = require("Core/Util/table_util")
 
 ---@class AttrDef
----@field protected RefIdToKey table<number, string>
----@field public Attr table<string, number>
+---@field protected RefIdToKey table<integer, string>
+---@field public Attr table<string, integer>
 local AttrDef = {}
 
 AttrDef.Attr = {}
 AttrDef.RefIdToKey = {}
 
 ---@public
----@param InKey number|string
----@return number
+---@param InKey integer|string
+---@return integer
 AttrDef.ToId = function(InKey)
     local id = tonumber(InKey)
     if not id then
@@ -34,7 +34,7 @@ AttrDef.ToId = function(InKey)
 end
 
 ---@public
----@param InId number|string
+---@param InId integer|string
 ---@return string
 AttrDef.ToKey = function(InId)
     if type(InId) == 'string' then

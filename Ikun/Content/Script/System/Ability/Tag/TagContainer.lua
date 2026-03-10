@@ -74,6 +74,6 @@ function TagContainer:HasAnyTags(InTags)
     return false
 end
 
-TagContainer = TagContainer:Register()
+TagContainer = TagContainer:RegisterClass()
 
 return TagContainer

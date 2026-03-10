@@ -14,6 +14,7 @@
 
 local log = require("Core/Log/log")
 local ffi = require("ffi") ---@type ffilib
+local jit = _G.jit
 
 local ffistate = {}
 
@@ -23,13 +24,13 @@ end
 
 function ffistate.PrintState()
     printf("[Check] Lua Version Check: _VERSION = %s", _VERSION)
-    if _G.jit then
+    if jit then
         printf("✅ JIT Enabled!")
-        printf("   - Version: %s", _G.jit.version)
-        printf("   - Arch:    %s", _G.jit.arch)
-        printf("   - OS:      %s", _G.jit.os)
+        printf("   - Version: %s", jit.version)
+        printf("   - Arch:    %s", jit.arch)
+        printf("   - OS:      %s", jit.os)
         -- 检查 JIT 编译器是否真的在工作
-        if _G.jit.status() then
+        if jit.status() then
             printf("   - Status:  Running (Optimizing code)")
         else
             printf("   - Status:  OFF (Interpreter mode)")

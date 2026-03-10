@@ -1,4 +1,17 @@
 
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : Core-FFI-Math-Vector3
+--  File        : vec3.lua
+--  Author      : zhengyanshuai
+--  Date        : Sat Dec 06 2025 09:09:25 GMT+0800 (中国标准时间)
+--  Description : cdata的vector3实现, 用于优化Lua侧的性能
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
+
 local fficlass = require("Core/FFI/fficlass")
 
 ---@class vec3
@@ -156,6 +169,18 @@ function vec3:fromUE(fvec)
     self.z = fvec.Z
 end
 
-vec3 = vec3:Register()
+vec3 = vec3:RegisterClass()
+
+local v1 = vec3(10, 0, 0)
+local v2 = vec3(0, 5, 5)
+local v3 = v1 + v2 -- vec3(10.000, 5.000, 5.000)
+
+assert(v3.x == 10 and v3.y == 5 and v3.z == 5, "加法测试失败")
+local v4 = v3 * 2 -- vec3(20.000, 10.000, 10.000)
+assert(v4.x == 20 and v4.y == 10 and v4.z == 10, "数乘测试失败")
+local dot = v1:dot(v2) -- 0
+assert(dot == 0, "点乘测试失败")
+local cross = v1:cross(v2) -- vec3(0.000, -50.000, 50.000)
+assert(cross.x == 0 and cross.y == -50 and cross.z == 50, "叉乘测试失败")
 
 return vec3
