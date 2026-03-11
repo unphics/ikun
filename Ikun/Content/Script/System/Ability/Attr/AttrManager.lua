@@ -31,7 +31,6 @@ local log = require('Core/Log/log')
 ---@class AttrConfig
 ---@field AttrKey string
 ---@field AttrName string
----@field IsFake boolean
 ---@field AttrFormula string
 
 ---@class AttrManager

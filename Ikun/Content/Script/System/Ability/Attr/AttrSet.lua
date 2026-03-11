@@ -103,21 +103,18 @@ end
 ---@protected
 ---@param InAttrId number
 function AttrSetClass:_UpdateAttribute(InAttrId)
-    local baseValue = 0
-
-    local totalAdd = 0
+    local modiValue = 0
     local mods = self._Modifiers[InAttrId]
     if mods then
-        ---@param mod AttrModifierClass
         for _, mod in ipairs(mods) do
-            totalAdd = totalAdd + mod.ModValue
+            modiValue = modiValue + mod.ModValue
         end
     end
 
     local formula = self._Manager:GetAttrFormula(InAttrId)
-    baseValue = formula and formula(self:_GetFormulaProxy()) or 0
+    local baseValue = formula and formula(self:_GetFormulaProxy()) or 0
 
-    self._Attributes[InAttrId] = baseValue + totalAdd
+    self._Attributes[InAttrId] = baseValue + modiValue
     self._Dirty[InAttrId] = false
 end
 
