@@ -32,6 +32,10 @@ local log = require('Core/Log/log')
 ---@field AttrKey string
 ---@field AttrName string
 ---@field AttrFormula string
+---@field IsChangeInstant boolean
+---@field IsModifierInfinite boolean
+---@field ModifierApplyStrategy string
+---@field ModifierAdditiveStrategy string
 
 ---@class AttrManager
 ---@field protected _System AbilitySystem
@@ -82,7 +86,6 @@ function AttrManager:CreateAttrSet(InSets)
 end
 
 ---@public
----@todo zys 补全逻辑
 ---@param InAttrKey integer|string
 ---@param InModValue number
 ---@param InPriority integer@opt
@@ -92,28 +95,34 @@ function AttrManager:AcquireModifier(InAttrKey, InModValue, InPriority)
 end
 
 ---@public
----@todo zys 补全逻辑
 ---@param InModifier AttrModifierClass
 function AttrManager:ReleaseModifier(InModifier)
 end
 
----@public [Pure] [Formula]
----@param InAttrKey number|string
+---@public
+---@param InAttrKey integer|string
 ---@return FormulaFunction
-function AttrManager:GetAttrFormula(InAttrKey)
+function AttrManager:GetAttrFormula(InAttrKey) -- const
     return self._AttrFormula[AttrDef.ToId(InAttrKey)]
 end
 
----@public [Pure] [Dependence]
----@param InAttrKey number|string
-function AttrManager:GetAttrDependencies(InAttrKey)
+---@public
+---@param InAttrKey integer|string
+function AttrManager:GetAttrDependencies(InAttrKey) -- const
     return self._AttrDependencies[AttrDef.ToId(InAttrKey)]
 end
 
----@public [Pure] [Dependence]
----@param InAttrKey number|string
-function AttrManager:GetAttrDependents(InAttrKey)
+---@public
+---@param InAttrKey integer|string
+function AttrManager:GetAttrDependents(InAttrKey) -- const
     return self._AttrDependents[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey integer|string
+---@return AttrConfig
+function AttrManager:GetAttrConfig(InAttrKey) -- const
+    return self._AttrConfig[AttrDef.ToKey(InAttrKey)]
 end
 
 ---@protected [Init]

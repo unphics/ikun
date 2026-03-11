@@ -15,11 +15,12 @@
 local Class3 = require("Core/Class/Class3")
 local AttrDef = require("System/Ability/Attr/AttrDef")
 local log = require("Core/Log/log")
+local table_util = require("Core/Util/table_util")
 
 ---@class AttrSetClass
----@field protected _Attributes table<number, number>
----@field protected _Dirty table<number, boolean> 后面用位运算
----@field protected _Modifiers AttrModifierClass[]
+---@field protected _Attributes table<integer, number>
+---@field protected _Dirty table<integer, boolean> 后面用位运算
+---@field protected _Modifiers table<integer, AttrModifierClass[]>
 ---@field protected _Manager AttrManager
 local AttrSetClass = Class3.Class("AttrSetClass")
 
@@ -28,16 +29,12 @@ local AttrSetClass = Class3.Class("AttrSetClass")
 function AttrSetClass:Ctor(InManager, InAttributes)
     self._Manager = InManager
     self._Attributes = InAttributes
-    self._Dirty = {}
+    self._Dirty = table_util.make_arr(AttrDef.AttrCount, false)
     self._Modifiers = {}
-
-    for id, _ in pairs(AttrDef.RefIdToKey) do
-        self._Dirty[id] = true
-    end
 end
 
 ---@public
----@param InAttrKey number|string
+---@param InAttrKey integer|string
 function AttrSetClass:GetAttrValue(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
     if self._Dirty[id] then
@@ -50,11 +47,16 @@ end
 ---@param InModifier AttrModifierClass
 function AttrSetClass:AddModifier(InModifier)
     local id = AttrDef.ToId(InModifier.ModAttrKey)
-    self:AddDirty(id)
-    if not self._Modifiers[id] then
-        self._Modifiers[id] = {}
+    self:AddDirty(id) ---@todo 思考这个怎么放
+    
+    if self._Manager:GetAttrConfig(id).IsModifierInfinite then
+        if not self._Modifiers[id] then
+            self._Modifiers[id] = {}
+        end
+        table.insert(self._Modifiers[id], InModifier)
+    else
+        self._Attributes[id] = self._Attributes[id] + InModifier.ModValue
     end
-    table.insert(self._Modifiers[id], InModifier)
 end
 
 ---@public
@@ -74,7 +76,7 @@ function AttrSetClass:RemoveModifier(InModifier)
 end
 
 ---@public
----@param InAttrKey number
+---@param InAttrKey integer
 function AttrSetClass:AddDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
     self._Dirty[id] = true
@@ -87,21 +89,21 @@ function AttrSetClass:AddDirty(InAttrKey)
 end
 
 ---@public
----@param InAttrKey number
+---@param InAttrKey integer
 function AttrSetClass:RemoveDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
     self._Dirty[id] = false
 end
 
 ---@public
----@param InAttrKey number
+---@param InAttrKey integer
 function AttrSetClass:IsDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
     return self._Dirty[id]
 end
 
 ---@protected
----@param InAttrId number
+---@param InAttrId integer
 function AttrSetClass:_UpdateAttribute(InAttrId)
     local modiValue = 0
     local mods = self._Modifiers[InAttrId]
