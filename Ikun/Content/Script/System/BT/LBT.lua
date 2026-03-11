@@ -7,6 +7,8 @@
 ---      使用参考UE行为树
 ---
 
+local log =  require("Core/Log/log")
+
 require('Ikun/Module/AI/BT/NodeCore')
 require('Ikun/Module/AI/BT/NodeDef')
 require('Ikun/Module/AI/BT/Blackboard')

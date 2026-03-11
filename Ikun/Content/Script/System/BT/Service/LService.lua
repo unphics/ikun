@@ -1,4 +1,6 @@
 
+
+local log =  require("Core/Log/log")
 local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
 
 ---@class LService: LDecorator

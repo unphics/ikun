@@ -4,6 +4,8 @@
 ---@data Sat Apr 19 2025 06:04:16 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class LTask_SwitchBT: LTask
 ---@field NewBTKey string
 local LTask_SwitchBT = class.class 'LTask_SwitchBT' : extends 'LTask' {

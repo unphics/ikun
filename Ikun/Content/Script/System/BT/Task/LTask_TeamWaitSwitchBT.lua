@@ -5,6 +5,7 @@
 ---@data Wed Apr 23 2025 20:18:13 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
 local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 

@@ -4,6 +4,8 @@
 ---@data Sun Mar 16 2025 23:04:24 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class LTask_MakeTeam: LTask
 ---@field ConstMakeTeamJudgeRange number
 local LTask_MakeTeam = class.class 'LTask_MakeTeam' : extends 'LTask' {

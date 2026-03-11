@@ -5,6 +5,7 @@
 ---@data Mon May 19 2025 23:26:06 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
 local NavMoveData = require('Ikun/Module/Nav/NavMoveData')

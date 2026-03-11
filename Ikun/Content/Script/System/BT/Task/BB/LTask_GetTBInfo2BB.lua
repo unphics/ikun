@@ -5,6 +5,8 @@
 ---@data Mon May 19 2025 14:53:14 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class LTask_GetTBInfo2BB: LTask
 ---@field ConstTableName string
 ---@field ConstBBKey BBKeyDef
