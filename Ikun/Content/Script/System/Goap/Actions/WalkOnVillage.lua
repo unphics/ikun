@@ -5,6 +5,8 @@
 ---@data    Fri Oct 03 2025 00:02:20 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class WalkOnVillage: GAction
 ---@field NavMoveBehav NavMoveBehav
 ---@field OwnerAgent GAgent

@@ -5,6 +5,8 @@
 ---@data    Sun Oct 12 2025 13:49:48 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class SaunterDayAction: GAction
 ---@field OwnerAgent GAction
 ---@field NavMoveBehav NavMoveBehav

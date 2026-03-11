@@ -5,6 +5,8 @@
 ---@data    Fri Oct 03 2025 13:25:07 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class GoHomeAction: GAction
 local GoHomeAction = class.class'GoHomeAction':extends'GAction'{}
 

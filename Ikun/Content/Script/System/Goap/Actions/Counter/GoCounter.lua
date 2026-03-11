@@ -5,6 +5,8 @@
 ---@data    Thu Oct 09 2025 23:36:07 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class GoCounterAction: GAction
 local GoCounterAction = class.class 'GoCounterAction' : extends 'GAction' {}
 

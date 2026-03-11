@@ -5,6 +5,8 @@
 ---@data    Sun Oct 26 2025 16:10:05 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class ReceptAction: GAction
 local ReceptAction = class.class'ReceptAction':extends'GAction' {}
 

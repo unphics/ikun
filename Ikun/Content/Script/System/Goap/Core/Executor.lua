@@ -5,6 +5,8 @@
 ---@data    Thu Oct 02 2025 21:10:28 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class GExecutor: AgentPartInterface
 ---@field _OwnerAgent RoleBaseClass
 ---@field CurPlan string[]

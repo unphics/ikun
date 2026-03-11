@@ -6,6 +6,8 @@
 ---@data    Sat Sep 27 2025 20:25:28 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 local initState = {
     IsSleeping = true,
     AtHome = true,

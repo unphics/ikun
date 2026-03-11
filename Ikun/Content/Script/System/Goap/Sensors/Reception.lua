@@ -5,6 +5,8 @@
 ---@data    Wed Oct 22 2025 09:47:14 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class ReceptionSensor: GSensor
 ---@field private _OwnerAgent GAgent
 local ReceptionSensor = class.class 'ReceptionSensor':extends'GSensor' {}
