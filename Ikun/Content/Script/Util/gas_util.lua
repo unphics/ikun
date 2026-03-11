@@ -5,6 +5,8 @@
 ---@data    Sun May 04 2025 14:20:00 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class TargetActorConfig
 ---@field TargetActorId number
 ---@field TargetActorDesc string

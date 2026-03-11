@@ -5,6 +5,8 @@
 ---@data    Sat Aug 30 2025 01:33:14 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class ChatCondConfig
 ---@field Id number
 ---@field Desc string

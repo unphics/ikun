@@ -13,6 +13,8 @@
 -- -----------------------------------------------------------------------------
 --]]
 
+local log =  require("Core/Log/log")
+
 ---@class RoleHoldLocationClass
 ---@field _OwnerRole RoleBaseClass
 ---@field _tbHoldLocation LocationClass[]

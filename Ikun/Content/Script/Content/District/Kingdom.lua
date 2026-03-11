@@ -13,6 +13,8 @@ require("Content/District/Settlements/SettlementBase")
 require("Content/District/Settlements/City")
 require("Content/District/Settlements/Village")
 
+local log =  require("Core/Log/log")
+
 ---@class Kingdom
 ---@field public KingdomName string
 ---@field public KingdomInstId integer

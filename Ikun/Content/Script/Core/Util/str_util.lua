@@ -5,6 +5,8 @@
 ---@data    Sat Oct 11 2025 17:50:27 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class str_util
 local str_util = {}
 

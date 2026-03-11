@@ -5,6 +5,9 @@
 ---@data    Fri Aug 29 2025 22:54:01 GMT+0800 (中国标准时间)
 ---
 
+
+local log =  require("Core/Log/log")
+
 ---@class ChatExecLib
 local ChatExecLib = {}
 

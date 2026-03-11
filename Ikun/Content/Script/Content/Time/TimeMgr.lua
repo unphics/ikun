@@ -5,6 +5,9 @@
 ---@data    Sun May 04 2025 13:53:30 GMT+0800 (中国标准时间)
 ---
 
+
+local log =  require("Core/Log/log")
+
 local function FmtTime(Number)
     return Number < 10 and ('0' .. tostring(Number)) or tostring(Number)
 end

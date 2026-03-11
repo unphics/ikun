@@ -4,6 +4,8 @@
 ---@data    Wed Aug 27 2025 10:50:42 GMT+0800 (中国标准时间)
 ---
 
+
+local log =  require("Core/Log/log")
 local QuestStateType = require('Content/Quest/QuestStateType')
 
 ---@class QuestConfig

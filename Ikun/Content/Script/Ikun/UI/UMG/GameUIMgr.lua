@@ -5,6 +5,8 @@
 ---@data    Sat Apr 05 2025 14:39:37 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class GameUIMgr: GameUIMgr_C
 ---@field GameWorld UWorld
 ---@field tbUIWidget table<string, UUserWidget>

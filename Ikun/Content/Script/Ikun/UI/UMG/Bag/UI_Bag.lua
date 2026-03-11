@@ -5,6 +5,8 @@
 ---@data    Mon Oct 13 2025 21:43:09 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 local EnhInput = require("Ikun/Module/Input/EnhInput")
 

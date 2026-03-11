@@ -5,15 +5,16 @@
 ---@data    Sun May 04 2025 14:17:18 GMT+0800 (中国标准时间)
 ---
 
+---@class obj_util
+local obj_util = {}
+
 ---@return table
 local make_weak = function(table)
     return setmetatable(table, {__mode = "v"})
 end
 
+obj_util.make_weak = make_weak
 _G.make_weak = make_weak
-
----@class obj_util
-local obj_util = {}
 
 ---@public 创建一个有Lua对象的UObject
 ---@return UObject

@@ -5,6 +5,7 @@
 ---@data    Sat Jan 03 2026 00:20:02 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
 local Class3 = require('Core/Class/Class3')
 local IConfigParser = require('System/Config/Interface').IConfigParser
 
@@ -117,8 +118,8 @@ function ConfigParserClass:CastArrCol(InHeaders)
                 local arr = str_util.split_simple(gridStr, ',')
                 local gridData = {}
                 for _, item in ipairs(arr) do
-                    item = str_util.trim(item)
-                    table.insert(gridData, tonumber(item) or item)
+                    local ele = str_util.trim(item)
+                    table.insert(gridData, tonumber(ele) or ele)
                 end
                 row[name] = gridData
             end

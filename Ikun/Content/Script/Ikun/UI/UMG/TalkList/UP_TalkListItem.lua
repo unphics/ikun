@@ -4,6 +4,8 @@
 ---@data Sun Apr 06 2025 10:35:40 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class UP_TalkListItem: UP_TalkListItem_C
 ---@field ItemData TalkListItem
 local M = UnLua.Class()

@@ -12,8 +12,6 @@ local log = require("Core/Log/log")
 local Protocols = require('System/Net/Protocols')
 
 ---@class NetSystem
----@param Host table
----@param Peer table
 ---@field IsServer boolean
 ---@field Handlers table
 local NetSystem = {

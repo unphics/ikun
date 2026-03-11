@@ -5,6 +5,7 @@
 ---@data    Fri Jan 02 2026 22:35:46 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
 local Class3 = require('Core/Class/Class3')
 local IFileContext = require('System/File/Interface').IFileContext
 

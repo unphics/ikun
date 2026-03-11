@@ -5,6 +5,8 @@
 ---@data    Sat Oct 18 2025 21:29:17 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class UP_InteractItem: UP_InteractItem_C
 local UP_InteractItem = UnLua.Class()
 

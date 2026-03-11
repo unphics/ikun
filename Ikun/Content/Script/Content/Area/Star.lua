@@ -5,6 +5,8 @@
 ---@data    Tue Sep 23 2025 00:44:02 GMT+0800 (中国标准时间)
 ---
 
+
+local log =  require("Core/Log/log")
 require("Content.District.DistrictMgr")
 
 ---@class StarClass

@@ -5,6 +5,8 @@
 ---@data    Sat Apr 05 2025 15:27:02 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class UI_MainHud: UI_MainHud_C
 local UI_MainHud = UnLua.Class()
 

@@ -5,6 +5,8 @@
 ---@data    Sat Aug 30 2025 12:37:03 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class UI_QuestMsg: UI_QuestMsg_C
 local M = UnLua.Class()
 
