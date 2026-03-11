@@ -102,21 +102,36 @@ function AttrSetClass:IsDirty(InAttrKey)
     return self._Dirty[id]
 end
 
+local ModifierApplyStrategy = {
+    Additive = function(InBaseValue, InModValue)
+        return InBaseValue + InModValue
+    end
+}
+
+local ModifierAdditiveStrategy = {
+    Additive = function(InMods)
+        local modValue = 0
+        if InMods then
+            for _, mod in ipairs(InMods) do
+                modValue = modValue + mod.ModValue
+            end
+        end
+        return modValue
+    end
+}
+
 ---@protected
 ---@param InAttrId integer
 function AttrSetClass:_UpdateAttribute(InAttrId)
-    local modiValue = 0
+    local config = self._Manager:GetAttrConfig(InAttrId)
+
     local mods = self._Modifiers[InAttrId]
-    if mods then
-        for _, mod in ipairs(mods) do
-            modiValue = modiValue + mod.ModValue
-        end
-    end
+    local modValue = ModifierAdditiveStrategy[config.ModifierAdditiveStrategy](mods)
 
     local formula = self._Manager:GetAttrFormula(InAttrId)
     local baseValue = formula and formula(self:_GetFormulaProxy()) or 0
 
-    self._Attributes[InAttrId] = baseValue + modiValue
+    self._Attributes[InAttrId] = ModifierApplyStrategy[config.ModifierApplyStrategy](baseValue, modValue)
     self._Dirty[InAttrId] = false
 end
 

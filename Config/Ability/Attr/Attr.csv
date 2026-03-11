@@ -1,13 +1,15 @@
 AttrKey|AttrName|AttrFormula|IsChangeInstant|IsModifierInfinite|ModifierApplyStrategy|ModifierAdditiveStrategy
 ||直接读属性or检查Dirty执行表达式|每次修改瞬间直接结算(否则每帧结算)|修改器持久保存(可撤)|修改器应用策略|修改器叠加策略
-IncomingDamage|伤害||true|false||
+IncomingDamage|伤害||true|false|Additive|Additive
 ||||||
-MaxHealth|最大生命值|(#BaseHealth + #FlatHealth * 10) * (1 + (#PercentHealth / 100)) + #ExtraHealth|true|true||
-BaseHealth|基础生命值||true|true||
-FlatHealth|附加生命值||true|true||
-PercentHealth|生命值百分比||true|true||
-ExtraHealth|额外生命值||true|true||
-CurHealth|当前生命值||true|false||
+MaxHealth|最大生命值|(#BaseHealth + #FlatHealth * 10) * (1 + (#PercentHealth / 100)) + #ExtraHealth|true|true|Additive|Additive
+BaseHealth|基础生命值||true|true|Additive|Additive
+FlatHealth|附加生命值||true|true|Additive|Additive
+PercentHealth|生命值百分比||true|true|Additive|Additive
+ExtraHealth|额外生命值||true|true|Additive|Additive
+CurHealth|当前生命值||true|false|Additive|Additive
 ||||||
-CurAttack|当前攻击力|#BaseAttack|true|true||
-BaseAttack|基础攻击力||true|true||
+CurAttack|当前攻击力|#BaseAttack|true|true|Additive|Additive
+BaseAttack|基础攻击力||true|true|Additive|Additive
+||||||
+||||||
