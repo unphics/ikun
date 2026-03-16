@@ -28,7 +28,7 @@ end
 
 ---@public
 ---@param InTagName string
----@return number
+---@return integer
 TagUtil.RequestTag = function(InTagName)
     local tag = TagDefine[InTagName]
     if not tag then

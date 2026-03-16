@@ -39,7 +39,7 @@ function AbilityManager:InitAbilityManager()
     self:_LoadConfig()
 end
 
----@protected [Config]
+---@private
 function AbilityManager:_LoadConfig()
     local file = FileSystem.Get():CreateConfigContext()
     if not file then

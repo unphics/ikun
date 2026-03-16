@@ -23,11 +23,11 @@ ffi.cdef [[
 ]]
 
 ---@class TagContainer
----@field counts number[]
+---@field counts integer[]
 local TagContainer = fficlass.define('TagContainer')
 
 ---@public
----@param InTagId number
+---@param InTagId integer
 function TagContainer:AddTag(InTagId)
     -- 增加自己计数
     self.counts[InTagId] = self.counts[InTagId] + 1
@@ -41,7 +41,7 @@ function TagContainer:AddTag(InTagId)
 end
 
 ---@public
----@param InTagId number
+---@param InTagId integer
 function TagContainer:RemoveTag(InTagId)
     if self.counts[InTagId] > 0 then
         self.counts[InTagId] = self.counts[InTagId] - 1
@@ -55,14 +55,14 @@ function TagContainer:RemoveTag(InTagId)
 end
 
 ---@public
----@param InTagId number
+---@param InTagId integer
 ---@return boolean
 function TagContainer:HasTag(InTagId)
     return self.counts[InTagId] > 0
 end
 
 ---@public
----@param InTags number[]
+---@param InTags integer[]
 ---@return boolean
 function TagContainer:HasAnyTags(InTags)
     for i = 1, #InTags do
