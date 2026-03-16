@@ -59,7 +59,7 @@ static constexpr luaL_Reg UnLua_ExFunctions[] = {
 	{nullptr, nullptr}
 };
 
-void OnLuaStateCreated(lua_State* L) {
+static void OnLuaStateCreated(lua_State* L) {
 	if (L) {
 		lua_getglobal(L, LUA_GNAME);
 		if (lua_istable(L, -1)) {

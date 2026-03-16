@@ -11,7 +11,7 @@ extern "C" {
 }
 
 
-void OnLuaStateCreated(lua_State* L) {
+static void OnLuaStateCreated(lua_State* L) {
 	RegisterCustomLuaModule(L, "enet", luaopen_enet);
 }
 
