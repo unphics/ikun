@@ -15,17 +15,18 @@
 
 local Class3 = require("Core/Class/Class3")
 
----@class EffectorContainer
+---@class EffectorContainerClass
 ---@field _EffectManager EffectManager
 ---@field _OwnerPart AbilityPartClass
-local EffectorContainer = Class3.Class("EffectorContainer")
+---@field _Effectors EffectorBaseClass
+local EffectorContainerClass = Class3.Class("EffectorContainerClass")
 
 ---@public
-function EffectorContainer:ctor(InEffectManager, InPart)
+function EffectorContainerClass:ctor(InEffectManager, InPart)
     self._EffectManager = InEffectManager
     self._OwnerPart = InPart
 end
 
 
 
-return EffectorContainer
+return EffectorContainerClass

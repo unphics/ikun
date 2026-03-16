@@ -2,7 +2,7 @@
 --[[
 -- -----------------------------------------------------------------------------
 --  Brief       : 能力系统-效果-效果器
---  File        : EffectorBase.lua
+--  File        : EffectorBaseClass.lua
 --  Author      : zhengyanshuai
 --  Date        : Mon Mar 16 2026 16:31:18 GMT+0800 (中国标准时间)
 --  Description : 效果器
@@ -26,30 +26,30 @@ local Class3 = require('Core/Class/Class3')
 ---@field BlockByTags string[]
 ---@field CancelToTags string[]
 
----@class EffectorBase
+---@class EffectorBaseClass
 ---@field protected _Manager EffectManager
 ---@field protected _EffectConfig EffectConfig
-local EffectorBase = Class3.Class('EffectorBase')
+local EffectorBaseClass = Class3.Class('EffectorBaseClass')
 
 ---@public
-function EffectorBase:Ctor(InManager, InConfig)
+function EffectorBaseClass:Ctor(InManager, InConfig)
     self._Manager = InManager
     self._EffectConfig = InConfig
 end
 
-function EffectorBase:InitEffector()
+function EffectorBaseClass:InitEffector()
 end
 
-function EffectorBase:ActiveEffector()
+function EffectorBaseClass:ActiveEffector()
 end
 
-function EffectorBase:DeactiveEffector()
+function EffectorBaseClass:DeactiveEffector()
 end
 
-function EffectorBase:ApplyEffector()
+function EffectorBaseClass:ApplyEffector()
 end
 
-function EffectorBase:ReapplyEffector()
+function EffectorBaseClass:ReapplyEffector()
 end
 
-return EffectorBase
+return EffectorBaseClass
