@@ -56,15 +56,26 @@ debug_util.IsChrDebug = function(Chr)
 end
 
 debug_util.skill = function()
-    local role = RoleMgr:FindRoleByName("鸽鸽")
+    log.warn("debug_util.skill begin")
+    local name = "鸽鸽"
+    local role = RoleMgr:FindRoleByName(name)
+    
     if role then
         local part = role.AbilityPart
-        local abilities = part:GetSlotAbility(TagUtil.RequestTag('Ability.Slot.Melee'))
+        local tagName = 'Ability.Slot.Melee'
+        local abilities = part:GetSlotAbility(TagUtil.RequestTag(tagName))
         local aa = abilities[1] ---@type AbilityClass
+        
         if aa:CanUse(_) then
             aa:UseSkill(_)
+        else
+            log.error_fmt("释放技能失败[%s]", tagName)
         end
+    else
+        log.error_fmt("没找到[%s]", name)
     end
+    
+    log.warn("debug_util.skill end")
 end
 
 local function parse_args(cmd_str)

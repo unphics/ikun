@@ -13,16 +13,18 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
-local AbilityManager = require('System/Ability/Ability/AbilityManager')
-local AttrManager = require('System/Ability/Attr/AttrManager')
-local BuffManager = require('System/Ability/Buff/BuffManager')
+local AbilityManager = require("System/Ability/Ability/AbilityManager")
+local AttrManager = require("System/Ability/Attr/AttrManager")
+local BuffManager = require("System/Ability/Buff/BuffManager")
+local EffectManager = require("System/Ability/Effect/EffectManager")
 local Time = require("Core/Time")
 
 ---@class AbilitySystem
 ---@field AbilityManager AbilityManager
 ---@field AttrManager AttrManager
 ---@field BuffManager BuffManager
-local AbilitySystem = Class3.Class('AbilitySystem')
+---@field EffectManager EffectManager
+local AbilitySystem = Class3.Class("AbilitySystem")
 
 local system = nil ---@type AbilitySystem
 
@@ -31,6 +33,7 @@ function AbilitySystem:Ctor()
     self.AttrManager = AttrManager:New(self)
     self.BuffManager = BuffManager:New(self)
     self.AbilityManager = AbilityManager:New(self)
+    self.EffectManager = EffectManager:New(self)
 end
 
 ---@public
@@ -47,13 +50,15 @@ function AbilitySystem:InitAbilitySystem()
     self.AttrManager:InitAttrManager()
     self.BuffManager:InitBuffManager()
     self.AbilityManager:InitAbilityManager()
+    self.EffectManager:InitEffectManager()
 end
 
 ---@public
 ---@param InDeltaTime number
 function AbilitySystem:TickAbilitySystem(InDeltaTime)
-    self.BuffManager:TickBuffManager(InDeltaTime)
     self.AbilityManager:TickAbilityManager(InDeltaTime)
+    self.BuffManager:TickBuffManager(InDeltaTime)
+    self.EffectManager:TickEffectManager(InDeltaTime)
 end
 
 ---@public

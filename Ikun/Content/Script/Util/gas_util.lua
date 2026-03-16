@@ -27,20 +27,6 @@ local log =  require("Core/Log/log")
 ---@field OwnerAbility BP_AbilityBase
 ---@field AbilityEffectInfos AbilityEffectInfo[]
 
----@class EffectContext
----@field SkillConfig SkillConfig
----@field EffectId number
----@field EffectConfig EffectConfig
-
----@class EffectConfig
----@field EffectId number
----@field EffectName string
----@field EffectDesc string
----@field EffectTemplate string
----@field EffectValue number
----@field EffectCorr number
----@field Params table
-
 ---@class gas_util
 local gas_util = {}
 
