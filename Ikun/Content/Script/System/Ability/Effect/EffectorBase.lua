@@ -40,6 +40,9 @@ end
 function EffectorBaseClass:InitEffector()
 end
 
+function EffectorBaseClass:CanActiveEffector()
+end
+
 function EffectorBaseClass:ActiveEffector()
 end
 

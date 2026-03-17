@@ -56,4 +56,10 @@ function EffectManager:_LoadConfig()
     effectorParser:ReleaseParser()
 end
 
+---@public
+---@return number
+function EffectManager:GetTimestampSec() -- const
+    return self._System:GetTimestampSec()
+end
+
 return EffectManager
