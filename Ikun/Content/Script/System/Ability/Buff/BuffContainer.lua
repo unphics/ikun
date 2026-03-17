@@ -16,6 +16,7 @@ local Class3 = require("Core/Class/Class3")
 local Time = require("Core/Time")
 
 ---@class BuffContainerClass
+---@deprecated
 ---@field protected _OwnerPart AbilityPartClass
 ---@field protected _Buffs BuffBaseClass[]
 local BuffContainerClass = Class3.Class("BuffBaseClass")

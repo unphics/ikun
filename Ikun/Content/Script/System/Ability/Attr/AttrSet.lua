@@ -150,7 +150,7 @@ end
 
 ---@public
 function AttrSetClass:PrintModifiers()
-    local str = string.format("\nBuffs:")
+    local str = string.format("\nModifiers:")
     for id, modifiers in pairs(self._Modifiers) do
         for i = 1, #modifiers do
             local modi = modifiers[i] ---@type AttrModifierClass

@@ -15,6 +15,7 @@
 local ffi = require('ffi')
 local fficlass = require('Core/FFI/fficlass')
 local TagManager = require('System/Ability/Tag/TagManager')
+local log = require("Core/Log/log")
 
 ffi.cdef [[
     typedef struct {
@@ -29,6 +30,11 @@ local TagContainer = fficlass.define('TagContainer')
 ---@public
 ---@param InTagId integer
 function TagContainer:AddTag(InTagId)
+    if not type(InTagId) == "number" then
+        log.error_fmt("TagContainer:AddTag(): Invalid Tag = [%s]", tostring(InTagId))
+        return
+    end
+    
     -- 增加自己计数
     self.counts[InTagId] = self.counts[InTagId] + 1
 

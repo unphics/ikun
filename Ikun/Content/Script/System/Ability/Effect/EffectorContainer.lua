@@ -18,15 +18,47 @@ local Class3 = require("Core/Class/Class3")
 ---@class EffectorContainerClass
 ---@field _EffectManager EffectManager
 ---@field _OwnerPart AbilityPartClass
----@field _Effectors EffectorBaseClass
+---@field _Effectors EffectorBaseClass[]
 local EffectorContainerClass = Class3.Class("EffectorContainerClass")
 
 ---@public
 function EffectorContainerClass:ctor(InEffectManager, InPart)
     self._EffectManager = InEffectManager
     self._OwnerPart = InPart
+
+    self._Effectors = {}
 end
 
+---@public
+function EffectorContainerClass:TickEffectorContainer(InDeltaTime, InTimestampSec)
+    for i = 1, #self._Effectors do    
+        local effector = self._Effectors[i]
+        if effector:IsEffectorExpried(InTimestampSec) then
+            effector:DeactiveEffector()
+            self:RemoveEffector(effector)
+        else
+            effector:TickEffector(InDeltaTime, InTimestampSec)
+        end
+    end
+end
 
+---@public
+---@param InEffector EffectorBaseClass
+function EffectorContainerClass:AddEffector(InEffector)
+    InEffector:ActiveEffector(self._EffectManager:GetTimestampSec())
+    table.insert(self._Effectors, InEffector)
+end
+
+---@public
+---@param InEffector EffectorBaseClass
+function EffectorContainerClass:RemoveEffector(InEffector)
+    for i = 1, #self._Effectors do
+        local effector = self._Effectors[i]
+        if effector == InEffector then
+            table.remove(self._Effectors, i)
+            break
+        end
+    end
+end
 
 return EffectorContainerClass

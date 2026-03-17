@@ -13,6 +13,7 @@
 --]]
 
 ---@enum BuffPolicyDef
+---@deprecated
 local BuffPolicyDef = {
     Instant = "Instant",
     HasDuration = "HasDuration",

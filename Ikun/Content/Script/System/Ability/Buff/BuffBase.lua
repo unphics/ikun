@@ -30,6 +30,7 @@ local Time = require("Core/Time")
 ---@field public CancelTags number[]         -- TagId[]
 
 ---@class BuffBaseClass
+---@deprecated
 ---@field public BuffSource AbilityPartClass
 ---@field public BuffTarget AbilityPartClass
 ---@field protected _BuffConfig BuffConfig
@@ -54,7 +55,7 @@ function BuffBaseClass:CanApplyBuff()
         local target = buffTarget ---@type AbilityPartClass
         if target and target:HasAnyTags(self:GetBuffConfig().BlockTags) then
             return false
-        end
+        end 
     end
     -- Cancel 由 BuffManager 统一处理（互斥组/CancelTags）
     return true

@@ -74,9 +74,16 @@ function AbilitySystem:GetAttrManager()
 end
 
 ---@public
+---@deprecated
 ---@return BuffManager
 function AbilitySystem:GetBuffManager()
     return self.BuffManager
+end
+
+---@public
+---@return EffectManager
+function AbilitySystem:GetEffectManager()
+    return self.EffectManager
 end
 
 ---@public

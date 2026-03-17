@@ -16,9 +16,8 @@
 local Class3 = require("Core/Class/Class3")
 local AbilitySystem = require("System/Ability/AbilitySystem")
 local AbilityClass = require("System/Ability/Ability/Ability")
-local BuffBaseClass = require("System/Ability/Buff/BuffBase")
 local TagUtil = require("System/Ability/Tag/TagUtil")
-local BuffContainer = require("System/Ability/Buff/BuffContainer")
+local EffectorContainerClass = require("System/Ability/Effect/EffectorContainer")
 local log = require("Core/Log/log")
 
 ---@class AbilityPartClass
@@ -28,13 +27,14 @@ local log = require("Core/Log/log")
 ---@field protected _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
 ---@field protected _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
 ---@field protected _RefAbilityToSlots table<string, string[]> (AbilityKey:number[])
+---@field protected _EffectorContainer EffectorContainerClass
 local AbilityPartClass = Class3.Class("AbilityPartClass")
 
 ---@public
 function AbilityPartClass:Ctor(InOwner)
     self._Owner = InOwner
     self._PartTagContainer = TagUtil.MakeContainer()
-    self._BuffContainer = AbilitySystem.Get():GetBuffManager():AcquireBuffContainer()
+    self._EffectorContainer = EffectorContainerClass:New(AbilitySystem.Get():GetEffectManager(), self)
 
     self._SlotInfos = {}
     self._AbilityInfos = {}
@@ -194,27 +194,27 @@ function AbilityPartClass:HasAnyTags(InTags)
     return self._PartTagContainer:HasAnyTags(InTags)
 end
 
----@public
----@param InBuffKey string
----@return BuffBaseClass?
-function AbilityPartClass:MakeBuff(InBuffKey)
-    local mgr = AbilitySystem.Get():GetBuffManager()
-    local buff = mgr:CreateBuff(InBuffKey)
-    if buff then
-        buff.BuffSource = self
-    end
-    return buff
-end
-
----@public [Buff]
----@param InBuffInst BuffBaseClass
-function AbilityPartClass:ApplyBuffToSelf(InBuffInst)
-    InBuffInst.BuffTarget = self
-    local ok = InBuffInst:CanApplyBuff()
-    if not ok then
+---@public [Effect]
+---@return EffectorBaseClass?
+function AbilityPartClass:MakeEffector(InEffectorKey)
+    local effector = AbilitySystem.Get():GetEffectManager():CreateEffector(InEffectorKey)
+    if not effector then
         return
     end
-    self._BuffContainer:AddBuff(InBuffInst)
+
+    effector.EffectorSource = self
+    effector:InitEffector()
+    return effector
+end
+
+---@public [Effect]
+---@param InEffectorInst EffectorBaseClass
+function AbilityPartClass:TryApplyEffectorToSelf(InEffectorInst)
+    InEffectorInst.EffectorTarget = self
+    if not InEffectorInst:CanActiveEffector() then
+        return
+    end
+    self._EffectorContainer:AddEffector(InEffectorInst)
 end
 
 return AbilityPartClass

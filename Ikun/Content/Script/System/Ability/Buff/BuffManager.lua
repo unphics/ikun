@@ -23,6 +23,7 @@ local BuffBaseClass = require("System/Ability/Buff/BuffBase")
 local Time = require("Core/Time")
 
 ---@class BuffManager
+---@deprecated
 ---@field protected _System AbilitySystem
 ---@field protected _BuffConfigs table<string, BuffConfig> -- Key -> Config
 ---@field protected _BuffContainers BuffContainerClass[]

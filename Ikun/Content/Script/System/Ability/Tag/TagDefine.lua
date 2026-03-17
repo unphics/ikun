@@ -16,7 +16,7 @@ local TagManager = require('System/Ability/Tag/TagManager').Get()
 
 local Tags = {
     "skill.type.active",
-    "Ability.Slot.Melee"
+    "Ability.Slot.Melee",
 }
 
 local TagDefine = {}
