@@ -2,4 +2,4 @@ EffectorKey|EffectorName|EffectTemplate|EffectPeroid|EffectDuration|EffectPriori
 |||优先级|持续时间|周期|表达式|||
 |||||||||
 Effect1||EffectBase|1||||||
-Burn|烧伤|Burn|1||||||
+Burn|烧伤|Burn|1||||Effector.State.Burn||

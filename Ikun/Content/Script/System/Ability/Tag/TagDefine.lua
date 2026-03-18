@@ -12,17 +12,27 @@
 -- -----------------------------------------------------------------------------
 --]]
 
+local table_util = require("Core/Util/table_util")
 local TagManager = require('System/Ability/Tag/TagManager').Get()
 
 local Tags = {
     "skill.type.active",
     "Ability.Slot.Melee",
+    "Effector.State.Burn"
 }
 
+---@class TagDefine
+---@field tbNameToTag table<string, integer>
+---@field tbTagToName table<integer, string>
 local TagDefine = {}
 
+TagDefine.tbNameToTag = {}
+TagDefine.tbTagToName = table_util.make_arr(table_util.map_len(Tags), -1)
+
 for _, tag in ipairs(Tags) do
-    TagDefine[tag] = TagManager:Register(tag)
+    local int = TagManager:Register(tag)
+    TagDefine.tbNameToTag[tag] = int
+    TagDefine.tbTagToName[int] = tag
 end
 
 return TagDefine

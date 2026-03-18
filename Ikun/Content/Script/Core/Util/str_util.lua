@@ -99,10 +99,7 @@ end
 ---@public
 ---@return boolean
 str_util.is_empty = function(InStr)
-    if not InStr then
-        return true
-    end
-    if InStr == '' or InStr == ' ' then
+    if not InStr or InStr == '' or InStr == ' ' then
         return true
     end
     return false

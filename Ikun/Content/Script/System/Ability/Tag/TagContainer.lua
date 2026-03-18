@@ -30,7 +30,7 @@ local TagContainer = fficlass.define('TagContainer')
 ---@public
 ---@param InTagId integer
 function TagContainer:AddTag(InTagId)
-    if not type(InTagId) == "number" then
+    if type(InTagId) ~= "number" then
         log.error_fmt("TagContainer:AddTag(): Invalid Tag = [%s]", tostring(InTagId))
         return
     end

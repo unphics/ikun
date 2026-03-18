@@ -17,11 +17,12 @@ local ConfigSystem = require("System/Config/ConfigSystem")
 local log = require('Core/Log/log')
 local str_util = require("Core/Util/str_util")
 local EffectorBaseClass = require("System/Ability/Effect/EffectorBase")
+local TagUtil = require("System/Ability/Tag/TagUtil")
 local Class3 = require('Core/Class/Class3')
 
 ---@class EffectManager
 ---@field protected _System AbilitySystem
----@field protected _EffectorConfigData EffectConfig
+---@field protected _EffectorConfigData EffectorConfig
 ---@field protected _EffectorContainers EffectorContainerClass[]
 local EffectManager = Class3.Class('EffectManager')
 
@@ -46,7 +47,7 @@ function EffectManager:TickEffectManager(InDeltaTime)
 end
 
 ---@public
----@return EffectConfig?
+---@return EffectorConfig?
 function EffectManager:LookupEffectorConfig(InEffectorKey) -- const
     return self._EffectorConfigData[InEffectorKey]
 end
@@ -122,8 +123,33 @@ function EffectManager:_LoadConfig()
         return
     end
 
-    self._EffectorConfigData = effectorParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastMapCol({"AbilitySkills"}):GetResult()
+    self._EffectorConfigData = effectorParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastMapCol({"AbilitySkills"}):CastArrCol({"GrantedTags", "BlockByTags", "CancelToTags"}):GetResult()
     effectorParser:ReleaseParser()
+
+    ---@param config EffectorConfig
+    for k, config in pairs(self._EffectorConfigData) do
+        if config.BlockByTags then
+            local tbTags = config.BlockByTags
+            config.BlockByTags = {}
+            for _, tag in ipairs(tbTags) do
+                table.insert(config.BlockByTags, TagUtil.RequestTag(tag))
+            end
+        end
+        if config.CancelToTags then
+            local tbTags = config.CancelToTags
+            config.CancelToTags = {}
+            for _, tag in ipairs(tbTags) do
+                table.insert(config.CancelToTags, TagUtil.RequestTag(tag))
+            end
+        end
+        if config.GrantedTags then
+            local tbTags = config.GrantedTags
+            config.GrantedTags = {}
+            for _, tag in ipairs(tbTags) do
+                table.insert(config.GrantedTags, TagUtil.RequestTag(tag))
+            end
+        end
+    end
 end
 
 return EffectManager

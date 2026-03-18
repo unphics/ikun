@@ -14,20 +14,20 @@
 
 local Class3 = require('Core/Class/Class3')
 
----@class EffectConfig
+---@class EffectorConfig
 ---@field EffectKey string
 ---@field EffectTemplate string 模板
 ---@field EffectPeroid integer 优先级
 ---@field EffectDuration number 持续时间
 ---@field EffectPriority number 周期
 ---@field AttrModFml string
----@field GrantedTags string[]
----@field BlockByTags string[]
----@field CancelToTags string[]
+---@field GrantedTags integer[]
+---@field BlockByTags integer[]
+---@field CancelToTags integer[]
 
 ---@class EffectorBaseClass
 ---@field protected _Manager EffectManager
----@field protected _EffectConfig EffectConfig
+---@field protected _EffectConfig EffectorConfig
 ---@field protected _StartTime number
 ---@field protected _EndTime number
 ---@field protected _Duration number
@@ -44,8 +44,8 @@ end
 
 ---@public
 function EffectorBaseClass:InitEffector()
-    self._Duration = self:GetEffectorConfig().EffectDuration
-    self._Interval = self:GetEffectorConfig().EffectPeroid
+    self._Duration = self:GetEffectorConfig().EffectDuration or -1
+    self._Interval = self:GetEffectorConfig().EffectPeroid or -1
 end
 
 ---@public
@@ -78,10 +78,10 @@ end
 
 ---@public
 function EffectorBaseClass:DeactiveEffector()
-    local blockByRags = self:GetEffectorConfig().BlockByTags
+    local grantedTags = self:GetEffectorConfig().GrantedTags
     if self.EffectorTarget then
-        for i = 1, #blockByRags do
-            self.EffectorTarget:RemoveTag(blockByRags[i])
+        for i = 1, #grantedTags do
+            self.EffectorTarget:RemoveTag(grantedTags[i])
         end
     end
 end
@@ -105,7 +105,7 @@ function EffectorBaseClass:IsEffectorExpried(InTimestampSec) -- const
 end
 
 ---@public
----@return EffectConfig
+---@return EffectorConfig
 function EffectorBaseClass:GetEffectorConfig()
     return self._EffectConfig
 end

@@ -59,7 +59,9 @@ function ConfigParserClass:ToMap(InPrimaryCol)
         if not str_util.is_empty(cells[InPrimaryCol]) then
             local rowMap = {}
             for j, key in ipairs(self._Header) do
-                rowMap[key] = tonumber(cells[j]) or cells[j] ---@warn 此处默认做tonumber处理
+                if not str_util.is_empty(cells[j]) then
+                    rowMap[key] = tonumber(cells[j]) or cells[j] ---@warn 此处默认做tonumber处理
+                end
             end
             local mainKey = cells[InPrimaryCol]
             resultMap[mainKey] = tonumber(rowMap) or rowMap ---@warn 此处默认做tonumber处理
@@ -96,9 +98,11 @@ function ConfigParserClass:CastMapCol(InHeaders)
                 local gridData = {}
                 for _, pair in ipairs(arr) do
                     local key, value = pair:match("^([^=]+)=([^=]+)$")
-                    key = str_util.trim(key)
-                    value = str_util.trim(value)
-                    gridData[key] = tonumber(value) or value
+                    if not str_util.is_empty(value) then
+                        key = str_util.trim(key)
+                        value = str_util.trim(value)
+                        gridData[key] = tonumber(value) or value
+                    end
                 end
                 row[name] = gridData
             end

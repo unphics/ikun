@@ -27,14 +27,19 @@ TagUtil.MakeContainer = function()
 end
 
 ---@public
----@param InTagName string
 ---@return integer
 TagUtil.RequestTag = function(InTagName)
-    local tag = TagDefine[InTagName]
+    local tag = TagDefine.tbNameToTag[InTagName]
     if not tag then
         log.error_fmt("TagUtil.RequestTag(): Invalid TagName = [%s]", tostring(InTagName))
     end
     return tag
+end
+
+---@public
+---@return string?
+TagUtil.LookupTagName = function(InTag)
+    return TagDefine.tbTagToName[InTag]
 end
 
 return TagUtil

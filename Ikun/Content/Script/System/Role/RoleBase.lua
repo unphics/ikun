@@ -93,10 +93,10 @@ function RoleBaseClass:InitComplexPart()
         self.Agent = agent
     end
 
-    if #config.RoleAttrSet > 0 then
+    if config.RoleAttrSet and #config.RoleAttrSet > 0 then
         self.AbilityPart:InitAttrSet(config.RoleAttrSet)
     end
-    if next(config.RoleAbility) then
+    if config.RoleAbility and next(config.RoleAbility) then
         self.AbilityPart:InitAbilitySlot(config.RoleAbility)
     end
 end
