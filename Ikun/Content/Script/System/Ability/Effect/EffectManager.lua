@@ -109,7 +109,7 @@ function EffectManager:_LoadConfig()
         return
     end
     file:ChangeDirectory("Ability")
-    file:ChangeDirectory("Effector")
+    file:ChangeDirectory("Effect")
     local content = file:ReadStringFile("Effector.csv")
     if not content then
         log.fatal_fmt("EffectManager:_LoadConfig(): Failed to load Effector.csv!!!")
