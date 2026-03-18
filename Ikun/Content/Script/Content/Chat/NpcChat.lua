@@ -5,6 +5,7 @@
 ---@data    Thu Aug 28 2025 23:58:24 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
 local ChatExecLib = require('Content/Chat/ChatExecLib')
 local DynaSelect = require('Content/Chat/DynaSelect')
 

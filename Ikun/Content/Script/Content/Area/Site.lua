@@ -5,6 +5,9 @@
 ---@data    Mon Sep 22 2025 00:09:49 GMT+0800 (中国标准时间)
 ---
 
+
+local log =  require("Core/Log/log")
+
 ---@class SiteConfig
 ---@field SiteId integer
 ---@field SiteName string

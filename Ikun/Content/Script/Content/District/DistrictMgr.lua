@@ -6,6 +6,7 @@
 ---@desc    行政区划管理器包含此星球所有国家(最大基本单位)
 ---
 
+local log =  require("Core/Log/log")
 require("Content/District/Kingdom")
 
 local SettlementType = require('Content/District/Settlements/SettlemengType')
@@ -77,7 +78,7 @@ function DistrictMgr:FindKingdomByCfgId(KingdomCfgId)
             return kingdom
         end
     end
-    log.error('DistrictMgr:FindKingdomByCfgId', '没有找到此国家, config id:', KingdomCfgId)
+    log.error('DistrictMgr:FindKingdomByCfgId', '没有找到此国家, config id:', KingdomCfgId, type(KingdomCfgId))
 end
 
 ---@public [Init] 初始化此行星所有国家

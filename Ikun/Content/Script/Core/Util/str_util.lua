@@ -5,6 +5,8 @@
 ---@data    Sat Oct 11 2025 17:50:27 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class str_util
 local str_util = {}
 
@@ -92,6 +94,18 @@ str_util.split_exact = function(InStr, InDelimiter)
         table.insert(result, item)
     end
     return result
+end
+
+---@public
+---@return boolean
+str_util.is_empty = function(InStr)
+    if not InStr then
+        return true
+    end
+    if InStr == '' or InStr == ' ' then
+        return true
+    end
+    return false
 end
 
 ---@public 去掉空格, 排查字符串中前两个字符和后两个字符

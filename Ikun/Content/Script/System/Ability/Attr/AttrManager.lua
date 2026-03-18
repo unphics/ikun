@@ -1,0 +1,256 @@
+
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : 能力系统-属性管理器
+--  File        : AttrManager.lua
+--  Author      : zhengyanshuai
+--  Date        : Fri Jan 16 2026 23:09:10 GMT+0800 (中国标准时间)
+--  Description : 管理属性配置, 提供属性集工厂
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
+
+local Class3 = require('Core/Class/Class3')
+local FileSystem = require("System/File/FileSystem")
+local ConfigSystem = require("System/Config/ConfigSystem")
+local ExpLib = require('System/Ability/Attr/Exp')
+local AttrSetClass = require('System/Ability/Attr/AttrSet')
+local AttrDef = require('System/Ability/Attr/AttrDef')
+local AttrModifierClass = require('System/Ability/Attr/AttrModifier')
+local log = require('Core/Log/log')
+
+---@alias FormulaFunction fun(Attributes: table<integer, number>):number
+
+---@class SetConfig
+---@field SetKey string
+---@field SetDesc string
+---@field SetAttrs string[]
+
+---@class AttrConfig
+---@field AttrKey string
+---@field AttrName string
+---@field AttrFormula string
+---@field IsChangeInstant boolean
+---@field IsModifierInfinite boolean
+---@field ModifierApplyStrategy string
+---@field ModifierAdditiveStrategy string
+
+---@class AttrManager
+---@field protected _System AbilitySystem
+---@field protected _AttrConfig table<string, AttrConfig>
+---@field protected _SetConfigData table<string, SetConfig>
+---@field protected _AttrFormula table<number, FormulaFunction>
+---@field protected _AttrDependencies table<number, number[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
+---@field protected _AttrDependents table<number, number[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
+local AttrManager = Class3.Class('AttrManager')
+
+---@private
+---@param InSystem AbilitySystem
+function AttrManager:Ctor(InSystem)
+    self._System = InSystem
+    self._AttrConfig = {}
+    self._AttrFormula = {}
+    self._AttrDependencies = {}
+    self._AttrDependents = {}
+end
+
+---@public [Init]
+function AttrManager:InitAttrManager()
+    self:_LoadAttrConfig()
+    self:_LoadSetConfig()
+    self:_BuildAttrDependencies()
+    self:_BuildAttrDependents()
+    self:_BuildAttrFormulas()
+end
+
+---@public
+---@param InSets string[]
+---@return AttrSetClass
+function AttrManager:CreateAttrSet(InSets)
+    local attributes = {}
+    for i = 1, #InSets do
+        local set = self._SetConfigData[InSets[i]] ---@type SetConfig
+        for j = 1, #set.SetAttrs do
+            local attr = set.SetAttrs[j]
+            local id = AttrDef.Attr[attr]
+            if id then
+                attributes[id] = 0
+            end
+        end
+    end
+    
+    local set = AttrSetClass:New(self, attributes) ---@type AttrSetClass
+    return set
+end
+
+---@public
+---@param InAttrKey integer|string
+---@param InModValue number
+---@param InPriority integer@opt
+---@return AttrModifierClass
+function AttrManager:AcquireModifier(InAttrKey, InModValue, InPriority)
+    return AttrModifierClass(-1, InModValue, AttrDef.ToId(InAttrKey), InPriority or 0)
+end
+
+---@public
+---@param InModifier AttrModifierClass
+function AttrManager:ReleaseModifier(InModifier)
+end
+
+---@public
+---@param InAttrKey integer|string
+---@return FormulaFunction
+function AttrManager:GetAttrFormula(InAttrKey) -- const
+    return self._AttrFormula[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey integer|string
+function AttrManager:GetAttrDependencies(InAttrKey) -- const
+    return self._AttrDependencies[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey integer|string
+function AttrManager:GetAttrDependents(InAttrKey) -- const
+    return self._AttrDependents[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey integer|string
+---@return AttrConfig
+function AttrManager:GetAttrConfig(InAttrKey) -- const
+    return self._AttrConfig[AttrDef.ToKey(InAttrKey)]
+end
+
+---@protected [Init]
+function AttrManager:_LoadAttrConfig()
+    -- 解析属性配置表原文
+    local file = FileSystem.Get():CreateConfigContext()
+    if not file then
+        log.error('zys AttrManager:_LoadAttrConfig(): Failed to create config file context!')
+        return
+    end
+    file:ChangeDirectory('Ability')
+    file:ChangeDirectory('Attr')
+    local attrFileContent = file:ReadStringFile('Attr.csv')
+    if not attrFileContent then
+        log.error('zys AttrManager:_LoadAttrConfig(): Failed to read Attr.csv!')
+        return
+    end
+    local attrParser = ConfigSystem.Get():CreateCSVParser(attrFileContent)
+    if not attrParser then
+        log.error('zys AttrManager:_LoadAttrConfig(): Failed to create csv parser!')
+        return
+    end
+    self._AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
+    attrParser:ReleaseParser()
+end
+
+---@protected [Init]
+function AttrManager:_LoadSetConfig()
+    local file = FileSystem.Get():CreateConfigContext()
+    if not file then
+        log.error('zys AttrManager:_LoadSetConfig(): Failed to create config file context!')
+        return
+    end
+    file:ChangeDirectory("Ability")
+    file:ChangeDirectory("Attr")
+    local setFileContent = file:ReadStringFile("Set.csv")
+    if not setFileContent then
+        log.error("zys AttrManager:_LoadSetConfig(): Failed to create csv parser!")
+        return
+    end
+    local setParser = ConfigSystem.Get():CreateCSVParser(setFileContent)
+    if not setParser then
+        log.error('zys AttrManager:_LoadSetConfig(): Failed to create csv parser!')
+        return
+    end
+    self._SetConfigData = setParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastArrCol({"SetAttrs"}):GetResult()
+    setParser:ReleaseParser()
+end
+
+---@protected [Init]
+function AttrManager:_BuildAttrDependencies()
+    if not self._AttrConfig or not next(self._AttrConfig) then
+        log.error('zys AttrManager:_BuildAttrDependencies(): Failed to read AttrConfig!')
+        return
+    end
+
+    local attrDeps = {} ---@type table<string, string[]>
+
+    for key, _ in pairs(self._AttrConfig) do
+        if not attrDeps[key] then
+            attrDeps[key] = {}
+        end
+    end
+
+    ---@param config AttrConfig
+    for key, config in pairs(self._AttrConfig) do
+        local deps = ExpLib.CollectDeps(config.AttrFormula)
+        if deps then
+            for _, src in ipairs(deps) do
+                if not attrDeps[key] then
+                    attrDeps[key] = {}
+                end
+                table.insert(attrDeps[key], src)
+            end
+        end
+    end
+
+    local sorted = ExpLib.TopoSortDFS(attrDeps) ---@type string[]
+    for i = #sorted, 1, -1 do
+        AttrDef.Attr[sorted[i]] = #sorted - i + 1
+    end
+    AttrDef.BuildIdToKey()
+    
+    local attrNumDeps = {}
+    for key, deps in pairs(attrDeps) do
+        local tb = {}
+        for _, dep in ipairs(deps) do
+            table.insert(tb, AttrDef.Attr[dep])
+        end
+        attrNumDeps[AttrDef.Attr[key]] = tb
+    end
+    
+    self._AttrDependencies = attrNumDeps
+end
+
+---@public [Init]
+function AttrManager:_BuildAttrDependents()
+    if not self._AttrDependencies or (not next(self._AttrDependencies)) then
+        log.error('zys AttrManager:_BuildAttrDependents(): Failed to read AttrDependencies!')
+        return
+    end
+    local attrDependents = {}
+    for attr, deps in pairs(self._AttrDependencies) do
+        for _, dep in ipairs(deps) do
+            if not attrDependents[dep] then
+                attrDependents[dep] = {}
+            end
+            table.insert(attrDependents[dep], attr)
+        end
+    end
+    self._AttrDependents = attrDependents
+end
+
+---@protected [Init]
+function AttrManager:_BuildAttrFormulas()
+    if not self._AttrConfig or not (next(self._AttrConfig)) then
+        log.error('zys AttrManager:_BuildAttrFormulas(): Failed to read AttrConfig!')
+        return
+    end
+    local attrFormula = {}
+    ---@param config AttrConfig
+    for key, config in pairs(self._AttrConfig) do
+        local func = ExpLib.Compile(config.AttrFormula)
+        if func then
+            attrFormula[AttrDef.Attr[key]] = func
+        end
+    end
+    self._AttrFormula = attrFormula
+end
+
+return AttrManager

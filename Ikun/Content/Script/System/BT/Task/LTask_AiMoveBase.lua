@@ -8,6 +8,7 @@
 ---      4.这个现在只能处理静态点
 ---
 
+local log =  require("Core/Log/log")
 local NavMoveData = require('Ikun/Module/Nav/NavMoveData')
 local MoveStuckMonitor = require('Ikun/Module/Nav/MoveStuckMonitor')
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")

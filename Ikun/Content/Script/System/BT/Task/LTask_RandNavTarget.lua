@@ -1,4 +1,5 @@
 
+local log =  require("Core/Log/log")
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_RandNavTarget: LTask

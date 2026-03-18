@@ -5,6 +5,8 @@
 ---@data    Thu Nov 06 2025 15:17:47 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class GameSession
 local GameSession = class.class 'GameSession' {}
 
@@ -19,7 +21,11 @@ end
 ---@param Callback fun()
 function GameSession:CreateSession(InPC, PlayerCount, bUseLan, Callback)
     local proxy = UE.UCreateSessionCallbackProxy.CreateSession(InPC, InPC, PlayerCount, bUseLan)
-    proxy.OnSuccess:Add(InPC, Callback)
+    proxy.OnSuccess:Add(InPC, function()
+        local NetSystem = require('System/Net/NetSystem')
+        NetSystem:StartServer(12345)
+        Callback()
+    end)
     proxy.OnFailure:Add(InPC, function()
         log.error('GameSession:CreateSession', 'Failed to create session!!!')
     end)
@@ -66,6 +72,8 @@ function GameSession:JoinSession(InPC, SessionResult)
     local proxy = UE.UJoinSessionCallbackProxy.JoinSession(InPC, InPC, SessionResult)
     proxy.OnSuccess:Add(InPC, function()
         log.info('GameSession:JoinSession', 'Succeed to join!')
+        local NetSystem = require('System/Net/NetSystem')
+        NetSystem:StartClient('127.0.0.1', 12345)
     end)
     proxy.OnFailure:Add(InPC, function()
         log.info('GameSession:JoinSession', 'Failed to join!!!')

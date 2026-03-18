@@ -1,0 +1,37 @@
+
+local enet = require("enet") 加载模块
+
+创建一个Host(主机)
+    enet.host_create([address, peer_count, channel_count, in_bandwidth, out_bandwidth])
+    如果是服务器: address设为"*:端口"
+    如果是客户端: address设为nil
+
+Host
+    host:service([timeout])
+        最重要的函数, 处理网络循环, 返回一个Event对象, 通常在UE的Tick里调用, timeout设为0(非阻塞)
+    host:connect(address, [channel_count, data])
+        客户端向服务器发起连接
+    host:broadcast(data, [channel, flag])
+        向所有连接的Peer广播数据
+    host:flush()
+        立即发送待发缓冲区的数据包(不等待下一次service)
+    host:total_sent_data() / host:total_received_data()
+        统计流量
+
+Peer
+    peer:send(data, [channel, flag])
+        向指定对象发送数据
+        flag可以是"reliable"(可靠传输, 类似TCP)或"unreliable"(不可靠, 类似纯UDP)
+    peer:disconnect([data])
+        正常断开连接
+    peer:reset()
+        强制重置连接
+    peer:index()
+        获取Peer的索引ID
+
+Event
+    host:service()返回的事件对象包含:
+        type:事件类型, 有"connect", "disconnect", "receive, "none"
+        peer:触发事件的Peer对象
+        data:收到的内容(仅限"receive"类型, 通常是字符串/二进制流)
+        channel: 数据所在的通道

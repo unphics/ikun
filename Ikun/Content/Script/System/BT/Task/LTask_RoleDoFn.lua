@@ -4,6 +4,8 @@
 ---@data
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class LTask_RoleDoFn: LTask
 ---@field ConstFnName string
 local LTask_RoleDoFn = class.class 'LTask_RoleDoFn' : extends 'LTask' {

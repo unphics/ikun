@@ -5,6 +5,8 @@
 ---@data    Sun May 04 2025 14:21:59 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 local actor_util = {}
 
 local IkunChrClass = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/BP_ChrBase.BP_ChrBase_C')

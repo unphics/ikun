@@ -5,6 +5,8 @@
 ---@todo 更多配置项,在Role中
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class LService_Alert: LService
 ---@field StaticRange number
 local LService_Alert = class.class 'LService_Alert' : extends 'LService' {

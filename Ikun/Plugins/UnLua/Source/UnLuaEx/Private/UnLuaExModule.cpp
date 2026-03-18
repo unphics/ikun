@@ -59,7 +59,7 @@ static constexpr luaL_Reg UnLua_ExFunctions[] = {
 	{nullptr, nullptr}
 };
 
-void OnLuaStateCreated(lua_State* L) {
+static void OnLuaStateCreated(lua_State* L) {
 	if (L) {
 		lua_getglobal(L, LUA_GNAME);
 		if (lua_istable(L, -1)) {
@@ -68,7 +68,7 @@ void OnLuaStateCreated(lua_State* L) {
 		lua_pop(L, 1);
 
 		FString FileName = FString::Printf(TEXT("%s%s.lua"), *GLuaSrcFullPath, TEXT("Start"));
-		UE_LOG(LogIkun, Log, TEXT("FUnLuaExModule: Try to find file Start.lua, Name=%s"), *FileName)
+		// UE_LOG(LogIkun, Log, TEXT("FUnLuaExModule: Try to find file Start.lua, Name=%s"), *FileName)
 		if (FPaths::FileExists(FileName)) {
 			luaL_dofile(L, TCHAR_TO_ANSI(*FileName));
 		} else {

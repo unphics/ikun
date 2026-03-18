@@ -1,12 +1,35 @@
 
----
----@brief   角色的基类
----@author  zys
----@data    Sun Nov 09 2025 09:27:37 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : RoleBaseClass
+--  File        : RoleBase.lua
+--  Author      : zhengyanshuai
+--  Date        : Sun Nov 09 2025 09:27:37 GMT+0800 (中国标准时间)
+--  Todo        : 构造时起码必须要有ConfigId
+--  Description : 角色系统-角色的基类
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local NpcChat = require("Content/Chat/NpcChat")
-require('Module/Role/RoleHoldLocation')
+local AbilityPart = require("System/Ability/Part/AbilityPart")
+local str_util = require("Core/Util/str_util")
+require("System/Role/RoleHoldLocation")
+
+---@class RoleConfig
+---@field RoleId number
+---@field RoleName string
+---@field RoleDesc string
+---@field bUniqueRole boolean
+---@field BelongKingdom number
+---@field RoleAbility table<string, string>
+---@field RoleAttrSet string[]
+---@field RoleSkills number[]
+---@field GoapKey string
+---@field RoleChat number[]
+---@field HoldLocations number[]
 
 ---@class RoleBaseClass
 ---@field public Avatar BP_ChrBase UE表演对象
@@ -15,6 +38,7 @@ require('Module/Role/RoleHoldLocation')
 ---@field public QuestGiver QuestGiverClass, 预计处理 todo zys
 ---@field public HoldLocation RoleHoldLocationClass todo zys 角色持有的地点
 ---@field public NpcChat NpcChatClass
+---@field public AbilityPart AbilityPartClass 能力部件
 ---@field private _RoleId integer
 ---@field private _RoleCfgId integer
 ---@field private _RoleName string
@@ -35,6 +59,7 @@ function RoleBaseClass:ctor()
     self.QuestGiver = class.new 'QuestGiverClass'(self)
     self.Bag = class.new 'BagClass'(self)
     self.NpcChat = class.new 'NpcChatClass'(self)
+    self.AbilityPart = AbilityPart:New(self)
 end
 
 ---@override
@@ -63,9 +88,16 @@ function RoleBaseClass:InitComplexPart()
 
     self.HoldLocation = class.new 'RoleHoldLocationClass'(self, self._RoleCfgId)
 
-    if config.GoapKey then
+    if not str_util.is_empty(config.GoapKey) then
         local agent = class.new 'GAgent' (self) ---@as GAgent
         self.Agent = agent
+    end
+
+    if #config.RoleAttrSet > 0 then
+        self.AbilityPart:InitAttrSet(config.RoleAttrSet)
+    end
+    if next(config.RoleAbility) then
+        self.AbilityPart:InitAbilitySlot(config.RoleAbility)
     end
 end
 
@@ -82,32 +114,32 @@ function RoleBaseClass:LateAtNight()
     end
 end
 
----@public [Pure]
+---@public
 ---@return integer
-function RoleBaseClass:GetRoleId()
+function RoleBaseClass:GetRoleId() -- const
     return self._RoleId
 end
 
----@public [Pure]
+---@public
 ---@return integer
-function RoleBaseClass:GetRoleCfgId()
+function RoleBaseClass:GetRoleCfgId() -- const
     return self._RoleCfgId
 end
 
----@public [Pure]
+---@public
 ---@return string
-function RoleBaseClass:RoleName()
+function RoleBaseClass:RoleName() -- const
     return self._RoleName
 end
 
----@public [Pure]
+---@public
 ---@return Kingdom
-function RoleBaseClass:GetBelongKingdom()
+function RoleBaseClass:GetBelongKingdom() -- const
     return self._BelongKingdom
 end
 
----@public [Pure] [Debug]
-function RoleBaseClass:PrintRole()
+---@public [Debug]
+function RoleBaseClass:PrintRole() -- const
     return string.format('{Role:%s:%i}', self:GetRoleId(), self:RoleName())
 end
 

@@ -5,6 +5,7 @@
 ---@data    Thu Jan 09 2025 12:26:53 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_SelectAbility: LTask

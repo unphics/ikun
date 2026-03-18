@@ -3,10 +3,10 @@
 ---@author  zys
 ---@data    Tue Jun 17 2025 22:41:45 GMT+0800 (中国标准时间)
 ---@desc    做成Service的原因是: 角色时刻在思考, 有时候会有很好的时机, 但是也会因为正在做其他事情错过, 但是其实能遇到
----@version 0.1 所有的参数先都硬编码在代码里, 后面考虑根据角色的设定来调整
 ---@ref     
 ---
 
+local log =  require("Core/Log/log")
 local ELStatus = require('Ikun/Module/AI/BT/ELStatus')
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 local BehavDef = require("Ikun.Module.AI.BT.Behav.BehavDef")

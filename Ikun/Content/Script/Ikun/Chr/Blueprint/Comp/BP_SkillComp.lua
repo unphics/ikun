@@ -8,20 +8,12 @@
 local BPS_SkillSlot = UE.UObject.Load('/Game/Ikun/Blueprint/Struct/BPS_SkillSlot.BPS_SkillSlot')
 local SLOT_NAME_HEAD = 'Skill.Slot.'
 
----@class SkillConfig
----@field SkillName string
----@field SkillDesc string
----@field AbilityTemplate string
----@field SkillEffects number[]
----@field TargetActors number[]
----@field AbilityAnims string[]
----@field Params table
-
 ---@class BP_SkillComp: BP_SkillComp_C
 local BP_SkillComp = UnLua.Class()
 
 ---@public 初始化角色的技能
 function BP_SkillComp:InitRoleSkill()
+    do return end
     -- 有效角色检查
     local role = rolelib.role(self:GetOwner())
     if not role then

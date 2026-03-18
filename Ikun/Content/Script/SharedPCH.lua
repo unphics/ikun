@@ -1,10 +1,18 @@
 
----
----@brief   SharedPreCompiledHeader, 通用预包含
----@author  zys
----@data    Sat Apr 05 2025 14:07:07 GMT+0800 (中国标准时间)
----@notice  此文件的修改必须征得本人同意(全局变量增加要慎重)!!!
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : 通用预包含
+--  File        : SharedPCH.lua
+--  Author      : zhengyanshuai
+--  Date        : Sat Apr 05 2025 14:07:07 GMT+0800 (中国标准时间)
+--  Description : SharedPreCompiledHeader
+--  Warn        : 此文件的修改必须征得本人同意(全局变量增加要慎重)!!!
+--  Todo        : 考虑重新设计封装
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 do
     class = require('Core/Class/class')
@@ -33,7 +41,7 @@ do
     require('Ikun/Module/Config/ConfigMgr')
     require('Content/Time/TimeMgr')
     require('Content/Item/ItemMgr')
-    require('Module/Role/RoleMgr')
+    require('System/Role/RoleMgr')
     require('Content/Quest/QuestMgr')
     require("Content/Area/Cosmos")
 
@@ -49,7 +57,7 @@ do
 end
 
 do
-    rolelib = require('Module/Role/RoleLib') ---@type rolelib
+    rolelib = require('System/Role/RoleLib') ---@type rolelib
 end
 
 do

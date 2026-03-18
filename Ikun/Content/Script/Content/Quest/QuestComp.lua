@@ -5,6 +5,8 @@
 ---@data    Thu Aug 28 2025 22:43:09 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class QuestCompClass
 ---@field _Owner RoleBaseClass
 ---@field _Quests QuestInstClass[]

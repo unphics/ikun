@@ -5,6 +5,7 @@
 ---@data Fri Apr 25 2025 21:21:44 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LService_NeedSwitchBT: LService

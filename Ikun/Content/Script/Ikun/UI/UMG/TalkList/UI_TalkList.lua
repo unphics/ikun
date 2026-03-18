@@ -5,6 +5,8 @@
 ---@data    Sun Apr 06 2025 10:35:40 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class UI_TalkList: UI_TalkList_C
 ---@field TalkingRoleList table<string, TalkListItem>
 ---@field TalkingContentList TalkListItem[]

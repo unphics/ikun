@@ -6,6 +6,7 @@
 ---@data Thu Apr 24 2025 22:01:39 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LTask_TeamGetMoveTarget : LTask

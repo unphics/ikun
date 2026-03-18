@@ -1,3 +1,6 @@
+
+local ffi = require("ffi")
+
 local EntityManager = {}
 
 -- 预分配 10000 个单位的内存

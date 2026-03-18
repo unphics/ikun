@@ -5,6 +5,8 @@
 ---@data    Sun May 04 2025 14:20:00 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class TargetActorConfig
 ---@field TargetActorId number
 ---@field TargetActorDesc string
@@ -24,20 +26,6 @@
 ---@field OwnerAvatar BP_ChrBase
 ---@field OwnerAbility BP_AbilityBase
 ---@field AbilityEffectInfos AbilityEffectInfo[]
-
----@class EffectContext
----@field SkillConfig SkillConfig
----@field EffectId number
----@field EffectConfig EffectConfig
-
----@class EffectConfig
----@field EffectId number
----@field EffectName string
----@field EffectDesc string
----@field EffectTemplate string
----@field EffectValue number
----@field EffectCorr number
----@field Params table
 
 ---@class gas_util
 local gas_util = {}

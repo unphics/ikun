@@ -1,0 +1,4 @@
+BuffKey|BuffName|BuffTemplate|BuffPolicy|BuffDuration|Period|GrantedTags|BlockTags|CancelTags
+|||Instant=1, HasDuration=2, Infinite=3,|||||
+Buff1|TestBuff|||||||
+FireDebuff|灼伤|Fire|2|3||||

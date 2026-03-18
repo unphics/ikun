@@ -5,6 +5,8 @@
 ---@data    Sun May 04 2025 14:21:36 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class async_util
 local async_util = {}
 

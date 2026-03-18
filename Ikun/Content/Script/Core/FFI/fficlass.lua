@@ -1,11 +1,29 @@
 
----
----@brief   luaffi oop
----@author  zys
----@data    Sat Dec 06 2025 09:09:25 GMT+0800 (中国标准时间)
----
+
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : Core-FFI-Class
+--  File        : fficlass.lua
+--  Author      : zhengyanshuai
+--  Date        : Sat Dec 06 2025 09:09:25 GMT+0800 (中国标准时间)
+--  Description : LuaJitFFI的OOP实现
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local ffi = require('ffi')
+
+local function CDefErrpr(InErrMsg, InCTypeName, InCDef)
+    local err_msg = tostring(InErrMsg)
+    local str = "\n============================================================================================\n"
+    str = str .. "❌ [FFI Error] Failed to define struct: " .. tostring(InCTypeName) .. '\n'
+    str = str .. "Error Message: " .. err_msg .. "\n"
+    str = str .. "Context (C Code):\n" .. InCDef .. "\n"
+    str = str .. "============================================================================================"
+    error(str)
+end
 
 ---@class fficlass
 local fficlass = {}
@@ -17,21 +35,15 @@ function fficlass.define(c_type_name, c_def)
     if c_def then
         local ok, err = pcall(ffi.cdef, c_def)
         if not ok then
-            local err_msg = tostring(err)
-            local str = "\n============================================================================================\n"
-            str = str .. "❌ [FFI Error] Failed to define struct: " .. tostring(c_type_name) .. '\n'
-            str = str .. "Error Message: " .. err_msg .. "\n"
-            str = str .. "Context (C Code):\n" .. c_def .. "\n"
-            str = str .. "============================================================================================"
-            log.error(str)
+            CDefErrpr(err, c_type_name, c_def)
         end
     end
 
     local mt = {}
     mt.__index = mt
 
-    function mt:Register()
-        self.Register = nil
+    function mt:RegisterClass()
+        self.RegisterClass = nil
 
         local raw_ctor = ffi.metatype(c_type_name, self)
 

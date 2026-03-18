@@ -5,6 +5,7 @@
 ---@data Sun May 18 2025 15:12:41 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LDecorator_NeedRepos4Ability: LDecorator

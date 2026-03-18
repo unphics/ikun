@@ -1,15 +1,23 @@
 
----
----@brief   增强输入的应用层
----@author  zys
----@data    Sat Jul 19 2025 17:05:58 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : 输入系统-增强输入的应用层
+--  File        : EnhInput.lua
+--  Author      : zhengyanshuai
+--  Date        : Sat Jul 19 2025 17:05:58 GMT+0800 (中国标准时间)
+--  Description : 初始化输入系统, 管理IMC, 转发UE消息
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local EnhancedInput = require("UnLua.EnhancedInput")
 
 local IMCDef = require('System/Input/IMCDef') ---@type IMCDef
 local IADef = require('System/Input/IADef') ---@type IADef
 local TriggerEventDef = require('System/Input/TriggerEventDef') ---@type TriggerEventDef
+local log = require("Core/Log/log")
 
 local InputMgr = require('Ikun/Module/Input/InputMgr')
 
@@ -25,7 +33,6 @@ EnhInput.TriggerEventDef = TriggerEventDef
 ---@public [Init]
 ---@param PC BP_IkunPC
 EnhInput.InitByPlayerController = function(PC)
-    log.info('增强输入', 'EnhInput.InitByPlayerController', PC)
     EnhInput._PlayerController = PC
     EnhInput._GetEnhInputSubsys()
 end

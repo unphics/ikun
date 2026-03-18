@@ -1,41 +1,43 @@
 
----
----@brief   角色管理器
----@author  zys
----@data    Fri May 30 2025 23:46:56 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : RoleMgrClass
+--  File        : RoleMgr.lua
+--  Author      : zhengyanshuai
+--  Date        : Fri May 30 2025 23:46:56 GMT+0800 (中国标准时间)
+--  Description : 角色系统-角色管理器
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
-require('Module/Role/RoleBase')
-
----@class RoleConfig
----@field RoleId number
----@field RoleName string
----@field RoleDesc string
----@field bUniqueRole boolean
----@field BelongKingdom number
----@field RoleSkills number[]
----@field InitBT string
----@field GoapKey string
----@field SpecialClass string
----@field FightPosAssign FightPosDef[]
----@field BTCfg table<BTType, string>
----@field RoleChat number[]
----@field HoldLocations number[]
+require("System/Role/RoleBase")
+local FileSystem = require("System/File/FileSystem")
+local ConfigSystem = require("System/Config/ConfigSystem")
+local table_util = require("Core/Util/table_util")
+local TagUtil = require("System/Ability/Tag/TagUtil")
+local log = require("Core/Log/log")
 
 ---@class RoleMgrClass
 ---@field _AllRoles table<integer, RoleBaseClass>
 ---@field _AllConfigRoles table<integer, RoleBaseClass[]>
+---@field _RoleConfigData table<number, RoleConfig>
 local RoleMgrClass = class.class 'RoleMgrClass'{
     ctor = function()end,
+    GetOrCreateRole = function()end,
+    RegisterRole = function()end,
     FindRole = function()end,
-    NewRole = function()end,
     GetRoleConfig = function()end,
+    LateAtNight = function()end,
+    _CreateRoleInst = function()end,
     _AllRoles = nil,
 }
 
 function RoleMgrClass:ctor()
     self._AllRoles = {}
     self._AllConfigRoles = {}
+    self:_LoadConfig()
 end
 
 ---@public 获取或创建一个角色实例
@@ -105,15 +107,44 @@ end
 ---@public [Pure] 根据实例Id查找角色
 ---@param Id integer RoleInstId
 ---@return RoleBaseClass
-function RoleMgrClass:FindRole(Id)
+function RoleMgrClass:FindRole(Id) -- const
     return self._AllRoles[Id]
 end
 
----@public [Pure] 根据配置Id获取配置表
+---@public
+---@param InRoleName string
+---@return RoleBaseClass?
+function RoleMgrClass:FindRoleByName(InRoleName)
+    ---@param role RoleBaseClass
+    for id, role in pairs(self._AllRoles) do
+        if role:RoleName() == InRoleName then
+            return role
+        end
+    end
+end
+
+---@public [Config] 根据配置Id获取配置表
 ---@return RoleConfig
-function RoleMgrClass:GetRoleConfig(InRoleCfgId)
-    local config = ConfigMgr:GetConfig('Role')[InRoleCfgId] ---@type RoleConfig
+function RoleMgrClass:GetRoleConfig(InRoleCfgId) -- const
+    local config = self._RoleConfigData[tostring(InRoleCfgId)] ---@type RoleConfig
     return config
+end
+
+---@public [Config] 加载角色相关配置表
+function RoleMgrClass:_LoadConfig() -- const
+    local file = FileSystem.Get():CreateConfigContext()
+    if not file then
+        log.fatal("RoleMgrClass:_LoadConfig(): Failed to CreateConfigContext !")
+        return
+    end
+    file:ChangeDirectory("Role")
+    local roleParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Role.csv"))
+    self._RoleConfigData = roleParser:ToRows():ExtractHeaders():ToGrid():ToMap()
+        :CastMapCol({"RoleSkills", "RoleAbility"})
+        :CastArrCol({"HoldLocations", "RoleAttrSet"})
+        :CastNumCol({"BelongKingdom", "RoleId"})
+        :GetResult()
+    roleParser:ReleaseParser()
 end
 
 return

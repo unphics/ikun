@@ -35,6 +35,14 @@
 #include "Registries/ClassRegistry.h"
 #include "Registries/EnumRegistry.h"
 
+void RegisterCustomLuaModule(lua_State* L, const char* Name, lua_CFunction InitFunc) {
+    lua_getglobal(L, "package");
+    lua_getfield(L, -1, "preload");
+    lua_pushcfunction(L, InitFunc);
+    lua_setfield(L, -2, Name);
+    lua_pop(L, 2);
+}
+
 #define LOCTEXT_NAMESPACE "FUnLuaModule"
 
 namespace UnLua {

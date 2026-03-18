@@ -5,6 +5,8 @@
 ---@data    Thu Sep 25 2025 23:40:32 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class ActionConfig
 ---@field ActionKey string
 ---@field ActionName string

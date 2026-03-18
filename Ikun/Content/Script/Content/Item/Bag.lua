@@ -5,6 +5,9 @@
 ---@data    Wed Aug 27 2025 00:45:13 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+local make_weak = require("Util/obj_util").make_weak
+
 ---@alias ItemChangeCallback fun(table:table, ItemCfgId: id, Count: count, ItemId: id)
 
 ---@class BagClass

@@ -5,6 +5,8 @@
 ---@data    Sat Oct 04 2025 15:03:32 GMT+0800 (中国标准时间)
 ---
 
+local log =  require("Core/Log/log")
+
 ---@class GoStallAction: GAction
 local GoStallAction = class.class'GoStallAction':extends'GAction'{}
 
