@@ -1,5 +1,5 @@
-EffectorKey|EffectorName|EffectTemplate|EffectPeroid|EffectDuration|EffectPriority|EffectTime|AttrModFml|GrantedTags|BlockByTags|CancelToTags
-|||优先级|持续时间|周期|次数|表达式|||
-||||||||||
-Effect1||EffectBase|1|||||||
-||||||||||
+EffectorKey|EffectorName|EffectTemplate|EffectPeroid|EffectDuration|EffectPriority|AttrModFml|GrantedTags|BlockByTags|CancelToTags
+|||优先级|持续时间|周期|表达式|||
+|||||||||
+Effect1||EffectBase|1||||||
+Burn|烧伤|EffectBase|1||||||

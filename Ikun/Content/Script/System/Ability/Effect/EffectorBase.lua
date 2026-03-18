@@ -20,7 +20,6 @@ local Class3 = require('Core/Class/Class3')
 ---@field EffectPeroid integer 优先级
 ---@field EffectDuration number 持续时间
 ---@field EffectPriority number 周期
----@field EffectTime integer 次数
 ---@field AttrModFml string
 ---@field GrantedTags string[]
 ---@field BlockByTags string[]
@@ -43,7 +42,10 @@ function EffectorBaseClass:Ctor(InManager, InConfig)
     self._EffectConfig = InConfig
 end
 
+---@public
 function EffectorBaseClass:InitEffector()
+    self._Duration = self:GetEffectorConfig().EffectDuration
+    self._Interval = self:GetEffectorConfig().EffectPeroid
 end
 
 ---@public
@@ -88,7 +90,8 @@ end
 function EffectorBaseClass:TickEffector(InDeltaTime, InTimestampSec)
 end
 
-function EffectorBaseClass:ApplyEffector()
+---@protected
+function EffectorBaseClass:_ApplyEffector()
 end
 
 ---@public

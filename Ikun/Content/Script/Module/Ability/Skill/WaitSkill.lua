@@ -28,9 +28,9 @@ function WaitSkillClass:BeginSkill(InAbility, InParams)
 
     local part = self:GetSkillOwner() ---@as AbilityPartClass
     local set = part:GetAttrSet()
-    local buff = part:MakeBuff("FireDebuff")
-    if buff then
-        part:ApplyBuffToSelf(buff)
+    local effector = part:MakeEffector("FireDebuff")
+    if effector then
+        part:TryApplyEffectorToSelf(effector)
     end
     return true
 end
