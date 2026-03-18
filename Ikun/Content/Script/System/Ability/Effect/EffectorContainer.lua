@@ -27,6 +27,8 @@ function EffectorContainerClass:Ctor(InEffectManager, InPart)
     self._OwnerPart = InPart
 
     self._Effectors = {}
+
+    self._EffectManager:AddEffectorContainer(self)
 end
 
 ---@public

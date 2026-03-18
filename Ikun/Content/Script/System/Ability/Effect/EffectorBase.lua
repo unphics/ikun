@@ -92,6 +92,10 @@ end
 
 ---@protected
 function EffectorBaseClass:_ApplyEffector()
+    self:_OnApplyEffector()
+end
+---@protected
+function EffectorBaseClass:_OnApplyEffector()
 end
 
 ---@public
