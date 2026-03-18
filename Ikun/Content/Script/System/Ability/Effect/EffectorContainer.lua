@@ -14,6 +14,7 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
+local log = require("Core/Log/log")
 
 ---@class EffectorContainerClass
 ---@field _EffectManager EffectManager
@@ -22,7 +23,7 @@ local Class3 = require("Core/Class/Class3")
 local EffectorContainerClass = Class3.Class("EffectorContainerClass")
 
 ---@public
-function EffectorContainerClass:ctor(InEffectManager, InPart)
+function EffectorContainerClass:Ctor(InEffectManager, InPart)
     self._EffectManager = InEffectManager
     self._OwnerPart = InPart
 

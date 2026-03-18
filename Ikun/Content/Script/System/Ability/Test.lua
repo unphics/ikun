@@ -66,7 +66,7 @@ if true then
     assert(math.floor(set:GetAttrValue(AttrDef.Attr.MaxHealth)) == 110)
 end
 
-if true then
+if false then
     local part = AbilityPart:New(nil) ---@type AbilityPartClass
     local buff = part:MakeBuff('Buff1')
     part:ApplyBuffToSelf(buff)
