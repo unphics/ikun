@@ -3,3 +3,4 @@ EffectorKey|EffectorName|EffectTemplate|EffectPeroid|EffectDuration|EffectPriori
 |||||||||
 Effect1||EffectBase|1||||||
 Burn|烧伤|Burn|1|5|||Effector.State.Burn||
+Boom|爆炸|Burn|1|0|1||Effector.State.Burn||

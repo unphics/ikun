@@ -32,6 +32,7 @@ local Class3 = require('Core/Class/Class3')
 ---@field protected _EndTime number
 ---@field protected _Duration number
 ---@field protected _Interval number
+---@field protected _LastApplyTime number 上一次周期触发的时间戳
 ---@field public EffectorSource AbilityPartClass
 ---@field public EffectorTarget AbilityPartClass
 local EffectorBaseClass = Class3.Class('EffectorBaseClass')
@@ -74,10 +75,22 @@ function EffectorBaseClass:ActiveEffector(InTimestampSec)
     for i = 1, #grantedTags do
         self.EffectorTarget:AddTag(grantedTags[i])
     end
+
+    if self._Interval >= 0 then
+        self._LastApplyTime = self._StartTime
+        self:ApplyEffector()
+    else
+        self._LastApplyTime = -1
+    end
+    self:OnActiveEffector(InTimestampSec)
+end
+---@public
+function EffectorBaseClass:OnActiveEffector(InTimestampSec)
 end
 
 ---@public
 function EffectorBaseClass:DeactiveEffector()
+    self:OnDeactiveEffector()
     local grantedTags = self:GetEffectorConfig().GrantedTags
     if self.EffectorTarget then
         for i = 1, #grantedTags do
@@ -85,17 +98,28 @@ function EffectorBaseClass:DeactiveEffector()
         end
     end
 end
+---@public
+function EffectorBaseClass:OnDeactiveEffector()
+end
 
 ---@public
 function EffectorBaseClass:TickEffector(InDeltaTime, InTimestampSec)
+    if self._Interval > 0 and self._LastApplyTime then
+        local nextApplyTime = self._LastApplyTime + self._Interval
+        while InTimestampSec >= nextApplyTime do
+            self:ApplyEffector()
+            nextApplyTime = nextApplyTime + self._Interval
+        end
+        self._LastApplyTime = nextApplyTime - self._Interval -- 把多加以判断那个时间是否走了的未来时间剪掉
+    end
 end
 
----@protected
-function EffectorBaseClass:_ApplyEffector()
-    self:_OnApplyEffector()
+---@public
+function EffectorBaseClass:ApplyEffector()
+    self:OnApplyEffector()
 end
----@protected
-function EffectorBaseClass:_OnApplyEffector()
+---@public
+function EffectorBaseClass:OnApplyEffector()
 end
 
 ---@public

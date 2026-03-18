@@ -19,7 +19,13 @@ local log = require("Core/Log/log")
 ---@class BurnClass: EffectorBaseClass
 local BurnClass = Class3.Class("BurnClass", EffectorBaseClass)
 
-function BurnClass:_OnApplyEffector()
+function BurnClass:OnActiveEffector()
+end
+
+function BurnClass:OnApplyEffector()
+end
+
+function BurnClass:OnDeactiveEffector()
 end
 
 return BurnClass

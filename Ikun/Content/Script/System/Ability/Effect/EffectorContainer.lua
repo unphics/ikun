@@ -35,11 +35,10 @@ end
 function EffectorContainerClass:TickEffectorContainer(InDeltaTime, InTimestampSec)
     for i = 1, #self._Effectors do    
         local effector = self._Effectors[i]
+        effector:TickEffector(InDeltaTime, InTimestampSec)
         if effector:IsEffectorExpried(InTimestampSec) then
             effector:DeactiveEffector()
             self:RemoveEffector(effector)
-        else
-            effector:TickEffector(InDeltaTime, InTimestampSec)
         end
     end
 end
