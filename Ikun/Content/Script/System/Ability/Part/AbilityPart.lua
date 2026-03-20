@@ -16,7 +16,7 @@
 local Class3 = require("Core/Class/Class3")
 local AbilitySystem = require("System/Ability/AbilitySystem")
 local AbilityClass = require("System/Ability/Ability/Ability")
-local TagUtil = require("System/Ability/Tag/TagUtil")
+local TagUtils = require("System/Ability/Tag/TagUtils")
 local EffectorContainerClass = require("System/Ability/Effect/EffectorContainer")
 local log = require("Core/Log/log")
 
@@ -33,7 +33,7 @@ local AbilityPartClass = Class3.Class("AbilityPartClass")
 ---@public
 function AbilityPartClass:Ctor(InOwner)
     self._Owner = InOwner
-    self._PartTagContainer = TagUtil.MakeContainer()
+    self._PartTagContainer = TagUtils.MakeContainer()
     self._EffectorContainer = EffectorContainerClass:New(AbilitySystem.Get():GetEffectManager(), self)
 
     self._SlotInfos = {}
@@ -59,7 +59,7 @@ end
 ---@param InAbilitySlotInfo table<string, string>
 function AbilityPartClass:InitAbilitySlot(InAbilitySlotInfo)
     for tagName, abilityKey in pairs(InAbilitySlotInfo) do
-        local slot = TagUtil.RequestTag("Ability.Slot."..tagName)
+        local slot = TagUtils.RequestTag("Ability.Slot."..tagName)
         if not slot then
             log.error_fmt("AbilityPartClass:InitAbilitySlot(): InValid tag, name = [%s]", string(tagName))
             goto continue

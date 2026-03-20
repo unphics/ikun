@@ -13,11 +13,11 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
-local TagUtil = require("System/Ability/Tag/TagUtil")
+local TagUtils = require("System/Ability/Tag/TagUtils")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local BuffContainer = require("System/Ability/Buff/BuffContainer")
-local str_util = require("Core/Util/str_util")
+local str_util = require("Core/Utils/str_util")
 local log = require("Core/Log/log")
 local BuffBaseClass = require("System/Ability/Buff/BuffBase")
 local Time = require("Core/Time")

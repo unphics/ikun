@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local table_util = require("Core/Util/table_util")
+local table_util = require("Core/Utils/table_util")
 
 ---@class AttrDef
 ---@field protected RefIdToKey table<integer, string>

@@ -16,25 +16,25 @@
 
 do
     class = require('Core/Class/class')
-    math_util = require('Core/Util/math_util') ---@type math_util
-    table_util = require('Core/Util/table_util') ---@type table_util
-    str_util = require('Core/Util/str_util') ---@type str_util
+    math_util = require('Core/Utils/math_util') ---@type math_util
+    table_util = require('Core/Utils/table_util') ---@type table_util
+    str_util = require('Core/Utils/str_util') ---@type str_util
 end
 
-debug_util = require('Util/debug_util')
+
 
 require('Module/Modules')
 modules = class.new'Modules'() ---@type Modules
 
 do
-    world_util = require("Util/world_util")
-    gas_util = require('Util/gas_util') ---@type gas_util
-    actor_util = require('Util/actor_util')
-    obj_util = require('Util/obj_util') ---@type obj_util
-    net_util = require("Util/net_util")
-    async_util = require("Util/async_util")
-    ui_util = require("Util/UI/ui_util") ---@type ui_util
-    draw_util = require('Util/draw_util')
+    world_util = require("Utils/world_util")
+    gas_util = require('Utils/gas_util') ---@type gas_util
+    actor_util = require('Utils/actor_util')
+    obj_util = require('Utils/obj_util') ---@type obj_util
+    net_util = require("Utils/net_util")
+    async_util = require("Utils/async_util")
+    ui_util = require("Utils/UI/ui_util") ---@type ui_util
+    draw_util = require('Utils/draw_util')
 end
 
 do

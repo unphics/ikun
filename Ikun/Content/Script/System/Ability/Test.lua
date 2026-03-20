@@ -13,7 +13,7 @@
 --]]
 
 local AbilitySystem = require('System/Ability/AbilitySystem')
-local TagUtil = require("System/Ability/Tag/TagUtil")
+local TagUtils = require("System/Ability/Tag/TagUtils")
 local AbilityPart = require('System/Ability/Part/AbilityPart')
 local AttrDef = require("System/Ability/Attr/AttrDef")
 local log = require('Core/Log/log') ---@as log
@@ -26,8 +26,8 @@ end
 AbilitySystem.Get():InitAbilitySystem()
 
 if true then
-    local tag = TagUtil.RequestTag('skill.type.active')
-    local container = TagUtil.MakeContainer()
+    local tag = TagUtils.RequestTag('skill.type.active')
+    local container = TagUtils.MakeContainer()
     assert(container:HasTag(tag) == false)
     container:AddTag(tag)
     assert(container:HasTag(tag) == true)

@@ -5,7 +5,7 @@
 ---@data    Sun Mar 02 2025 02:19:44 GMT+0800 (中国标准时间)
 ---  
 
-local TagUtil = require("System/Ability/Tag/TagUtil")
+local TagUtils = require("System/Ability/Tag/TagUtils")
 
 ---@class BP_ChrBase: BP_ChrBase_C
 ---@field Role RoleBaseClass

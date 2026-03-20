@@ -15,7 +15,7 @@
 
 local NpcChat = require("Content/Chat/NpcChat")
 local AbilityPart = require("System/Ability/Part/AbilityPart")
-local str_util = require("Core/Util/str_util")
+local str_util = require("Core/Utils/str_util")
 require("System/Role/RoleHoldLocation")
 
 ---@class RoleConfig

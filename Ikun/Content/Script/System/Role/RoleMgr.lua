@@ -15,8 +15,8 @@
 require("System/Role/RoleBase")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
-local table_util = require("Core/Util/table_util")
-local TagUtil = require("System/Ability/Tag/TagUtil")
+local table_util = require("Core/Utils/table_util")
+local TagUtils = require("System/Ability/Tag/TagUtils")
 local log = require("Core/Log/log")
 
 ---@class RoleMgrClass

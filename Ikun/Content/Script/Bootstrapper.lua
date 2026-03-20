@@ -15,9 +15,10 @@
 --]]
 
 local ffi = require ("ffi") ---@type ffilib
-local log = require('Core/Log/log') ---@type log
 local ffistate = require("Core/FFI/ffistate")
 local Time = require('Core/Time')
+local log = require('Core/Log/log') ---@type log
+local debug_util = require('Utils/DebugUtils')
 
 _G.log = require('Core/Log/log') ---@type log
 

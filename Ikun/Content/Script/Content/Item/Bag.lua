@@ -6,7 +6,7 @@
 ---
 
 local log =  require("Core/Log/log")
-local make_weak = require("Util/obj_util").make_weak
+local make_weak = require("Utils/obj_util").make_weak
 
 ---@alias ItemChangeCallback fun(table:table, ItemCfgId: id, Count: count, ItemId: id)
 

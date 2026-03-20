@@ -19,7 +19,7 @@ _G.make_weak = make_weak
 ---@public 创建一个有Lua对象的UObject
 ---@return UObject
 obj_util.new_uobj = function()
-    local ComObjClass = UE.UClass.Load('/Game/Ikun/Blueprint/Util/ComObj.ComObj_C')
+    local ComObjClass = UE.UClass.Load('/Game/Ikun/Blueprint/Utils/ComObj.ComObj_C')
     return UE.NewObject(ComObjClass)
 end
 

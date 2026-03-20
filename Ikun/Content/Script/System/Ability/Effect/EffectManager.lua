@@ -15,9 +15,9 @@
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local log = require('Core/Log/log')
-local str_util = require("Core/Util/str_util")
+local str_util = require("Core/Utils/str_util")
 local EffectorBaseClass = require("System/Ability/Effect/EffectorBase")
-local TagUtil = require("System/Ability/Tag/TagUtil")
+local TagUtils = require("System/Ability/Tag/TagUtils")
 local Class3 = require('Core/Class/Class3')
 
 ---@class EffectManager
@@ -132,21 +132,21 @@ function EffectManager:_LoadConfig()
             local tbTags = config.BlockByTags
             config.BlockByTags = {}
             for _, tag in ipairs(tbTags) do
-                table.insert(config.BlockByTags, TagUtil.RequestTag(tag))
+                table.insert(config.BlockByTags, TagUtils.RequestTag(tag))
             end
         end
         if config.CancelToTags then
             local tbTags = config.CancelToTags
             config.CancelToTags = {}
             for _, tag in ipairs(tbTags) do
-                table.insert(config.CancelToTags, TagUtil.RequestTag(tag))
+                table.insert(config.CancelToTags, TagUtils.RequestTag(tag))
             end
         end
         if config.GrantedTags then
             local tbTags = config.GrantedTags
             config.GrantedTags = {}
             for _, tag in ipairs(tbTags) do
-                table.insert(config.GrantedTags, TagUtil.RequestTag(tag))
+                table.insert(config.GrantedTags, TagUtils.RequestTag(tag))
             end
         end
     end

@@ -1,8 +1,8 @@
 
 --[[
 -- -----------------------------------------------------------------------------
---  Brief       : TagUtil
---  File        : TagUtil.lua
+--  Brief       : TagUtils
+--  File        : TagUtils.lua
 --  Author      : zhengyanshuai
 --  Date        : Sat Jan 03 2026 21:50:43 GMT+0800 (中国标准时间)
 --  Description : Tag工具方法
@@ -17,29 +17,29 @@ local TagContainer = require('System/Ability/Tag/TagContainer')
 local TagDefine = require('System/Ability/Tag/TagDefine')
 local log = require("Core/Log/log")
 
----@class TagUtil
-local TagUtil = {}
+---@class TagUtils
+local TagUtils = {}
 
 ---@public
 ---@return TagContainer
-TagUtil.MakeContainer = function()
+TagUtils.MakeContainer = function()
     return TagContainer()
 end
 
 ---@public
 ---@return integer
-TagUtil.RequestTag = function(InTagName)
+TagUtils.RequestTag = function(InTagName)
     local tag = TagDefine.tbNameToTag[InTagName]
     if not tag then
-        log.error_fmt("TagUtil.RequestTag(): Invalid TagName = [%s]", tostring(InTagName))
+        log.error_fmt("TagUtils.RequestTag(): Invalid TagName = [%s]", tostring(InTagName))
     end
     return tag
 end
 
 ---@public
 ---@return string?
-TagUtil.LookupTagName = function(InTag)
+TagUtils.LookupTagName = function(InTag)
     return TagDefine.tbTagToName[InTag]
 end
 
-return TagUtil
+return TagUtils

@@ -1,11 +1,17 @@
 
----
----@brief   植入UECmd的Lua调试转发
----@author  zys
----@data    Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : 植入UECmd的Lua调试转发
+--  File        : DebugUtils.lua
+--  Author      : zhengyanshuai
+--  Date        : Sun May 04 2025 14:20:59 GMT+0800 (中国标准时间)
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
-local TagUtil = require("System/Ability/Tag/TagUtil")
+local TagUtils = require("System/Ability/Tag/TagUtils")
 local log = require("Core/Log/log")
 
 local GameWorld = nil
@@ -15,6 +21,10 @@ log.info("debug_util Loaded")
 ---@class debug_util
 local debug_util = {}
 
+-- [[
+-- 调试变量
+-- ]]
+
 debug_util.debug_class = false
 
 debug_util.debug_bt = 1
@@ -22,6 +32,10 @@ debug_util.debugrole = 10102001
 
 debug_util.RotateColor = UE.FLinearColor(0, 1, 0)
 debug_util.MoveColor = UE.FLinearColor(1, 1, 0)
+
+-- [[
+-- 调试方法
+-- ]]
 
 debug_util.qqq = function(a, b)
     log.error("zys: qqq", a, b)
@@ -63,7 +77,7 @@ debug_util.skill = function()
     if role then
         local part = role.AbilityPart
         local tagName = 'Ability.Slot.Melee'
-        local abilities = part:GetSlotAbility(TagUtil.RequestTag(tagName))
+        local abilities = part:GetSlotAbility(TagUtils.RequestTag(tagName))
         local aa = abilities[1] ---@type AbilityClass
         
         if aa:CanUse(_) then
@@ -77,6 +91,10 @@ debug_util.skill = function()
     
     log.warn("debug_util.skill end")
 end
+
+-- [[
+-- UECommander接收
+-- ]]
 
 local function parse_args(cmd_str)
     local args = {}

@@ -17,7 +17,7 @@ local AbilityClass = require("System/Ability/Ability/Ability")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local SkillClass = require("System/Ability/Ability/Skill")
-local str_util = require("Core/Util/str_util")
+local str_util = require("Core/Utils/str_util")
 local log = require("Core/Log/log")
 
 ---@class AbilityManager

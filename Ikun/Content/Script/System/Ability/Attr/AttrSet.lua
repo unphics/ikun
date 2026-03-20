@@ -15,7 +15,7 @@
 local Class3 = require("Core/Class/Class3")
 local AttrDef = require("System/Ability/Attr/AttrDef")
 local log = require("Core/Log/log")
-local table_util = require("Core/Util/table_util")
+local table_util = require("Core/Utils/table_util")
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<integer, number>

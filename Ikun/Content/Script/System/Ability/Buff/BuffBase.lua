@@ -13,7 +13,7 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
-local TagUtil = require("System/Ability/Tag/TagUtil")
+local TagUtils = require("System/Ability/Tag/TagUtils")
 local BuffPolicyDef = require("System/Ability/Buff/BuffPolicyDef")
 local log = require("Core/Log/log")
 local Time = require("Core/Time")

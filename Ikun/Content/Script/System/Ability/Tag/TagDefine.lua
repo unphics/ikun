@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local table_util = require("Core/Util/table_util")
+local table_util = require("Core/Utils/table_util")
 local TagManager = require('System/Ability/Tag/TagManager').Get()
 
 local Tags = {
