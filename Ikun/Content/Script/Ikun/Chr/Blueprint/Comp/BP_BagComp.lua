@@ -10,7 +10,6 @@
 local BPS_Item = UE.UObject.Load('/Game/Ikun/Blueprint/Struct/BPS_Item.BPS_Item')
 local GameInit = require("Core/Init/GameInit")
 local log = require("Core/Log/log")
-local GameInit = require("Core/Init/GameInit")
 
 ---@class BP_BagComp: BP_BagComp_C
 local BP_BagComp = UnLua.Class()
