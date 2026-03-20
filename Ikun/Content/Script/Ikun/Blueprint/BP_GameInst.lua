@@ -7,6 +7,7 @@
 
 require('Start')
 require('Bootstrapper')
+local log = require("Core/Log/log")
 
 ---@class BP_GameInst: BP_GameInst_C
 local BP_GameInst = UnLua.Class()
@@ -14,7 +15,7 @@ local BP_GameInst = UnLua.Class()
 function BP_GameInst:ReceiveInit()
     self.Overridden.ReceiveInit(self)
     -- 此处是客户端和服务器最早启动的地方, 因此可以在这里做一些初始化全局或者静态的东西
-    log.info(log.key.ueinit..' BP_GameInstanceBase:ReceiveInit'..'--------------------------------------------------------------------------')
+    log.mark(log.key.ueinit..":BP_GameInstanceBase:ReceiveInit")
 
     UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 't.MaxFPS 1000', nil)
     UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 'stat FPS', nil)

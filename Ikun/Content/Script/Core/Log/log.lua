@@ -42,6 +42,11 @@ function log.todo(...)
     sys_error("[TODO]", ...)
 end
 
+---@public 关键时机标记
+function log.mark(...)
+    sys_warn("[MARK]", ...)
+end
+
 ---@public 基础日志
 function log.log(...)
     sys_print("[LOG]", ...)
