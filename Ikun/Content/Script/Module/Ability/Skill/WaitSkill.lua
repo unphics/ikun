@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require("Core/Class/class3")
+local Class3 = require("Core/Class/Class3")
 local SkillClass = require("System/Ability/Ability/Skill")
 local log = require("Core/Log/log")
 local Time = require('Core/Time')

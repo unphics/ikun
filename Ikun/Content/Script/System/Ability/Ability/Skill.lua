@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/class3')
+local Class3 = require('Core/Class/Class3')
 
 ---@class SkillConfig
 ---@field SkillKey string

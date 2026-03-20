@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require("Core/Class/class3")
+local Class3 = require("Core/Class/Class3")
 local EffectorBaseClass = require("System/Ability/Effect/EffectorBase")
 local log = require("Core/Log/log")
 

@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require("Core/Class/class3")
+local Class3 = require("Core/Class/Class3")
 local BuffBaseClass = require("System/Ability/Buff/BuffBase")
 local Time = require("Core/Time")
 local log = require("Core/Log/log")

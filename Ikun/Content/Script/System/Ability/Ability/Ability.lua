@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/class3')
+local Class3 = require('Core/Class/Class3')
 local Time = require('Core/Time')
 
 ---@class AbilityConfig
