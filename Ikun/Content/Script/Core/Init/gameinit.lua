@@ -70,10 +70,13 @@ for _, keys in pairs(InitGroup) do
 end
 
 ---@public
----@param callback fun(self: table)
+---@param InRing InitRing
+---@param InObject table
+---@param InCallback fun(self: table)
 GameInit.RegisterInit = function(InRing, InObject, InCallback)
     local infos = GameInit._InitRings[InRing]
     if not infos then
+        log.warn(log.key.gameinit, 'RegisterInit failed: ring not found', InRing)
         return
     end
 
@@ -86,6 +89,11 @@ end
 
 ---@public
 GameInit.BroadcastInit = function(InGroup)
+    if type(InGroup) ~= "table" then
+        log.error(log.key.gameinit, 'BroadcastInit failed: InGroup is not a table')
+        return
+    end
+
     for _, key in ipairs(InGroup) do
         local infos = GameInit._InitRings[key] ---@type table
         log.info(log.key.gameinit, 'BroadcastInit', key)
