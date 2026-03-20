@@ -1,5 +1,11 @@
-# LuaJITFFI 使用说明
-## 使用简介
+# LuaJIT 使用说明
+> **作者:** [zhengyanshuai]
+> **创建日期:** Fri Mar 20 2026 22:10:08 GMT+0800 (中国标准时间)
+> **最后更新:** Fri Mar 20 2026 22:10:08 GMT+0800 (中国标准时间)
+> **文档状态:** 已实装
+> **目标读者:** 程序
+> **主旨目标:** 介绍LuaJit的使用
+## FFI使用简介
 ```
 local ffi = require("ffi")
 
@@ -34,7 +40,7 @@ v1:Add(v2) -- 调用方法，性能极高（JIT 会内联这个调用）
 
 print(v1) -- 输出: Vec2(15.000000, 25.000000)
 ```
-## 交互规则
+## FFI交互规则
 ### 内部交互（Lua 内部）
 | 源数据 | 目标 | 行为准则 | 建议 |
 |--------|------|----------|------|
@@ -54,7 +60,7 @@ print(v1) -- 输出: Vec2(15.000000, 25.000000)
 3. **类型转换**：FFI 结构体与 UE 类型不兼容，需要手动转换
 4. **生命周期**：存储 UE 对象指针时，需注意对象可能被销毁导致指针悬空
 5. **性能考量**：频繁的类型转换会影响性能，尽量减少不必要的转换操作
-## 位运算
+## LuaJIT位运算
 ```
 local ffi = require("ffi")
 
@@ -94,7 +100,7 @@ ffi.cdef[[
 2. NYI: pairs(), next(), string部分如match和gmatch, table.insert和table.remove, debug全部
 3. 不要在循环里ffi.new; 尽量在循环外写tmp
 4. Lua全局变量查找(_G)是很慢的; 尽量在文件头缓存如local sin = math.sin;
-## ECS友好
+## FFI的ECS友好
 ```
 
 local ffi = require("ffi")
