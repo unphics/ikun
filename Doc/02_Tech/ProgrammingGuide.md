@@ -41,7 +41,8 @@
 |组合|建立'有一个'的关系|
 |接口|建立'能做什么'的契约, 如IInteractable|
 |ECS|数据与行为分离|
-## 编码风格
+## 编码
+### 命名
 |部分|编码风格|
 |-|-|
 |类名|大驼峰|
@@ -49,6 +50,8 @@
 |成员变量|大驼峰|
 |文件名|大驼峰|
 |临时变量|小驼峰|
+### 文件头
+- 时间格式转换工具: https://www.lddgo.net/convert/datetime-format-converter
 ## VsCode插件
 |插件|说明|
 |-|-|
@@ -56,6 +59,17 @@
 |Reload|重启VsCode|
 |SynthWave'84|常用主题|
 |EditCSV|好用的csv查看与编辑插件|
+## 动画部分
+- 使用自带Rotate_to_face_BB_entry任务时需勾选Chr的UseControllerRotationYaw, 同时开启Chr下的ChrMovementComp的UseControllerDesiredRotation
+## 框架参考
+- https://github.com/EllanJiang/GameFramework
+- https://passion.blog.csdn.net/article/details/109259806
+- https://passion.blog.csdn.net/article/details/109262711
+- https://passion.blog.csdn.net/article/details/110206648
+- https://passion.blog.csdn.net/article/details/129754833
+- https://passion.blog.csdn.net/article/details/110248405
+## 运行编辑器
+- 以AsClient模式运行时, 需打开EditorPreferences的LaunchSeparateServer
 ## UI开发
 ### 拖动
 #### 双方都要覆写()
