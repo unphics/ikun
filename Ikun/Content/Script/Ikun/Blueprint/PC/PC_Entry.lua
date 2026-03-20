@@ -6,6 +6,7 @@
 ---
 
 local EnhInput = require('Ikun/Module/Input/EnhInput')
+local log = require("Core/Log/log")
 
 ---@class PC_Entry: PC_Base
 local PC_Entry = UnLua.Class('Ikun/Blueprint/PC/PC_Base')

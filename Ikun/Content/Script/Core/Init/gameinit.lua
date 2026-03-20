@@ -13,10 +13,10 @@
 
 local log = require('Core/Log/log')
 
--- 初始化环: 定义了所有需要初始化的模块/系统, 每一个环代表一个初始化点
+-- 初始化点: 定义了所有需要初始化的模块/系统
 ---@diagnostic disable-next-line duplicate-type
----@enum InitRing
-local InitRing = {
+---@enum InitPoint
+local InitPoint = {
     InitStar = 'InitStar',
     InitQuest = 'InitQuest',
     InitLoc = 'InitLoc',
@@ -26,57 +26,57 @@ local InitRing = {
     OpenDefaultUI = 'OpenDefaultUI',
 }
 
--- 触发初始化的流程组
+-- 初始化环
 ---@diagnostic disable-next-line duplicate-type
----@class InitGroup
----@field EnvInit InitRing[]
----@field GamemodeInit InitRing[]
----@field PlayerControllerInit InitRing[]
----@field PlayerControllerInit_Delay_1 InitRing[]
----@field PlayerControllerInit_Delay_2 InitRing[]
-local InitGroup = {
-    EnvInit = {
-        InitRing.InitStar,
-        InitRing.InitQuest,
-    },
-    GamemodeInit = {
-        InitRing.InitLoc,
-    },
-    PlayerControllerInit = {
-        InitRing.InitSite,
-    },
-    PlayerControllerInit_Delay_1 = {
-        InitRing.InitRole,
-        InitRing.OpenDefaultUI,
-    },
-    PlayerControllerInit_Delay_2 = {
-        InitRing.InitBagComp,
-    }
+---@class InitRing
+local InitRing = {}
+
+---@type InitPoint[]
+InitRing.EnvInit = {
+    InitPoint.InitStar,
+    InitPoint.InitQuest,
+}
+---@type InitPoint[]
+InitRing.GameInst_ReceiveInit = {
+    InitPoint.InitLoc,
+}
+---@type InitPoint[]
+InitRing.PC_BeginPlay = {
+    InitPoint.InitSite,
+}
+---@type InitPoint[]
+InitRing.PC_BeginPlay_Delay_1 = {
+    InitPoint.InitRole,
+    InitPoint.OpenDefaultUI,
+}
+---@type InitPoint[]
+InitRing.PC_BeginPlay_Delay_2 = {
+    InitPoint.InitBagComp,
 }
 
 ---@diagnostic disable-next-line duplicate-type
 ---@class GameInit
----@field private _InitRings table
+---@field private _InitPoints table
 local GameInit = {}
-GameInit._InitRings = {}
-GameInit.InitGroup = InitGroup
+GameInit._InitPoints = {}
 GameInit.InitRing = InitRing
+GameInit.InitPoint = InitPoint
 
 -- 创建回调表
-for _, keys in pairs(InitGroup) do
+for _, keys in pairs(InitRing) do
     for _, key in ipairs(keys) do
-        GameInit._InitRings[key] = {}
+        GameInit._InitPoints[key] = {}
     end
 end
 
 ---@public
----@param InRing InitRing
+---@param InPoint InitPoint
 ---@param InObject table
 ---@param InCallback fun(self: table)
-GameInit.RegisterInit = function(InRing, InObject, InCallback)
-    local infos = GameInit._InitRings[InRing]
+GameInit.RegisterInit = function(InPoint, InObject, InCallback)
+    local infos = GameInit._InitPoints[InPoint]
     if not infos then
-        log.warn(log.key.gameinit, 'RegisterInit failed: ring not found', InRing)
+        log.warn(log.key.gameinit, 'RegisterInit failed: ring not found', InPoint)
         return
     end
 
@@ -88,14 +88,14 @@ GameInit.RegisterInit = function(InRing, InObject, InCallback)
 end
 
 ---@public
-GameInit.BroadcastInit = function(InGroup)
-    if type(InGroup) ~= "table" then
-        log.error(log.key.gameinit, 'BroadcastInit failed: InGroup is not a table')
+GameInit.BroadcastInit = function(InRing)
+    if type(InRing) ~= "table" then
+        log.error(log.key.gameinit, 'BroadcastInit failed: InRing is not a table')
         return
     end
 
-    for _, key in ipairs(InGroup) do
-        local infos = GameInit._InitRings[key] ---@type table
+    for _, key in ipairs(InRing) do
+        local infos = GameInit._InitPoints[key] ---@type table
         log.info(log.key.gameinit, 'BroadcastInit', key)
 
         ---@param info any

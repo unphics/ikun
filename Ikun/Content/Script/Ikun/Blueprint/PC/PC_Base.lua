@@ -21,8 +21,8 @@ function PC_Base:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     log.info(log.key.ueinit, ' PC_Base:ReceiveBeginPlay()', net_util.print(self))
     if net_util.is_server(self) then
-        GameInit.BroadcastInit(GameInit.InitGroup.PlayerControllerInit)
-        GameInit.BroadcastInit(GameInit.InitGroup.PlayerControllerInit_Delay_1)
+        GameInit.BroadcastInit(GameInit.InitRing.PC_BeginPlay)
+        GameInit.BroadcastInit(GameInit.InitRing.PC_BeginPlay_Delay_1)
 
         if not modules.GameLevelMgr:CheckLevel(self:GetWorld()) then
             modules.GameLevelMgr:OpenEntryLevel(self:GetWorld())

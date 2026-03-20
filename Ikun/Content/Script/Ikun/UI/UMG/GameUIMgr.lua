@@ -28,7 +28,7 @@ function GameUIMgr:InitUIMgr(Wolrd)
     ui_util.uimgr = self
     self.GameWorld = Wolrd
     log.info('GameUIMgr:InitUIMgr', Wolrd, obj_util.dispname(Wolrd))
-    GameInit.RegisterInit(GameInit.InitRing.OpenDefaultUI, self, self._OpenDefaultUI)
+    GameInit.RegisterInit(GameInit.InitPoint.OpenDefaultUI, self, self._OpenDefaultUI)
 end
 
 ---@public
