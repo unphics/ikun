@@ -11,7 +11,7 @@ local actor_util = {}
 
 local IkunChrClass = UE.UClass.Load('/Game/Ikun/Chr/Blueprint/BP_ChrBase.BP_ChrBase_C')
 
----@region ring.0
+---@region Ring.0
 
 ---@public
 ---@param World UWorld | AActor
@@ -160,7 +160,7 @@ actor_util.filter_is_firend_4_obstacles = function(OwnerChr)
     return filter
 end
 
----@region ring.1
+---@region Ring.1
 
 ---@public 查找最近的ikun_chr
 actor_util.get_nearby_ikun_chr = function(find_actor)

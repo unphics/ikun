@@ -43,7 +43,7 @@ function QuestMgr:ctor()
     self._QuestConfig_QuestId = {}
     self._QuestStepConfig_QuestId = {}
 
-    GameInit.RegisterInit(GameInit.ring.init_quest, self, self.InitQuestMgr)
+    GameInit.RegisterInit(GameInit.InitRing.InitQuest, self, self.InitQuestMgr)
 end
 
 ---@overide [Init]

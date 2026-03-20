@@ -13,7 +13,7 @@ local BP_SiteRegisterComp = UnLua.Class()
 ---@override
 function BP_SiteRegisterComp:ReceiveBeginPlay()
     if net_util.is_server(self) then
-        GameInit.RegisterInit(GameInit.ring.init_site, self, self.AvatarInitSite)
+        GameInit.RegisterInit(GameInit.InitRing.InitSite, self, self.AvatarInitSite)
     end
 end
 

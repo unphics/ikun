@@ -14,7 +14,7 @@ local BP_RoleRegisterComp = UnLua.Class()
 ---@override
 function BP_RoleRegisterComp:ReceiveBeginPlay()
     if net_util.is_server(self:GetOwner()) then    
-        GameInit.RegisterInit(GameInit.ring.init_role, self, self.AvatarInitRole)
+        GameInit.RegisterInit(GameInit.InitRing.InitRole, self, self.AvatarInitRole)
     end
 end
 

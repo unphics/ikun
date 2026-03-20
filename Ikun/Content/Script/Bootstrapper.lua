@@ -24,7 +24,7 @@ _G.log = require('Core/Log/log') ---@type log
 
 local GameInit = require('Core/Init/GameInit')
 require('SharedPCH')
-GameInit.BroadcastInit(GameInit.groups.env_init)
+GameInit.BroadcastInit(GameInit.InitGroup.EnvInit)
 
 require('System/Ability/Test')
 local AbilitySystem = require('System/Ability/AbilitySystem')

@@ -24,7 +24,7 @@ local CosmosClass = class.class "CosmosClass" {
 function CosmosClass:ctor()
     self._tbStar = {}
 
-    GameInit.RegisterInit(GameInit.ring.init_star, self, self.InitAllStar)
+    GameInit.RegisterInit(GameInit.InitRing.InitStar, self, self.InitAllStar)
 end
 
 ---@override

@@ -13,33 +13,35 @@
 
 local log = require('Core/Log/log')
 
-local ring = {
-    init_star = 'init_star',
-    init_quest = 'init_quest',
-    init_loc = 'init_loc',
-    init_site = 'init_site',
-    init_bag_comp = 'init_bag_comp',
-    init_role = 'init_role',
-    open_dft_ui = 'open_dft_ui',
+-- 初始化环: 定义了所有需要初始化的模块/系统, 每一个环代表一个初始化点
+local InitRing = {
+    InitStar = 'InitStar',
+    InitQuest = 'InitQuest',
+    InitLoc = 'InitLoc',
+    InitSite = 'InitSite',
+    InitBagComp = 'InitBagComp',
+    InitRole = 'InitRole',
+    OpenDefaultUI = 'OpenDefaultUI',
 }
 
-local groups = {
-    env_init = {
-        ring.init_star,
-        ring.init_quest,
+-- 触发初始化的流程组
+local InitGroup = {
+    EnvInit = {
+        InitRing.InitStar,
+        InitRing.InitQuest,
     },
-    gm_init = {
-        ring.init_loc,
+    GamemodeInit = {
+        InitRing.InitLoc,
     },
-    ctl_init = {
-        ring.init_site,
+    PlayerControllerInit = {
+        InitRing.InitSite,
     },
-    ctl_delay_1 = {
-        ring.init_role,
-        ring.open_dft_ui,
+    PlayerControllerInit_Delay_1 = {
+        InitRing.InitRole,
+        InitRing.OpenDefaultUI,
     },
-    ctl_delay_2 = {
-        ring.init_bag_comp,
+    PlayerControllerInit_Delay_2 = {
+        InitRing.InitBagComp,
     }
 }
 
@@ -47,19 +49,19 @@ local groups = {
 ---@field private _initring table
 local GameInit = {}
 GameInit._initring = {}
-GameInit.groups = groups
-GameInit.ring = ring
+GameInit.InitGroup = InitGroup
+GameInit.InitRing = InitRing
 
-for _, keys in pairs(groups) do
+for _, keys in pairs(InitGroup) do
     for _, key in ipairs(keys) do
         GameInit._initring[key] = {}
     end
 end
 
 ---@public
----@param callback fun(table)
-GameInit.RegisterInit = function(ring, obj, callback)
-    local infos = GameInit._initring[ring]
+---@param callback fun(self: table)
+GameInit.RegisterInit = function(Ring, obj, callback)
+    local infos = GameInit._initring[Ring]
     table.insert(infos, {obj = obj, callback = callback})
     if infos._inited then
         callback(obj)
@@ -67,10 +69,10 @@ GameInit.RegisterInit = function(ring, obj, callback)
 end
 
 ---@public
-GameInit.BroadcastInit = function(group)
-    for _, key in ipairs(group) do
+GameInit.BroadcastInit = function(InGroup)
+    for _, key in ipairs(InGroup) do
         local infos = GameInit._initring[key]
-        log.info(log.key.GameInit, 'BroadcastInit', key)
+        log.info(log.key.gameinit, 'BroadcastInit', key)
         for _, info in pairs(infos) do
             if type(info) == "table" and info.callback and info.obj then
                 info.callback(info.obj)
