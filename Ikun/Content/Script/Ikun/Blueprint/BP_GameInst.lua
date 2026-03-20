@@ -8,6 +8,7 @@
 require('Start')
 require('Bootstrapper')
 local log = require("Core/Log/log")
+local GameInit = require("Core/Init/GameInit")
 
 ---@class BP_GameInst: BP_GameInst_C
 local BP_GameInst = UnLua.Class()
@@ -19,7 +20,7 @@ function BP_GameInst:ReceiveInit()
 
     UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 't.MaxFPS 1000', nil)
     UE.UKismetSystemLibrary.ExecuteConsoleCommand(self, 'stat FPS', nil)
-    gameinit.triggerinit(gameinit.groups.gm_init)
+    GameInit.BroadcastInit(GameInit.groups.gm_init)
 end
 
 function BP_GameInst:ReceiveOnWorldChanged(OldWorld, NewWorld)

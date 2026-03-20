@@ -85,7 +85,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
     HalfSzie.X = width / 2
     HalfSzie.Z = 80
     local DrawDebugType = UE.EDrawDebugTrace.None
-    if debug_util.IsChrDebug(pos1) then
+    if DebugUtils.IsChrDebug(pos1) then
         DrawDebugType = UE.EDrawDebugTrace.ForDuration
     end
     local TraceColor = UE.FLinearColor(1, 0, 0)
@@ -96,7 +96,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         true, TraceColor, HitColor, DrawTime)
     local Results = {}
     local owner = rolelib.role(pos1)
-    if owner:GetRoleId() == debug_util.debugrole then
+    if owner:GetRoleId() == DebugUtils.debugrole then
         local a = 1
     end
     for i = 1, HitResults:Length() do

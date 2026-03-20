@@ -9,6 +9,7 @@ require('Content/Area/Site')
 require('Content/Area/Location')
 require('Content/Area/Landform')
 require("Content/Area/Star")
+local GameInit = require("Core/Init/GameInit")
 
 ---@class CosmosClass
 ---@field _tbStar StarClass[]
@@ -23,7 +24,7 @@ local CosmosClass = class.class "CosmosClass" {
 function CosmosClass:ctor()
     self._tbStar = {}
 
-    gameinit.registerinit(gameinit.ring.init_star, self, self.InitAllStar)
+    GameInit.RegisterInit(GameInit.ring.init_star, self, self.InitAllStar)
 end
 
 ---@override

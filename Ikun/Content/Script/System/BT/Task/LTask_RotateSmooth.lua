@@ -55,8 +55,8 @@ function LTask_RotateSmooth:OnInit()
     if math.abs(self.DeltaRot.Yaw) < self.ConstFillInThreshold then
         self:DoTerminate(true)
     end
-    if debug_util.IsChrDebug(self.Chr) then
-        draw_util.draw_dir_sphere(AgentLoc, TargetLoc, debug_util.RotateColor)
+    if DebugUtils.IsChrDebug(self.Chr) then
+        draw_util.draw_dir_sphere(AgentLoc, TargetLoc, DebugUtils.RotateColor)
     end
 end
 function LTask_RotateSmooth:OnUpdate(DeltaTime)

@@ -1,9 +1,15 @@
 
----
----@brief   初始化顺序管理
----@author  zys
----@data    Tue Sep 23 2025 11:13:55 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : 初始化时序管理
+--  File        : GameInit.lua
+--  Author      : zhengyanshuai
+--  Date        : Tue Sep 23 2025 11:13:55 GMT+0800 (中国标准时间)
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local log = require('Core/Log/log')
 
@@ -37,23 +43,23 @@ local groups = {
     }
 }
 
----@class gameinit
+---@class GameInit
 ---@field private _initring table
-local gameinit = {}
-gameinit._initring = {}
-gameinit.groups = groups
-gameinit.ring = ring
+local GameInit = {}
+GameInit._initring = {}
+GameInit.groups = groups
+GameInit.ring = ring
 
 for _, keys in pairs(groups) do
     for _, key in ipairs(keys) do
-        gameinit._initring[key] = {}
+        GameInit._initring[key] = {}
     end
 end
 
 ---@public
 ---@param callback fun(table)
-gameinit.registerinit = function(ring, obj, callback)
-    local infos = gameinit._initring[ring]
+GameInit.RegisterInit = function(ring, obj, callback)
+    local infos = GameInit._initring[ring]
     table.insert(infos, {obj = obj, callback = callback})
     if infos._inited then
         callback(obj)
@@ -61,10 +67,10 @@ gameinit.registerinit = function(ring, obj, callback)
 end
 
 ---@public
-gameinit.triggerinit = function(group)
+GameInit.BroadcastInit = function(group)
     for _, key in ipairs(group) do
-        local infos = gameinit._initring[key]
-        log.info(log.key.gameinit, 'triggerinit', key)
+        local infos = GameInit._initring[key]
+        log.info(log.key.GameInit, 'BroadcastInit', key)
         for _, info in pairs(infos) do
             if type(info) == "table" and info.callback and info.obj then
                 info.callback(info.obj)
@@ -74,4 +80,4 @@ gameinit.triggerinit = function(group)
     end
 end
 
-return gameinit
+return GameInit

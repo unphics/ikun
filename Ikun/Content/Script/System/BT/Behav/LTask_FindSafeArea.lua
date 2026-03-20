@@ -32,7 +32,7 @@ function LTask_FindSafeArea:OnInit()
         BackDir = BackDir * 200
         local bSuccess, ResultLoc = class.NavMoveData.RandomNavPointInRadius(self.Chr, TeamCenter + BackDir, 150)
         if bSuccess then
-            -- if debug_util.IsChrDebug(self.Chr) then
+            -- if DebugUtils.IsChrDebug(self.Chr) then
                 draw_util.draw_dir_sphere(self.Chr, ResultLoc, draw_util.blue)
             -- end
             self.Blackboard:SetBBValue(BBKeyDef.SafeLoc, ResultLoc)

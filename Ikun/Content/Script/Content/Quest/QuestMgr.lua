@@ -9,6 +9,7 @@ require('Content/Quest/QuestStep')
 require('Content/Quest/QuestInst')
 require('Content/Quest/QuestGiver')
 require('Content/Quest/QuestComp')
+local GameInit = require("Core/Init/GameInit")
 
 ---@class QuestStepConfig
 ---@field QuestStepId number
@@ -42,7 +43,7 @@ function QuestMgr:ctor()
     self._QuestConfig_QuestId = {}
     self._QuestStepConfig_QuestId = {}
 
-    gameinit.registerinit(gameinit.ring.init_quest, self, self.InitQuestMgr)
+    GameInit.RegisterInit(GameInit.ring.init_quest, self, self.InitQuestMgr)
 end
 
 ---@overide [Init]

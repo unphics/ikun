@@ -5,6 +5,8 @@
 ---@data    Sun Jan 19 2025 20:19:40 GMT+0800 (中国标准时间)
 ---
 
+local GameInit = require("Core/Init/GameInit")
+
 ---@class BP_RoleRegisterComp: RoleComp_C
 ---@field Role RoleBaseClass
 local BP_RoleRegisterComp = UnLua.Class()
@@ -12,7 +14,7 @@ local BP_RoleRegisterComp = UnLua.Class()
 ---@override
 function BP_RoleRegisterComp:ReceiveBeginPlay()
     if net_util.is_server(self:GetOwner()) then    
-        gameinit.registerinit(gameinit.ring.init_role, self, self.AvatarInitRole)
+        GameInit.RegisterInit(GameInit.ring.init_role, self, self.AvatarInitRole)
     end
 end
 

@@ -62,11 +62,11 @@ function LTask_FindLoc4Ability:FindReposLoc_Circle()
             local rot = UE.FRotator(0, angle, 0)
             local newDir = rot:RotateVector(BaseDir)
             local newPos = TargetLoc + newDir * Radius
-            if debug_util.IsChrDebug(self.Chr) then
+            if DebugUtils.IsChrDebug(self.Chr) then
                 draw_util.draw_dir_sphere(OwnerChr, newPos)
             end
             if not actor_util.has_obstacles(newPos, TargetLoc, actor_util.filter_is_firend_4_obstacles(self.Chr)) then
-                if debug_util.IsChrDebug(self.Chr) then
+                if DebugUtils.IsChrDebug(self.Chr) then
                     draw_util.draw_dir_sphere(newPos, TargetLoc, draw_util.green)
                 end
                 return newPos

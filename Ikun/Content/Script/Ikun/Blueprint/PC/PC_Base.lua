@@ -7,6 +7,8 @@
 
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
+local log = require("Core/Log/log")
+local GameInit = require("Core/Init/GameInit")
 
 ---@class PC_Base: PC_Base_C
 ---@field OwnerChr BP_ChrBase
@@ -19,8 +21,8 @@ function PC_Base:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     log.info(log.key.ueinit, ' PC_Base:ReceiveBeginPlay()', net_util.print(self))
     if net_util.is_server(self) then
-        gameinit.triggerinit(gameinit.groups.ctl_init)
-        gameinit.triggerinit(gameinit.groups.ctl_delay_1)
+        GameInit.BroadcastInit(GameInit.groups.ctl_init)
+        GameInit.BroadcastInit(GameInit.groups.ctl_delay_1)
 
         if not modules.GameLevelMgr:CheckLevel(self:GetWorld()) then
             modules.GameLevelMgr:OpenEntryLevel(self:GetWorld())

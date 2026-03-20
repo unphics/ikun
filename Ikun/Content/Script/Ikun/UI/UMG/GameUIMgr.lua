@@ -6,6 +6,7 @@
 ---
 
 local log =  require("Core/Log/log")
+local GameInit = require("Core/Init/GameInit")
 
 ---@class GameUIMgr: GameUIMgr_C
 ---@field GameWorld UWorld
@@ -27,7 +28,7 @@ function GameUIMgr:InitUIMgr(Wolrd)
     ui_util.uimgr = self
     self.GameWorld = Wolrd
     log.info('GameUIMgr:InitUIMgr', Wolrd, obj_util.dispname(Wolrd))
-    gameinit.registerinit(gameinit.ring.open_dft_ui, self, self._OpenDefaultUI)
+    GameInit.RegisterInit(GameInit.ring.open_dft_ui, self, self._OpenDefaultUI)
 end
 
 ---@public

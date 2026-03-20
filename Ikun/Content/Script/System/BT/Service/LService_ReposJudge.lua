@@ -10,7 +10,7 @@ function LService_ReposJudge:OnInit()
     self.CurTickCount = self.StaticTickInterval
 end
 function LService_ReposJudge:OnUpdate(DeltaTime)
-    -- if not debug_util.IsChrDebug(self.Chr) then
+    -- if not DebugUtils.IsChrDebug(self.Chr) then
     --     self:DoTerminate(true)
     --     return
     -- end
@@ -20,7 +20,7 @@ function LService_ReposJudge:OnUpdate(DeltaTime)
     if self.FightTarget:IsRoleDead() then
         return
     end
-    if debug_util.IsChrDebug(self.Chr) then
+    if DebugUtils.IsChrDebug(self.Chr) then
         local a = 1
     end
     if not actor_util.has_obstacles(self.FightTarget.Avatar, self.Chr, actor_util.filter_is_firend_4_obstacles(self.Chr), function(tb)

@@ -5,13 +5,15 @@
 ---@data    Sat Oct 04 2025 13:24:46 GMT+0800 (中国标准时间)
 ---
 
+local GameInit = require("Core/Init/GameInit")
+
 ---@class BP_SiteRegisterComp: BP_SiteRegisterComp_C
 local BP_SiteRegisterComp = UnLua.Class()
 
 ---@override
 function BP_SiteRegisterComp:ReceiveBeginPlay()
     if net_util.is_server(self) then
-        gameinit.registerinit(gameinit.ring.init_site, self, self.AvatarInitSite)
+        GameInit.RegisterInit(GameInit.ring.init_site, self, self.AvatarInitSite)
     end
 end
 

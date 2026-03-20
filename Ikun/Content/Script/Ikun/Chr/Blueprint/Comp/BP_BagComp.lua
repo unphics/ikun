@@ -8,6 +8,9 @@
 ---
 
 local BPS_Item = UE.UObject.Load('/Game/Ikun/Blueprint/Struct/BPS_Item.BPS_Item')
+local GameInit = require("Core/Init/GameInit")
+local log = require("Core/Log/log")
+local GameInit = require("Core/Init/GameInit")
 
 ---@class BP_BagComp: BP_BagComp_C
 local BP_BagComp = UnLua.Class()
@@ -15,7 +18,7 @@ local BP_BagComp = UnLua.Class()
 ---@override
 function BP_BagComp:ReceiveBeginPlay()
     if net_util.is_server(self:GetOwner()) then
-        gameinit.registerinit(gameinit.ring.init_bag_comp, self, self._InitBagComp)
+        GameInit.RegisterInit(GameInit.ring.init_bag_comp, self, self._InitBagComp)
     end
 end
 

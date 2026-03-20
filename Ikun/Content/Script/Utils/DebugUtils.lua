@@ -14,41 +14,40 @@
 local TagUtils = require("System/Ability/Tag/TagUtils")
 local log = require("Core/Log/log")
 
-local GameWorld = nil
-local Unpack = table.unpack or _G.unpack
-log.info("debug_util Loaded")
+---@class DebugUtils
+local DebugUtils = {}
 
----@class debug_util
-local debug_util = {}
+local Unpack = table.unpack or _G.unpack
+local GameWorld = nil
 
 -- [[
 -- 调试变量
 -- ]]
 
-debug_util.debug_class = false
+DebugUtils.debug_class = false
 
-debug_util.debug_bt = 1
-debug_util.debugrole = 10102001
+DebugUtils.debug_bt = 1
+DebugUtils.debugrole = 10102001
 
-debug_util.RotateColor = UE.FLinearColor(0, 1, 0)
-debug_util.MoveColor = UE.FLinearColor(1, 1, 0)
+DebugUtils.RotateColor = UE.FLinearColor(0, 1, 0)
+DebugUtils.MoveColor = UE.FLinearColor(1, 1, 0)
 
 -- [[
 -- 调试方法
 -- ]]
 
-debug_util.qqq = function(a, b)
+DebugUtils.qqq = function(a, b)
     log.error("zys: qqq", a, b)
 end
 
-debug_util.printrole = function(id)
+DebugUtils.printrole = function(id)
     local role = RoleMgr:FindRole(id)
     if role then
         log.error(role:PrintRole())
     end
 end
 
-debug_util.gamespeed = function(speed)
+DebugUtils.gamespeed = function(speed)
     local time = TimeMgr ---@type TimeMgr
     time:SetGameSpeed(speed)
 end
@@ -56,21 +55,21 @@ end
 ---@public
 ---@param Chr BP_ChrBase | RoleBaseClass | number
 ---@return boolean
-debug_util.IsChrDebug = function(Chr)
+DebugUtils.IsChrDebug = function(Chr)
     if type(Chr) == "number" then
-        return Chr == debug_util.debugrole
+        return Chr == DebugUtils.debugrole
     end
     if Chr.GetRole then
-        return Chr:GetRole():GetRoleId() == debug_util.debugrole
+        return Chr:GetRole():GetRoleId() == DebugUtils.debugrole
     end
     if class.instanceof(Chr, class.RoleBaseClass) then
-        return Chr:GetRoleId() == debug_util.debugrole
+        return Chr:GetRoleId() == DebugUtils.debugrole
     end
     return false
 end
 
-debug_util.skill = function()
-    log.warn("debug_util.skill begin")
+DebugUtils.skill = function()
+    log.warn("DebugUtils.skill begin")
     local name = "鸽鸽"
     local role = RoleMgr:FindRoleByName(name)
     
@@ -89,7 +88,7 @@ debug_util.skill = function()
         log.error_fmt("没找到[%s]", name)
     end
     
-    log.warn("debug_util.skill end")
+    log.warn("DebugUtils.skill end")
 end
 
 -- [[
@@ -111,7 +110,7 @@ UECmd = function(Cmd, InWorld)
         GameWorld = InWorld
         local args = parse_args(Cmd)
         local field_name = table.remove(args, 1)
-        local field = debug_util[field_name]
+        local field = DebugUtils[field_name]
         if field and type(field) == "function" then
             xpcall(function()
                 field(Unpack(args))
@@ -120,14 +119,14 @@ UECmd = function(Cmd, InWorld)
             end)
         elseif field and (type(field) == "string" or type(field) == "number" or type(field) == "boolean") then
             local value = table.remove(args, 1)
-            debug_util[field_name] = tonumber(value) or value
+            DebugUtils[field_name] = tonumber(value) or value
             log.error("LuaCmd: Set debug field [" .. field_name .. "] : " ..  value)
         else
-            log.error("debug_util找不到这个函数:" .. Cmd)
+            log.error("DebugUtils找不到这个函数:" .. Cmd)
         end
         return true;
     end;
     return false;
 end
 
-return debug_util
+return DebugUtils
