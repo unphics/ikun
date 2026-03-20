@@ -55,18 +55,30 @@ InitRing.PC_BeginPlay_Delay_2 = {
 }
 
 ---@diagnostic disable-next-line duplicate-type
+---@class InitPointData
+---@field Obj table?
+---@field Callback fun(self:table)?
+
+---@diagnostic disable-next-line duplicate-type
 ---@class GameInit
----@field private _InitPoints table
+---@field private _InitPointInfos table<InitPoint, InitPointData[]>
+---@field private _InitedMark table<InitPoint, boolean>
 local GameInit = {}
-GameInit._InitPoints = {}
+GameInit._InitPointInfos = {}
+GameInit._InitedMark = {}
 GameInit.InitRing = InitRing
 GameInit.InitPoint = InitPoint
 
 -- 创建回调表
 for _, keys in pairs(InitRing) do
+    ---@param key InitPoint
     for _, key in ipairs(keys) do
-        GameInit._InitPoints[key] = {}
+        GameInit._InitPointInfos[key] = {}
     end
+end
+
+for key in pairs(InitPoint) do
+    GameInit._InitedMark[key] = false
 end
 
 ---@public
@@ -74,7 +86,7 @@ end
 ---@param InObject table
 ---@param InCallback fun(self: table)
 GameInit.RegisterInit = function(InPoint, InObject, InCallback)
-    local infos = GameInit._InitPoints[InPoint]
+    local infos = GameInit._InitPointInfos[InPoint]
     if not infos then
         log.warn(log.key.gameinit, 'RegisterInit failed: ring not found', InPoint)
         return
@@ -82,12 +94,13 @@ GameInit.RegisterInit = function(InPoint, InObject, InCallback)
 
     table.insert(infos, {obj = InObject, callback = InCallback})
     
-    if infos._inited then
+    if GameInit._InitedMark[InPoint] then
         InCallback(InObject)
     end
 end
 
 ---@public
+---@param InRing InitPoint[]
 GameInit.BroadcastInit = function(InRing)
     if type(InRing) ~= "table" then
         log.error(log.key.gameinit, 'BroadcastInit failed: InRing is not a table')
@@ -95,17 +108,31 @@ GameInit.BroadcastInit = function(InRing)
     end
 
     for _, key in ipairs(InRing) do
-        local infos = GameInit._InitPoints[key] ---@type table
+        local infos = GameInit._InitPointInfos[key]
         log.info(log.key.gameinit, 'BroadcastInit', key)
-
         ---@param info any
         for _, info in pairs(infos) do
             if info and type(info) == "table" and info.callback and info.obj then
                 info.callback(info.obj)
             end
         end
-        infos._inited = true
+        GameInit._InitedMark[key] = true
     end
+
+    if GameInit.CheckAllFinished() then
+        log.mark(log.key.gameinit, "All init finished !")
+    end
+end
+
+---@private
+---@return boolean
+GameInit.CheckAllFinished = function()
+    for _, ele in pairs(GameInit._InitedMark) do
+        if not ele then
+            return false
+        end
+    end
+    return true
 end
 
 return GameInit
