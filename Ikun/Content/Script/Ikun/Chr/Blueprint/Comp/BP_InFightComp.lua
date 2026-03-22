@@ -5,7 +5,7 @@
 ---@data    Thu Jul 31 2025 23:32:46 GMT+0800 (中国标准时间)
 ---
 
-local UnLuaClass = require("Core/Class/UnLuaClass")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class BP_InFightComp: BP_InFightComp_C
 ---@field private _OutFightTimeCount number

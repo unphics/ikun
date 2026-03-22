@@ -5,7 +5,7 @@
 ---@data    Sun Mar 02 2025 02:19:44 GMT+0800 (中国标准时间)
 ---  
 
-local UnLuaClass = require("Core/Class/UnLuaClass")
+local UnLuaClass = require("Core/UnLua/Class")
 local log = require("Core/Log/log")
 local TagUtils = require("System/Ability/Tag/TagUtils")
 

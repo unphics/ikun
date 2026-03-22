@@ -5,7 +5,7 @@
 ---@data    Sun Aug 31 2025 21:49:36 GMT+0800 (中国标准时间)
 ---
 
-local UnLuaClass = require("Core/Class/UnLuaClass")
+local UnLuaClass = require("Core/UnLua/Class")
 local log = require("Core/Log/log")
 local BPS_SkillSlot = UE.UObject.Load('/Game/Ikun/Blueprint/Struct/BPS_SkillSlot.BPS_SkillSlot')
 local SLOT_NAME_HEAD = 'Skill.Slot.'

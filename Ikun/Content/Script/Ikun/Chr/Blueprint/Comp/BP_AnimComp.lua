@@ -5,7 +5,7 @@
 ---@data    Sun Jul 20 2025 11:01:17 GMT+0800 (中国标准时间)
 ---
 
-local UnLuaClass = require("Core/Class/UnLuaClass")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class AnimComp: BP_AnimComp_C
 local AnimComp = UnLuaClass()

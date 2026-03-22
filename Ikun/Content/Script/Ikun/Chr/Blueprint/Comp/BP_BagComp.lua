@@ -7,7 +7,7 @@
 ---@desc    
 ---
 
-local UnLuaClass = require("Core/Class/UnLuaClass")
+local UnLuaClass = require("Core/UnLua/Class")
 local BPS_Item = UE.UObject.Load('/Game/Ikun/Blueprint/Struct/BPS_Item.BPS_Item')
 local GameInit = require("Core/Init/GameInit")
 local log = require("Core/Log/log")

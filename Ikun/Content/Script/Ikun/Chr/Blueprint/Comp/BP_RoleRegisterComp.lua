@@ -5,7 +5,7 @@
 ---@data    Sun Jan 19 2025 20:19:40 GMT+0800 (中国标准时间)
 ---
 
-local UnLuaClass = require("Core/Class/UnLuaClass")
+local UnLuaClass = require("Core/UnLua/Class")
 local GameInit = require("Core/Init/GameInit")
 
 ---@class BP_RoleRegisterComp: BP_RoleRegisterComp_C
