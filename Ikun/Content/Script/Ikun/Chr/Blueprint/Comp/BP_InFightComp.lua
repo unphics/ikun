@@ -5,17 +5,19 @@
 ---@data    Thu Jul 31 2025 23:32:46 GMT+0800 (中国标准时间)
 ---
 
----@class BP_InFIghtComp: BP_InFIghtComp_C
+local UnLuaClass = require("Core/Class/UnLuaClass")
+
+---@class BP_InFightComp: BP_InFightComp_C
 ---@field private _OutFightTimeCount number
-local BP_InFIghtComp = UnLua.Class()
+local BP_InFightComp = UnLuaClass()
 
 ---@override
-function BP_InFIghtComp:ReceiveBeginPlay()
+function BP_InFightComp:ReceiveBeginPlay()
     self._OutFightTimeCount = nil
 end
 
 ---@override
-function BP_InFIghtComp:ReceiveTick(DeltaSeconds)
+function BP_InFightComp:ReceiveTick(DeltaSeconds)
     if net_util.is_client(self) then
         return
     end
@@ -28,7 +30,7 @@ function BP_InFIghtComp:ReceiveTick(DeltaSeconds)
 end
 
 ---@public [Server] 入战调用
-function BP_InFIghtComp:EnterFight()
+function BP_InFightComp:EnterFight()
     self._OutFightTimeCount = ConfigMgr:GetGlobalConst('OutFightTime')
     if not self:CheckInFight() then
         gas_util.add_loose_tag(self:GetOwner(), 'Role.State.InFight')
@@ -36,7 +38,7 @@ function BP_InFIghtComp:EnterFight()
 end
 
 ---@public [Server] 出战调用
-function BP_InFIghtComp:ExitFight()
+function BP_InFightComp:ExitFight()
     if self:CheckInFight() then
         self._OutFightTimeCount = nil
         gas_util.remove_loose_tag(self:GetOwner(), 'Role.State.InFight')
@@ -44,7 +46,7 @@ function BP_InFIghtComp:ExitFight()
 end
 
 ---@public 拿起武器
-function BP_InFIghtComp:C2S_Equip_RPC()
+function BP_InFightComp:C2S_Equip_RPC()
     if not self:CheckIsEquip() then
         gas_util.add_loose_tag(self:GetOwner(), 'Role.State.bEquip')
         self:GetOwner().SkillComp:TryActiveSlotSkill('Equip')
@@ -52,7 +54,7 @@ function BP_InFIghtComp:C2S_Equip_RPC()
 end
 
 ---@public 收起武器
-function BP_InFIghtComp:C2S_UnEquip_RPC()
+function BP_InFightComp:C2S_UnEquip_RPC()
     if self:CheckIsEquip() then
         gas_util.remove_loose_tag(self:GetOwner(), 'Role.State.bEquip')
         self:GetOwner().SkillComp:TryActiveSlotSkill('UnEquip')
@@ -61,16 +63,16 @@ end
 
 ---@public 当前拿起了武器
 ---@return boolean
-function BP_InFIghtComp:CheckIsEquip()
+function BP_InFightComp:CheckIsEquip()
     local bResult = gas_util.has_loose_tag(self:GetOwner(), 'Role.State.bEquip')
     return bResult
 end
 
 ---@public 当前是否在战斗状态
 ---@return boolean
-function BP_InFIghtComp:CheckInFight()
+function BP_InFightComp:CheckInFight()
     local bResult = gas_util.has_loose_tag(self:GetOwner(), 'Role.State.InFight')
     return bResult
 end
 
-return BP_InFIghtComp
+return BP_InFightComp

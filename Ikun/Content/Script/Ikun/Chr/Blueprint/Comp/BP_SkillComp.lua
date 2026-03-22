@@ -5,11 +5,13 @@
 ---@data    Sun Aug 31 2025 21:49:36 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/Class/UnLuaClass")
+local log = require("Core/Log/log")
 local BPS_SkillSlot = UE.UObject.Load('/Game/Ikun/Blueprint/Struct/BPS_SkillSlot.BPS_SkillSlot')
 local SLOT_NAME_HEAD = 'Skill.Slot.'
 
 ---@class BP_SkillComp: BP_SkillComp_C
-local BP_SkillComp = UnLua.Class()
+local BP_SkillComp = UnLuaClass()
 
 ---@public 初始化角色的技能
 function BP_SkillComp:InitRoleSkill()

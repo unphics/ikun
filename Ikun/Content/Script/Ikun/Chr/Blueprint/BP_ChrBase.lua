@@ -5,11 +5,13 @@
 ---@data    Sun Mar 02 2025 02:19:44 GMT+0800 (中国标准时间)
 ---  
 
+local UnLuaClass = require("Core/Class/UnLuaClass")
+local log = require("Core/Log/log")
 local TagUtils = require("System/Ability/Tag/TagUtils")
 
 ---@class BP_ChrBase: BP_ChrBase_C
 ---@field Role RoleBaseClass
-local BP_ChrBase = UnLua.Class()
+local BP_ChrBase = UnLuaClass()
 
 ---@override
 function BP_ChrBase:ReceiveBeginPlay()

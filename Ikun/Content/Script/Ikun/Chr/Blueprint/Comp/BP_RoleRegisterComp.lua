@@ -5,11 +5,12 @@
 ---@data    Sun Jan 19 2025 20:19:40 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/Class/UnLuaClass")
 local GameInit = require("Core/Init/GameInit")
 
----@class BP_RoleRegisterComp: RoleComp_C
+---@class BP_RoleRegisterComp: BP_RoleRegisterComp_C
 ---@field Role RoleBaseClass
-local BP_RoleRegisterComp = UnLua.Class()
+local BP_RoleRegisterComp = UnLuaClass()
 
 ---@override
 function BP_RoleRegisterComp:ReceiveBeginPlay()

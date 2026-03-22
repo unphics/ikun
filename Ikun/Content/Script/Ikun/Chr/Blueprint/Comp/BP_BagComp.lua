@@ -7,12 +7,13 @@
 ---@desc    
 ---
 
+local UnLuaClass = require("Core/Class/UnLuaClass")
 local BPS_Item = UE.UObject.Load('/Game/Ikun/Blueprint/Struct/BPS_Item.BPS_Item')
 local GameInit = require("Core/Init/GameInit")
 local log = require("Core/Log/log")
 
 ---@class BP_BagComp: BP_BagComp_C
-local BP_BagComp = UnLua.Class()
+local BP_BagComp = UnLuaClass()
 
 ---@override
 function BP_BagComp:ReceiveBeginPlay()
