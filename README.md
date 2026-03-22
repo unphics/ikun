@@ -17,6 +17,7 @@ Ikun/
 |  |  ├── ···               # 其他美术资产
 |  |  ├── Ikun              # 主要开发内容的资产目录 *
 |  |  └── Script            # 游戏工程的lua脚本文件, 大部分的游戏逻辑在这里存放 *
+|  ├── Plugins/             # 构成游戏基石的一些插件
 |  └── Source               # Unreal工程的cpp代码目录
 ├── LICENSE                 # MIT License
 ├── Resource                # 美术资产源文件
