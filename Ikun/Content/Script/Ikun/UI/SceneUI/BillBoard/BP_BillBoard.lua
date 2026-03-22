@@ -1,8 +1,15 @@
----
----@brief 
----@author zys
----@data Sat Apr 05 2025 18:36:20 GMT+0800 (中国标准时间)
----
+
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : SceneUI-Billboard的WidgetComp
+--  File        : BP_BillBoard.lua
+--  Author      : zhengyanshuai
+--  Date        : Sat Apr 05 2025 18:36:20 GMT+0800 (中国标准时间)
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 ---@class BP_BillBoardComp: BP_BillBoardComp_C
 ---@field BillboardContent table<string, string>
@@ -18,17 +25,17 @@ function BP_BillBoardComp:ReceiveTick(DeltaSeconds)
     if net_util.is_client(self:GetOwner()) then
         self:Face2Player()
     end
-    self:UpdateHealthBar()
+    self:_UpdateHealthBar()
 end
 
 ---@public 直接设置Billboard文本
 function BP_BillBoardComp:S2C_SetText_RPC(Text)
-    self:GetWidget().TxtDebug:SetText(Text)
+    self:GetBillBoardUI().TxtDebug:SetText(Text)
 end
 
 ---@public 
 function BP_BillBoardComp:S2C_ShowHealthBar_RPC(bShow)
-    self:GetWidget().HealthBar:SetVisibility(bShow and UE.ESlateVisibility.SelfHitTestInvisible or UE.ESlateVisibility.Collapsed)
+    self:GetBillBoardUI().HealthBar:SetVisibility(bShow and UE.ESlateVisibility.SelfHitTestInvisible or UE.ESlateVisibility.Collapsed)
 end
 
 ---@private [Tick] Billboard永远面向玩家
@@ -50,14 +57,20 @@ function BP_BillBoardComp:OnRoleNameUpdate(RoleName)
 end
 
 ---@private [Tick]
-function BP_BillBoardComp:UpdateHealthBar()
+function BP_BillBoardComp:_UpdateHealthBar()
     if not self:GetOwner().AttrSet then
         return
     end
     local CurHealth = self:GetOwner().AttrSet:GetAttrValueByName("Health")
     local MaxHealth = self:GetOwner().AttrSet:GetAttrValueByName("MaxHealth")
     local HP = CurHealth / MaxHealth
-    self:GetWidget().HealthBar:SetPercent(HP)
+    self:GetBillBoardUI().HealthBar:SetPercent(HP)
+end
+
+---@public
+---@return UI_BillBoard_C
+function BP_BillBoardComp:GetBillBoardUI()
+    return self:GetWidget()
 end
 
 return BP_BillBoardComp
