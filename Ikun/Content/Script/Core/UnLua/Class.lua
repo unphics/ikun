@@ -74,4 +74,6 @@ local function Class(super_name)
   return new_class
 end
 
-return Class
+local UnLua = _G.UnLua
+
+return UnLua.Class
