@@ -5,6 +5,7 @@
 ---@data    Sun Aug 10 2025 01:30:39 GMT+0800 (中国标准时间)
 ---
 
+local log = require("Core/Log/log")
 require('Module/DirectoryBrowser/DirectoryBrowser')
 
 ---@class ConfigMgr
@@ -23,8 +24,6 @@ local ConfigMgr = class.class 'ConfigMgr' {
 
 ---@override 初始化缓存容器, 加载需要预加载的配置表
 function ConfigMgr:ctor()
-    log.info('ConfigMgr:ctor()')
-
     self._CachedConfigTable = {}
     self:_PreloadConfigTable()
 end
@@ -57,8 +56,6 @@ end
 
 ---@private 预加载一些配置表
 function ConfigMgr:_PreloadConfigTable()
-    log.info('ConfigMgr:_PreloadConfigTable()', '预加载配置表开始!')
-
     local brs = class.DirectoryBrowser.CreateConfigDir() ---@type DirectoryBrowser
     self:LoadConfigTable(brs, 'GlobalConst')
     local preloadConfig = self:LoadConfigTable(brs, 'Preload')
@@ -81,7 +78,6 @@ function ConfigMgr:_PreloadConfigTable()
             brs:CD('..')
         end
     end
-    log.info('ConfigMgr:_PreloadConfigTable()', '预加载配置表结束!')
 end
 
 ---@private 解析以"|"为分隔符的csv表格内容

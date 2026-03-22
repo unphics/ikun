@@ -11,19 +11,20 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local log = require('Core/Log/log')
+local log = require("Core/Log/log")
 
 -- 初始化点: 定义了所有需要初始化的模块/系统
 ---@diagnostic disable-next-line duplicate-type
 ---@enum InitPoint
 local InitPoint = {
-    InitStar = 'InitStar',
-    InitQuest = 'InitQuest',
-    InitLoc = 'InitLoc',
-    InitSite = 'InitSite',
-    InitBagComp = 'InitBagComp',
-    InitRole = 'InitRole',
-    OpenDefaultUI = 'OpenDefaultUI',
+    InitStar = "InitStar",
+    InitQuest = "InitQuest",
+    InitLoc = "InitLoc",
+    InitSite = "InitSite",
+    InitBagComp = "InitBagComp",
+    InitRole = "InitRole",
+    OpenDefaultUI = "OpenDefaultUI",
+    InitFinish = "InitFinish",
 }
 
 -- 初始化环
@@ -52,6 +53,7 @@ InitRing.PC_BeginPlay_Delay_1 = {
 ---@type InitPoint[]
 InitRing.PC_BeginPlay_Delay_2 = {
     InitPoint.InitBagComp,
+    InitRing.InitFinish,
 }
 
 ---@diagnostic disable-next-line duplicate-type
@@ -83,18 +85,19 @@ end
 
 ---@public
 ---@param InPoint InitPoint
----@param InObject table
----@param InCallback fun(self: table)
+---@param InObject table?
+---@param InCallback fun(self?: table)
 GameInit.RegisterInit = function(InPoint, InObject, InCallback)
     local infos = GameInit._InitPointInfos[InPoint]
     if not infos then
-        log.warn(log.key.gameinit, 'RegisterInit failed: ring not found', InPoint)
+        log.warn(log.key.gameinit, "RegisterInit failed: ring not found", InPoint)
         return
     end
 
     table.insert(infos, {obj = InObject, callback = InCallback})
     
     if GameInit._InitedMark[InPoint] then
+        ---@todo 优化掉这个
         InCallback(InObject)
     end
 end
@@ -103,13 +106,13 @@ end
 ---@param InRing InitPoint[]
 GameInit.BroadcastInit = function(InRing)
     if type(InRing) ~= "table" then
-        log.error(log.key.gameinit, 'BroadcastInit failed: InRing is not a table')
+        log.error(log.key.gameinit, "BroadcastInit failed: InRing is not a table")
         return
     end
 
     for _, key in ipairs(InRing) do
         local infos = GameInit._InitPointInfos[key]
-        log.info(log.key.gameinit, 'BroadcastInit', key)
+        log.info(log.key.gameinit, "BroadcastInit", key)
         ---@param info any
         for _, info in pairs(infos) do
             if info and type(info) == "table" and info.callback and info.obj then
@@ -118,21 +121,15 @@ GameInit.BroadcastInit = function(InRing)
         end
         GameInit._InitedMark[key] = true
     end
-
-    if GameInit.CheckAllFinished() then
-        log.mark(log.key.gameinit, "All init finished !")
-    end
 end
 
----@private
----@return boolean
-GameInit.CheckAllFinished = function()
-    for _, ele in pairs(GameInit._InitedMark) do
-        if not ele then
-            return false
-        end
-    end
-    return true
-end
+GameInit.RegisterInit(InitPoint.InitFinish, nil, function()
+    -- for _, ele in pairs(GameInit._InitedMark) do
+    --     if not ele then
+    --         return false
+    --     end
+    -- end
+    log.mark(log.key.gameinit, "All init finished !")
+end)
 
 return GameInit

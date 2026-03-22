@@ -23,6 +23,7 @@ function PC_Base:ReceiveBeginPlay()
     if net_util.is_server(self) then
         GameInit.BroadcastInit(GameInit.InitRing.PC_BeginPlay)
         GameInit.BroadcastInit(GameInit.InitRing.PC_BeginPlay_Delay_1)
+        GameInit.BroadcastInit(GameInit.InitRing.PC_BeginPlay_Delay_2)
 
         if not modules.GameLevelMgr:CheckLevel(self:GetWorld()) then
             modules.GameLevelMgr:OpenEntryLevel(self:GetWorld())
