@@ -6,11 +6,12 @@
 ---@todo    改名为Entry
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 
 ---@class UI_Entry: UI_Entry_C
-local UI_Entry = UnLua.Class()
+local UI_Entry = UnLuaClass()
 
 ---@override
 function UI_Entry:Construct()

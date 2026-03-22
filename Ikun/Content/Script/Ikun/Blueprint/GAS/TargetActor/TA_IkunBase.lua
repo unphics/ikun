@@ -5,9 +5,12 @@
 ---@data    Wed Sep 17 2025 20:17:22 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class TA_IkunBase: AIkunTargetActorBase
 ---@field TargetActorContext TargetActorContext
-local TA_IkunBase = UnLua.Class()
+local TA_IkunBase = UnLuaClass()
 
 ---@override
 function TA_IkunBase:ReceiveBeginPlay()

@@ -5,8 +5,11 @@
 ---@data    Wed Aug 27 2025 14:25:04 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class ChatComp: BP_ChatComp_C
-local ChatComp = UnLua.Class()
+local ChatComp = UnLuaClass()
 
 ---@public [Server]
 function ChatComp:BeginChat()

@@ -5,8 +5,11 @@
 ---@data    Tue Sep 02 2025 23:47:54 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class GA_UnEquip: BP_AbilityBase
-local GA_UnEquip = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
+local GA_UnEquip = UnLuaClass('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 ---@override
 ---@param Payload FGameplayEventData

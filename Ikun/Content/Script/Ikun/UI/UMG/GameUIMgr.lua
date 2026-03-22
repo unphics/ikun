@@ -7,11 +7,12 @@
 
 local log =  require("Core/Log/log")
 local GameInit = require("Core/Init/GameInit")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class GameUIMgr: GameUIMgr_C
 ---@field GameWorld UWorld
 ---@field tbUIWidget table<string, UUserWidget>
-local GameUIMgr = UnLua.Class()
+local GameUIMgr = UnLuaClass()
 
 ---@override
 function GameUIMgr:Construct()

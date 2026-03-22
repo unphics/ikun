@@ -5,8 +5,10 @@
 ---@data    Sat Nov 08 2025 00:00:28 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+
 ---@class UP_FindSessionItem: UP_FindSessionItem_C
-local M = UnLua.Class()
+local M = UnLuaClass()
 
 ---@override
 function M:Construct()

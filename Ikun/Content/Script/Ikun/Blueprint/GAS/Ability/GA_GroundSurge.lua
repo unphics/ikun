@@ -5,11 +5,13 @@
 ---@data    Sun Sep 14 2025 14:34:11 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 
 ---@class GA_GroundSurge: BP_AbilityBase
-local GA_GroundSurge = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
+local GA_GroundSurge = UnLuaClass('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 ---@override
 function GA_GroundSurge:K2_ActivateAbilityFromEvent(Payload)

@@ -4,12 +4,14 @@
 ---@data Sat Apr 05 2025 15:36:54 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+
 local BREATHE_DURATION_PEACE = 2 -- 平静时一次呼吸时间
 local MAX_OPEN_AMPLITUDE = 30 -- 最大的张开幅度
 local MIN_SHRINK_AMPLITUDE = 15 -- 最小的收缩幅度
 
 ---@class UI_BreathePointer: UI_BreathePointer_C
-local M = UnLua.Class()
+local M = UnLuaClass()
 
 --function M:Initialize(Initializer)
 --end

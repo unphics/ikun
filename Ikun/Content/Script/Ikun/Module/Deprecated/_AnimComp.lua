@@ -6,6 +6,8 @@
 -- @DATE ${date} ${time}
 --
 
+local UnLuaClass = require("Core/UnLua/Class")
+
 local EGait = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/Gait.Gait')
 local EMoveDir = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/MoveDir.MoveDir')
 local EMoveState = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/MoveState.MoveState')
@@ -14,7 +16,7 @@ local EStance = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/Stance.Stance')
 local EViewModel = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/ViewModel.ViewModel')
 
 ---@type AnimComp_C
-local AnimComp = UnLua.Class()
+local AnimComp = UnLuaClass()
 
 --- MapRangeClamped
 local function Remap(Val, InMin, InMax, OutMin, OutMax)

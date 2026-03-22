@@ -5,8 +5,11 @@
 ---@data    Mon Aug 11 2025 23:24:54 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class CameraViewComp_C
-local CameraViewComp = UnLua.Class()
+local CameraViewComp = UnLuaClass()
 
 -- function CameraViewComp:Initialize(Initializer)
 -- end

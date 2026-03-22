@@ -6,13 +6,14 @@
 ---@note    2025年7月30日23:55:40: 开始处理旋转的时候要把OrientRotationToMovement关掉, 同时UseControllerRotationYaw也要关掉
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
 
 local VelBlendStruct = UE.UObject.Load('/Game/Ikun/Blueprint/Anim/VelBlend.VelBlend') ---@type FVelBlend
 local MoveDirEnum = UE.UObject.Load('/Game/Ikun/Blueprint/Anim/MoveDir.MoveDir') ---@type MoveDir
 
 ---@class ABP_Archer: ABP_Archer_C
 ---@field Chr BP_ChrBase
-local ABP_Archer = UnLua.Class()
+local ABP_Archer = UnLuaClass()
 
 -- function ABP_Archer:Initialize(Initializer)
 -- end

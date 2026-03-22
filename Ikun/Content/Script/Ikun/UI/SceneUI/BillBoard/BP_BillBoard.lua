@@ -11,9 +11,11 @@
 -- -----------------------------------------------------------------------------
 --]]
 
+local UnLuaClass = require("Core/UnLua/Class")
+
 ---@class BP_BillBoardComp: BP_BillBoardComp_C
 ---@field BillboardContent table<string, string>
-local BP_BillBoardComp = UnLua.Class()
+local BP_BillBoardComp = UnLuaClass()
 
 ---@override
 function BP_BillBoardComp:ReceiveBeginPlay()

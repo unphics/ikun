@@ -7,11 +7,12 @@
 
 require('Start')
 require('Bootstrapper')
+local UnLuaClass = require("Core/UnLua/Class")
 local log = require("Core/Log/log")
 local GameInit = require("Core/Init/GameInit")
 
 ---@class BP_GameInst: BP_GameInst_C
-local BP_GameInst = UnLua.Class()
+local BP_GameInst = UnLuaClass()
 
 function BP_GameInst:ReceiveInit()
     self.Overridden.ReceiveInit(self)

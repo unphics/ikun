@@ -5,10 +5,11 @@
 ---
 
 local log =  require("Core/Log/log")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class UP_TalkListItem: UP_TalkListItem_C
 ---@field ItemData TalkListItem
-local M = UnLua.Class()
+local M = UnLuaClass()
 
 --function M:Initialize(Initializer)
 --end

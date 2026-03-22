@@ -6,8 +6,11 @@
 -- @DATE ${date} ${time}
 --
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class TA_Lich_Skill_02: TA_Lich_Skill_02_C
-local M = UnLua.Class('Ikun/Blueprint/GAS/TargetActor/TA_IkunBase')
+local M = UnLuaClass('Ikun/Blueprint/GAS/TargetActor/TA_IkunBase')
 
 -- function M:Initialize(Initializer)
 -- end

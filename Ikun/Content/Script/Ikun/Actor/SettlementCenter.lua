@@ -5,8 +5,11 @@
 ---@data    Fri Aug 22 2025 00:18:54 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class SettlementCenter: SettlementCenter_C
-local SettlementCenter = UnLua.Class()
+local SettlementCenter = UnLuaClass()
 
 ---@override
 function SettlementCenter:ReceiveBeginPlay()

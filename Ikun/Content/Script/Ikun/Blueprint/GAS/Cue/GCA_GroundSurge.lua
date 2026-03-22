@@ -5,8 +5,11 @@
 ---@data    Sat Sep 20 2025 13:35:13 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class GCA_GroundSurge: AGameplayCueNotify_Actor
-local GCA_GroundSurge = UnLua.Class()
+local GCA_GroundSurge = UnLuaClass()
 
 function GCA_GroundSurge:OnActive(MyTarget, Parameters)
     local avatar = Parameters.Instigator

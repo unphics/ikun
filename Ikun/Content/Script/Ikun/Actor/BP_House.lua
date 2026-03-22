@@ -6,8 +6,11 @@
 ---@desc    房子属于Location, 房子的门是Site, 房子Location属于Village, 房子Location属于地貌某某河流平原
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class BP_House: BP_House_C
-local BP_House = UnLua.Class()
+local BP_House = UnLuaClass()
 
 ---@public
 ---@return FVector

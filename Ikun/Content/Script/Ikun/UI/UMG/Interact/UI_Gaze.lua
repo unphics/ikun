@@ -8,11 +8,12 @@
 local log =  require("Core/Log/log")
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class UI_Gaze: UI_Gaze_C
 ---@field _GazeInputPower InputPower
 ---@field _PC BP_IkunPC
-local UI_Gaze = UnLua.Class()
+local UI_Gaze = UnLuaClass()
 
 ---@override
 function UI_Gaze:OnShow()

@@ -5,8 +5,17 @@
 ---@data    Sun Jun 08 2025 22:25:56 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
+local EffectConfig = {
+    [1] = {
+        EffectVal = 100,
+    },
+}
+
 ---@class EC_Heal : GE_EffectCalcBase
-local EC_Heal = UnLua.Class('Ikun/Blueprint/GAS/EffectCalc/GE_EffectCalcBase')
+local EC_Heal = UnLuaClass('Ikun/Blueprint/GAS/EffectCalc/GE_EffectCalcBase')
 
 function EC_Heal:OnExecute(CalcObj, Ability, Effect, OptionObj)
     log.fatal('未整理')

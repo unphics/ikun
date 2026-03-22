@@ -3,13 +3,14 @@
 ---@brief Lich一技能, 远程
 ---@author zys
 ---@data Fri Jan 31 2025 14:13:55 GMT+0800 (中国标准时间)
----@deprecated
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class GA_Lich_Skill_02: BP_AbilityBase
-local GA_Lich_Skill_02 = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
+local GA_Lich_Skill_02 = UnLuaClass('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 function GA_Lich_Skill_02:OnActivateAbility()
     self.Super.OnActivateAbility(self)

@@ -6,9 +6,10 @@
 ---
 
 local log =  require("Core/Log/log")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class UP_BagTab: UP_BagTab_C
-local UP_BagTab = UnLua.Class()
+local UP_BagTab = UnLuaClass()
 
 ---@override
 function UP_BagTab:Construct()

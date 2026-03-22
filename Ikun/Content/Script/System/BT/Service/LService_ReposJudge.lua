@@ -1,4 +1,6 @@
 
+local DebugUtils = require("Core/DebugUtil")
+local log =  require("Core/Log/log")
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class LService_ReposJudge: LService

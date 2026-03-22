@@ -5,11 +5,12 @@
 ---@data    Fri Nov 07 2025 23:06:24 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local log = require("Core/Log/log")
 
 ---@class PC_Entry: PC_Base
-local PC_Entry = UnLua.Class('Ikun/Blueprint/PC/PC_Base')
+local PC_Entry = UnLuaClass('Ikun/Blueprint/PC/PC_Base')
 
 EnhInput.BindActions(PC_Entry)
 

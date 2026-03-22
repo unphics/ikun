@@ -5,6 +5,8 @@
 ---@data    Sat Jul 19 2025 20:53:10 GMT+0800 (中国标准时间)
 ---
 
+local log = require("Core/Log/log")
+
 ---@class InputPower
 ---@field Object UObject
 ---@field bBorrowInput boolean

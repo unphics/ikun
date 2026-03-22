@@ -5,10 +5,13 @@
 ---@data    Wed Sep 17 2025 20:32:02 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class BP_AbilityBase: UIkunGABase
 ---@field AvatarLua BP_ChrBase
 ---@field SkillConfig SkillConfig
-local BP_AbilityBase = UnLua.Class()
+local BP_AbilityBase = UnLuaClass()
 
 ---@override [ImplBP]
 ---@notice 此方法需要子类Super调用

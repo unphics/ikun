@@ -4,8 +4,11 @@
 ---@data    Fri May 30 2025 22:42:22 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class BP_GameStateBase: BP_GameStateBase_C
-local BP_GameStateBase = UnLua.Class()
+local BP_GameStateBase = UnLuaClass()
 
 ---@override
 function BP_GameStateBase:ReceiveBeginPlay()

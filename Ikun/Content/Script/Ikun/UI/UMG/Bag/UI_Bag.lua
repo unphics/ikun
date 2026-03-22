@@ -6,13 +6,14 @@
 ---
 
 local log =  require("Core/Log/log")
+local UnLuaClass = require("Core/UnLua/Class")
 
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 local EnhInput = require("Ikun/Module/Input/EnhInput")
 
 ---@class UI_Bag: UI_Bag_C
 ---@field _BagUIInputPower InputPower
-local UI_Bag = UnLua.Class()
+local UI_Bag = UnLuaClass()
 
 ---@override
 function UI_Bag:OnShow()

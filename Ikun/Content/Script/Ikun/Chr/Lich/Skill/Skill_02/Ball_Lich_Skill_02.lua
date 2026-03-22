@@ -4,6 +4,9 @@
 ---@data    Sun Jul 06 2025 17:32:54 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class Ball_Lich_Skill_02: Ball_Lich_Skill_02_C
 ---@field ConstAliveTime number 投射物最大存活时间
 ---@field CurLiveTime number 投射物当前存活时间
@@ -11,7 +14,7 @@
 ---@field OwnerAvatar BP_ChrBase 所属角色
 ---@field TriggerCB fun(BP_AbilityBase, AActor, FTransform) 投射物碰撞回调
 ---@field bDestroySelf boolean 需要销毁自己
-local M = UnLua.Class()
+local M = UnLuaClass()
 
 ---@override
 function M:ReceiveBeginPlay()

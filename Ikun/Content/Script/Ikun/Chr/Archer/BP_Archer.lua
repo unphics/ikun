@@ -5,8 +5,10 @@
 ---@data    Thu Jul 31 2025 23:26:44 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+
 ---@class BP_Archer: BP_Archer_C
-local BP_Archer = UnLua.Class('Ikun/Chr/Blueprint/BP_ChrBase')
+local BP_Archer = UnLuaClass('Ikun/Chr/Blueprint/BP_ChrBase')
 
 ---@override
 function BP_Archer:ReceiveBeginPlay()

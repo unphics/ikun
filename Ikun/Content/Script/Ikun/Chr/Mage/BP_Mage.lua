@@ -5,8 +5,11 @@
 ---@data    Sun Sep 14 2025 14:39:28 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class BP_Mage: BP_ChrBase
-local BP_Mage = UnLua.Class('Ikun/Chr/Blueprint/BP_ChrBase')
+local BP_Mage = UnLuaClass('Ikun/Chr/Blueprint/BP_ChrBase')
 
 function BP_Mage:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)

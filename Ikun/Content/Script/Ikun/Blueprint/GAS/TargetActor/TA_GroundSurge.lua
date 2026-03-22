@@ -5,8 +5,11 @@
 ---@data    Wed Sep 17 2025 20:16:36 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class TA_GroundSurge: TA_IkunBase
-local TA_GroundSurge = UnLua.Class('Ikun/Blueprint/GAS/TargetActor/TA_IkunBase')
+local TA_GroundSurge = UnLuaClass('Ikun/Blueprint/GAS/TargetActor/TA_IkunBase')
 
 ---@override
 function TA_GroundSurge:InitTargetActor(Context)

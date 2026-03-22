@@ -2,6 +2,9 @@
 ---@brief 
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 -- local EGait = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/Gait.Gait')
 -- local EMoveDir = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/MoveDir.MoveDir')
 -- local EMoveState = UE.UObject.Load('/Game/Ikun/Anim/Blueprint/Enum/MoveState.MoveState')
@@ -14,7 +17,7 @@
 -- local StructVelBlend = UE.UObject.Load('/Game/Ikun/Chr/Blueprint/Structure/VelBlend.VelBlend')
 
 ---@class IkunAnimInst: IkunAnimInst_C
-local IkunAnimInst = UnLua.Class()
+local IkunAnimInst = UnLuaClass()
 
 local function format(num)
     return string.format('%08.4f', num)

@@ -6,8 +6,11 @@
 -- @DATE ${date} ${time}
 --
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@type AnimNotify_ExecLuaFn_C
-local M = UnLua.Class()
+local M = UnLuaClass()
 
 function M:Received_Notify(MeshComp)
     local actor = MeshComp:GetOwner()

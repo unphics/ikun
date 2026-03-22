@@ -5,8 +5,11 @@
 ---@data    Mon Jun 02 2025 01:42:51 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class GE_EffectCalcBase: UIkunGEExecCalc
-local GE_EffectCalcBase = UnLua.Class()
+local GE_EffectCalcBase = UnLuaClass()
 
 ---@override
 ---@param InParams FGameplayEffectCustomExecutionParameters

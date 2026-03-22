@@ -6,9 +6,10 @@
 ---
 
 local log =  require("Core/Log/log")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class UI_MainHud: UI_MainHud_C
-local UI_MainHud = UnLua.Class()
+local UI_MainHud = UnLuaClass()
 
 ---@override
 function UI_MainHud:Construct()

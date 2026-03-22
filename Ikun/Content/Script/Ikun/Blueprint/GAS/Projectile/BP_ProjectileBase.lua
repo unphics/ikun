@@ -5,9 +5,12 @@
 ---@data    Sat Sep 06 2025 12:30:40 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class BP_ProjectileBase: BP_ProjectileBase_C
 ---@field AbilityContext AbilityContext
-local BP_ProjectileBase = UnLua.Class()
+local BP_ProjectileBase = UnLuaClass()
 
 ---@override
 function BP_ProjectileBase:ReceiveBeginPlay()

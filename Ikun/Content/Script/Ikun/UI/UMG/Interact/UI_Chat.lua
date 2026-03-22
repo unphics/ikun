@@ -8,12 +8,13 @@
 local log =  require("Core/Log/log")
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class UI_Chat: Chat_C
 ---@field _CurSelectIndex number
 ---@field _CurSelectList table[]
 ---@field _InteractInputPower InputPower
-local UI_Chat = UnLua.Class()
+local UI_Chat = UnLuaClass()
 
 ---@override
 function UI_Chat:Construct()

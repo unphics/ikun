@@ -5,9 +5,12 @@
 ---@data    Tue Oct 21 2025 22:50:52 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class BP_ReceptionComp: BP_ReceptionComp_C
 ---@field _tbVisit PC_Base[]
-local BP_ReceptionComp = UnLua.Class()
+local BP_ReceptionComp = UnLuaClass()
 
 ---@override
 function BP_ReceptionComp:ReceiveBeginPlay()

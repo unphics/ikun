@@ -5,6 +5,7 @@
 ---@data    Sat Jul 19 2025 17:23:24 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 local log = require("Core/Log/log")
@@ -12,7 +13,7 @@ local GameInit = require("Core/Init/GameInit")
 
 ---@class PC_Base: PC_Base_C
 ---@field OwnerChr BP_ChrBase
-local PC_Base = UnLua.Class()
+local PC_Base = UnLuaClass()
 
 EnhInput.BindActions(PC_Base)
 

@@ -5,8 +5,11 @@
 ---@data    Sat Nov 08 2025 00:12:13 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class GM_Village: GM_Village_C
-local GM_Village = UnLua.Class('Ikun/Blueprint/GameMode/GM_Base')
+local GM_Village = UnLuaClass('Ikun/Blueprint/GameMode/GM_Base')
 
 ---@override
 function GM_Village:ReceiveBeginPlay()

@@ -4,8 +4,11 @@
 ---@data    Tue Sep 23 2025 15:06:52 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class MsgBusComp: MsgBusComp_C
-local MsgBusComp = UnLua.Class()
+local MsgBusComp = UnLuaClass()
 
 ---@public [Client] [Server] 触发事件
 function MsgBusComp:TriggerMsg(EventName, ...)

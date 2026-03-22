@@ -4,8 +4,22 @@
 ---@data    Tue Jan 14 2025 13:56:55 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+local obj_util = require("Core/Util/obj_util")
+
+local LichColorCfg = {
+    Red = {R = 1, G = 0, B = 0},
+    Green = {R = 0, G = 1, B = 0},
+    Blue = {R = 0, G = 0, B = 1},
+    Yellow = {R = 1, G = 1, B = 0},
+    Purple = {R = 0.5, G = 0, B = 0.5},
+    Orange = {R = 1, G = 0.5, B = 0},
+    Pink = {R = 1, G = 0.5, B = 1},
+}
+
 ---@class BP_Lich: BP_Lich_C
-local BP_Lich = UnLua.Class('/Ikun/Chr/Blueprint/BP_ChrBase')
+local BP_Lich = UnLuaClass('/Ikun/Chr/Blueprint/BP_ChrBase')
 
 ---@override
 function BP_Lich:ReceiveBeginPlay()

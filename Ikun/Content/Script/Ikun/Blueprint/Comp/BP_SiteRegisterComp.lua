@@ -5,10 +5,12 @@
 ---@data    Sat Oct 04 2025 13:24:46 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
 local GameInit = require("Core/Init/GameInit")
 
 ---@class BP_SiteRegisterComp: BP_SiteRegisterComp_C
-local BP_SiteRegisterComp = UnLua.Class()
+local BP_SiteRegisterComp = UnLuaClass()
 
 ---@override
 function BP_SiteRegisterComp:ReceiveBeginPlay()

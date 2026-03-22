@@ -5,13 +5,15 @@
 ---@data    Fri Sep 05 2025 01:43:35 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
 local EnhInput = require('Ikun/Module/Input/EnhInput')
 local InputMgr = require("Ikun/Module/Input/InputMgr")
 
 ---@class GA_DrawBow: BP_AbilityBase
 ---@field bChargeMax boolean 是否满弓
 ---@field SkillConfig SkillConfig
-local GA_DrawBow = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
+local GA_DrawBow = UnLuaClass('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 ---@override
 function GA_DrawBow:K2_ActivateAbilityFromEvent(Payload)

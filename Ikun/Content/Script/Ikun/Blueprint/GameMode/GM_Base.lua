@@ -5,8 +5,11 @@
 ---@data    Fri May 30 2025 22:38:14 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class GM_Base: GM_Base_C
-local GM_Base = UnLua.Class()
+local GM_Base = UnLuaClass()
 
 ---@override
 function GM_Base:ReceiveBeginPlay()

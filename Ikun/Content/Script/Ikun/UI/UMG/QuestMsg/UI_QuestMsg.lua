@@ -6,9 +6,10 @@
 ---
 
 local log =  require("Core/Log/log")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class UI_QuestMsg: UI_QuestMsg_C
-local M = UnLua.Class()
+local M = UnLuaClass()
 
 -- function M:Construct()
 -- end

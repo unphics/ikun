@@ -6,9 +6,10 @@
 ---
 
 local log =  require("Core/Log/log")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class UP_InteractItem: UP_InteractItem_C
-local UP_InteractItem = UnLua.Class()
+local UP_InteractItem = UnLuaClass()
 
 ---@override
 function UP_InteractItem:Construct()

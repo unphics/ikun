@@ -5,6 +5,9 @@
 ---@data    Thu Jul 17 2025 00:48:50 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class CameraViewConfig
 ---@field Forward number
 ---@field Right number
@@ -16,7 +19,7 @@
 ---@field CameraTransitionTotalTime number
 ---@field bCameraFading boolean
 ---@field CameraViewConfig CameraViewConfig
-local BP_CameraMgr = UnLua.Class()
+local BP_CameraMgr = UnLuaClass()
 
 ---@override
 function BP_CameraMgr:ReceiveBeginPlay()

@@ -6,11 +6,12 @@
 ---
 
 local log =  require("Core/Log/log")
+local UnLuaClass = require("Core/UnLua/Class")
 
 ---@class UI_TalkList: UI_TalkList_C
 ---@field TalkingRoleList table<string, TalkListItem>
 ---@field TalkingContentList TalkListItem[]
-local UI_TalkList = UnLua.Class()
+local UI_TalkList = UnLuaClass()
 
 ---@override
 function UI_TalkList:Construct()

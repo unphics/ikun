@@ -3,14 +3,15 @@
 ---@brief   Lich三技能治疗术, 持续施法每秒恢复目标的生命值
 ---@author  zys
 ---@data    Tue Jun 10 2025 11:27:57 GMT+0800 (中国标准时间)
----@deprecated
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
 local BBKeyDef = require("Ikun.Module.AI.BT.BBKeyDef")
 
 ---@class GA_Lich_Skill_03: BP_AbilityBase
 ---@field HealedTime number
-local GA_Lich_Skill_03 = UnLua.Class('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
+local GA_Lich_Skill_03 = UnLuaClass('Ikun/Blueprint/GAS/Ability/BP_AbilityBase')
 
 function GA_Lich_Skill_03:OnActivateAbility()
     self.Super.OnActivateAbility(self)

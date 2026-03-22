@@ -5,11 +5,14 @@
 ---@data    Sat Aug 23 2025 11:23:32 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class InteractComp: InteractComp_C
 ---@field GazeIntervalConst number 凝视间隔
 ---@field GazeDistanceConst number 凝视距离
 ---@field CurGazeCountTime number 当前凝视时间计时
-local InteractComp = UnLua.Class()
+local InteractComp = UnLuaClass()
 
 ---@override
 function InteractComp:ReceiveBeginPlay()

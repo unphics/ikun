@@ -5,8 +5,11 @@
 ---@data    Sun Jun 08 2025 12:55:19 GMT+0800 (中国标准时间)
 ---
 
+local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+
 ---@class EC_MagicDmg : GE_EffectCalcBase
-local EC_MagicDmg = UnLua.Class('Ikun/Blueprint/GAS/EffectCalc/GE_EffectCalcBase')
+local EC_MagicDmg = UnLuaClass('Ikun/Blueprint/GAS/EffectCalc/GE_EffectCalcBase')
 
 ---@override
 function EC_MagicDmg:OnExecute(CalcObj, Ability, Effect, OptionObj)
