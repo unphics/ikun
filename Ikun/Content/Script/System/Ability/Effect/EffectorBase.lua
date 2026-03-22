@@ -13,7 +13,7 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
-local AttrImposeContextClass = require("System/Ability/Attr/AttrImposeContext")
+local AttrInteractContextClass = require("System/Ability/Attr/AttrInteractContext")
 
 ---@class EffectorBaseClass
 ---@field protected _Manager EffectManager
@@ -143,26 +143,31 @@ function EffectorBaseClass:GetEffectorConfig()
 end
 
 ---@public
----@return AttrImposeContextClass
-function EffectorBaseClass:MakeImposeContext()
-    local tb = AttrImposeContextClass:New()
-    tb.ImposeSource = self.EffectorSource
-    tb.ImposeTarget = self.EffectorTarget
-    tb.ImposeCarrier = self
-    tb.ImposeAttr = self._EffectConfig.AttrImposeFml.AttrId
-    tb.ImposeFunc = self._EffectConfig.AttrImposeFml.Formula
-    return tb
+---@return AttrInteractContextClass
+function EffectorBaseClass:MakeInteractContext()
+    local ctx = AttrInteractContextClass:New(self) ---@type AttrInteractContextClass
+    if not self._EffectConfig.AttrImposeFml then
+        return ctx
+    end
+    local attr = self._EffectConfig.AttrImposeFml.AttrId
+    ctx:SetImposeInfo(self.EffectorSource, self._EffectConfig.AttrImposeFml.Formula, attr)
+    ctx:SetReceiveInfo(self.EffectorTarget, self._Manager:GetAbilitySystem():GetAttrManager():GetAttrReceiveFormula(attr))
+    return ctx
 end
 
 ---@public
----@param InImposeContext AttrImposeContextClass
+---@param InInteractContext AttrInteractContextClass
 ---@return AttrModifierClass
-function EffectorBaseClass:ApplyImpose(InImposeContext)
-    InImposeContext:CalcAttrImposeValue()
+function EffectorBaseClass:ApplyAttrInteract(InInteractContext)
     local attrManager = self._Manager:GetAbilitySystem():GetAttrManager()
-    local mod = attrManager:AcquireModifier(InImposeContext.ImposeAttr, InImposeContext.ImposeValue)
+
+    InInteractContext:CalcAttrImposeValue()
+    InInteractContext:CalcAttrReceviveValue()
+
+    local mod = attrManager:AcquireModifier(InInteractContext.InteractAttr, InInteractContext.ReceiveValue)
     self.EffectorTarget:GetAttrSet():AddModifier(mod)
     table.insert(self._ActiveModifiers, mod)
+
     return mod
 end
 

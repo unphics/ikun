@@ -1,6 +1,6 @@
-AttrKey|AttrName|AttrFormula|AttrAcceptFormula|IsChangeInstant|IsModifierInfinite|ModifierApplyStrategy|ModifierAdditiveStrategy
+AttrKey|AttrName|AttrFormula|AttrReceiveFormula|IsChangeInstant|IsModifierInfinite|ModifierApplyStrategy|ModifierAdditiveStrategy
 ||属性表达式|属性接受表达式|每次修改瞬间是否直接结算(否则每帧结算)|修改器是否持久保存(可撤)|修改器应用策略|修改器叠加策略
-IncomingDamage|伤害|||true|false|Additive|Additive
+IncomingDamage|伤害||ImposeValue * 0.9|true|false|Additive|Additive
 |||||||
 MaxHealth|最大生命值|(#BaseHealth + #FlatHealth * 10) * (1 + (#PercentHealth / 100)) + #ExtraHealth||true|true|Additive|Additive
 BaseHealth|基础生命值|||true|true|Additive|Additive

@@ -76,7 +76,7 @@ if true then
     local effector = part:MakeEffector("Boom")
     assert(effector)
     part:TryApplyEffectorToSelf(effector)
-    assert(part:GetAttrSet():GetAttrValue(AttrDef.Attr.IncomingDamage) == 10)
+    assert(part:GetAttrSet():GetAttrValue(AttrDef.Attr.IncomingDamage) == 9)
 end
 
 if false then

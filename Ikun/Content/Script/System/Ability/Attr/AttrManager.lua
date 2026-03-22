@@ -23,6 +23,7 @@ local log = require('Core/Log/log')
 
 ---@alias AttrFormulaFunction fun(Attributes: table<integer, number>):number
 ---@alias AttrImposeFormulaFunction fun(SourceAttribute: table<integer, number>, TargetAttribute: table<integer, number>):number
+---@alias AttrReceiveFormulaFunction fun(SourceAttribute: table<integer, number>, TargetAttribute: table<integer, number>, ImposeValue: number):number
 
 ---@class SetConfig
 ---@field SetKey string
@@ -33,6 +34,7 @@ local log = require('Core/Log/log')
 ---@field AttrKey string
 ---@field AttrName string
 ---@field AttrFormula string
+---@field AttrReceiveFormula string
 ---@field IsChangeInstant boolean
 ---@field IsModifierInfinite boolean
 ---@field ModifierApplyStrategy string
@@ -42,9 +44,10 @@ local log = require('Core/Log/log')
 ---@field protected _System AbilitySystem
 ---@field protected _AttrConfig table<string, AttrConfig>
 ---@field protected _SetConfigData table<string, SetConfig>
----@field protected _AttrFormula table<number, AttrFormulaFunction>
----@field protected _AttrDependencies table<number, number[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
----@field protected _AttrDependents table<number, number[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
+---@field protected _AttrFormula table<integer, AttrFormulaFunction>
+---@field protected _AttrReceiveFormula table<integer, AttrReceiveFormulaFunction>
+---@field protected _AttrDependencies table<integer, integer[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
+---@field protected _AttrDependents table<integer, integer[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
 ---@filed protected _AttrModGenId integer
 local AttrManager = Class3.Class('AttrManager')
 
@@ -54,6 +57,8 @@ function AttrManager:Ctor(InSystem)
     self._System = InSystem
     self._AttrConfig = {}
     self._AttrFormula = {}
+    self._AttrReceiveFormula = {}
+
     self._AttrDependencies = {}
     self._AttrDependents = {}
     self._AttrModGenId = 0
@@ -66,6 +71,7 @@ function AttrManager:InitAttrManager()
     self:_BuildAttrDependencies()
     self:_BuildAttrDependents()
     self:_BuildAttrFormulas()
+    self:_BuildAttrReceiveFormulas()
 end
 
 ---@public
@@ -109,6 +115,13 @@ end
 ---@return AttrFormulaFunction
 function AttrManager:GetAttrFormula(InAttrKey) -- const
     return self._AttrFormula[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey integer|string
+---@return AttrReceiveFormulaFunction
+function AttrManager:GetAttrReceiveFormula(InAttrKey)
+    return self._AttrReceiveFormula[AttrDef.ToId(InAttrKey)]
 end
 
 ---@public
@@ -180,7 +193,6 @@ end
 ---@protected [Init]
 function AttrManager:_BuildAttrDependencies()
     if not self._AttrConfig or not next(self._AttrConfig) then
-        log.error('zys AttrManager:_BuildAttrDependencies(): Failed to read AttrConfig!')
         return
     end
 
@@ -225,8 +237,7 @@ end
 
 ---@public [Init]
 function AttrManager:_BuildAttrDependents()
-    if not self._AttrDependencies or (not next(self._AttrDependencies)) then
-        log.error('zys AttrManager:_BuildAttrDependents(): Failed to read AttrDependencies!')
+    if not self._AttrDependencies or not next(self._AttrDependencies) then
         return
     end
     local attrDependents = {}
@@ -243,8 +254,7 @@ end
 
 ---@protected [Init]
 function AttrManager:_BuildAttrFormulas()
-    if not self._AttrConfig or not (next(self._AttrConfig)) then
-        log.error('zys AttrManager:_BuildAttrFormulas(): Failed to read AttrConfig!')
+    if not self._AttrConfig or not next(self._AttrConfig) then
         return
     end
     local attrFormula = {}
@@ -256,6 +266,21 @@ function AttrManager:_BuildAttrFormulas()
         end
     end
     self._AttrFormula = attrFormula
+end
+
+---@protected [Init]
+function AttrManager:_BuildAttrReceiveFormulas()
+    if not self._AttrConfig or not next(self._AttrConfig) then
+        return
+    end
+    local receiveFormula = {}
+    for key, config in pairs(self._AttrConfig) do
+        local func = ExpLib.CompileAttrReceiveFormula(config.AttrReceiveFormula)
+        if func then
+            receiveFormula[AttrDef.Attr[key]] = func
+        end
+    end
+    self._AttrReceiveFormula = receiveFormula
 end
 
 return AttrManager

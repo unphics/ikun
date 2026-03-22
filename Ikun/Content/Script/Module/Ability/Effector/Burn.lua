@@ -26,8 +26,8 @@ function BurnClass:OnActiveEffector()
 end
 
 function BurnClass:OnApplyEffector()
-    local ctx = self:MakeImposeContext()
-    self:ApplyImpose(ctx)
+    local ctx = self:MakeInteractContext()
+    self:ApplyAttrInteract(ctx)
 end
 
 function BurnClass:OnDeactiveEffector()

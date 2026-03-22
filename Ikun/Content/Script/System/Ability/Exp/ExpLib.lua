@@ -65,6 +65,24 @@ ExpLib.LoadFormulaFunction = function(InScriptCode, InFormulaStr)
 end
 
 ---@public
+---@return AttrFormulaFunction?
+ExpLib.CompileAttrFormula = function(InFormulaStr)
+    if StrUtils.IsEmpty(InFormulaStr) then
+        return nil
+    end
+
+    -- 语法转换: 支持#101或#MaxHealth; 将#Key转换为(v[Num]or0)
+    local luaCode = string.gsub(InFormulaStr, "#([%w_]+)", function(attrName)
+        return string.format("(v[%d] or 0)", AttrDef.ToId(attrName))
+    end)
+
+    -- 包装函数体
+    local script = "return function(v) return "..luaCode.." end"
+
+    return ExpLib.LoadFormulaFunction(script, InFormulaStr)
+end
+
+---@public
 ---@return AttrImposeFormulaFunction?, integer?
 ExpLib.CompileAttrImposeFormula = function(InFormulaStr)
     if StrUtils.IsEmpty(InFormulaStr) then
@@ -83,26 +101,25 @@ ExpLib.CompileAttrImposeFormula = function(InFormulaStr)
         return string.format("(%s[%d] or 0)", prefix, AttrDef.ToId(attrName))
     end)
 
-    local script = "return function(src, tar) return "..luaCode.."end"
+    local script = "return function(src, tar) return "..luaCode.." end"
     
     return ExpLib.LoadFormulaFunction(script, InFormulaStr), AttrDef.ToId(targetAttr)
 end
 
 ---@public
----@return AttrFormulaFunction?
-ExpLib.CompileAttrFormula = function(InFormulaStr)
+---@return AttrReceiveFormulaFunction?
+ExpLib.CompileAttrReceiveFormula = function(InFormulaStr)
     if StrUtils.IsEmpty(InFormulaStr) then
         return nil
     end
 
-    -- 语法转换: 支持#101或#MaxHealth; 将#Key转换为(v[Num]or0)
-    local luaCode = string.gsub(InFormulaStr, "#([%w_]+)", function(attrName)
-        return string.format("(v[%d] or 0)", AttrDef.ToId(attrName))
+    -- 语法转换: 支持src#CurAttack或tar#CurHealth; 将src#Key转换为(src[Num]or0)
+    local luaCode = string.gsub(InFormulaStr, "([%a_][%w_]*)#([%w_]+)", function(prefix, attrName)
+        return string.format("(%s[%d] or 0)", prefix, AttrDef.ToId(attrName))
     end)
 
-    -- 包装函数体
-    local script = "return function(v) return "..luaCode.." end"
-
+    local script = "return function(src, tar, ImposeValue) return "..luaCode.." end"
+    
     return ExpLib.LoadFormulaFunction(script, InFormulaStr)
 end
 

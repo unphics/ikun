@@ -22,8 +22,8 @@ function BoomClass:OnActiveEffector()
 end
 
 function BoomClass:OnApplyEffector()
-    local ctx = self:MakeImposeContext()
-    self:ApplyImpose(ctx)
+    local ctx = self:MakeInteractContext()
+    self:ApplyAttrInteract(ctx)
 end
 
 function BoomClass:OnDeactiveEffector()
