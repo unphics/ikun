@@ -53,7 +53,7 @@ InitRing.PC_BeginPlay_Delay_1 = {
 ---@type InitPoint[]
 InitRing.PC_BeginPlay_Delay_2 = {
     InitPoint.InitBagComp,
-    InitRing.InitFinish,
+    InitPoint.InitFinish,
 }
 
 ---@diagnostic disable-next-line duplicate-type
@@ -112,10 +112,9 @@ GameInit.BroadcastInit = function(InRing)
 
     for _, key in ipairs(InRing) do
         local infos = GameInit._InitPointInfos[key]
-        log.info(log.key.gameinit, "BroadcastInit", key)
         ---@param info any
         for _, info in pairs(infos) do
-            if info and type(info) == "table" and info.callback and info.obj then
+            if info.callback then
                 info.callback(info.obj)
             end
         end
@@ -124,11 +123,6 @@ GameInit.BroadcastInit = function(InRing)
 end
 
 GameInit.RegisterInit(InitPoint.InitFinish, nil, function()
-    -- for _, ele in pairs(GameInit._InitedMark) do
-    --     if not ele then
-    --         return false
-    --     end
-    -- end
     log.mark(log.key.gameinit, "All init finished !")
 end)
 
