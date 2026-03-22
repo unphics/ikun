@@ -15,41 +15,49 @@
 
 local AttrDef = require("System/Ability/Attr/AttrDef")
 local log = require('Core/Log/log')
-local ExpLib = {}
+local setfenv = _G.setfenv
+local loadstring = _G.loadstring
+local laod = _G.load
 
 -- 允许策划在表达式里使用的函数
-local Env = {
+local ExpEnv = {
     min = math.min,
     max = math.max,
     clamp = function(v, min, max) return math.max(min, math.min(max, v)) end,
 }
 
 -- 防止策划访问_G
-setmetatable(Env, {
+setmetatable(ExpEnv, {
     __index = function(t, k)
         return nil
     end,
 })
 
-ExpLib.CollectDeps = function(InFormulaStr)
-    if not InFormulaStr or InFormulaStr == '' then
+---@class ExpLib
+local ExpLib = {}
+
+---@public 根据表达式字符串加载表达式块
+---@param InScriptCode string
+---@param InFormulaStr string
+---@return fun():AttrFormulaFunction
+ExpLib.LoadFormulaChunk = function(InScriptCode, InFormulaStr)
+    local chunk, err
+    if setfenv then
+        chunk, err = loadstring(InScriptCode, "FormulaChunk")
+        setfenv(chunk, ExpEnv)
+    else
+        chunk, err = load(InScriptCode, "FormulaChunk", "t", ExpEnv)
+    end
+    if not chunk then
+        log.warn(string.format("[FormulaError] 编译失败: %s\n原始公式:%s", err, InFormulaStr))
         return nil
     end
-
-    -- 提取依赖, 建立反向索引
-    local deps = {}
-    local seen = {}
-    for idStr in string.gmatch(InFormulaStr, "#([%w_]+)") do
-        local id = tonumber(idStr) or idStr
-        if not seen[id] then
-            table.insert(deps, id)
-            seen[id] = true
-        end
-    end
-    return deps
+    return chunk
 end
 
-ExpLib.Compile = function(InFormulaStr)
+---@public
+---@return AttrFormulaFunction?
+ExpLib.CompileAttrFormula = function(InFormulaStr)
     if not InFormulaStr or InFormulaStr == '' then
         return nil
     end
@@ -69,21 +77,7 @@ ExpLib.Compile = function(InFormulaStr)
     -- 包装函数体
     local script = "return function(v) return "..luaCode.." end"
 
-    local chunk, err
-    if setfenv then
-        chunk, err = loadstring(script, "FormulaChunk")
-        if not chunk then
-            log.warn(string.format("[FormulaError] 编译失败: %s\n原始公式:%s", err, InFormulaStr))
-            return nil
-        end
-        setfenv(chunk, Env)
-    else
-        chunk, err = load(script, "FormulaChunk", "t", Env)
-        if not chunk then
-            log.warn(string.format("[FormulaError] 编译失败: %s\n原始公式:%s", err, InFormulaStr))
-            return nil
-        end
-    end
+    local chunk = ExpLib.LoadFormulaChunk(script, InFormulaStr)
 
     local status, func = pcall(chunk)
     if not status then
@@ -91,6 +85,24 @@ ExpLib.Compile = function(InFormulaStr)
         return nil
     end
     return func
+end
+
+ExpLib.CollectDeps = function(InFormulaStr)
+    if not InFormulaStr or InFormulaStr == '' then
+        return nil
+    end
+
+    -- 提取依赖, 建立反向索引
+    local deps = {}
+    local seen = {}
+    for idStr in string.gmatch(InFormulaStr, "#([%w_]+)") do
+        local id = tonumber(idStr) or idStr
+        if not seen[id] then
+            table.insert(deps, id)
+            seen[id] = true
+        end
+    end
+    return deps
 end
 
 ---@todo zys: 回头仔细研究一下

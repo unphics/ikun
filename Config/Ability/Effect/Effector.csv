@@ -1,4 +1,4 @@
-EffectorKey|EffectorName|EffectTemplate|EffectPeroid|EffectDuration|EffectPriority|AttrModFml|GrantedTags|BlockByTags|CancelToTags
+EffectorKey|EffectorName|EffectTemplate|EffectPeroid|EffectDuration|EffectPriority|AttrImposeFml|GrantedTags|BlockByTags|CancelToTags
 |||优先级|持续时间|周期|表达式|||
 |||||||||
 Effect1||EffectBase|1||||||

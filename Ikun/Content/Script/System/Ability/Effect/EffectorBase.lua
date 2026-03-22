@@ -20,7 +20,7 @@ local Class3 = require('Core/Class/Class3')
 ---@field EffectPeroid integer 优先级
 ---@field EffectDuration number 持续时间
 ---@field EffectPriority number 周期
----@field AttrModFml string
+---@field AttrImposeFml string
 ---@field GrantedTags integer[]
 ---@field BlockByTags integer[]
 ---@field CancelToTags integer[]

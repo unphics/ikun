@@ -15,13 +15,13 @@
 local Class3 = require('Core/Class/Class3')
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
-local ExpLib = require('System/Ability/Attr/Exp')
+local ExpLib = require('System/Ability/Exp/ExpLib')
 local AttrSetClass = require('System/Ability/Attr/AttrSet')
 local AttrDef = require('System/Ability/Attr/AttrDef')
 local AttrModifierClass = require('System/Ability/Attr/AttrModifier')
 local log = require('Core/Log/log')
 
----@alias FormulaFunction fun(Attributes: table<integer, number>):number
+---@alias AttrFormulaFunction fun(Attributes: table<integer, number>):number
 
 ---@class SetConfig
 ---@field SetKey string
@@ -41,7 +41,7 @@ local log = require('Core/Log/log')
 ---@field protected _System AbilitySystem
 ---@field protected _AttrConfig table<string, AttrConfig>
 ---@field protected _SetConfigData table<string, SetConfig>
----@field protected _AttrFormula table<number, FormulaFunction>
+---@field protected _AttrFormula table<number, AttrFormulaFunction>
 ---@field protected _AttrDependencies table<number, number[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
 ---@field protected _AttrDependents table<number, number[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
 local AttrManager = Class3.Class('AttrManager')
@@ -101,7 +101,7 @@ end
 
 ---@public
 ---@param InAttrKey integer|string
----@return FormulaFunction
+---@return AttrFormulaFunction
 function AttrManager:GetAttrFormula(InAttrKey) -- const
     return self._AttrFormula[AttrDef.ToId(InAttrKey)]
 end
@@ -245,7 +245,7 @@ function AttrManager:_BuildAttrFormulas()
     local attrFormula = {}
     ---@param config AttrConfig
     for key, config in pairs(self._AttrConfig) do
-        local func = ExpLib.Compile(config.AttrFormula)
+        local func = ExpLib.CompileAttrFormula(config.AttrFormula)
         if func then
             attrFormula[AttrDef.Attr[key]] = func
         end

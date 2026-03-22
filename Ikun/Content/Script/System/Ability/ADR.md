@@ -47,7 +47,7 @@
                 - Duration: 持续时间
                 - Time: 持续时间内生效多少次
                 - Priority: 多久生效1次
-            - AttrModFml: 对属性的影响公式
+            - AttrImposeFml: 对属性的影响公式
             - GrantedTags: 赋予Tag
             - BlockByTags: 被这些Tag拒绝Apply
             - CancelTags: 取消这些Tag的效果器
