@@ -22,6 +22,7 @@ local AttrModifierClass = require('System/Ability/Attr/AttrModifier')
 local log = require('Core/Log/log')
 
 ---@alias AttrFormulaFunction fun(Attributes: table<integer, number>):number
+---@alias AttrImposeFormulaFunction fun(SourceAttribute: table<integer, number>, SourceAttribute: table<integer, number>):number
 
 ---@class SetConfig
 ---@field SetKey string

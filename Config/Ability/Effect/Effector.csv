@@ -1,6 +1,6 @@
 EffectorKey|EffectorName|EffectTemplate|EffectPeroid|EffectDuration|EffectPriority|AttrImposeFml|GrantedTags|BlockByTags|CancelToTags
-|||优先级|持续时间|周期|表达式|||
+|||优先级|持续时间|周期|属性施加表达式|赋予此Tags|被此Tags阻挡|取消此Tags
 |||||||||
 Effect1||EffectBase|1||||||
-Burn|烧伤|Burn|1|5|||Effector.State.Burn||
-Boom|爆炸|Burn|1|0|1||Effector.State.Burn||
+Burn|烧伤|Burn|1|5||#IncomingDamage = src#CurAttack|Effector.State.Burn||
+Boom|爆炸|Burn|1|0|1|#IncomingDamage = src#CurAttack|||

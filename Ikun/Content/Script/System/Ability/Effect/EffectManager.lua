@@ -19,6 +19,7 @@ local StrUtils = require("Core/Utils/StrUtils")
 local EffectorBaseClass = require("System/Ability/Effect/EffectorBase")
 local TagUtils = require("System/Ability/Tag/TagUtils")
 local Class3 = require('Core/Class/Class3')
+local ExpLib = require("System/Ability/Exp/ExpLib")
 
 ---@class EffectManager
 ---@field protected _System AbilitySystem
@@ -147,6 +148,13 @@ function EffectManager:_LoadConfig()
             config.GrantedTags = {}
             for _, tag in ipairs(tbTags) do
                 table.insert(config.GrantedTags, TagUtils.RequestTag(tag))
+            end
+        end
+
+        if config.AttrImposeFml then
+            local fml, attr = ExpLib.CompileAttrImposeFormula(config.AttrImposeFml)
+            if fml and attr then
+                config.AttrImposeFml = {Formula = fml, AttrId = attr}
             end
         end
     end

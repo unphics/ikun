@@ -14,6 +14,7 @@
 --]]
 
 local AttrDef = require("System/Ability/Attr/AttrDef")
+local StrUtils = require("Core/Utils/StrUtils")
 local log = require('Core/Log/log')
 local setfenv = _G.setfenv
 local loadstring = _G.loadstring
@@ -36,48 +37,24 @@ setmetatable(ExpEnv, {
 ---@class ExpLib
 local ExpLib = {}
 
----@public 根据表达式字符串加载表达式块
+---@public 根据表达式字符串加载表达式函数
 ---@param InScriptCode string
 ---@param InFormulaStr string
----@return fun():AttrFormulaFunction
-ExpLib.LoadFormulaChunk = function(InScriptCode, InFormulaStr)
+---@return AttrFormulaFunction?
+ExpLib.LoadFormulaFunction = function(InScriptCode, InFormulaStr)
     local chunk, err
+
     if setfenv then
         chunk, err = loadstring(InScriptCode, "FormulaChunk")
         setfenv(chunk, ExpEnv)
     else
         chunk, err = load(InScriptCode, "FormulaChunk", "t", ExpEnv)
     end
+
     if not chunk then
         log.warn(string.format("[FormulaError] 编译失败: %s\n原始公式:%s", err, InFormulaStr))
         return nil
     end
-    return chunk
-end
-
----@public
----@return AttrFormulaFunction?
-ExpLib.CompileAttrFormula = function(InFormulaStr)
-    if not InFormulaStr or InFormulaStr == '' then
-        return nil
-    end
-
-    -- 语法转换：支持 #101 或 #MaxHealth
-    -- 将 #Key 转换为 (v['Key'] or 0)
-    local luaCode = string.gsub(InFormulaStr, "#([%w_]+)", function(attrName)
-        -- 如果是纯数字，就转换成数字索引，否则保留字符串索引
-        local id = tonumber(attrName)
-        if not id then
-            id = AttrDef.ToId(attrName)
-        end
-        local c = string.format("(v[%d] or 0)", id)
-        return c
-    end)
-
-    -- 包装函数体
-    local script = "return function(v) return "..luaCode.." end"
-
-    local chunk = ExpLib.LoadFormulaChunk(script, InFormulaStr)
 
     local status, func = pcall(chunk)
     if not status then
@@ -85,6 +62,48 @@ ExpLib.CompileAttrFormula = function(InFormulaStr)
         return nil
     end
     return func
+end
+
+---@public
+---@return AttrImposeFormulaFunction?, integer?
+ExpLib.CompileAttrImposeFormula = function(InFormulaStr)
+    if StrUtils.IsEmpty(InFormulaStr) then
+        return nil
+    end
+
+    local tb = StrUtils.SplitExact(InFormulaStr, "=")
+    if StrUtils.IsEmpty(tb[1]) or StrUtils.IsEmpty(tb[2]) then
+        return nil
+    end
+
+    local targetAttr = string.gsub(StrUtils.Trim(tb[1]), "#", "")
+
+    -- 语法转换: 支持src#CurAttack或tar#CurHealth; 将src#Key转换为(src[Num]or0)
+    local luaCode = string.gsub(tb[2], "([%a_][%w_]*)#([%w_]+)", function(prefix, attrName)
+        return string.format("(%s[%d] or 0)", prefix, AttrDef.ToId(attrName))
+    end)
+
+    local script = "return function(src, tar) return "..luaCode.."end"
+    
+    return ExpLib.LoadFormulaFunction(script, InFormulaStr), AttrDef.ToId(targetAttr)
+end
+
+---@public
+---@return AttrFormulaFunction?
+ExpLib.CompileAttrFormula = function(InFormulaStr)
+    if StrUtils.IsEmpty(InFormulaStr) then
+        return nil
+    end
+
+    -- 语法转换: 支持#101或#MaxHealth; 将#Key转换为(v[Num]or0)
+    local luaCode = string.gsub(InFormulaStr, "#([%w_]+)", function(attrName)
+        return string.format("(v[%d] or 0)", AttrDef.ToId(attrName))
+    end)
+
+    -- 包装函数体
+    local script = "return function(v) return "..luaCode.." end"
+
+    return ExpLib.LoadFormulaFunction(script, InFormulaStr)
 end
 
 ExpLib.CollectDeps = function(InFormulaStr)
