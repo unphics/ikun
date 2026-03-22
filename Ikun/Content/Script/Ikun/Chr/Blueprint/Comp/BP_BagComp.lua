@@ -36,6 +36,10 @@ end
 
 ---@private [Init]
 function BP_BagComp:_InitBagComp()
+    if not obj_util.is_valid(self) then
+        return
+    end
+    
     local avatar = self:GetOwner()
     local role = avatar.GetRole and avatar:GetRole() ---@type RoleBaseClass
     if not role then
