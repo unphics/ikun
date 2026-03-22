@@ -12,11 +12,11 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local AbilitySystem = require('System/Ability/AbilitySystem')
+local AbilitySystem = require("System/Ability/AbilitySystem")
 local TagUtils = require("System/Ability/Tag/TagUtils")
-local AbilityPart = require('System/Ability/Part/AbilityPart')
+local AbilityPart = require("System/Ability/Part/AbilityPart")
 local AttrDef = require("System/Ability/Attr/AttrDef")
-local log = require('Core/Log/log') ---@as log
+local log = require("Core/Log/log") ---@as log
 local assert = _G.assert
 
 local testlog = function(...)
@@ -26,7 +26,7 @@ end
 AbilitySystem.Get():InitAbilitySystem()
 
 if true then
-    local tag = TagUtils.RequestTag('skill.type.active')
+    local tag = TagUtils.RequestTag("skill.type.active")
     local container = TagUtils.MakeContainer()
     assert(container:HasTag(tag) == false)
     container:AddTag(tag)
@@ -66,15 +66,21 @@ if true then
     assert(math.floor(set:GetAttrValue(AttrDef.Attr.MaxHealth)) == 110)
 end
 
-if false then
+if true then
+    local attrMgr = AbilitySystem.Get():GetAttrManager()
     local part = AbilityPart:New(nil) ---@type AbilityPartClass
-    local buff = part:MakeBuff('Buff1')
-    part:ApplyBuffToSelf(buff)
-    testlog('buff', buff)
+    part:InitAttrSet({"Health", "Attack"})
+    local mod_attack_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.BaseAttack, 10)
+    part:GetAttrSet():AddModifier(mod_attack_add_10)
+    assert(part:GetAttrSet():GetAttrValue(AttrDef.Attr.BaseAttack) == 10)
+    local effector = part:MakeEffector("Boom")
+    assert(effector)
+    part:TryApplyEffectorToSelf(effector)
+    assert(part:GetAttrSet():GetAttrValue(AttrDef.Attr.IncomingDamage) == 10)
 end
 
 if false then
     local part = AbilityPart:New() ---@as AbilityPartClass
-    part:AddAbilityToSlot(2, 'Ability1')
-    part:UseAbility('Ability1', {a = 1})
+    part:AddAbilityToSlot(2, "Ability1")
+    part:UseAbility("Ability1", {a = 1})
 end

@@ -1,3 +1,4 @@
 SetKey|SetDesc|SetAttrs
 ||
-Health|生命值、伤害、护盾相关|MaxHealth, BaseHealth, FlatHealth, PercentHealth, ExtraHealth
+Health|生命值、伤害、护盾相关|MaxHealth, BaseHealth, FlatHealth, PercentHealth, ExtraHealth, IncomingDamage
+Attack|攻击力、耐力相关|BaseAttack, CurAttack

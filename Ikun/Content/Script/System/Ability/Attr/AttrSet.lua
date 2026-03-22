@@ -75,7 +75,7 @@ function AttrSetClass:RemoveModifier(InModifier)
     self:AddDirty(id)
 end
 
----@public
+---@private
 ---@param InAttrKey integer
 function AttrSetClass:AddDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
@@ -88,14 +88,14 @@ function AttrSetClass:AddDirty(InAttrKey)
     end
 end
 
----@public
+---@private
 ---@param InAttrKey integer
 function AttrSetClass:RemoveDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
     self._Dirty[id] = false
 end
 
----@public
+---@private
 ---@param InAttrKey integer
 function AttrSetClass:IsDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
@@ -129,14 +129,15 @@ function AttrSetClass:_UpdateAttribute(InAttrId)
     local modValue = ModifierAdditiveStrategy[config.ModifierAdditiveStrategy](mods)
 
     local formula = self._Manager:GetAttrFormula(InAttrId)
-    local baseValue = formula and formula(self:_GetFormulaProxy()) or 0
+    local baseValue = formula and formula(self:GetFormulaProxy()) or 0
 
     self._Attributes[InAttrId] = ModifierApplyStrategy[config.ModifierApplyStrategy](baseValue, modValue)
     self._Dirty[InAttrId] = false
 end
 
----@protected
-function AttrSetClass:_GetFormulaProxy()
+---@public
+---@return table<integer, number>
+function AttrSetClass:GetFormulaProxy()
     if not self._Proxy then
         self._Proxy = setmetatable({}, {
             __index = function(_, k)

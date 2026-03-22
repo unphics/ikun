@@ -21,6 +21,17 @@ local TagUtils = require("System/Ability/Tag/TagUtils")
 local Class3 = require('Core/Class/Class3')
 local ExpLib = require("System/Ability/Exp/ExpLib")
 
+---@class EffectorConfig
+---@field EffectKey string
+---@field EffectTemplate string 模板
+---@field EffectPeroid integer 优先级
+---@field EffectDuration number 持续时间
+---@field EffectPriority number 周期
+---@field AttrImposeFml? {Formula:AttrImposeFormulaFunction, AttrId:integer}
+---@field GrantedTags? integer[]
+---@field BlockByTags? integer[]
+---@field CancelToTags? integer[]
+
 ---@class EffectManager
 ---@field protected _System AbilitySystem
 ---@field protected _EffectorConfigData EffectorConfig
@@ -96,6 +107,12 @@ function EffectManager:GetTimestampSec() -- const
     return self._System:GetTimestampSec()
 end
 
+---@public
+---@return AbilitySystem
+function EffectManager:GetAbilitySystem()
+    return self._System
+end
+
 ---@private
 ---@return EffectorBaseClass?
 function EffectManager:_LoadEffectorClass(InEffectorClassName)
@@ -137,8 +154,8 @@ function EffectManager:_LoadConfig()
             end
         end
         if config.CancelToTags then
-            local tbTags = config.CancelToTags
             config.CancelToTags = {}
+            local tbTags = config.CancelToTags
             for _, tag in ipairs(tbTags) do
                 table.insert(config.CancelToTags, TagUtils.RequestTag(tag))
             end

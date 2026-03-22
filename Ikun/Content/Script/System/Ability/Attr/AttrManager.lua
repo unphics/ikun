@@ -22,7 +22,7 @@ local AttrModifierClass = require('System/Ability/Attr/AttrModifier')
 local log = require('Core/Log/log')
 
 ---@alias AttrFormulaFunction fun(Attributes: table<integer, number>):number
----@alias AttrImposeFormulaFunction fun(SourceAttribute: table<integer, number>, SourceAttribute: table<integer, number>):number
+---@alias AttrImposeFormulaFunction fun(SourceAttribute: table<integer, number>, TargetAttribute: table<integer, number>):number
 
 ---@class SetConfig
 ---@field SetKey string
@@ -45,6 +45,7 @@ local log = require('Core/Log/log')
 ---@field protected _AttrFormula table<number, AttrFormulaFunction>
 ---@field protected _AttrDependencies table<number, number[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
 ---@field protected _AttrDependents table<number, number[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
+---@filed protected _AttrModGenId integer
 local AttrManager = Class3.Class('AttrManager')
 
 ---@private
@@ -55,6 +56,7 @@ function AttrManager:Ctor(InSystem)
     self._AttrFormula = {}
     self._AttrDependencies = {}
     self._AttrDependents = {}
+    self._AttrModGenId = 0
 end
 
 ---@public [Init]
@@ -89,10 +91,12 @@ end
 ---@public
 ---@param InAttrKey integer|string
 ---@param InModValue number
----@param InPriority integer@opt
+---@param InPriority? integer
 ---@return AttrModifierClass
 function AttrManager:AcquireModifier(InAttrKey, InModValue, InPriority)
-    return AttrModifierClass(-1, InModValue, AttrDef.ToId(InAttrKey), InPriority or 0)
+    InPriority = InPriority or 0
+    self._AttrModGenId = self._AttrModGenId + 1
+    return AttrModifierClass(self._AttrModGenId, InModValue, AttrDef.ToId(InAttrKey), InPriority)
 end
 
 ---@public

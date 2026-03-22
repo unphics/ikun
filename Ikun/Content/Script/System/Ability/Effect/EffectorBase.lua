@@ -12,18 +12,8 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
-
----@class EffectorConfig
----@field EffectKey string
----@field EffectTemplate string 模板
----@field EffectPeroid integer 优先级
----@field EffectDuration number 持续时间
----@field EffectPriority number 周期
----@field AttrImposeFml {Formula:AttrImposeFormulaFunction, AttrId:integer}
----@field GrantedTags integer[]
----@field BlockByTags integer[]
----@field CancelToTags integer[]
+local Class3 = require("Core/Class/Class3")
+local AttrImposeContextClass = require("System/Ability/Attr/AttrImposeContext")
 
 ---@class EffectorBaseClass
 ---@field protected _Manager EffectManager
@@ -33,6 +23,7 @@ local Class3 = require('Core/Class/Class3')
 ---@field protected _Duration number
 ---@field protected _Interval number
 ---@field protected _LastApplyTime number 上一次周期触发的时间戳
+---@field protected _ActiveModifiers AttrModifierClass[]
 ---@field public EffectorSource AbilityPartClass
 ---@field public EffectorTarget AbilityPartClass
 local EffectorBaseClass = Class3.Class('EffectorBaseClass')
@@ -72,9 +63,13 @@ function EffectorBaseClass:ActiveEffector(InTimestampSec)
     end
 
     local grantedTags = self:GetEffectorConfig().GrantedTags
-    for i = 1, #grantedTags do
-        self.EffectorTarget:AddTag(grantedTags[i])
+    if grantedTags then
+        for i = 1, #grantedTags do
+            self.EffectorTarget:AddTag(grantedTags[i])
+        end
     end
+
+    self._ActiveModifiers = {}
 
     if self._Interval >= 0 then
         self._LastApplyTime = self._StartTime
@@ -82,6 +77,7 @@ function EffectorBaseClass:ActiveEffector(InTimestampSec)
     else
         self._LastApplyTime = -1
     end
+
     self:OnActiveEffector(InTimestampSec)
 end
 ---@public
@@ -91,14 +87,22 @@ end
 ---@public
 function EffectorBaseClass:DeactiveEffector()
     self:OnDeactiveEffector()
+
     local grantedTags = self:GetEffectorConfig().GrantedTags
-    if self.EffectorTarget then
+    if grantedTags then
         for i = 1, #grantedTags do
             self.EffectorTarget:RemoveTag(grantedTags[i])
         end
     end
+
+    local attrSet = self.EffectorTarget:GetAttrSet()
+    for i = 1, #self._ActiveModifiers do
+        attrSet:RemoveModifier(self._ActiveModifiers[i])
+    end
+    self._ActiveModifiers = {}
 end
----@public
+
+---@private
 function EffectorBaseClass:OnDeactiveEffector()
 end
 
@@ -114,11 +118,11 @@ function EffectorBaseClass:TickEffector(InDeltaTime, InTimestampSec)
     end
 end
 
----@public
+---@private
 function EffectorBaseClass:ApplyEffector()
     self:OnApplyEffector()
 end
----@public
+---@private
 function EffectorBaseClass:OnApplyEffector()
 end
 
@@ -136,6 +140,30 @@ end
 ---@return EffectorConfig
 function EffectorBaseClass:GetEffectorConfig()
     return self._EffectConfig
+end
+
+---@public
+---@return AttrImposeContextClass
+function EffectorBaseClass:MakeImposeContext()
+    local tb = AttrImposeContextClass:New()
+    tb.ImposeSource = self.EffectorSource
+    tb.ImposeTarget = self.EffectorTarget
+    tb.ImposeCarrier = self
+    tb.ImposeAttr = self._EffectConfig.AttrImposeFml.AttrId
+    tb.ImposeFunc = self._EffectConfig.AttrImposeFml.Formula
+    return tb
+end
+
+---@public
+---@param InImposeContext AttrImposeContextClass
+---@return AttrModifierClass
+function EffectorBaseClass:ApplyImpose(InImposeContext)
+    InImposeContext:CalcAttrImposeValue()
+    local attrManager = self._Manager:GetAbilitySystem():GetAttrManager()
+    local mod = attrManager:AcquireModifier(InImposeContext.ImposeAttr, InImposeContext.ImposeValue)
+    self.EffectorTarget:GetAttrSet():AddModifier(mod)
+    table.insert(self._ActiveModifiers, mod)
+    return mod
 end
 
 return EffectorBaseClass

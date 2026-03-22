@@ -29,7 +29,7 @@ function WaitSkillClass:BeginSkill(InAbility, InParams)
     local part = self:GetSkillOwner() ---@as AbilityPartClass
     local set = part:GetAttrSet()
     -- local effector = part:MakeEffector("Burn")
-    local effector = part:MakeEffector("Boom")
+    local effector = part:MakeEffector("Burn")
     if effector then
         part:TryApplyEffectorToSelf(effector)
     end

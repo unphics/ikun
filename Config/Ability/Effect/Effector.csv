@@ -3,4 +3,4 @@ EffectorKey|EffectorName|EffectTemplate|EffectPeroid|EffectDuration|EffectPriori
 |||||||||
 Effect1||EffectBase|1||||||
 Burn|烧伤|Burn|1|5||#IncomingDamage = src#CurAttack|Effector.State.Burn||
-Boom|爆炸|Burn|1|0|1|#IncomingDamage = src#CurAttack|||
+Boom|爆炸|Boom|1|0|1|#IncomingDamage = src#CurAttack|||
