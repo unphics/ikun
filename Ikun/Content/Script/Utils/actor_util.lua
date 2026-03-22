@@ -6,6 +6,7 @@
 ---
 
 local log =  require("Core/Log/log")
+local DebugUtils = require("Utils/DebugUtils")
 
 local actor_util = {}
 
