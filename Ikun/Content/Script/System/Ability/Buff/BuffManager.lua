@@ -17,7 +17,7 @@ local TagUtils = require("System/Ability/Tag/TagUtils")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local BuffContainer = require("System/Ability/Buff/BuffContainer")
-local str_util = require("Core/Utils/str_util")
+local StrUtils = require("Core/Utils/StrUtils")
 local log = require("Core/Log/log")
 local BuffBaseClass = require("System/Ability/Buff/BuffBase")
 local Time = require("Core/Time")
@@ -121,7 +121,7 @@ end
 ---@protected
 ---@return BuffBaseClass
 function BuffManager:_LoadBuffClass(InBuffClassName)
-    if str_util.is_empty(InBuffClassName) then 
+    if StrUtils.IsEmpty(InBuffClassName) then 
         return BuffBaseClass
     else
         local pathHeader = "Module/Ability/Buff/"

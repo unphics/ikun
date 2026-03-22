@@ -17,7 +17,7 @@ local AbilityClass = require("System/Ability/Ability/Ability")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local SkillClass = require("System/Ability/Ability/Skill")
-local str_util = require("Core/Utils/str_util")
+local StrUtils = require("Core/Utils/StrUtils")
 local log = require("Core/Log/log")
 
 ---@class AbilityManager
@@ -77,7 +77,7 @@ end
 ---@param InAbilityClassName string
 ---@return AbilityClass
 function AbilityManager:_LoadAbilityClass(InAbilityClassName)
-    if str_util.is_empty(InAbilityClassName) then 
+    if StrUtils.IsEmpty(InAbilityClassName) then 
         return AbilityClass
     else
         local pathHeader = "Module/Ability/Ability/"
@@ -109,7 +109,7 @@ end
 ---@param InSkillClassName string
 ---@return SkillClass
 function AbilityManager:_LoadSkillClass(InSkillClassName) -- const
-    if str_util.is_empty(InSkillClassName) then 
+    if StrUtils.IsEmpty(InSkillClassName) then 
         return SkillClass
     else
         local pathHeader = "Module/Ability/Skill/"

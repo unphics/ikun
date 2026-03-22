@@ -6,6 +6,7 @@
 ---
 
 local log = require("Core/Log/log")
+local StrUtils = require("Core/Utils/StrUtils")
 require('Module/DirectoryBrowser/DirectoryBrowser')
 
 ---@class ConfigMgr
@@ -86,16 +87,16 @@ end
 ---@return table
 function ConfigMgr:_ParsePipeTable(InData, InMajorKeyColIdx)
     InMajorKeyColIdx = InMajorKeyColIdx or 1
-    local allLineData = str_util.split_simple(InData, '\r\n') -- 所有的行
+    local allLineData = StrUtils.SplitSimple(InData, '\r\n') -- 所有的行
     local result = {}
-    local headerData = str_util.split_exact(allLineData[1], "|") -- 表头数组
+    local headerData = StrUtils.SplitExact(allLineData[1], "|") -- 表头数组
     for rowNum, rowStr in ipairs(allLineData) do
-        rowStr = str_util.trim(rowStr)
+        rowStr = StrUtils.Trim(rowStr)
         if rowNum == 1 then
             goto next_row
         end
         
-        local rowData = str_util.split_exact(rowStr, '|')
+        local rowData = StrUtils.SplitExact(rowStr, '|')
         
         local majorKeyContent = rowData[InMajorKeyColIdx]
         if not majorKeyContent or majorKeyContent == '' or majorKeyContent:find(',') then
@@ -108,23 +109,23 @@ function ConfigMgr:_ParsePipeTable(InData, InMajorKeyColIdx)
             if not itemStr or itemStr == '' then
                 goto  next_item
             end
-            headerName = str_util.trim(headerName)
+            headerName = StrUtils.Trim(headerName)
             if itemStr:find(',') and itemStr:find('=') then -- 字典
-                local arr = str_util.split_simple(itemStr, ',')
+                local arr = StrUtils.SplitSimple(itemStr, ',')
                 rowResult[headerName] = {}
                 for _, pair in ipairs(arr) do
                     local key, value = pair:match("^([^=]+)=([^=]+)$")
-                    key = str_util.trim(key)
-                    value = str_util.trim(value)
+                    key = StrUtils.Trim(key)
+                    value = StrUtils.Trim(value)
                     if key then
                         rowResult[headerName][key] = tonumber(value) or value
                     end
                 end
             elseif itemStr:find(',') then -- 数组
                 rowResult[headerName] = {}
-                local arr = str_util.split_simple(itemStr, ',')
+                local arr = StrUtils.SplitSimple(itemStr, ',')
                 for _, item in ipairs(arr) do
-                    table.insert(rowResult[headerName], str_util.trim(item))
+                    table.insert(rowResult[headerName], StrUtils.Trim(item))
                 end
             elseif itemStr:find('=') then -- 单键值对
                 local key, value = itemStr:match("^([^=]+)=([^=]+)$")

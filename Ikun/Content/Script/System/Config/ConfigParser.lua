@@ -6,8 +6,9 @@
 ---
 
 local log =  require("Core/Log/log")
-local Class3 = require('Core/Class/Class3')
-local IConfigParser = require('System/Config/Interface').IConfigParser
+local Class3 = require("Core/Class/Class3")
+local StrUtils = require("Core/Utils/StrUtils")
+local IConfigParser = require("System/Config/Interface").IConfigParser
 
 ---@class ConfigParserClass: IConfigParser
 ---@field _System ConfigSystem
@@ -26,7 +27,7 @@ end
 ---@return ConfigParserClass
 function ConfigParserClass:ToRows(InSeparator)
     InSeparator = InSeparator or '\r\n'
-    self._Data = str_util.split_simple(self._Data, InSeparator)
+    self._Data = StrUtils.SplitSimple(self._Data, InSeparator)
     return self
 end
 
@@ -36,7 +37,7 @@ function ConfigParserClass:ExtractHeaders(InRowNum, InSeparator)
     InRowNum = InRowNum or 1
     InSeparator = InSeparator or '|'
     local headerStr = table.remove(self._Data, InRowNum)
-    self._Header = str_util.split_exact(headerStr, InSeparator)
+    self._Header = StrUtils.SplitExact(headerStr, InSeparator)
     return self
 end
 
@@ -45,7 +46,7 @@ end
 function ConfigParserClass:ToGrid(InSeparator)
     InSeparator = InSeparator or '|'
     for i, str in ipairs(self._Data) do
-        self._Data[i] = str_util.split_exact(str, InSeparator)
+        self._Data[i] = StrUtils.SplitExact(str, InSeparator)
     end
     return self
 end
@@ -56,10 +57,10 @@ function ConfigParserClass:ToMap(InPrimaryCol)
     InPrimaryCol = InPrimaryCol or 1
     local resultMap = {}
     for _, cells in ipairs(self._Data) do
-        if not str_util.is_empty(cells[InPrimaryCol]) then
+        if not StrUtils.IsEmpty(cells[InPrimaryCol]) then
             local rowMap = {}
             for j, key in ipairs(self._Header) do
-                if not str_util.is_empty(cells[j]) then
+                if not StrUtils.IsEmpty(cells[j]) then
                     rowMap[key] = tonumber(cells[j]) or cells[j] ---@warn 此处默认做tonumber处理
                 end
             end
@@ -94,13 +95,13 @@ function ConfigParserClass:CastMapCol(InHeaders)
         for _, name in ipairs(InHeaders) do
             local gridStr = row[name]
             if gridStr then
-                local arr = str_util.split_simple(gridStr, ',')
+                local arr = StrUtils.SplitSimple(gridStr, ',')
                 local gridData = {}
                 for _, pair in ipairs(arr) do
                     local key, value = pair:match("^([^=]+)=([^=]+)$")
-                    if not str_util.is_empty(value) then
-                        key = str_util.trim(key)
-                        value = str_util.trim(value)
+                    if not StrUtils.IsEmpty(value) then
+                        key = StrUtils.Trim(key)
+                        value = StrUtils.Trim(value)
                         gridData[key] = tonumber(value) or value
                     end
                 end
@@ -119,10 +120,10 @@ function ConfigParserClass:CastArrCol(InHeaders)
         for _, name in ipairs(InHeaders) do
             local gridStr = row[name]
             if gridStr then
-                local arr = str_util.split_simple(gridStr, ',')
+                local arr = StrUtils.SplitSimple(gridStr, ',')
                 local gridData = {}
                 for _, item in ipairs(arr) do
-                    local ele = str_util.trim(item)
+                    local ele = StrUtils.Trim(item)
                     table.insert(gridData, tonumber(ele) or ele)
                 end
                 row[name] = gridData
@@ -139,10 +140,10 @@ function ConfigParserClass:CastPairCol(InHeaders)
     for _, row in pairs(self._Data) do
         for _, name in ipairs(InHeaders) do
             local gridStr = row[name]
-            if not str_util.is_empty(gridStr) then
+            if not StrUtils.IsEmpty(gridStr) then
                 local key, value = gridStr:match("^([^=]+)=([^=]+)$")
-                key = str_util.trim(key)
-                value = str_util.trim(value)
+                key = StrUtils.Trim(key)
+                value = StrUtils.Trim(value)
                 row[key] = tonumber(value) or value
             end
         end

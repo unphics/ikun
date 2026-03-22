@@ -15,7 +15,7 @@
 
 local NpcChat = require("Content/Chat/NpcChat")
 local AbilityPart = require("System/Ability/Part/AbilityPart")
-local str_util = require("Core/Utils/str_util")
+local StrUtils = require("Core/Utils/StrUtils")
 require("System/Role/RoleHoldLocation")
 
 ---@class RoleConfig
@@ -88,7 +88,7 @@ function RoleBaseClass:InitComplexPart()
 
     self.HoldLocation = class.new 'RoleHoldLocationClass'(self, self._RoleCfgId)
 
-    if not str_util.is_empty(config.GoapKey) then
+    if not StrUtils.IsEmpty(config.GoapKey) then
         local agent = class.new 'GAgent' (self) ---@as GAgent
         self.Agent = agent
     end

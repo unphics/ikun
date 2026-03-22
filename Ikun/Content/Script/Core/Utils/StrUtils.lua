@@ -1,20 +1,26 @@
 
----
----@brief   字符串处理工具
----@author  zys
----@data    Sat Oct 11 2025 17:50:27 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : 字符串处理工具集
+--  File        : StrUtils.lua
+--  Author      : zhengyanshuai
+--  Date        : Sat Oct 11 2025 17:50:27 GMT+0800 (中国标准时间)
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local log =  require("Core/Log/log")
 
----@class str_util
-local str_util = {}
+---@class StrUtils
+local StrUtils = {}
 
----@public
+---@public 通过逗号拆解字符串为数组
 ---@todo 是否需要尝试转数字
 ---@param InStr string
 ---@return string[]
-str_util.parse_array_by_comma = function(InStr)
+StrUtils.ParseArrayByComma = function(InStr)
     if not InStr or InStr == '' then
         return {}
     end
@@ -26,11 +32,11 @@ str_util.parse_array_by_comma = function(InStr)
     return result
 end
 
----@public
+---@public 通过逗号拆解字符串为字典
 ---@todo 是否需要尝试转数字
 ---@param InStr string
 ---@return table<string, string>
-str_util.parse_dict_by_comma = function(InStr)
+StrUtils.ParseDictByComma = function(InStr)
     if not InStr or InStr == '' then
         return {}
     end
@@ -48,11 +54,11 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------------
 
----@public
+---@public 字符串分割, 忽略空元素
 ---@param InStr string
 ---@param InDelimiter string
 ---@return string[]
-str_util.split_simple = function(InStr, InDelimiter)
+StrUtils.SplitSimple = function(InStr, InDelimiter)
     if not InDelimiter then
         log.fatal('无效的分隔符')
     end
@@ -67,11 +73,11 @@ str_util.split_simple = function(InStr, InDelimiter)
     return result
 end
 
----@public
+---@public 字符串分割, 保留空元素
 ---@param InStr string
 ---@param InDelimiter string
 ---@return string[]
-str_util.split_exact = function(InStr, InDelimiter)
+StrUtils.SplitExact = function(InStr, InDelimiter)
     if not InDelimiter then
         log.fatal('无效的分隔符')
     end
@@ -96,9 +102,9 @@ str_util.split_exact = function(InStr, InDelimiter)
     return result
 end
 
----@public
+---@public 判断为空
 ---@return boolean
-str_util.is_empty = function(InStr)
+StrUtils.IsEmpty = function(InStr)
     if not InStr or InStr == '' or InStr == ' ' then
         return true
     end
@@ -108,7 +114,7 @@ end
 ---@public 去掉空格, 排查字符串中前两个字符和后两个字符
 ---@param InStr string
 ---@return string
-str_util.trim = function(InStr)
+StrUtils.Trim = function(InStr)
     if type(InStr) ~= 'string' then
         return InStr
     end
@@ -129,4 +135,4 @@ str_util.trim = function(InStr)
     return result and result ~= '' and result or nil
 end
 
-return str_util
+return StrUtils
