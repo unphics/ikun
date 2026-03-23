@@ -69,7 +69,7 @@ DebugUtils.IsChrDebug = function(Chr)
 end
 
 DebugUtils.skill = function()
-    log.warn("DebugUtils.skill begin")
+    log.mark("DebugUtils.skill begin")
     local name = "鸽鸽"
     local role = RoleMgr:FindRoleByName(name)
     
@@ -79,8 +79,8 @@ DebugUtils.skill = function()
         local abilities = part:GetSlotAbility(TagUtils.RequestTag(tagName))
         local aa = abilities[1] ---@type AbilityClass
         
-        if aa:CanUse(_) then
-            aa:UseSkill(_)
+        if aa:CanCast(_) then
+            aa:CastSkill(_)
         else
             log.error_fmt("释放技能失败[%s]", tagName)
         end
@@ -88,7 +88,7 @@ DebugUtils.skill = function()
         log.error_fmt("没找到[%s]", name)
     end
     
-    log.warn("DebugUtils.skill end")
+    log.mark("DebugUtils.skill end")
 end
 
 -- [[

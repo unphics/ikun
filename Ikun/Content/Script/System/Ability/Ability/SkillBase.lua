@@ -47,10 +47,14 @@ end
 
 ---@public
 function SkillBaseClass:EndSkill()
+    self:OnEndSKill()
     local manager = self._Manager
     self._Manager = nil
     self._Ability = nil
     manager:ReleaseSkill(self)
+end
+---@protected
+function SkillBaseClass:OnEndSKill()
 end
 
 ---@public

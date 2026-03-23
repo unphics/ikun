@@ -30,7 +30,7 @@ local Time = require('Core/Time')
 ---@field protected _AbilityConfigData AbilityConfig
 ---@field protected _AbilitySkills table<string, SkillBaseClass>
 ---@field protected _Owner table
----@field protected _UseSkillTimeStamp number
+---@field protected _CastSkillTimeStamp number
 local AbilityClass = Class3.Class('AbilityClass')
 
 ---@public
@@ -40,14 +40,14 @@ function AbilityClass:Ctor(InManager, InAbilityConfig, InOwner)
     self._Owner = InOwner
 
     self._AbilitySkills = {}
-    self._UseSkillTimeStamp = 0
+    self._CastSkillTimeStamp = 0
 end
 
 ---@public
 ---@param InParams table
 ---@return boolean
-function AbilityClass:CanUse(InParams) -- const
-    if (Time.GetTimestampSec() - self._UseSkillTimeStamp) < self:GetAbilityConfig().AbilityCooldown then
+function AbilityClass:CanCast(InParams) -- const
+    if (Time.GetTimestampSec() - self._CastSkillTimeStamp) < self:GetAbilityConfig().AbilityCooldown then
         return false
     end
     return true
@@ -56,7 +56,7 @@ end
 ---@public
 ---@param InParams table
 ---@return boolean
-function AbilityClass:UseSkill(InParams)
+function AbilityClass:CastSkill(InParams)
     self:StartCooldown()
     local key = self:GetAbilityConfig().AbilitySkills.EntrySkill
     local skill = self._Manager:AcquireSkill(key, self)
@@ -78,7 +78,7 @@ end
 
 ---@public
 function AbilityClass:StartCooldown()
-    self._UseSkillTimeStamp = Time.GetTimestampSec()
+    self._CastSkillTimeStamp = Time.GetTimestampSec()
 end
 
 ---@public
@@ -87,7 +87,7 @@ function AbilityClass:GetCooldown() -- const
     if self:GetAbilityConfig().AbilityCooldown < 0.01 then
         return 0
     end
-    return math.max(0, self:GetAbilityConfig().AbilityCooldown - (Time.GetTimestampSec() - self._UseSkillTimeStamp))
+    return math.max(0, self:GetAbilityConfig().AbilityCooldown - (Time.GetTimestampSec() - self._CastSkillTimeStamp))
 end
 
 ---@public

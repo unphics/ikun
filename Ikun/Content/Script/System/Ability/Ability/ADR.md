@@ -20,10 +20,10 @@
     - 字段:
         _AbilityConfigData: 能力的配置表数据
         _AbilitySkills: 活动技能实例
-        _UseSkillTimeStamp: 上次该能力激活时间
+        _CastSkillTimeStamp: 上次该能力激活时间
     - 方法:
-        CanUse: 可以使用技能
-        UseSkill: 使用技能
+        CanCast: 可以使用技能
+        CastSkill: 使用技能
         FollowSkill: 跟随使用技能, 技能实例中调用, 实现链式调用或一对多调用等
         StartCooldown: 开始冷却
         GetCooldown: 获取冷却时间

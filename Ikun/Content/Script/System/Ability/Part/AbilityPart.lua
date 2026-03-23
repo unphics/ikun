@@ -163,11 +163,11 @@ function AbilityPartClass:UseAbility(InAbilityKey, Params)
         return false
     end
 
-    if not ability:CanUse(Params) then
+    if not ability:CanCast(Params) then
         return false
     end
 
-    ability:UseSkill(Params)
+    ability:CastSkill(Params)
     return true
 end
 

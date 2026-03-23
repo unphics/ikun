@@ -46,4 +46,8 @@ function WaitSkillClass:TickSkill(InDeltaTime)
     self.WaitTiming = self.WaitTiming + InDeltaTime
 end
 
+function WaitSkillClass:OnEndSKill()
+    log.mark("WaitSkillClass:OnEndSKill()")
+end
+
 return WaitSkillClass
