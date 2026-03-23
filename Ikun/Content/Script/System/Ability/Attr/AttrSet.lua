@@ -89,10 +89,7 @@ function AttrSetClass:RemoveModifier(InModifier)
 
     if bRemoved then
         self:AddDirty(id)
-        local config = self._Manager:GetAttrConfig(id)
-        if config.IsChangeInstant then
-            self:_UpdateAttribute(id, oldValue)
-        end
+        self:_TryInflush(id, oldValue)
     end
 end
 
