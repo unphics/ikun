@@ -1,7 +1,7 @@
 
 --[[
 -- -----------------------------------------------------------------------------
---  Brief       : SkillClass
+--  Brief       : SkillBaseClass
 --  File        : Skill.lua
 --  Author      : zhengyanshuai
 --  Date        : Fri Jan 02 2026 22:31:04 GMT+0800 (中国标准时间)
@@ -12,21 +12,21 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
+local Class3 = require("Core/Class/Class3")
 
 ---@class SkillConfig
 ---@field SkillKey string
 ---@field SkillName string
 ---@field SkillTemplate string
 
----@class SkillClass
+---@class SkillBaseClass
 ---@field protected _Manager AbilityManager
 ---@field protected _ConfigData SkillConfig
 ---@field protected _Ability AbilityClass
-local SkillClass = Class3.Class('SkillClass')
+local SkillBaseClass = Class3.Class("SkillBaseClass")
 
 ---@param InManager AbilityManager
-function SkillClass:Ctor(InManager, InConfigData)
+function SkillBaseClass:Ctor(InManager, InConfigData)
     self._Manager = InManager
     self._ConfigData = InConfigData
 end
@@ -35,18 +35,18 @@ end
 ---@param InAbility AbilityClass
 ---@param InParams table
 ---@return boolean
-function SkillClass:BeginSkill(InAbility, InParams)
+function SkillBaseClass:BeginSkill(InAbility, InParams)
     self._Ability = InAbility
     return true
 end
 
 ---@public
 ---@param InDeltaTime number
-function SkillClass:TickSkill(InDeltaTime)
+function SkillBaseClass:TickSkill(InDeltaTime)
 end
 
 ---@public
-function SkillClass:EndSkill()
+function SkillBaseClass:EndSkill()
     local manager = self._Manager
     self._Manager = nil
     self._Ability = nil
@@ -55,14 +55,14 @@ end
 
 ---@public
 ---@return SkillConfig
-function SkillClass:GetSkillConfig() --const
+function SkillBaseClass:GetSkillConfig() --const
     return self._ConfigData
 end
 
 ---@public
 ---@return table
-function SkillClass:GetSkillOwner() -- const
+function SkillBaseClass:GetSkillOwner() -- const
     return self._Ability:GetAbilityOwner()
 end
 
-return SkillClass
+return SkillBaseClass

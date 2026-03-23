@@ -28,7 +28,7 @@ local Time = require('Core/Time')
 ---@class AbilityClass
 ---@field protected _Manager AbilityManager
 ---@field protected _AbilityConfigData AbilityConfig
----@field protected _AbilitySkills table<string, SkillClass>
+---@field protected _AbilitySkills table<string, SkillBaseClass>
 ---@field protected _Owner table
 ---@field protected _UseSkillTimeStamp number
 local AbilityClass = Class3.Class('AbilityClass')

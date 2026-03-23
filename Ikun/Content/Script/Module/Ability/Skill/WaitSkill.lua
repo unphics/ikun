@@ -13,16 +13,16 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
-local SkillClass = require("System/Ability/Ability/Skill")
+local SkillBaseClass = require("System/Ability/Ability/SkillBase")
 local log = require("Core/Log/log")
 local Time = require('Core/Time')
 
----@class WaitSkillClass: SkillClass
-local WaitSkillClass = Class3.Class('WaitSkillClass', SkillClass)
+---@class WaitSkillClass: SkillBaseClass
+local WaitSkillClass = Class3.Class('WaitSkillClass', SkillBaseClass)
 
 ---@override
 function WaitSkillClass:BeginSkill(InAbility, InParams)
-    SkillClass.BeginSkill(self, InAbility, InParams)
+    SkillBaseClass.BeginSkill(self, InAbility, InParams)
     self.WaitTotalTime = self:GetSkillConfig().WaitTime
     self.WaitTiming = 0.0
 
@@ -38,7 +38,7 @@ end
 
 ---@override
 function WaitSkillClass:TickSkill(InDeltaTime)
-    SkillClass.TickSkill(self, InDeltaTime)
+    SkillBaseClass.TickSkill(self, InDeltaTime)
     if self.WaitTiming > self.WaitTotalTime then
         self:EndSkill()
         return

@@ -16,13 +16,13 @@ local Class3 = require("Core/Class/Class3")
 local AbilityClass = require("System/Ability/Ability/Ability")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
-local SkillClass = require("System/Ability/Ability/Skill")
+local SkillBaseClass = require("System/Ability/Ability/SkillBase")
 local StrUtils = require("Core/Utils/StrUtils")
 local log = require("Core/Log/log")
 
 ---@class AbilityManager
 ---@field protected _System AbilitySystem
----@field protected _SkillList SkillClass[]
+---@field protected _SkillList SkillBaseClass[]
 ---@field protected _AbilityConfigData table<string, AbilityConfig>
 ---@field protected _SkillConfigData table<string, SkillConfig>
 local AbilityManager = Class3.Class("AbilityManager")
@@ -89,31 +89,31 @@ end
 ---@public
 ---@param InSkillKey string
 ---@param InAbility AbilityClass
----@return SkillClass
+---@return SkillBaseClass
 function AbilityManager:AcquireSkill(InSkillKey, InAbility)
     local config = self:LookupSkillConfig(InSkillKey)
     local tmplClass = self:_LoadSkillClass(config.SkillTemplate)
-    local skill = tmplClass:New(self, config) ---@type SkillClass
+    local skill = tmplClass:New(self, config) ---@type SkillBaseClass
     table.insert(self._SkillList, skill)
     return skill
 end
 
 ---@public
 ---@todo pool
----@param InSkillClass SkillClass
+---@param InSkillClass SkillBaseClass
 function AbilityManager:ReleaseSkill(InSkillClass)
     table_util.remove(self._SkillList, InSkillClass)
 end
 
 ---@public
 ---@param InSkillClassName string
----@return SkillClass
+---@return SkillBaseClass
 function AbilityManager:_LoadSkillClass(InSkillClassName) -- const
     if StrUtils.IsEmpty(InSkillClassName) then 
-        return SkillClass
+        return SkillBaseClass
     else
         local pathHeader = "Module/Ability/Skill/"
-        local skillClass = require(pathHeader..InSkillClassName) ---@type SkillClass
+        local skillClass = require(pathHeader..InSkillClassName) ---@type SkillBaseClass
         return skillClass
     end
 end
