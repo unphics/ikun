@@ -47,6 +47,7 @@ function AttrSetClass:GetAttrValue(InAttrKey)
 end
 
 ---@public
+---@todo 提供一个批量接口, 提高效率
 ---@param InModifier AttrModifierClass
 function AttrSetClass:AddModifier(InModifier)
     local id = AttrDef.ToId(InModifier.ModAttrKey)
@@ -70,6 +71,7 @@ function AttrSetClass:AddModifier(InModifier)
 end
 
 ---@public
+---@todo 提供一个批量接口, 提高效率
 ---@param InModifier AttrModifierClass
 function AttrSetClass:RemoveModifier(InModifier)
     local id = AttrDef.ToId(InModifier.ModAttrKey)
@@ -163,12 +165,10 @@ function AttrSetClass:_UpdateAttribute(InAttrId, InOldValue)
 
     self._Dirty[InAttrId] = false
 
-    if self._OnChangedFuncs[InAttrId] then
-        self._OnChangedFuncs[InAttrId](self, newValue, oldValue)
-    end
+    self:_OnAttrChanged(InAttrId, newValue, oldValue)
 end
 
----@public
+---@public 用于在fml中便捷的属性访问
 ---@return table<integer, number>
 function AttrSetClass:GetFormulaProxy()
     if not self._Proxy then
@@ -182,7 +182,7 @@ function AttrSetClass:GetFormulaProxy()
     return self._Proxy
 end
 
----@private
+---@private 收集派生类中的OnAttrChanged函数
 function AttrSetClass:_CollectOnChangedFuncs()
     self._OnChangedFuncs = AttrDef.NewAttrIdArr()
     for i in ipairs(self._OnChangedFuncs) do
@@ -191,6 +191,13 @@ function AttrSetClass:_CollectOnChangedFuncs()
         if fn then
             self._OnChangedFuncs[i] = fn
         end
+    end
+end
+
+---@private
+function AttrSetClass:_OnAttrChanged(InAttrId, InNewValue, InOldValue)
+    if self._OnChangedFuncs[InAttrId] then
+        self._OnChangedFuncs[InAttrId](self, InNewValue, InOldValue)
     end
 end
 
