@@ -50,7 +50,7 @@ end
 ---@todo 提供一个批量接口, 提高效率
 ---@param InModifier AttrModifierClass
 function AttrSetClass:AddModifier(InModifier)
-    local id = AttrDef.ToId(InModifier.ModAttrKey)
+    local id = InModifier.ModAttrId
     local config = self._Manager:GetAttrConfig(id)
     local oldValue = self._Attributes[id]
 
@@ -65,16 +65,14 @@ function AttrSetClass:AddModifier(InModifier)
         self._Attributes[id] = self._Attributes[id] + InModifier.ModValue
     end
 
-    if config.IsChangeInstant then
-        self:_UpdateAttribute(id, oldValue)
-    end
+    self:_TryInflush(id, oldValue)
 end
 
 ---@public
 ---@todo 提供一个批量接口, 提高效率
 ---@param InModifier AttrModifierClass
 function AttrSetClass:RemoveModifier(InModifier)
-    local id = AttrDef.ToId(InModifier.ModAttrKey)
+    local id = InModifier.ModAttrId
     local bRemoved = false
     local mods = self._Modifiers[id]
     local oldValue = self._Attributes[id]
@@ -198,6 +196,14 @@ end
 function AttrSetClass:_OnAttrChanged(InAttrId, InNewValue, InOldValue)
     if self._OnChangedFuncs[InAttrId] then
         self._OnChangedFuncs[InAttrId](self, InNewValue, InOldValue)
+    end
+end
+
+---@public
+function AttrSetClass:_TryInflush(InAttrId, InOldValue)
+    local config = self._Manager:GetAttrConfig(InAttrId)
+    if config.IsChangeInstant then
+        self:_UpdateAttribute(InAttrId, InOldValue)
     end
 end
 

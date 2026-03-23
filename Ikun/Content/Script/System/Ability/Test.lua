@@ -44,13 +44,13 @@ if true then
     local set = attrMgr:CreateAttrSet({"Health"}) ---@type AttrSetClass
 
     local mod_baseHealth_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.BaseHealth, 10)
-    assert(mod_baseHealth_add_10.ModValue == 10 and mod_baseHealth_add_10.ModAttrKey == AttrDef.Attr.BaseHealth)
+    assert(mod_baseHealth_add_10.ModValue == 10 and mod_baseHealth_add_10.ModAttrId == AttrDef.Attr.BaseHealth)
     set:AddModifier(mod_baseHealth_add_10)
     assert(set:GetAttrValue(AttrDef.Attr.BaseHealth) == 10)
     assert(set:GetAttrValue(AttrDef.Attr.MaxHealth) == 10)
 
     local mod_FlatHealth_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.FlatHealth, 10)
-    assert(mod_FlatHealth_add_10.ModValue == 10 and mod_FlatHealth_add_10.ModAttrKey == AttrDef.Attr.FlatHealth)
+    assert(mod_FlatHealth_add_10.ModValue == 10 and mod_FlatHealth_add_10.ModAttrId == AttrDef.Attr.FlatHealth)
     set:AddModifier(mod_FlatHealth_add_10)
     assert(set:IsDirty(AttrDef.Attr.MaxHealth) == true)
     assert(set:GetAttrValue(AttrDef.Attr.FlatHealth) == 10)
