@@ -31,7 +31,6 @@ function BurnClass:OnApplyEffector()
 end
 
 function BurnClass:OnDeactiveEffector()
-    log.dev("BurnClass:OnDeactiveEffector()", self.EffectorTarget:GetAttrSet():GetAttrValue(AttrDef.Attr.IncomingDamage))
 end
 
 return BurnClass

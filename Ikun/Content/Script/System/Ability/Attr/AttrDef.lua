@@ -56,4 +56,10 @@ AttrDef.BuildIdToKey = function()
     end
 end
 
+---@public
+---@return any[]
+AttrDef.NewAttrIdArr = function(InDefaultValue)
+    return table_util.make_arr(AttrDef.AttrCount, InDefaultValue)
+end
+
 return AttrDef

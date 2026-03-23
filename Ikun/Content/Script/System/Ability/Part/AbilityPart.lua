@@ -43,9 +43,10 @@ end
 
 ---@public [AttrSet]
 ---@param InAttrSetConfig string[]
-function AbilityPartClass:InitAttrSet(InAttrSetConfig)
+---@param InAttrSetClass? AttrSetClass
+function AbilityPartClass:InitAttrSet(InAttrSetConfig, InAttrSetClass)
     local mgr = AbilitySystem.Get():GetAttrManager()
-    local set = mgr:CreateAttrSet(InAttrSetConfig)
+    local set = mgr:CreateAttrSet(InAttrSetConfig, InAttrSetClass)
     self._AttrSet = set
 end
 

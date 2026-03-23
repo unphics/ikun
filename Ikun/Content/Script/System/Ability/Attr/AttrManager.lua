@@ -76,8 +76,10 @@ end
 
 ---@public
 ---@param InSets string[]
+---@param InAttrSetClass? AttrSetClass
 ---@return AttrSetClass
-function AttrManager:CreateAttrSet(InSets)
+function AttrManager:CreateAttrSet(InSets, InAttrSetClass)
+    InAttrSetClass = InAttrSetClass or AttrSetClass
     local attributes = {}
     for i = 1, #InSets do
         local set = self._SetConfigData[InSets[i]] ---@type SetConfig
@@ -90,7 +92,7 @@ function AttrManager:CreateAttrSet(InSets)
         end
     end
     
-    local set = AttrSetClass:New(self, attributes) ---@type AttrSetClass
+    local set = InAttrSetClass:New(self, attributes) ---@type AttrSetClass
     return set
 end
 
@@ -163,7 +165,7 @@ function AttrManager:_LoadAttrConfig()
         log.error('zys AttrManager:_LoadAttrConfig(): Failed to create csv parser!')
         return
     end
-    self._AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
+    self._AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastBoolCol({"IsChangeInstant", "IsModifierInfinite"}):GetResult()
     attrParser:ReleaseParser()
 end
 

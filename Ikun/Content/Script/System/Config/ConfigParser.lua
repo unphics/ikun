@@ -152,6 +152,27 @@ function ConfigParserClass:CastPairCol(InHeaders)
 end
 
 ---@public
+---@param InHeaders string[]
+---@return ConfigParserClass
+function ConfigParserClass:CastBoolCol(InHeaders)
+    for _, row in pairs(self._Data) do
+        for _, name in ipairs(InHeaders) do
+            local gridStr = row[name]
+            if not StrUtils.IsEmpty(gridStr) then
+                if gridStr == "true" then
+                    row[name] = true
+                elseif gridStr == "false" then
+                    row[name] = false
+                else
+                    row[name] = false
+                end
+            end
+        end
+    end
+    return self
+end
+
+---@public
 ---@return any
 function ConfigParserClass:GetResult()
     return self._Data

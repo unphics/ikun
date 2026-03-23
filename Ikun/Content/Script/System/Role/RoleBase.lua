@@ -94,7 +94,7 @@ function RoleBaseClass:InitComplexPart()
     end
 
     if config.RoleAttrSet and #config.RoleAttrSet > 0 then
-        self.AbilityPart:InitAttrSet(config.RoleAttrSet)
+        self.AbilityPart:InitAttrSet(config.RoleAttrSet, require("Module/Ability/Attr/IkunAttrSet"))
     end
     if config.RoleAbility and next(config.RoleAbility) then
         self.AbilityPart:InitAbilitySlot(config.RoleAbility)
