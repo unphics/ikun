@@ -174,7 +174,12 @@ namespace UnLua
 
     FORCEINLINE int32 Push(lua_State* L, FText& V, bool bCopy = false)
     {
+#if UNLUA_ENABLE_FTEXT
+        const auto userdata = NewTypedUserdata(L, FText);
+        new(userdata) FText(V);
+#else
         lua_pushstring(L, TCHAR_TO_UTF8(*V.ToString()));
+#endif
         return 1;
     }
 

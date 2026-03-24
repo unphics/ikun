@@ -262,32 +262,22 @@ int32 FFunctionDesc::CallUE(lua_State *L, int32 NumParams, void *Userdata)
 
     UObject* Object;
     int32 FirstParamIndex;
-    if (bStaticFunc)
-    {
+    if (bStaticFunc) {
         Object = Function->GetOuterUClass()->GetDefaultObject();                // get CDO for static function
         FirstParamIndex = 1;
-    }
-    else if (NumParams > 0)
-    {
+    } else if (NumParams > 0) {
         Object = UnLua::GetUObject(L, 1, false);
         FirstParamIndex = 2;
         --NumParams;
-    }
-    else
-    {
+    } else {
         Object = nullptr;
         FirstParamIndex = 1;
     }
 
-    if (Object == UnLua::LowLevel::ReleasedPtr)
-        return luaL_error(L, "attempt to call UFunction '%s' on released object.", TCHAR_TO_UTF8(*FuncName));
-
-    if (Object == nullptr)
-        return luaL_error(L, "attempt to call UFunction '%s' on NULL object. (check the usage of ':' and '.')", TCHAR_TO_UTF8(*FuncName));
-
-    if (Object->IsUnreachable())
-        return luaL_error(L, "attempt to call UFunction '%s' on Unreachable object '%s'.", TCHAR_TO_UTF8(*FuncName), TCHAR_TO_UTF8(*Object->GetName()));
-
+    FString error;
+    if (UNLIKELY(!this->CheckObject(Object, error)))
+        return luaL_error(L, TCHAR_TO_UTF8(*error));
+    
 #if SUPPORTS_RPC_CALL
     int32 Callspace = Object->GetFunctionCallspace(Function.Get(), nullptr);
     bool bRemote = Callspace & FunctionCallspace::Remote;
@@ -306,8 +296,7 @@ int32 FFunctionDesc::CallUE(lua_State *L, int32 NumParams, void *Userdata)
         // get target UFunction if it's a function in Interface
         FName FunctionName = Function->GetFName();
         FinalFunction = Object->GetClass()->FindFunctionByName(FunctionName);
-        if (!FinalFunction)
-        {
+        if (!FinalFunction) {
             UNLUA_LOGERROR(L, LogUnLua, Error, TEXT("ERROR! Can't find UFunction '%s' in target object!"), *FuncName);
 
 #if !ENABLE_PERSISTENT_PARAM_BUFFER
@@ -318,8 +307,7 @@ int32 FFunctionDesc::CallUE(lua_State *L, int32 NumParams, void *Userdata)
             return 0;
         }
 #if UE_BUILD_DEBUG
-        else if (FinalFunction != Function)
-        {
+        else if (FinalFunction != Function) {
             // todo: 'FinalFunction' must have the same signature with 'Function', check more parameters here
             check(FinalFunction->NumParms == Function->NumParms && FinalFunction->ParmsSize == Function->ParmsSize && FinalFunction->ReturnValueOffset == Function->ReturnValueOffset);
         }
@@ -327,8 +315,7 @@ int32 FFunctionDesc::CallUE(lua_State *L, int32 NumParams, void *Userdata)
     }
 #if ENABLE_CALL_OVERRIDDEN_FUNCTION
     {
-        if (!Function->HasAnyFunctionFlags(FUNC_Net))
-        {
+        if (!Function->HasAnyFunctionFlags(FUNC_Net)) {
             const auto LuaFunction = Cast<ULuaFunction>(Function);
             const auto Overridden = LuaFunction == nullptr ? nullptr : LuaFunction->GetOverridden();
             if (Overridden)
@@ -340,11 +327,15 @@ int32 FFunctionDesc::CallUE(lua_State *L, int32 NumParams, void *Userdata)
 #if ENABLE_TYPE_CHECK && WITH_EDITOR
     if (!Object->IsA(FinalFunction->GetOuterUClass()))
     {
-        return luaL_error(L, "attempt to call UFunction '%s' on invalid self type. '%s' required but got '%s'.",
-                          TCHAR_TO_UTF8(*FuncName), TCHAR_TO_UTF8(*FinalFunction->GetOuterUClass()->GetName()), TCHAR_TO_UTF8(*Object->GetClass()->GetName()));
+        if(!Object->GetClass()->ImplementsInterface(FinalFunction->GetOuterUClass()))
+        {
+            return luaL_error(L, "attempt to call UFunction '%s' on invalid self type. '%s' required but got '%s'.",
+                              TCHAR_TO_UTF8(*FuncName), TCHAR_TO_UTF8(*FinalFunction->GetOuterUClass()->GetName()), TCHAR_TO_UTF8(*Object->GetClass()->GetName()));
+
+        }
     }
 #endif
-
+    
     // call the UFuncton...
 #if !SUPPORTS_RPC_CALL
     if (FinalFunction == Function && FinalFunction->HasAnyFunctionFlags(FUNC_Native) && NumCalls == 1)
@@ -683,3 +674,45 @@ bool FFunctionDesc::CallLuaInternal(lua_State *L, void *InParams, FOutParmRec *O
     return true;
 }
 
+bool FFunctionDesc::CheckObject(UObject* Object, FString& Error) const
+{
+    if (Object == UnLua::LowLevel::ReleasedPtr)
+    {
+        Error = FString::Printf(TEXT("attempt to call UFunction '%s' on released object."), *FuncName);
+        return false;
+    }
+
+    if (Object == nullptr)
+    {
+        Error = FString::Printf(TEXT("attempt to call UFunction '%s' on NULL object. (check the usage of ':' and '.')"), *FuncName);
+        return false;
+    }
+
+    if (Object->IsUnreachable())
+    {
+        Error = FString::Printf(TEXT("attempt to call UFunction '%s' on Unreachable object '%s'."), *FuncName, *Object->GetName());
+        return false;
+    }
+
+#if ENABLE_TYPE_CHECK && WITH_EDITOR
+    if (Object->IsA(Function->GetOuterUClass()))
+        return true;
+
+    const auto LuaFunction = Cast<ULuaFunction>(Function);
+    if (!LuaFunction)
+        return true;
+
+    const auto Overridden = LuaFunction->GetOverridden();
+    if (!Overridden)
+        return true;
+
+    if (Object->IsA(Overridden->GetOuterUClass()))
+        return true;
+
+    Error = FString::Printf(TEXT("attempt to call UFunction '%s' on invalid self type. '%s' required but got '%s'."),
+                            *FuncName, *Overridden->GetOuterUClass()->GetName(), *Object->GetClass()->GetName());
+    return false;
+#else
+    return true;
+#endif
+}

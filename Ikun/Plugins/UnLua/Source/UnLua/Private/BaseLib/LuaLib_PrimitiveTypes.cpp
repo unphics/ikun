@@ -12,6 +12,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 // See the License for the specific language governing permissions and limitations under the License.
 
+// 将UE中的原始类型PrimitiveTypes(原始类型如uint32)t)和AggregateTypes(聚合类型如FString)包装并导出到Lua脚本中, 使得Lua能够处理这些类型
+
 #include "UnLuaEx.h"
 
 template <typename T>
@@ -50,6 +52,7 @@ struct TAggregateTypeWrapper
     T Value;
 };
 
+// 用于将原始类型导出到Lua, 自动生成代码来处理类型的导出和封装
 #define EXPORT_PRIMITIVE_TYPE(Type, WrapperType, ArgType) \
     DEFINE_NAMED_TYPE(#Type, WrapperType) \
     BEGIN_EXPORT_CLASS_EX(false, Type, , WrapperType, nullptr, ArgType) \
