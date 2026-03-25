@@ -33,6 +33,18 @@ function WaitSkillClass:BeginSkill(InAbility, InParams)
     if effector then
         part:TryApplyEffectorToSelf(effector)
     end
+    local avatar = part:GetOwnerRole().Avatar
+    if not obj_util.is_valid(avatar) then
+        log.dev("qqq 1")
+    end
+    local animInst = avatar.Mesh:GetAnimInstance()
+    log.dev("qqq 1.1", animInst:IsAnyMontagePlaying(), obj_util.dispname(avatar))
+    local mtg = UE.UObject.Load('/Game/Ikun/Chr/Mage/Montage/Mtg_Fire_R.Mtg_Fire_R')
+    if not obj_util.is_valid(mtg) then
+        log.dev("qqq 2")
+    end
+    local time = animInst:Montage_Play(mtg)
+    log.dev("qqq 3", time, animInst:IsAnyMontagePlaying())
     return true
 end
 

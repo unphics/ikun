@@ -218,4 +218,9 @@ function AbilityPartClass:TryApplyEffectorToSelf(InEffectorInst)
     self._EffectorContainer:AddEffector(InEffectorInst)
 end
 
+---@public
+function AbilityPartClass:GetOwnerRole() -- const
+    return self._Owner
+end
+
 return AbilityPartClass
