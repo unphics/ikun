@@ -11,6 +11,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
+local log = require("Core/Log/log")
 local ffi = require("ffi")
 
 ffi.cdef[[
@@ -22,10 +23,14 @@ local status, result = pcall(ffi.load, "UnrealEditor-LuaENet")
 if status then
     lib = result
 else
-    status, result = pcall(ffi.load, "Ikun")
+    status, result = pcall(ffi.load, "UnrealEditor-LuaENet-Win64-DebugGame")
     if status then
         lib = result
     end
+end
+
+if not lib then
+    log.fatal("Failed to load Library [UnrealEditor-LuaENet]!")
 end
 
 ---@return number
