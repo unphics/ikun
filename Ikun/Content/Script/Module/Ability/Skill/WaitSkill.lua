@@ -20,6 +20,8 @@ local Time = require('Core/Time')
 ---@class WaitSkillClass: SkillBaseClass
 local WaitSkillClass = Class3.Class('WaitSkillClass', SkillBaseClass)
 
+local mtg = UE.UObject.Load('/Game/Ikun/Chr/Mage/Montage/Mtg_Fire_R.Mtg_Fire_R')
+
 ---@override
 function WaitSkillClass:BeginSkill(InAbility, InParams)
     SkillBaseClass.BeginSkill(self, InAbility, InParams)
@@ -39,13 +41,17 @@ function WaitSkillClass:BeginSkill(InAbility, InParams)
     end
     local animInst = avatar.Mesh:GetAnimInstance()
     log.dev("qqq 1.1", animInst:IsAnyMontagePlaying(), obj_util.dispname(avatar))
-    local mtg = UE.UObject.Load('/Game/Ikun/Chr/Mage/Montage/Mtg_Fire_R.Mtg_Fire_R')
+    animInst.OnMontageStarted:Add(avatar,  self.on_start)
     if not obj_util.is_valid(mtg) then
         log.dev("qqq 2")
     end
-    local time = animInst:Montage_Play(mtg)
+    local time = animInst:Montage_Play(mtg, 1, UE.EMontagePlayReturnType.Duration, 0, true)
     log.dev("qqq 3", time, animInst:IsAnyMontagePlaying())
     return true
+end
+
+function WaitSkillClass:on_start(mtg)
+    log.dev("WaitSkillClass:on_start", obj_util.dispname(mtg))
 end
 
 ---@override
@@ -56,9 +62,20 @@ function WaitSkillClass:TickSkill(InDeltaTime)
         return
     end
     self.WaitTiming = self.WaitTiming + InDeltaTime
+
+    local part = self:GetSkillOwner() ---@as AbilityPartClass
+    local avatar = part:GetOwnerRole().Avatar
+    local animInst = avatar.Mesh:GetAnimInstance()
+    local b = animInst:IsAnyMontagePlaying()
+    local mtg = animInst:GetCurrentActiveMontage()
+    log.dev("tick", obj_util.dispname(mtg))
 end
 
 function WaitSkillClass:OnEndSKill()
+    local part = self:GetSkillOwner() ---@as AbilityPartClass
+    local avatar = part:GetOwnerRole().Avatar
+    local animInst = avatar.Mesh:GetAnimInstance()
+    animInst.OnMontageStarted:Remove(avatar, self.on_start)
     log.mark("WaitSkillClass:OnEndSKill()")
 end
 
