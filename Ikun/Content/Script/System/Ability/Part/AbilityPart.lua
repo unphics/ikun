@@ -27,14 +27,14 @@ local log = require("Core/Log/log")
 ---@field protected _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
 ---@field protected _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
 ---@field protected _RefAbilityToSlots table<string, string[]> (AbilityKey:number[])
----@field protected _EffectorContainer EffectorContainerClass
+---@field protected _ActiveEffectorContainer EffectorContainerClass
 local AbilityPartClass = Class3.Class("AbilityPartClass")
 
 ---@public
 function AbilityPartClass:Ctor(InOwner)
     self._Owner = InOwner
     self._PartTagContainer = TagUtils.MakeContainer()
-    self._EffectorContainer = EffectorContainerClass:New(AbilitySystem.Get():GetEffectManager(), self)
+    self._ActiveEffectorContainer = EffectorContainerClass:New(AbilitySystem.Get():GetEffectManager(), self)
 
     self._SlotInfos = {}
     self._AbilityInfos = {}
@@ -215,7 +215,7 @@ function AbilityPartClass:TryApplyEffectorToSelf(InEffectorInst)
     if not InEffectorInst:CanActiveEffector() then
         return
     end
-    self._EffectorContainer:AddEffector(InEffectorInst)
+    self._ActiveEffectorContainer:AddEffector(InEffectorInst)
 end
 
 ---@public
