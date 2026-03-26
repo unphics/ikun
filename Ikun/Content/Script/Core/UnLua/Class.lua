@@ -27,7 +27,7 @@ local function Index(t, k)
     local mt = getmetatable(t)
     local super = mt
     while super do
-        local v = rawget(t, k)
+        local v = rawget(super, k)
         if v ~= nil and not rawequal(v, NotExist) then
             rawset(t, k, v)
             return v
@@ -74,6 +74,4 @@ local function Class(super_name)
   return new_class
 end
 
-local UnLua = _G.UnLua
-
-return UnLua.Class
+return Class
