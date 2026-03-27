@@ -1,0 +1,9 @@
+SkillId|StartTime|TaskType|ListenEvent|Duration|EmitEvent |Condition|
+|||||||
+Melee|0|PlayAnim||3|Success=PA_Success, Failed = PA_Failed||
+|0|PlayFX|||||
+|2|DamageBox||0.2|||
+|1.5|WarnBox||0.5|||
+|-1|PlayAnim|PA_Success|1|||
+|-1|PlayAnim|PA_Failed|1|||
+|||||||
