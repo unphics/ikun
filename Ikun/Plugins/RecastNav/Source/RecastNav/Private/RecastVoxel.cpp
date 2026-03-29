@@ -8,29 +8,30 @@
 #include "DrawDebugHelpers.h"
 #include "Navmesh/Public/Recast/Recast.h"
 
-namespace InsightRecast
+FRecastGeometryCache::FRecastGeometryCache(const uint8* Memory)
 {
-	struct FRecastGeometry {
-
-		struct FHeader {
-			FNavigationRelevantData::FCollisionDataHeader Validation;
-			int32_t NumVerts;
-			int32_t NumFaces;
-			FWalkableSlopeOverride SlopOverride;
-			static uint32_t StaticMagicNumber;
-		};
-
-		FRecastGeometry(const uint8* InMemory) {
-			this->Header = *((FHeader*)InMemory);
-			this->Verts = (float*)(InMemory + sizeof(FHeader));
-			this->Indices = (int32*)(InMemory + sizeof(FHeader) + (sizeof(float) * this->Header.NumVerts * 3));
-		}
-		
-		FHeader Header;
-		float* Verts;
-		int32_t* Indices;
-	};
+	Header = *((FHeader*)Memory);
+	Verts = (FVector::FReal*)(Memory + sizeof(FRecastGeometryCache));
+	Indices = (int32*)(Memory + sizeof(FRecastGeometryCache) + (sizeof(FVector::FReal) * Header.NumVerts * 3));
 }
+
+struct FRecastGeometryData {
+	FRecastGeometryData(const FRecastGeometryCache& InGeoCache) {
+		this->Triangles.Reserve(InGeoCache.Header.NumFaces);
+		for (int32_t i = 0; i < InGeoCache.Header.NumFaces; ++i) {
+			int32_t i0 = InGeoCache.Indices[i * 3 + 0];
+			int32_t i1 = InGeoCache.Indices[i * 3 + 1];
+			int32_t i2 = InGeoCache.Indices[i * 3 + 2];
+
+			FVector v0(InGeoCache.Verts[i0 * 3 + 0], InGeoCache.Verts[i0 * 3 + 1], InGeoCache.Verts[i0 * 3 + 2]);
+			FVector v1(InGeoCache.Verts[i1 * 3 + 0], InGeoCache.Verts[i1 * 3 + 1], InGeoCache.Verts[i1 * 3 + 2]);
+			FVector v2(InGeoCache.Verts[i2 * 3 + 0], InGeoCache.Verts[i2 * 3 + 1], InGeoCache.Verts[i2 * 3 + 2]);
+
+			this->Triangles.Add(FTriangle(v0, v1, v2));
+		}
+	}
+	TArray<FTriangle> Triangles;
+};
 
 ARecastVoxel::ARecastVoxel() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -49,8 +50,8 @@ void ARecastVoxel::Tick(float DeltaTime) {
 
 void ARecastVoxel::ComputeVoxelOfTargetMesh() {
 	this->LoadNavConfig();
-	this->RasterizeMeshToHeightField();
-	this->VisualizeHeightField();
+	 this->RasterizeMeshToHeightField();
+	 this->VisualizeHeightField();
 }
 
 void ARecastVoxel::LoadNavConfig() {
@@ -84,7 +85,8 @@ void ARecastVoxel::RasterizeMeshToHeightField() {
 	}
 	
 	// 数据结构转换; 将原始字节数据解析为结构化的几何数据
-	InsightRecast::FRecastGeometry collisionCache(rawCollisionCache.GetData());
+	FRecastGeometryCache collisionCache(rawCollisionCache.GetData());
+	FRecastGeometryData geoData(collisionCache);
 	
 	const int32 numCoords = collisionCache.Header.NumVerts * 3;
 	const int32 numIndices = collisionCache.Header.NumFaces * 3;

@@ -9,6 +9,22 @@
 
 struct rcHeightfield;
 
+USTRUCT(BlueprintType)
+struct FTriangle {
+	GENERATED_BODY()
+	FTriangle(FVector p0, FVector p1, FVector p2) {
+		this->Point[0] = p0;
+		this->Point[1] = p1;
+		this->Point[2] = p2;
+	}
+	FTriangle() {
+		this->Point[0] = FVector::ZeroVector;
+		this->Point[1] = FVector::ZeroVector;
+		this->Point[2] = FVector::ZeroVector;
+	}
+	FVector Point[3];
+};
+
 UCLASS()
 class RECASTNAV_API ARecastVoxel : public AActor {
 	GENERATED_BODY()
@@ -21,7 +37,6 @@ public:
 	void ComputeVoxelOfTargetMesh();
 	
 	// config
-	UFUNCTION(BlueprintCallable, CallInEditor)
 	void LoadNavConfig();
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float CellSize;
@@ -29,7 +44,6 @@ public:
 	float CellHeight;
 	
 	//recaster
-	UFUNCTION(BlueprintCallable, CallInEditor) 
 	void RasterizeMeshToHeightField();
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	AActor* TargetActor;
