@@ -85,8 +85,8 @@ function EffectorBaseClass:OnActiveEffector(InTimestampSec)
 end
 
 ---@public
-function EffectorBaseClass:DeactiveEffector()
-    self:OnDeactiveEffector()
+function EffectorBaseClass:InactiveEffector()
+    self:OnInactiveEffector()
 
     local grantedTags = self:GetEffectorConfig().GrantedTags
     if grantedTags then
@@ -103,7 +103,7 @@ function EffectorBaseClass:DeactiveEffector()
 end
 
 ---@private
-function EffectorBaseClass:OnDeactiveEffector()
+function EffectorBaseClass:OnInactiveEffector()
 end
 
 ---@public

@@ -26,7 +26,7 @@ function BoomClass:OnApplyEffector()
     self:ApplyAttrInteract(ctx)
 end
 
-function BoomClass:OnDeactiveEffector()
+function BoomClass:OnInactiveEffector()
 end
 
 return BoomClass

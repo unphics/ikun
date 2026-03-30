@@ -61,7 +61,7 @@
             - _OnReapply()
             - _OnApply()
             - _OnTick()
-            - _OnDeactive()
+            - _OnInactive()
 - 与其他模块关系:
     - 与技能: 技能对目标施加效果器
     - 与属性: 效果器影响目标属性

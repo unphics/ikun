@@ -30,7 +30,7 @@ function BurnClass:OnApplyEffector()
     self:ApplyAttrInteract(ctx)
 end
 
-function BurnClass:OnDeactiveEffector()
+function BurnClass:OnInactiveEffector()
 end
 
 return BurnClass

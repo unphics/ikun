@@ -37,7 +37,7 @@ function EffectorContainerClass:TickEffectorContainer(InDeltaTime, InTimestampSe
         local effector = self._Effectors[i]
         effector:TickEffector(InDeltaTime, InTimestampSec)
         if effector:IsEffectorExpried(InTimestampSec) then
-            effector:DeactiveEffector()
+            effector:InactiveEffector()
             self:RemoveEffector(effector)
         end
     end
