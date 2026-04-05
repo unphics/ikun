@@ -44,7 +44,7 @@
 		},
 		{
 			"Name": "ExportNav",
-			"Enabled": true
+			"Enabled": false
 		},
 		{
 			"Name": "ELuaProfiler",
@@ -60,6 +60,10 @@
 		},
 		{
 			"Name": "LuaSocket",
+			"Enabled": false
+		},
+		{
+			"Name": "RecastNav",
 			"Enabled": false
 		}
 	]
