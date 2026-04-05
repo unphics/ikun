@@ -12,14 +12,14 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local Class3 = require('Core/Class/Class3')
+local Class3 = require("Core/Class/Class3")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
-local ExpLib = require('System/Ability/Exp/ExpLib')
-local AttrSetClass = require('System/Ability/Attr/AttrSet')
-local AttrDef = require('System/Ability/Attr/AttrDef')
-local AttrModifierClass = require('System/Ability/Attr/AttrModifier')
-local log = require('Core/Log/log')
+local ExpLib = require("System/Ability/Exp/ExpLib")
+local AttrSetClass = require("System/Ability/Attr/AttrSet")
+local AttrDef = require("System/Ability/Attr/AttrDef")
+local AttrModifierClass = require("System/Ability/Attr/AttrModifier")
+local log = require("Core/Log/log")
 
 ---@alias AttrFormulaFunction fun(Attributes: table<integer, number>):number
 ---@alias AttrImposeFormulaFunction fun(SourceAttribute: table<integer, number>, TargetAttribute: table<integer, number>):number
@@ -49,7 +49,7 @@ local log = require('Core/Log/log')
 ---@field protected _AttrDependencies table<integer, integer[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
 ---@field protected _AttrDependents table<integer, integer[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
 ---@filed protected _AttrModGenId integer
-local AttrManager = Class3.Class('AttrManager')
+local AttrManager = Class3.Class("AttrManager")
 
 ---@private
 ---@param InSystem AbilitySystem
@@ -150,19 +150,19 @@ function AttrManager:_LoadAttrConfig()
     -- 解析属性配置表原文
     local file = FileSystem.Get():CreateConfigContext()
     if not file then
-        log.error('zys AttrManager:_LoadAttrConfig(): Failed to create config file context!')
+        log.error("zys AttrManager:_LoadAttrConfig(): Failed to create config file context!")
         return
     end
-    file:ChangeDirectory('Ability')
-    file:ChangeDirectory('Attr')
-    local attrFileContent = file:ReadStringFile('Attr.csv')
+    file:ChangeDirectory("Ability")
+    file:ChangeDirectory("Attr")
+    local attrFileContent = file:ReadStringFile("Attr.csv")
     if not attrFileContent then
-        log.error('zys AttrManager:_LoadAttrConfig(): Failed to read Attr.csv!')
+        log.error("zys AttrManager:_LoadAttrConfig(): Failed to read Attr.csv!")
         return
     end
     local attrParser = ConfigSystem.Get():CreateCSVParser(attrFileContent)
     if not attrParser then
-        log.error('zys AttrManager:_LoadAttrConfig(): Failed to create csv parser!')
+        log.error("zys AttrManager:_LoadAttrConfig(): Failed to create csv parser!")
         return
     end
     self._AttrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastBoolCol({"IsChangeInstant", "IsModifierInfinite"}):GetResult()
@@ -173,7 +173,7 @@ end
 function AttrManager:_LoadSetConfig()
     local file = FileSystem.Get():CreateConfigContext()
     if not file then
-        log.error('zys AttrManager:_LoadSetConfig(): Failed to create config file context!')
+        log.error("zys AttrManager:_LoadSetConfig(): Failed to create config file context!")
         return
     end
     file:ChangeDirectory("Ability")
@@ -185,7 +185,7 @@ function AttrManager:_LoadSetConfig()
     end
     local setParser = ConfigSystem.Get():CreateCSVParser(setFileContent)
     if not setParser then
-        log.error('zys AttrManager:_LoadSetConfig(): Failed to create csv parser!')
+        log.error("zys AttrManager:_LoadSetConfig(): Failed to create csv parser!")
         return
     end
     self._SetConfigData = setParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastArrCol({"SetAttrs"}):GetResult()
