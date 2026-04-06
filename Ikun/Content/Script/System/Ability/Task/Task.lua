@@ -1,13 +1,11 @@
 
 local Class3 = require("Core/Class/Class3")
 local log = require("Core/Log/log")
+local Delegate = require("Core/Delegate")
 
 ---@class Task
+---@field OnMontageEnd Delegate
 local Task = Class3.Class("Task")
-
-function Task:ctor()
-    
-end
 
 ---@public
 function Task.PlayMontageAndWait(Skill, Montage)
@@ -20,18 +18,23 @@ function Task.PlayMontageAndWait(Skill, Montage)
     return task
 end
 
+function Task:Ctor()
+    self.OnMontageEnd = Delegate:New()
+end
+
 function Task:Ready()
     local animInst = self.Avatar.Mesh:GetAnimInstance() ---@type UAnimInstance
     animInst.OnMontageEnded:Add(self.Avatar, function()
-        self:OnMontageEnd()
+        self:_MontageEnd()
     end)
     local time = animInst:Montage_Play(self.Montage, 1, UE.EMontagePlayReturnType.Duration, 0, true)
 end
 
-function Task:OnMontageEnd()
+function Task:_MontageEnd()
     local animInst = self.Avatar.Mesh:GetAnimInstance() ---@type UAnimInstance
-    animInst.OnMontageEnded:Remove(self.Avatar, self.OnMontageEnd)
+    animInst.OnMontageEnded:Remove(self.Avatar, self._MontageEnd)
     log.mark("qqqqqq")
+    self.OnMontageEnd:Broadcast()
 end
 
 return Task

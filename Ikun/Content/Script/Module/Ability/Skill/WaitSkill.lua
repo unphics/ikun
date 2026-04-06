@@ -38,6 +38,8 @@ function WaitSkillClass:BeginSkill(InAbility, InParams)
         part:TryApplyEffectorToSelf(effector)
     end
     local task = Task.PlayMontageAndWait(self, mtg)
+    self.fn = function() log.mark("task.OnMontageEnd") end
+    task.OnMontageEnd:Add(self, self.fn)
     task:Ready()
     return true
 end

@@ -19,7 +19,7 @@ local make_weak = _G.make_weak
 ---@field tbCallback {Obj:any, Fn:fun(any, ...)}[]
 local Delegate = Class3.Class("Delegate")
 
-function Delegate:ctor()
+function Delegate:Ctor()
     self.tbCallback = {}
 end
 
