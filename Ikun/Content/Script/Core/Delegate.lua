@@ -15,16 +15,16 @@
 local Class3 = require("Core/Class/Class3")
 local make_weak = _G.make_weak
 
----@class DelegateClass
+---@class Delegate
 ---@field tbCallback {Obj:any, Fn:fun(any, ...)}[]
-local DelegateClass = Class3.Class("Delegate")
+local Delegate = Class3.Class("Delegate")
 
-function DelegateClass:ctor()
+function Delegate:ctor()
     self.tbCallback = {}
 end
 
 ---@public
-function DelegateClass:Add(InObj, InFn)
+function Delegate:Add(InObj, InFn)
     if not InObj or not InFn then
         return
     end
@@ -32,7 +32,7 @@ function DelegateClass:Add(InObj, InFn)
 end
 
 ---@public
-function DelegateClass:Remove(InObj, InFn)
+function Delegate:Remove(InObj, InFn)
     for i, ele in pairs(self.tbCallback) do
         if ele.Obj == InObj and ele.Fn == InFn then
             table.remove(self.tbCallback, i)
@@ -42,7 +42,7 @@ function DelegateClass:Remove(InObj, InFn)
 end
 
 ---@public
-function DelegateClass:RemoveObj(InObj)
+function Delegate:RemoveObj(InObj)
     for i = #self.tbCallback, 1, -1 do
         local ele = self.tbCallback[i]
         if ele.Obj == InObj then
@@ -52,15 +52,15 @@ function DelegateClass:RemoveObj(InObj)
 end
 
 ---@public
-function DelegateClass:Clear()
+function Delegate:Clear()
     self.tbCallback = {}
 end
 
 ---@public
-function DelegateClass:Broadcast(...)
+function Delegate:Broadcast(...)
     for _, ele in pairs(self.tbCallback) do
         ele.Fn(ele.Obj, ...)
     end
 end
 
-return DelegateClass
+return Delegate
