@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"name": "Doc",
+			"path": "Doc"
+		},
+		{
+			"name": "Config",
+			"path": "Config"
+		},
+		{
+			"name": "Script",
+			"path": "Ikun/Content/Script"
+		},
+		{
+			"name": "Python",
+			"path": "Ikun/Content/Python"
+		},
+		{
+			"name": "UnLua",
+			"path": "Ikun/Plugins/UnLua/Content/Script/UnLua"
+		},
+		{
+			"name": "IntelliSense",
+			"path": "Ikun/Plugins/UnLua/Intermediate/IntelliSense"
+		},
+		{
+			"name": "PythonStub",
+			"path": "Ikun/Intermediate/PythonStub"
+		}
+	],
+	"settings": {}
+}
