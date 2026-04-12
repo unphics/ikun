@@ -4,6 +4,7 @@
 > **最后更新:** Sun Apr 12 2026 16:08:25 GMT+0800 (中国标准时间)
 > **文档状态:** 已实装
 > **目标读者:** 程序
+> **文档简介:** 给开发人员的UE使用提供参考
 ## 动画部分
 - 使用自带Rotate_to_face_BB_entry任务时需勾选Chr的UseControllerRotationYaw, 同时开启Chr下的ChrMovementComp的UseControllerDesiredRotation
 ## 运行编辑器
