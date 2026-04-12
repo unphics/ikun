@@ -19,18 +19,26 @@ local Delegate = require("Core/Delegate")
 ---@class TaskBaseClass
 ---@field private __Owner any
 ---@field private __TaskGraph TaskGraphClass?
+---@field private __bRunning boolean
 local TaskBaseClass = Class3.Class("TaskBaseClass")
 
 function TaskBaseClass:Ctor(InOwner)
     self.__Owner = InOwner
+    self.__bRunning = false
 end
 
 ---@public
 function TaskBaseClass:BeginTask()
+    self.__bRunning = true
 end
 
 ---@public
 function TaskBaseClass:EndTask()
+    if not self.__bRunning then
+        return
+    end
+    
+    self.__bRunning = false
     local graph = self:GetTaskGraph()
     if graph then
         graph:NotifyTaskEnd(self)
@@ -39,12 +47,15 @@ end
 
 ---@public
 function TaskBaseClass:TickTask(DeltaTime)
+    if not self.__bRunning then
+        return
+    end
 end
 
 ---@public
 ---@return boolean
 function TaskBaseClass:IsTaskRunning() -- const
-    return false
+    return self.__bRunning
 end
 
 ---@public
@@ -61,9 +72,11 @@ end
 
 ---@public
 function TaskBaseClass:SendEventToGraph(InEvent)
-    if not self:GetTaskGraph() then
+    local graph = self:GetTaskGraph()
+    if not graph then
         return
     end
+    graph:TriggerEvent(InEvent)
 end
 
 ---@public
