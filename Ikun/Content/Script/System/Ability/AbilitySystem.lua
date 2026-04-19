@@ -26,9 +26,9 @@ local Time = require("Core/Time")
 ---@field EffectManager EffectManager
 local AbilitySystem = Class3.Class("AbilitySystem")
 
-local system = nil ---@type AbilitySystem
+local system = nil
 
----@public
+---@private
 function AbilitySystem:Ctor()
     self.AttrManager = AttrManager:New(self)
     self.BuffManager = BuffManager:New(self)

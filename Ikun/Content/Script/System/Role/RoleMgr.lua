@@ -132,9 +132,9 @@ end
 
 ---@public [Config] 加载角色相关配置表
 function RoleMgrClass:_LoadConfig() -- const
-    local file = FileSystem.Get():CreateConfigContext()
+    local file = FileSystem.Get():CreateConfigFileContext()
     if not file then
-        log.fatal("RoleMgrClass:_LoadConfig(): Failed to CreateConfigContext !")
+        log.fatal("RoleMgrClass:_LoadConfig(): Failed to CreateConfigFileContext !")
         return
     end
     file:ChangeDirectory("Role")

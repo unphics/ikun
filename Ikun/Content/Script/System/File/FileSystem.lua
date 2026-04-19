@@ -6,12 +6,11 @@
 ---
 
 local Class3 = require('Core/Class/Class3')
-local IFileSystem = require('System/File/Interface').IFileSystem
 local log = require('Core/Log/log')
 local FileContext = require('System/File/FileContext')
 
----@class FileSystem: IFileSystem
-local FileSystem = Class3.Class('FileSystem', IFileSystem)
+---@class FileSystem
+local FileSystem = Class3.Class('FileSystem')
 
 local StaticFileSystem = nil
 
@@ -29,13 +28,40 @@ function FileSystem.Get()
 end
 
 ---@public
+---@param InFilePath string
+---@return string?
+function FileSystem:MustReadSConfigFile(InFilePath)
+    local fileContext = self:CreateConfigFileContext()
+    if not fileContext then
+        log.error('FileSystem:MustReadSConfigFile(): Failed to create FileContext!')
+        return nil
+    end
+
+    local parts = {}
+    for part in string.gmatch(InFilePath, "([^/]+)") do
+        table.insert(parts, part)
+    end
+
+    local fileName = table.remove(parts)
+
+    for _, dir in ipairs(parts) do
+        if not fileContext:ChangeDirectory(dir) then
+            log.error('FileSystem:MustReadSConfigFile(): Failed to change directory to [' .. dir .. ']!')
+            return nil
+        end
+    end
+
+    return fileContext:ReadStringFile(fileName)
+end
+
+---@public
 ---@todo 入参复用Context
 ---@return FileContextClass?
-function FileSystem:CreateProjectContext()
+function FileSystem:CreateProjectFileContext() -- const
     local projDir = UE.UBlueprintPathsLibrary.ProjectDir()
     local pullDir = UE.UBlueprintPathsLibrary.ConvertRelativePathToFull(projDir)
     if not self:IsDirectoryExist(pullDir) then
-        log.error('FileSystem:CreateProjectContext(): Failed to find project directory!')
+        log.error('FileSystem:CreateProjectFileContext(): Failed to find project directory!')
         return nil
     end
     local context = FileContext:New(pullDir, self) ---@type FileContextClass
@@ -45,8 +71,8 @@ end
 ---@public
 ---@todo 入参复用Context
 ---@return FileContextClass?
-function FileSystem:CreateConfigContext()
-    local context = self:CreateProjectContext()
+function FileSystem:CreateConfigFileContext()
+    local context = self:CreateProjectFileContext()
     if not context then
         return nil
     end

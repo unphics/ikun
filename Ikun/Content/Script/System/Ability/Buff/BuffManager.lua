@@ -50,7 +50,7 @@ end
 
 ---@private [Config]
 function BuffManager:_LoadBuffConfig()
-    local file = FileSystem.Get():CreateConfigContext()
+    local file = FileSystem.Get():CreateConfigFileContext()
     if not file then
         log.error("zys BuffManager:_LoadBuffConfig(): Failed to create FileContext!")
         return

@@ -17,7 +17,7 @@ local ConfigParserClass = Class3.Class('ConfigParserClass', IConfigParser)
 ---@public
 ---@param InConfigStr string
 ---@param InConfigSystem ConfigSystem
-function ConfigParserClass:Ctor(InConfigStr, InConfigSystem)
+function ConfigParserClass:Ctor(InConfigSystem, InConfigStr)
     self._System = InConfigSystem
     self._Header = {}
     self._Data = InConfigStr
