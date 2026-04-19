@@ -51,3 +51,7 @@
 - https://passion.blog.csdn.net/article/details/110206648
 - https://passion.blog.csdn.net/article/details/129754833
 - https://passion.blog.csdn.net/article/details/110248405
+## 杂项
+- 细节无所谓, 流程一定要对, 流程是固定的
+- 一定不要干涉别人的细节
+- 分层架构底层不能牵扯上层
