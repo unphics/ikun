@@ -51,8 +51,11 @@
 - https://passion.blog.csdn.net/article/details/110206648
 - https://passion.blog.csdn.net/article/details/129754833
 - https://passion.blog.csdn.net/article/details/110248405
-## 杂项
+## 其他
 - 细节无所谓, 流程一定要对, 流程是固定的
 - 一定不要干涉别人的细节
 - 分层架构底层不能牵扯上层
 - 分层架构每一层都有每一层该干的事情
+- Manager和Config和Factory分开
+- Config必须由统一的生命周期流程拉起
+- Factory用来屏蔽对象创建的复杂性, 并且在底层进行性能优化(类缓存/对象池等)
