@@ -18,6 +18,7 @@ local sys_error = _G.IkunError
 local string = _G.string
 local debug_traceback = _G.debug.traceback
 local select = _G.select
+local assert = _G.assert
 
 -- 内部辅助：处理字符串格式化
 local function fmt_out(fmt, ...)
@@ -99,6 +100,11 @@ end
 ---@public 格式化致命错误
 function log.fatal_fmt(fmt, ...)
     log.fatal(fmt_out(fmt, ...))
+end
+
+---@public
+function log.assert_fmt(exp, fmt, ...)
+    assert(exp, fmt_out)
 end
 
 ---@class logkeys

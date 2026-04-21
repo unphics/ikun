@@ -7,12 +7,11 @@
 
 local log =  require("Core/Log/log")
 local Class3 = require('Core/Class/Class3')
-local IFileContext = require('System/File/Interface').IFileContext
 
----@class FileContextClass: IFileContext
+---@class FileContextClass
 ---@field _System FileSystem
 ---@field _CurrentDirectory string
-local FileContextClass = Class3.Class('FileContextClass', IFileContext)
+local FileContextClass = Class3.Class('FileContextClass')
 
 ---@public
 ---@param InSystem FileSystem

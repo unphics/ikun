@@ -38,7 +38,7 @@ function ConfigSystem:CreateCSVParser(InConfigStr)
     if not InConfigStr then
         return
     end
-    return ConfigParserClass:New(InConfigStr, self) ---@as ConfigParserClass
+    return ConfigParserClass:New(self, InConfigStr) ---@as ConfigParserClass
 end
 
 ---@public

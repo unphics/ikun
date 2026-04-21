@@ -198,7 +198,7 @@ end
 ---@public [Effect]
 ---@return EffectorBaseClass?
 function AbilityPartClass:MakeEffector(InEffectorKey)
-    local effector = AbilitySystem.Get():GetEffectManager():CreateEffector(InEffectorKey)
+    local effector = AbilitySystem.Get():GetEffectManager():GetEffectConfig():CreateEffector(InEffectorKey)
     if not effector then
         return
     end

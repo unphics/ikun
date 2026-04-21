@@ -148,7 +148,7 @@ end
 ---@protected [Init]
 function AttrManager:_LoadAttrConfig()
     -- 解析属性配置表原文
-    local file = FileSystem.Get():CreateConfigContext()
+    local file = FileSystem.Get():CreateConfigFileContext()
     if not file then
         log.error("zys AttrManager:_LoadAttrConfig(): Failed to create config file context!")
         return
@@ -171,7 +171,7 @@ end
 
 ---@protected [Init]
 function AttrManager:_LoadSetConfig()
-    local file = FileSystem.Get():CreateConfigContext()
+    local file = FileSystem.Get():CreateConfigFileContext()
     if not file then
         log.error("zys AttrManager:_LoadSetConfig(): Failed to create config file context!")
         return

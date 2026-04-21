@@ -41,7 +41,7 @@ end
 
 ---@private
 function AbilityManager:_LoadConfig()
-    local file = FileSystem.Get():CreateConfigContext()
+    local file = FileSystem.Get():CreateConfigFileContext()
     if not file then
         return
     end
