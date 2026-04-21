@@ -21,29 +21,10 @@ local AttrDef = require("System/Ability/Attr/AttrDef")
 local AttrModifierClass = require("System/Ability/Attr/AttrModifier")
 local log = require("Core/Log/log")
 
----@alias AttrFormulaFunction fun(Attributes: table<integer, number>):number
----@alias AttrImposeFormulaFunction fun(SourceAttribute: table<integer, number>, TargetAttribute: table<integer, number>):number
----@alias AttrReceiveFormulaFunction fun(SourceAttribute: table<integer, number>, TargetAttribute: table<integer, number>, ImposeValue: number):number
-
----@class SetConfig
----@field SetKey string
----@field SetDesc string
----@field SetAttrs string[]
-
----@class AttrConfig
----@field AttrKey string
----@field AttrName string
----@field AttrFormula string
----@field AttrReceiveFormula string
----@field IsChangeInstant boolean
----@field IsModifierInfinite boolean
----@field ModifierApplyStrategy string
----@field ModifierAdditiveStrategy string
-
 ---@class AttrManager
 ---@field protected _System AbilitySystem
 ---@field protected _AttrConfig table<string, AttrConfig>
----@field protected _SetConfigData table<string, SetConfig>
+---@field protected _SetConfigData table<string, AttrSetConfig>
 ---@field protected _AttrFormula table<integer, AttrFormulaFunction>
 ---@field protected _AttrReceiveFormula table<integer, AttrReceiveFormulaFunction>
 ---@field protected _AttrDependencies table<integer, integer[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
