@@ -16,12 +16,13 @@ local Class3 = require("Core/Class/Class3")
 local EffectorBaseClass = require("System/Ability/Effect/EffectorBase")
 local log = require("Core/Log/log")
 local AttrDef = require("System/Ability/Attr/AttrDef")
+local AttrModifierFactoryClass = require("System/Ability/Attr/AttrModifierFactory")
 
 ---@class BurnClass: EffectorBaseClass
 local BurnClass = Class3.Class("BurnClass", EffectorBaseClass)
 
 function BurnClass:OnActiveEffector()
-    local mod_attack_add_10 = self._Manager:GetAbilitySystem():GetAttrManager():AcquireModifier(AttrDef.Attr.BaseAttack, 10)
+    local mod_attack_add_10 = AttrModifierFactoryClass.Get():AcquireModifier(AttrDef.Attr.BaseAttack, 10)
     self.EffectorSource:GetAttrSet():AddModifier(mod_attack_add_10)
 end
 

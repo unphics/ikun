@@ -16,7 +16,7 @@
 
 local ffi = require ("ffi") ---@type ffilib
 local ffistate = require("Core/FFI/ffistate")
-local Time = require('Core/Time')
+local TimeLib = require('Core/TimeLib')
 local log = require('Core/Log/log') ---@type log
 local DebugUtils = require('Utils/DebugUtils')
 
@@ -29,5 +29,6 @@ GameInit.BroadcastInit(GameInit.InitRing.EnvInit)
 require('System/Ability/Test')
 local AbilitySystem = require('System/Ability/AbilitySystem')
 function ENetTick(dt, world)
+    TimeLib.TickTimeLib()
     AbilitySystem.Get():TickAbilitySystem(0.033)
 end

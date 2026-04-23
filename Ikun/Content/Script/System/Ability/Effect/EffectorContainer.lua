@@ -14,21 +14,15 @@
 
 local Class3 = require("Core/Class/Class3")
 local log = require("Core/Log/log")
+local TimeLib = require("Core/TimeLib")
 
 ---@class EffectorContainerClass
----@field _EffectManager EffectManager
----@field _OwnerPart AbilityPartClass
 ---@field _Effectors EffectorBaseClass[]
 local EffectorContainerClass = Class3.Class("EffectorContainerClass")
 
 ---@public
-function EffectorContainerClass:Ctor(InEffectManager, InPart)
-    self._EffectManager = InEffectManager
-    self._OwnerPart = InPart
-
+function EffectorContainerClass:Ctor()
     self._Effectors = {}
-
-    self._EffectManager:AddEffectorContainer(self)
 end
 
 ---@public
@@ -46,7 +40,7 @@ end
 ---@public
 ---@param InEffector EffectorBaseClass
 function EffectorContainerClass:AddEffector(InEffector)
-    InEffector:ActiveEffector(self._EffectManager:GetTimestampSec())
+    InEffector:ActiveEffector(TimeLib.GetTimestampSec())
     table.insert(self._Effectors, InEffector)
 end
 

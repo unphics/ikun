@@ -16,6 +16,7 @@
 local NpcChat = require("Content/Chat/NpcChat")
 local AbilityPart = require("System/Ability/Part/AbilityPart")
 local StrUtils = require("Core/Utils/StrUtils")
+local TimeLib = require("Core/TimeLib")
 require("System/Role/RoleHoldLocation")
 
 ---@class RoleConfig
@@ -25,7 +26,7 @@ require("System/Role/RoleHoldLocation")
 ---@field bUniqueRole boolean
 ---@field BelongKingdom number
 ---@field RoleAbility table<string, string>
----@field RoleAttrSet string[]
+---@field RoleAttrSetClass string
 ---@field RoleSkills number[]
 ---@field GoapKey string
 ---@field RoleChat number[]
@@ -65,6 +66,7 @@ end
 ---@override
 ---@param DeltaTime number
 function RoleBaseClass:RoleTick(DeltaTime)
+    self.AbilityPart:TickAbilityPart(DeltaTime, TimeLib.GetTimestampSec())
     if self.Agent then
         -- self.Agent:TickAgent(DeltaTime)
     end
@@ -93,8 +95,8 @@ function RoleBaseClass:InitComplexPart()
         self.Agent = agent
     end
 
-    if config.RoleAttrSet and #config.RoleAttrSet > 0 then
-        self.AbilityPart:InitAttrSet(config.RoleAttrSet, require("Module/Ability/Attr/IkunAttrSet"))
+    if config.RoleAttrSetClass then
+        self.AbilityPart:InitAttrSet(config.RoleAttrSetClass)
     end
     if config.RoleAbility and next(config.RoleAbility) then
         self.AbilityPart:InitAbilitySlot(config.RoleAbility)

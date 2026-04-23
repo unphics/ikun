@@ -102,7 +102,7 @@ end
 ---@todo pool
 ---@param InSkillClass SkillBaseClass
 function AbilityManager:ReleaseSkill(InSkillClass)
-    table_util.remove(self._SkillList, InSkillClass)
+    table_util.remove_value(self._SkillList, InSkillClass)
 end
 
 ---@public

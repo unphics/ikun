@@ -14,9 +14,10 @@
 
 local Class3 = require("Core/Class/Class3")
 local AttrInteractContextClass = require("System/Ability/Attr/AttrInteractContext")
+local AttrConfigClass = require("System/Ability/Attr/AttrConfig")
+local AttrModifierFactoryClass = require("System/Ability/Attr/AttrModifierFactory")
 
 ---@class EffectorBaseClass
----@field protected _Manager EffectManager
 ---@field protected _EffectConfig EffectorConfig
 ---@field protected _StartTime number
 ---@field protected _EndTime number
@@ -29,8 +30,7 @@ local AttrInteractContextClass = require("System/Ability/Attr/AttrInteractContex
 local EffectorBaseClass = Class3.Class('EffectorBaseClass')
 
 ---@public
-function EffectorBaseClass:Ctor(InManager, InConfig)
-    self._Manager = InManager
+function EffectorBaseClass:Ctor(InConfig)
     self._EffectConfig = InConfig
 end
 
@@ -151,7 +151,7 @@ function EffectorBaseClass:MakeInteractContext()
     end
     local attr = self._EffectConfig.AttrImposeFml.AttrId
     ctx:SetImposeInfo(self.EffectorSource, self._EffectConfig.AttrImposeFml.Formula, attr)
-    ctx:SetReceiveInfo(self.EffectorTarget, self._Manager:GetAbilitySystem():GetAttrManager():GetAttrReceiveFormula(attr))
+    ctx:SetReceiveInfo(self.EffectorTarget, AttrConfigClass.Get():LookupAttrReceiveFormula(attr))
     return ctx
 end
 
@@ -159,12 +159,10 @@ end
 ---@param InInteractContext AttrInteractContextClass
 ---@return AttrModifierClass
 function EffectorBaseClass:ApplyAttrInteract(InInteractContext)
-    local attrManager = self._Manager:GetAbilitySystem():GetAttrManager()
-
     InInteractContext:CalcAttrImposeValue()
     InInteractContext:CalcAttrReceviveValue()
 
-    local mod = attrManager:AcquireModifier(InInteractContext.InteractAttr, InInteractContext.ReceiveValue)
+    local mod = AttrModifierFactoryClass.Get():AcquireModifier(InInteractContext.InteractAttr, InInteractContext.ReceiveValue)
     self.EffectorTarget:GetAttrSet():AddModifier(mod)
     table.insert(self._ActiveModifiers, mod)
 

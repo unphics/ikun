@@ -19,6 +19,9 @@ local AbilityClass = require("System/Ability/Ability/Ability")
 local TagUtils = require("System/Ability/Tag/TagUtils")
 local EffectorContainerClass = require("System/Ability/Effect/EffectorContainer")
 local log = require("Core/Log/log")
+local AttrFactoryClass = require("System/Ability/Attr/AttrFactory")
+local EffectConfig = require("System/Ability/Effect/EffectConfig")
+local EffectFactoryClass = require("System/Ability/Effect/EffectFactory")
 
 ---@class AbilityPartClass
 ---@field protected _Owner RoleBaseClass
@@ -41,13 +44,14 @@ function AbilityPartClass:Ctor(InOwner)
     self._RefAbilityToSlots = {}
 end
 
+---@public
+function AbilityPartClass:TickAbilityPart(InDeltaTime, InTimestampSec)
+    self._ActiveEffectorContainer:TickEffectorContainer(InDeltaTime, InTimestampSec)
+end
+
 ---@public [AttrSet]
----@param InAttrSetConfig string[]
----@param InAttrSetClass? AttrSetClass
-function AbilityPartClass:InitAttrSet(InAttrSetConfig, InAttrSetClass)
-    local mgr = AbilitySystem.Get():GetAttrManager()
-    local set = mgr:CreateAttrSet(InAttrSetConfig, InAttrSetClass)
-    self._AttrSet = set
+function AbilityPartClass:InitAttrSet(InAttrSetConfig)
+    self._AttrSet = AttrFactoryClass.Get():CreateAttrSet(InAttrSetConfig)
 end
 
 ---@public [AttrSet]
@@ -198,7 +202,7 @@ end
 ---@public [Effect]
 ---@return EffectorBaseClass?
 function AbilityPartClass:MakeEffector(InEffectorKey)
-    local effector = AbilitySystem.Get():GetEffectManager():GetEffectConfig():CreateEffector(InEffectorKey)
+    local effector = EffectFactoryClass.Get():CreateEffector(InEffectorKey)
     if not effector then
         return
     end

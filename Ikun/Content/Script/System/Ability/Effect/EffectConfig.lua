@@ -31,10 +31,9 @@ local TagUtils = require("System/Ability/Tag/TagUtils")
 ---@field CancelToTags? integer[]
 
 local EFFECTOR_CONFIG_PATH = "Ability/Effect/Effector.csv"
-local EFFECTOR_SCRIPT_PATH = "Module/Ability/Effector/"
 
 ---@class EffectConfigClass
----@field protected _EffectorConfigData EffectorConfig
+---@field private __EffectorConfigData EffectorConfig
 local EffectConfigClass = Class3.Class("EffectConfigClass")
 
 local config = nil
@@ -44,6 +43,7 @@ local config = nil
 function EffectConfigClass.Get()
     if not config then
         config = EffectConfigClass:New()
+        config:LoadEffectConfigs()
     end
     return config
 end
@@ -90,39 +90,13 @@ function EffectConfigClass:LoadEffectConfigs()
         end
     end
 
-    self._EffectorConfigData = configData
+    self.__EffectorConfigData = configData
 end
 
 ---@public
 ---@return EffectorConfig?
 function EffectConfigClass:LookupEffectConfig(InEffectKey) -- const
-    return self._EffectorConfigData[InEffectKey]
-end
-
----@public
----@return EffectorBaseClass?
-function EffectConfigClass:CreateEffector(InEffectorKey)
-    local config = self:LookupEffectConfig(InEffectorKey)
-    if not config then
-        log.error_fmt("EffectConfigClass:CreateEffector(): Invalid EffectorKey = [%s]", InEffectorKey)
-        return
-    end
-
-    local effectorClass = require(EFFECTOR_SCRIPT_PATH..config.EffectTemplate)
-    if not effectorClass then
-        log.error_fmt("EffectConfigClass:CreateEffector(): Invalid EffectorClass = [%s]", config.EffectTemplate)
-        return
-    end
-
-    local effector = effectorClass:New(config)
-    return effector
-end
-
----@public
----@return EffectorBaseClass?
-function EffectConfigClass:LoadEffectorClass(InEffectorClassName)
-    local effectorClass = require(EFFECTOR_SCRIPT_PATH..InEffectorClassName)
-    return effectorClass
+    return self.__EffectorConfigData[InEffectKey]
 end
 
 return EffectConfigClass

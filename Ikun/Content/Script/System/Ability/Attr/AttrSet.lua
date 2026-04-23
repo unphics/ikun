@@ -16,19 +16,17 @@ local Class3 = require("Core/Class/Class3")
 local AttrDef = require("System/Ability/Attr/AttrDef")
 local log = require("Core/Log/log")
 local table_util = require("Core/Utils/table_util")
+local AttrConfigClass = require("System/Ability/Attr/AttrConfig")
 
 ---@class AttrSetClass
 ---@field protected _Attributes table<integer, number>
 ---@field protected _Dirty table<integer, boolean> 后面用位运算
 ---@field protected _Modifiers table<integer, AttrModifierClass[]>
----@field protected _Manager AttrManager
 ---@field protected _OnChangedFuncs fun(self:AttrSetClass, NewValue: number, OldValue: number)[]
 local AttrSetClass = Class3.Class("AttrSetClass")
 
 ---@public
----@param InManager AttrManager
-function AttrSetClass:Ctor(InManager, InAttributes)
-    self._Manager = InManager
+function AttrSetClass:Ctor(InAttributes)
     self._Attributes = InAttributes
     self._Dirty = table_util.make_arr(AttrDef.AttrCount, false)
     self._Modifiers = {}
@@ -51,7 +49,7 @@ end
 ---@param InModifier AttrModifierClass
 function AttrSetClass:AddModifier(InModifier)
     local id = InModifier.ModAttrId
-    local config = self._Manager:GetAttrConfig(id)
+    local config = AttrConfigClass.Get():GetAttrConfig(id)
     local oldValue = self._Attributes[id]
 
     self:AddDirty(id) ---@todo 思考这个怎么放
@@ -98,7 +96,7 @@ end
 function AttrSetClass:AddDirty(InAttrKey)
     local id = AttrDef.ToId(InAttrKey)
     self._Dirty[id] = true
-    local deps = self._Manager:GetAttrDependents(id)
+    local deps = AttrConfigClass.Get():GetAttrDependents(id)
     if deps then
         for _, dep in ipairs(deps) do
             self:AddDirty(dep)
@@ -141,7 +139,7 @@ local ModifierAdditiveStrategy = {
 ---@protected
 ---@param InAttrId integer
 function AttrSetClass:_UpdateAttribute(InAttrId, InOldValue)
-    local config = self._Manager:GetAttrConfig(InAttrId)
+    local config = AttrConfigClass.Get():GetAttrConfig(InAttrId)
     local oldValue = InOldValue
     local newValue = 0
 
@@ -149,7 +147,7 @@ function AttrSetClass:_UpdateAttribute(InAttrId, InOldValue)
         local mods = self._Modifiers[InAttrId]
         local modValue = ModifierAdditiveStrategy[config.ModifierAdditiveStrategy](mods)
     
-        local formula = self._Manager:GetAttrFormula(InAttrId)
+        local formula = AttrConfigClass.Get():LookupAttrFormula(InAttrId)
         local baseValue = formula and formula(self:GetFormulaProxy()) or 0
     
         newValue = ModifierApplyStrategy[config.ModifierApplyStrategy](baseValue, modValue)
@@ -198,7 +196,7 @@ end
 
 ---@public
 function AttrSetClass:_TryInflush(InAttrId, InOldValue)
-    local config = self._Manager:GetAttrConfig(InAttrId)
+    local config = AttrConfigClass.Get():GetAttrConfig(InAttrId)
     if config.IsChangeInstant then
         self:_UpdateAttribute(InAttrId, InOldValue)
     end

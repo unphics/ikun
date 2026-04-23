@@ -20,7 +20,6 @@ local BuffContainer = require("System/Ability/Buff/BuffContainer")
 local StrUtils = require("Core/Utils/StrUtils")
 local log = require("Core/Log/log")
 local BuffBaseClass = require("System/Ability/Buff/BuffBase")
-local Time = require("Core/Time")
 
 ---@class BuffManager
 ---@deprecated

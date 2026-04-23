@@ -40,16 +40,25 @@ local AttrDef = require("System/Ability/Attr/AttrDef")
 ---@field ModifierAdditiveStrategy string
 
 local ATTR_CONFIG_PATH = "Ability/Attr/Attr.csv"
-local ATTRSET_CONFIG_PATH = "Ability/Attr/Set.csv"
 
 ---@class AttrConfigClass
----@field protected __AttrConfig table<string, AttrConfig>
----@field protected __AttrSetConfig table<string, AttrSetConfig>
----@field protected _AttrFormula table<integer, AttrFormulaFunction>
----@field protected _AttrReceiveFormula table<integer, AttrReceiveFormulaFunction>
----@field protected _AttrDependencies table<integer, integer[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
----@field protected _AttrDependents table<integer, integer[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
+---@field private __AttrConfig table<string, AttrConfig>
+---@field private __AttrFormula table<integer, AttrFormulaFunction>
+---@field private __AttrReceiveFormula table<integer, AttrReceiveFormulaFunction>
+---@field private __AttrDependencies table<integer, integer[]> (属性, 该属性依赖的属性[]) 依赖查找表, 我依赖谁
+---@field private __AttrDependents table<integer, integer[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
 local AttrConfigClass = Class3.Class("AttrConfigClass")
+
+local config = nil
+
+---@return AttrConfigClass
+function AttrConfigClass.Get()
+    if not config then
+        config = AttrConfigClass:New()
+        config:LoadAttrConfigs()
+    end
+    return config
+end
 
 function AttrConfigClass:Ctor()
 end
@@ -57,7 +66,6 @@ end
 ---@public
 function AttrConfigClass:LoadAttrConfigs()
     self:__LoadAttrConfig()
-    self:__LoadAttrSetConfig()
     self:__BuildAttrDependencies()
     self:__BuildAttrDependents()
     self:__BuildAttrFormulas()
@@ -73,17 +81,6 @@ function AttrConfigClass:__LoadAttrConfig()
     local attrConfig = attrParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastBoolCol({"IsChangeInstant", "IsModifierInfinite"}):GetResult()
     attrParser:ReleaseParser()
     self.__AttrConfig = attrConfig
-end
-
----@private
-function AttrConfigClass:__LoadAttrSetConfig()
-    local file = FileSystem.Get():MustReadSConfigFile(ATTRSET_CONFIG_PATH)
-    log.assert_fmt(file, "AttrConfigClass:__LoadAttrSetConfig(): Failed to read [%s]", ATTRSET_CONFIG_PATH)
-
-    local setParser = ConfigSystem.Get():CreateCSVParser(file)
-    local attrSetConfig = setParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastArrCol({"SetAttrs"}):GetResult()
-    setParser:ReleaseParser()
-    self.__AttrSetConfig = attrSetConfig
 end
 
 ---@private
@@ -175,6 +172,39 @@ function AttrConfigClass:__BuildAttrReceiveFormulas()
         end
     end
     self.__AttrReceiveFormula = receiveFormula
+end
+
+---@public
+---@param InAttrKey integer|string
+---@return AttrFormulaFunction
+function AttrConfigClass:LookupAttrFormula(InAttrKey) -- const
+    return self.__AttrFormula[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey integer|string
+---@return AttrReceiveFormulaFunction
+function AttrConfigClass:LookupAttrReceiveFormula(InAttrKey) -- const
+    return self.__AttrReceiveFormula[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey integer|string
+function AttrConfigClass:GetAttrDependencies(InAttrKey) -- const
+    return self.__AttrDependencies[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey integer|string
+function AttrConfigClass:GetAttrDependents(InAttrKey) -- const
+    return self.__AttrDependents[AttrDef.ToId(InAttrKey)]
+end
+
+---@public
+---@param InAttrKey integer|string
+---@return AttrConfig
+function AttrConfigClass:GetAttrConfig(InAttrKey) -- const
+    return self.__AttrConfig[AttrDef.ToKey(InAttrKey)]
 end
 
 return AttrConfigClass

@@ -41,8 +41,7 @@ function SkillBaseClass:BeginSkill(InAbility, InParams)
 end
 
 ---@public
----@param InDeltaTime number
-function SkillBaseClass:TickSkill(InDeltaTime)
+function SkillBaseClass:TickSkill(InDeltaTime, InTimestampSec)
 end
 
 ---@public

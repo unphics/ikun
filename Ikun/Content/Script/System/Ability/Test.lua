@@ -17,6 +17,8 @@ local TagUtils = require("System/Ability/Tag/TagUtils")
 local AbilityPart = require("System/Ability/Part/AbilityPart")
 local AttrDef = require("System/Ability/Attr/AttrDef")
 local log = require("Core/Log/log") ---@as log
+local AttrFactoryClass = require("System/Ability/Attr/AttrFactory")
+local AttrModifierFactoryClass = require("System/Ability/Attr/AttrModifierFactory")
 local assert = _G.assert
 
 local testlog = function(...)
@@ -41,15 +43,15 @@ end
 
 if true then
     local attrMgr = AbilitySystem.Get():GetAttrManager()
-    local set = attrMgr:CreateAttrSet({"Health"}) ---@type AttrSetClass
+    local set = AttrFactoryClass.Get():CreateAttrSet() ---@type AttrSetClass
 
-    local mod_baseHealth_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.BaseHealth, 10)
+    local mod_baseHealth_add_10 = AttrModifierFactoryClass.Get():AcquireModifier(AttrDef.Attr.BaseHealth, 10)
     assert(mod_baseHealth_add_10.ModValue == 10 and mod_baseHealth_add_10.ModAttrId == AttrDef.Attr.BaseHealth)
     set:AddModifier(mod_baseHealth_add_10)
     assert(set:GetAttrValue(AttrDef.Attr.BaseHealth) == 10)
     assert(set:GetAttrValue(AttrDef.Attr.MaxHealth) == 10)
 
-    local mod_FlatHealth_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.FlatHealth, 10)
+    local mod_FlatHealth_add_10 = AttrModifierFactoryClass.Get():AcquireModifier(AttrDef.Attr.FlatHealth, 10)
     assert(mod_FlatHealth_add_10.ModValue == 10 and mod_FlatHealth_add_10.ModAttrId == AttrDef.Attr.FlatHealth)
     set:AddModifier(mod_FlatHealth_add_10)
     assert(set:IsDirty(AttrDef.Attr.MaxHealth) == true)
@@ -60,7 +62,7 @@ if true then
     assert(set:GetAttrValue(AttrDef.Attr.BaseHealth) == 0)
     assert(set:GetAttrValue(AttrDef.Attr.MaxHealth) == 100)
 
-    local mod_perH_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.PercentHealth, 10)
+    local mod_perH_add_10 = AttrModifierFactoryClass.Get():AcquireModifier(AttrDef.Attr.PercentHealth, 10)
     set:AddModifier(mod_perH_add_10)
     assert(set:GetAttrValue(AttrDef.Attr.PercentHealth) == 10)
     assert(math.floor(set:GetAttrValue(AttrDef.Attr.MaxHealth)) == 110)
@@ -69,8 +71,8 @@ end
 if true then
     local attrMgr = AbilitySystem.Get():GetAttrManager()
     local part = AbilityPart:New(nil) ---@type AbilityPartClass
-    part:InitAttrSet({"Health", "Attack"})
-    local mod_attack_add_10 = attrMgr:AcquireModifier(AttrDef.Attr.BaseAttack, 10)
+    part:InitAttrSet()
+    local mod_attack_add_10 = AttrModifierFactoryClass.Get():AcquireModifier(AttrDef.Attr.BaseAttack, 10)
     part:GetAttrSet():AddModifier(mod_attack_add_10)
     assert(part:GetAttrSet():GetAttrValue(AttrDef.Attr.BaseAttack) == 10)
     local effector = part:MakeEffector("Boom")

@@ -30,46 +30,11 @@ end
 
 ---@public
 function EffectManager:InitEffectManager()
-    EffectConfigClass.Get():LoadEffectConfigs()
+    EffectConfigClass.Get()
 end
 
 ---@public
 function EffectManager:TickEffectManager(InDeltaTime)
-    local timestampSec = self:GetTimestampSec()
-    for i = 1, #self._EffectorContainers do
-        local container = self._EffectorContainers[i]
-        container:TickEffectorContainer(InDeltaTime, timestampSec)
-    end
-end
-
----@public
----@return EffectConfigClass
-function EffectManager:GetEffectConfig() -- const
-    return EffectConfigClass
-end
-
----@public
----@param InEffectorContainer EffectorContainerClass
-function EffectManager:AddEffectorContainer(InEffectorContainer)
-    table.insert(self._EffectorContainers, InEffectorContainer)
-end
-
----@public
----@param InEffectorContainer EffectorContainerClass
-function EffectManager:RemoveEffectorContainer(InEffectorContainer)
-    for i = 1, #self._EffectorContainers do
-        local container = self._EffectorContainers[i]
-        if container == InEffectorContainer then
-            table.remove(self._EffectorContainers, i)
-            break
-        end
-    end
-end
-
----@public
----@return number
-function EffectManager:GetTimestampSec() -- const
-    return self._System:GetTimestampSec()
 end
 
 ---@public

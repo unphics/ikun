@@ -13,7 +13,7 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
-local Time = require("Core/Time")
+local TimeLib = require("Core/TimeLib")
 
 ---@class BuffContainerClass
 ---@deprecated
@@ -47,7 +47,7 @@ end
 ---@public
 ---@param InBuffInst BuffBaseClass
 function BuffContainerClass:AddBuff(InBuffInst)
-    InBuffInst:ApplyBuff(Time.GetTimestampSec())
+    InBuffInst:ApplyBuff(TimeLib.GetTimestampSec())
     table.insert(self._Buffs, InBuffInst)
 end
 

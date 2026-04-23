@@ -13,7 +13,7 @@
 --]]
 
 local Class3 = require('Core/Class/Class3')
-local Time = require('Core/Time')
+local TimeLib = require('Core/TimeLib')
 
 ---@class AbilityConfig
 ---@field AbilityKey string
@@ -28,7 +28,7 @@ local Time = require('Core/Time')
 ---@class AbilityClass
 ---@field protected _Manager AbilityManager
 ---@field protected _AbilityConfigData AbilityConfig
----@field protected _AbilitySkills table<string, SkillBaseClass>
+---@field protected _AbilitySkills SkillBaseClass[]
 ---@field protected _Owner table
 ---@field protected _CastSkillTimeStamp number
 local AbilityClass = Class3.Class('AbilityClass')
@@ -44,10 +44,18 @@ function AbilityClass:Ctor(InManager, InAbilityConfig, InOwner)
 end
 
 ---@public
+function AbilityClass:TickAbility(InDelaTime, InTimestampSec)
+    for i = 1, #self._AbilitySkills do
+        local skill = self._AbilitySkills[i]
+        skill:TickSkill(InDelaTime, InTimestampSec)
+    end
+end
+
+---@public
 ---@param InParams table
 ---@return boolean
 function AbilityClass:CanCast(InParams) -- const
-    if (Time.GetTimestampSec() - self._CastSkillTimeStamp) < self:GetAbilityConfig().AbilityCooldown then
+    if (TimeLib.GetTimestampSec() - self._CastSkillTimeStamp) < self:GetAbilityConfig().AbilityCooldown then
         return false
     end
     return true
@@ -60,7 +68,8 @@ function AbilityClass:CastSkill(InParams)
     self:StartCooldown()
     local key = self:GetAbilityConfig().AbilitySkills.EntrySkill
     local skill = self._Manager:AcquireSkill(key, self)
-    self._AbilitySkills.EntrySkill = skill
+    table.insert(self._AbilitySkills, skill)
+    -- self._AbilitySkills.EntrySkill = skill
     if skill:BeginSkill(self, InParams) then
         self:StartCooldown()
         return true
@@ -78,7 +87,7 @@ end
 
 ---@public
 function AbilityClass:StartCooldown()
-    self._CastSkillTimeStamp = Time.GetTimestampSec()
+    self._CastSkillTimeStamp = TimeLib.GetTimestampSec()
 end
 
 ---@public
@@ -87,7 +96,7 @@ function AbilityClass:GetCooldown() -- const
     if self:GetAbilityConfig().AbilityCooldown < 0.01 then
         return 0
     end
-    return math.max(0, self:GetAbilityConfig().AbilityCooldown - (Time.GetTimestampSec() - self._CastSkillTimeStamp))
+    return math.max(0, self:GetAbilityConfig().AbilityCooldown - (TimeLib.GetTimestampSec() - self._CastSkillTimeStamp))
 end
 
 ---@public

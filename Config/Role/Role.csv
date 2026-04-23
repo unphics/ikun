@@ -1,4 +1,4 @@
-RoleId|RoleName|RoleDesc|bUniqueRole|BelongKingdom|RoleAbility|RoleAttrSet|RoleSkills|GoapKey|RoleChat|HoldLocations
+RoleId|RoleName|RoleDesc|bUniqueRole|BelongKingdom|RoleAbility|RoleAttrSetClass|RoleSkills|GoapKey|RoleChat|HoldLocations
 |||是唯一角色|初始归属的国家|角色能力|角色属性集|角色的初始技能|||
 |||||||todo:后面配成模板|||
 200002|阿克巴鲁斯|常见的; 法师, 战士||611002||||||
@@ -7,7 +7,7 @@ RoleId|RoleName|RoleDesc|bUniqueRole|BelongKingdom|RoleAbility|RoleAttrSet|RoleS
 200005|布噜布噜布噜|||611001|||||410011, 410021|
 ||||||||||
 210001|刘秀||true|611001|||Equip=530001,UnEquip=530002,NormalOne=530201|||
-210002|鸽鸽||true|611001|Melee=AAMelee|Health,Attack|Equip=530001,UnEquip=530002,NormalOne=530201|||
+210002|鸽鸽||true|611001|Melee=AAMelee|IkunAttrSet|Equip=530001,UnEquip=530002,NormalOne=530201|||
 ||||||||||
 ||||||||||
 210101|村长|清瀑村npc|true|611001||||VillageHead|410011, 410021|

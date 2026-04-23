@@ -1,7 +1,7 @@
 
 --[[
 -- -----------------------------------------------------------------------------
---  Brief       : LuaTableUtil
+--  Brief       : LuaTableUtils
 --  File        : table_util.lua
 --  Author      : zhengyanshuai
 --  Date        : Sun May 04 2025 14:15:45 GMT+0800 (中国标准时间)
@@ -108,8 +108,7 @@ end
 
 ---@public
 ---@param InTable table
----@param InFn fun(InItem):boolean
-table_util.remove = function(InTable, InItem)
+table_util.remove_value = function(InTable, InItem)
     for i = 1, #InTable do
         if InTable[i] == InItem then
             table.remove(InTable, i)
