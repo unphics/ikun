@@ -1,11 +1,10 @@
 
 --[[
 -- -----------------------------------------------------------------------------
---  Brief       : AbilityManager
+--  Brief       : 能力系统-能力-能力管理器
 --  File        : AbilityManager.lua
 --  Author      : zhengyanshuai
 --  Date        : Fri Jan 02 2026 22:31:32 GMT+0800 (中国标准时间)
---  Description : 能力系统-技能管理器
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
 --  Copyright (c) 2026 zhengyanshuai

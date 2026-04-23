@@ -1,24 +1,13 @@
 
 --[[
 -- -----------------------------------------------------------------------------
---  Brief       : 能力系统-能力-能力容器
---  File        : AbilityContainer.lua
+--  Brief       : 能力系统-技能-技能配置
+--  File        : AbilityManager.lua
 --  Author      : zhengyanshuai
 --  Date        : Fri Jan 02 2026 22:31:32 GMT+0800 (中国标准时间)
+--  Description : 技能配置
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
 --  Copyright (c) 2026 zhengyanshuai
 -- -----------------------------------------------------------------------------
 --]]
-
-local Class3 = require('Core/Class/Class3')
-
----@class AbilityContainerClass
-local AbilityContainerClass = Class3.Class("AbilityContainerClass")
-
-function AbilityContainerClass:Ctor()
-end
-
-function AbilityContainerClass
-
-return AbilityContainerClass

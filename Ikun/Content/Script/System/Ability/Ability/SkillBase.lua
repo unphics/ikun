@@ -1,11 +1,10 @@
 
 --[[
 -- -----------------------------------------------------------------------------
---  Brief       : SkillBaseClass
+--  Brief       : 能力系统-技能-技能基类
 --  File        : Skill.lua
 --  Author      : zhengyanshuai
 --  Date        : Fri Jan 02 2026 22:31:04 GMT+0800 (中国标准时间)
---  Description : 能力系统-技能类
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
 --  Copyright (c) 2026 zhengyanshuai
