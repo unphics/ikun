@@ -22,6 +22,7 @@ local log = require("Core/Log/log")
 local AttrFactoryClass = require("System/Ability/Attr/AttrFactory")
 local EffectConfig = require("System/Ability/Effect/EffectConfig")
 local EffectFactoryClass = require("System/Ability/Effect/EffectFactory")
+local AbilityFactoryClass = require("System/Ability/Ability/AbilityFactory")
 
 ---@class AbilityPartClass
 ---@field protected _Owner RoleBaseClass
@@ -82,8 +83,7 @@ function AbilityPartClass:AddAbilityToSlot(InSlotTag, InAbilityKey)
         self._SlotInfos[InSlotTag] = {}
     end
     if not self._AbilityInfos[InAbilityKey] then
-        local mgr = AbilitySystem.Get():GetAbilityManager()
-        local ability = mgr:CreateAbility(InAbilityKey, self)
+        local ability = AbilityFactoryClass.Get():CreateAbility(InAbilityKey, self)
         if ability then
             self._AbilityInfos[InAbilityKey] = ability
         end

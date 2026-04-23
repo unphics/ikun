@@ -13,6 +13,7 @@
 
 local Class3 = require('Core/Class/Class3')
 local TimeLib = require('Core/TimeLib')
+local SkillFactoryClass = require('System/Ability/Ability/SkillFactory')
 
 ---@class AbilityConfig
 ---@field AbilityKey string
@@ -66,7 +67,10 @@ end
 function AbilityClass:CastSkill(InParams)
     self:StartCooldown()
     local key = self:GetAbilityConfig().AbilitySkills.EntrySkill
-    local skill = self._Manager:AcquireSkill(key, self)
+    local skill = SkillFactoryClass.Get():AcquireSkill(key, self)
+    if not skill then
+        return false
+    end
     table.insert(self._AbilitySkills, skill)
     -- self._AbilitySkills.EntrySkill = skill
     if skill:BeginSkill(self, InParams) then

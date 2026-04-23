@@ -111,6 +111,12 @@ StrUtils.IsEmpty = function(InStr)
     return false
 end
 
+---@public 判断非空
+---@return boolean
+StrUtils.NotEmpty = function(InStr)
+    return not StrUtils.IsEmpty(InStr)
+end
+
 ---@public 去掉空格, 排查字符串中前两个字符和后两个字符
 ---@param InStr string
 ---@return string

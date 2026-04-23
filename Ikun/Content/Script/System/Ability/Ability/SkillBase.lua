@@ -12,11 +12,7 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
-
----@class SkillConfig
----@field SkillKey string
----@field SkillName string
----@field SkillTemplate string
+local SkillFactoryClass = require("System/Ability/Ability/SkillFactory")
 
 ---@class SkillBaseClass
 ---@field protected _Manager AbilityManager
@@ -24,9 +20,7 @@ local Class3 = require("Core/Class/Class3")
 ---@field protected _Ability AbilityClass
 local SkillBaseClass = Class3.Class("SkillBaseClass")
 
----@param InManager AbilityManager
-function SkillBaseClass:Ctor(InManager, InConfigData)
-    self._Manager = InManager
+function SkillBaseClass:Ctor(InConfigData)
     self._ConfigData = InConfigData
 end
 
@@ -46,10 +40,7 @@ end
 ---@public
 function SkillBaseClass:EndSkill()
     self:OnEndSKill()
-    local manager = self._Manager
-    self._Manager = nil
     self._Ability = nil
-    manager:ReleaseSkill(self)
 end
 ---@protected
 function SkillBaseClass:OnEndSKill()

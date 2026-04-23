@@ -10,8 +10,10 @@
 --  Copyright (c) 2026 zhengyanshuai
 -- -----------------------------------------------------------------------------
 --]]
-
-local Class3 = require('Core/Class/Class3')
+local Class3 = require("Core/Class/Class3")
+local ConfigSystem = require("System/Config/ConfigSystem")
+local FileSystem = require("System/File/FileSystem")
+local log = require('Core/Log/log')
 
 ---@class AbilityContainerClass
 local AbilityContainerClass = Class3.Class("AbilityContainerClass")
@@ -19,6 +21,6 @@ local AbilityContainerClass = Class3.Class("AbilityContainerClass")
 function AbilityContainerClass:Ctor()
 end
 
-function AbilityContainerClass
+-- function AbilityContainerClass
 
 return AbilityContainerClass

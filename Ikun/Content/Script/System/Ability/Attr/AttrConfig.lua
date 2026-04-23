@@ -39,8 +39,6 @@ local AttrDef = require("System/Ability/Attr/AttrDef")
 ---@field ModifierApplyStrategy string
 ---@field ModifierAdditiveStrategy string
 
-local ATTR_CONFIG_PATH = "Ability/Attr/Attr.csv"
-
 ---@class AttrConfigClass
 ---@field private __AttrConfig table<string, AttrConfig>
 ---@field private __AttrFormula table<integer, AttrFormulaFunction>
@@ -49,6 +47,7 @@ local ATTR_CONFIG_PATH = "Ability/Attr/Attr.csv"
 ---@field private __AttrDependents table<integer, integer[]> (属性, 依赖该属性的属性[]) 反向依赖查找表, 谁依赖我
 local AttrConfigClass = Class3.Class("AttrConfigClass")
 
+local ATTR_CONFIG_PATH = "Ability/Attr/Attr.csv"
 local config = nil
 
 ---@return AttrConfigClass

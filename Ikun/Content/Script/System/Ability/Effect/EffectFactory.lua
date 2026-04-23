@@ -24,7 +24,7 @@ local EffectConfigClass = require("System/Ability/Effect/EffectConfig")
 ---@field private __CachedClass table<string, EffectorBaseClass>
 local EffectFactoryClass = Class3.Class()
 
-EffectFactoryClass.EFFECTOR_SCRIPT_PATH = "Module/Ability/Effector/"
+local EFFECTOR_SCRIPT_PATH = "Module/Ability/Effector/"
 
 local factory = nil
 
@@ -67,7 +67,7 @@ function EffectFactoryClass:__GetOrLoadEffector(InEffectorClassName)
         if effectorClass then
             return effectorClass
         end
-        local fullPath = EffectFactoryClass.EFFECTOR_SCRIPT_PATH..InEffectorClassName
+        local fullPath = EFFECTOR_SCRIPT_PATH..InEffectorClassName
         local success, effectorClass = pcall(require, fullPath)
         if success and effectorClass then
             self.__CachedClass[InEffectorClassName] = effectorClass

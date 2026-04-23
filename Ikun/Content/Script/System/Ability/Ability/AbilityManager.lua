@@ -18,128 +18,28 @@ local ConfigSystem = require("System/Config/ConfigSystem")
 local SkillBaseClass = require("System/Ability/Ability/SkillBase")
 local StrUtils = require("Core/Utils/StrUtils")
 local log = require("Core/Log/log")
+local AbilityConfigClass = require("System/Ability/Ability/AbilityConfig")
+local SkillConfigClass = require("System/Ability/Ability/SkillConfig")
 
 ---@class AbilityManager
 ---@field protected _System AbilitySystem
----@field protected _SkillList SkillBaseClass[]
 ---@field protected _AbilityConfigData table<string, AbilityConfig>
----@field protected _SkillConfigData table<string, SkillConfig>
 local AbilityManager = Class3.Class("AbilityManager")
 
 ---@public
 ---@param InSystem AbilitySystem
 function AbilityManager:Ctor(InSystem)
     self._System = InSystem
-    self._SkillList = {}
 end
 
 ---@public
 function AbilityManager:InitAbilityManager()
-    self:_LoadConfig()
-end
-
----@private
-function AbilityManager:_LoadConfig()
-    local file = FileSystem.Get():CreateConfigFileContext()
-    if not file then
-        return
-    end
-    file:ChangeDirectory("Ability")
-    file:ChangeDirectory("Ability")
-    local abilityParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Ability.csv"))
-    self._AbilityConfigData = abilityParser:ToRows():ExtractHeaders():ToGrid():ToMap():CastMapCol({"AbilitySkills"}):GetResult()
-    abilityParser:ReleaseParser()
-
-    local skillParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Skill.csv"))
-    self._SkillConfigData = skillParser:ToRows():ExtractHeaders():ToGrid():ToMap()
-        :CastPairCol({"Param1", "Param2", "Param3", "Param4", "Param5", "Param6", "Param7", "Param8", "Param9"})
-        :GetResult()
-    skillParser:ReleaseParser()
+    AbilityConfigClass.Get()
+    SkillConfigClass.Get()
 end
 
 ---@public
----@param InAbilityKey string
----@param InOwner table
----@return AbilityClass?
-function AbilityManager:CreateAbility(InAbilityKey, InOwner)
-    local config = self:LookupAbilityConfig(InAbilityKey)
-    if not config then
-        log.warn_fmt("AbilityManager:CreateAbility(): Invalid AbilityKey = [%s]", InAbilityKey)
-        return nil
-    end
-    local abilityClass = self:_LoadAbilityClass(config.AbilityTemplate)
-    local ability = abilityClass:New(self, config, InOwner)
-    return ability
-end
-
----@public
----@param InAbilityClassName string
----@return AbilityClass
-function AbilityManager:_LoadAbilityClass(InAbilityClassName)
-    if StrUtils.IsEmpty(InAbilityClassName) then 
-        return AbilityClass
-    else
-        local pathHeader = "Module/Ability/Ability/"
-        local abilityClass = require(pathHeader..InAbilityClassName) ---@type AbilityClass
-        return abilityClass
-    end
-end
-
----@public
----@param InSkillKey string
----@param InAbility AbilityClass
----@return SkillBaseClass
-function AbilityManager:AcquireSkill(InSkillKey, InAbility)
-    local config = self:LookupSkillConfig(InSkillKey)
-    local tmplClass = self:_LoadSkillClass(config.SkillTemplate)
-    local skill = tmplClass:New(self, config) ---@type SkillBaseClass
-    table.insert(self._SkillList, skill)
-    return skill
-end
-
----@public
----@todo pool
----@param InSkillClass SkillBaseClass
-function AbilityManager:ReleaseSkill(InSkillClass)
-    table_util.remove_value(self._SkillList, InSkillClass)
-end
-
----@public
----@param InSkillClassName string
----@return SkillBaseClass
-function AbilityManager:_LoadSkillClass(InSkillClassName) -- const
-    if StrUtils.IsEmpty(InSkillClassName) then 
-        return SkillBaseClass
-    else
-        local pathHeader = "Module/Ability/Skill/"
-        local skillClass = require(pathHeader..InSkillClassName) ---@type SkillBaseClass
-        return skillClass
-    end
-end
-
----@public
----@param DeltaTime number
-function AbilityManager:TickAbilityManager(DeltaTime)
-    for i = #self._SkillList, 1, -1 do
-        local skill = self._SkillList[i]
-        skill:TickSkill(DeltaTime)
-    end
-
-    ---@todo DeadList
-end
-
----@public [Config]
----@param InAbilityKey string
----@return AbilityConfig
-function AbilityManager:LookupAbilityConfig(InAbilityKey) -- const
-    return self._AbilityConfigData[InAbilityKey]
-end
-
----@public [Config]
----@param InSkillKey string
----@return SkillConfig
-function AbilityManager:LookupSkillConfig(InSkillKey) -- const
-    return self._SkillConfigData[InSkillKey]
+function AbilityManager:TickAbilityManager(InDeltaTime)
 end
 
 return AbilityManager
