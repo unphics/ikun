@@ -39,9 +39,9 @@ end
 
 ---@public
 ---@param InAbilityKey string
----@param InOwner table
+---@param InOwnerAbilityPart AbilityPartClass
 ---@return AbilityClass?
-function AbilityFactoryClass:CreateAbility(InAbilityKey, InOwner)
+function AbilityFactoryClass:CreateAbility(InAbilityKey, InOwnerAbilityPart)
     local config = AbilityConfigClass.Get():LookupAbilityConfig(InAbilityKey)
     if not config then
         return nil
@@ -50,7 +50,7 @@ function AbilityFactoryClass:CreateAbility(InAbilityKey, InOwner)
     if not abilityClass then
         return nil
     end
-    return abilityClass:New(config, InOwner)
+    return abilityClass:New(config, InOwnerAbilityPart)
 end
 
 ---@return AbilityClass?
@@ -71,7 +71,7 @@ function AbilityFactoryClass:__GetOrLoadAbilityClass(InClassName)
             return abilityClass
         end
     end
-    log.error_fmt("AbilityFactoryClass:__GetOrLoadAbilityClass(): Invalid AbilittClass = [%s]", fullPath)
+    log.error_fmt("AbilityFactoryClass:__GetOrLoadAbilityClass(): Invalid AbilityClass! path=[%s], name=[%s]", fullPath, InClassName)
 end
 
 return AbilityFactoryClass

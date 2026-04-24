@@ -44,14 +44,15 @@ function AttrFactoryClass:Ctor()
 end
 
 ---@public
+---@param InAbilityPart AbilityPartClass
 ---@return AttrSetClass
-function AttrFactoryClass:CreateAttrSet(InAttrSetClassName)
+function AttrFactoryClass:CreateAttrSet(InAttrSetClassName, InAbilityPart)
     local setClass = self:__GetOrLoadAttrSetClass(InAttrSetClassName)
     if not setClass then
         setClass = AttrSetClass
     end
     local attributes = AttrDef.NewAttrIdArr(0)
-    local set = setClass:New(attributes)
+    local set = setClass:New(attributes, InAbilityPart)
     return set
 end
 

@@ -17,6 +17,10 @@ local NpcChat = require("Content/Chat/NpcChat")
 local AbilityPart = require("System/Ability/Part/AbilityPart")
 local StrUtils = require("Core/Utils/StrUtils")
 local TimeLib = require("Core/TimeLib")
+local TagUtils = require("System/Ability/Tag/TagUtils")
+local log = require("Core/Log/log")
+local AbilityFactoryClass = require("System/Ability/Ability/AbilityFactory")
+local table_util = require("Core/Utils/table_util")
 require("System/Role/RoleHoldLocation")
 
 ---@class RoleConfig
@@ -98,8 +102,13 @@ function RoleBaseClass:InitComplexPart()
     if config.RoleAttrSetClass then
         self.AbilityPart:InitAttrSet(config.RoleAttrSetClass)
     end
-    if config.RoleAbility and next(config.RoleAbility) then
-        self.AbilityPart:InitAbilitySlot(config.RoleAbility)
+    if table_util.is_map(config.RoleAbility) then
+        for _, abilityKey in pairs(config.RoleAbility) do
+            local ability = AbilityFactoryClass.Get():CreateAbility(abilityKey,self.AbilityPart)
+            if ability then
+                self.AbilityPart:AddAbility(ability)
+            end
+        end
     end
 end
 

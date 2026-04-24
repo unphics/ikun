@@ -40,7 +40,10 @@ function AbilityConfigClass:LoadAbilityConfigs()
     local file = FileSystem.Get():MustReadSConfigFile(ABILITY_CONFIG_PATH)
     log.assert_fmt(file, "AbilityConfigClass:__LoadAbilityConfigs(): Failed to read [%s]", ABILITY_CONFIG_PATH)
     local parser = ConfigSystem.Get():CreateCSVParser(file)
-    local config = parser:ToRows():ExtractHeaders():ToGrid():ToMap():CastMapCol({"AbilitySkills"}):GetResult()
+    local config = parser:ToRows():ExtractHeaders():ToGrid():ToMap()
+        :CastMapCol({"AbilitySkills"})
+        :CastArrCol({"AbilityTags"})
+        :GetResult()
     parser:ReleaseParser()
     self.__AbilityConfig = config
 end

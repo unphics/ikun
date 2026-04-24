@@ -20,24 +20,23 @@ local SkillFactoryClass = require('System/Ability/Ability/SkillFactory')
 ---@field AbilityName string
 ---@field AbilityTemplate string
 ---@field AbilityCooldown number
+---@field AbilityTags number[]
 ---@field AbilitySkills table<string, string>
 ---@field AbilityTargetings table<string, string>
 ---@field AbilityEffects table<string, string>
 ---@field Projectiles table<string, string>
 
 ---@class AbilityClass
----@field protected _Manager AbilityManager
 ---@field protected _AbilityConfigData AbilityConfig
 ---@field protected _AbilitySkills SkillBaseClass[]
----@field protected _Owner table
+---@field protected _OwnerPart AbilityPartClass
 ---@field protected _CastSkillTimeStamp number
 local AbilityClass = Class3.Class('AbilityClass')
 
 ---@public
-function AbilityClass:Ctor(InManager, InAbilityConfig, InOwner)
-    self._Manager = InManager
+function AbilityClass:Ctor(InAbilityConfig, InOwner)
     self._AbilityConfigData = InAbilityConfig
-    self._Owner = InOwner
+    self._OwnerPart = InOwner
 
     self._AbilitySkills = {}
     self._CastSkillTimeStamp = 0
@@ -113,9 +112,9 @@ function AbilityClass:GetAbilityConfig() -- const
 end
 
 ---@public
----@return table
-function AbilityClass:GetAbilityOwner() -- const
-    return self._Owner
+---@return AbilityPartClass
+function AbilityClass:GetAbilityOwnerPart() -- const
+    return self._OwnerPart
 end
 
 return AbilityClass

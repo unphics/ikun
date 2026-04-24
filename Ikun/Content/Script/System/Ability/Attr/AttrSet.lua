@@ -19,6 +19,7 @@ local table_util = require("Core/Utils/table_util")
 local AttrConfigClass = require("System/Ability/Attr/AttrConfig")
 
 ---@class AttrSetClass
+---@field protected _OwnerPart AbilityPartClass
 ---@field protected _Attributes table<integer, number>
 ---@field protected _Dirty table<integer, boolean> 后面用位运算
 ---@field protected _Modifiers table<integer, AttrModifierClass[]>
@@ -26,7 +27,8 @@ local AttrConfigClass = require("System/Ability/Attr/AttrConfig")
 local AttrSetClass = Class3.Class("AttrSetClass")
 
 ---@public
-function AttrSetClass:Ctor(InAttributes)
+function AttrSetClass:Ctor(InAttributes, InAbilityPart)
+    self._OwnerPart = InAbilityPart
     self._Attributes = InAttributes
     self._Dirty = table_util.make_arr(AttrDef.AttrCount, false)
     self._Modifiers = {}

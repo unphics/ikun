@@ -69,6 +69,7 @@ function TaskGraphClass:AddDelayTask(InDelayTime, InDelayTask)
     table.insert(self.DelayTasks, {Task = InDelayTask, DelayTime = InDelayTime})
 end
 
+---@public
 function TaskGraphClass:AddFollowTask(InPreTask, InNextTask)
     local tasks = self.FollowTasks[InPreTask]
     if not tasks then
@@ -78,6 +79,7 @@ function TaskGraphClass:AddFollowTask(InPreTask, InNextTask)
     table.insert(tasks, InNextTask)
 end
 
+---@public
 function TaskGraphClass:AddWaitEventTask(InEvent, InWaitTask)
     local tasks = self.WaitTasks[InEvent]
     if not tasks then

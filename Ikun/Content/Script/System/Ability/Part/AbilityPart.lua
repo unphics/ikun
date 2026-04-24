@@ -23,6 +23,7 @@ local AttrFactoryClass = require("System/Ability/Attr/AttrFactory")
 local EffectConfig = require("System/Ability/Effect/EffectConfig")
 local EffectFactoryClass = require("System/Ability/Effect/EffectFactory")
 local AbilityFactoryClass = require("System/Ability/Ability/AbilityFactory")
+local AbilityContainerClass = require("System/Ability/Ability/AbilityContainer")
 
 ---@class AbilityPartClass
 ---@field protected _Owner RoleBaseClass
@@ -32,6 +33,7 @@ local AbilityFactoryClass = require("System/Ability/Ability/AbilityFactory")
 ---@field protected _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
 ---@field protected _RefAbilityToSlots table<string, string[]> (AbilityKey:number[])
 ---@field protected _ActiveEffectorContainer EffectorContainerClass
+---@field protected _ActiveAbilityContainer AbilityContainerClass
 local AbilityPartClass = Class3.Class("AbilityPartClass")
 
 ---@public
@@ -39,6 +41,7 @@ function AbilityPartClass:Ctor(InOwner)
     self._Owner = InOwner
     self._PartTagContainer = TagUtils.MakeContainer()
     self._ActiveEffectorContainer = EffectorContainerClass:New(AbilitySystem.Get():GetEffectManager(), self)
+    self._ActiveAbilityContainer = AbilityContainerClass:New(self)
 
     self._SlotInfos = {}
     self._AbilityInfos = {}
@@ -52,7 +55,7 @@ end
 
 ---@public [AttrSet]
 function AbilityPartClass:InitAttrSet(InAttrSetConfig)
-    self._AttrSet = AttrFactoryClass.Get():CreateAttrSet(InAttrSetConfig)
+    self._AttrSet = AttrFactoryClass.Get():CreateAttrSet(InAttrSetConfig, self)
 end
 
 ---@public [AttrSet]
@@ -61,118 +64,30 @@ function AbilityPartClass:GetAttrSet()
     return self._AttrSet
 end
 
----@public [Ability]
----@param InAbilitySlotInfo table<string, string>
-function AbilityPartClass:InitAbilitySlot(InAbilitySlotInfo)
-    for tagName, abilityKey in pairs(InAbilitySlotInfo) do
-        local slot = TagUtils.RequestTag("Ability.Slot."..tagName)
-        if not slot then
-            log.error_fmt("AbilityPartClass:InitAbilitySlot(): InValid tag, name = [%s]", string(tagName))
-            goto continue
-        end
-        self:AddAbilityToSlot(slot, abilityKey)
-        ::continue::
-    end
+---@public
+---@param InAbility AbilityClass
+function AbilityPartClass:AddAbility(InAbility)
+    self._ActiveAbilityContainer:AddAbility(InAbility)
 end
 
----@public [Ability]
----@param InAbilityKey string
----@param InSlotTag number
-function AbilityPartClass:AddAbilityToSlot(InSlotTag, InAbilityKey)
-    if not self._SlotInfos[InSlotTag] then
-        self._SlotInfos[InSlotTag] = {}
-    end
-    if not self._AbilityInfos[InAbilityKey] then
-        local ability = AbilityFactoryClass.Get():CreateAbility(InAbilityKey, self)
-        if ability then
-            self._AbilityInfos[InAbilityKey] = ability
-        end
-    end
-    
-    table_util.add_unique(self._SlotInfos[InSlotTag], InAbilityKey)
-
-    if not self._RefAbilityToSlots[InAbilityKey] then
-        self._RefAbilityToSlots[InAbilityKey] = {}
-    end
-    table.insert(self._RefAbilityToSlots[InAbilityKey], InSlotTag)
+---@public
+---@param InAbility AbilityClass
+function AbilityPartClass:RemoveAbility(InAbility)
+    self._ActiveAbilityContainer:RemoveAbility(InAbility)
 end
 
----@public [Ability]
----@param InAbilityKey string
----@param InSlotTag number
-function AbilityPartClass:RemoveAbilityFromSlot(InAbilityKey, InSlotTag)
-    local slots = self._RefAbilityToSlots[InAbilityKey]
-    if not slots or #slots < 1 then
-        return
-    end
-
-    local slot = self._SlotInfos[InSlotTag]
-    ---@param InItem string
-    if table_util.remove_if(slot, function (InItem) return InItem == InAbilityKey end) then
-        table_util.remove_if(slots, function (InItem) return InItem == InAbilityKey end)
-    end
-
-    if #slots < 1 then
-        self._AbilityInfos[InAbilityKey] = nil
-    end
-end
-
----@public [Ability]
----@param InAbilityKey string
-function AbilityPartClass:RemoveAbilityByKey(InAbilityKey)
-    local slots = self._RefAbilityToSlots[InAbilityKey]
-    if not slots or #slots < 1 then
-        return
-    end
-
-    self._AbilityInfos[InAbilityKey] = nil
-    
-    for i = 1, #slots do
-        local slotName = slots[i]
-        local slot = self._SlotInfos[slotName] ---@type table<number, string>
-        ---@param InItem string
-        table_util.remove_if(slot, function (InItem) return InItem == InAbilityKey end)
-    end
-end
-
----@public [Ability]
----@param InSlotTag number
+---@public
+---@param InTag integer
 ---@return AbilityClass[]
-function AbilityPartClass:GetSlotAbility(InSlotTag)
-    local slot = self._SlotInfos[InSlotTag] or {}
-    local tbAbility = {}
-    for i = 1, #slot do
-        local ability = self:GetAbilityByKey(slot[i])
-        if ability then
-            table.insert(tbAbility, ability)
-        end
-    end
-    return tbAbility
+function AbilityPartClass:FindAbilitiesByTag(InTag)
+    return self._ActiveAbilityContainer:FindAbilitiesByTag(InTag)
 end
 
----@public [Ability]
----@param InAbilityKey string
----@return AbilityClass?
-function AbilityPartClass:GetAbilityByKey(InAbilityKey)
-    return self._AbilityInfos[InAbilityKey]
-end
-
----@public [Ability]
----@param InAbilityKey string
----@param Params table
----@return boolean
-function AbilityPartClass:UseAbility(InAbilityKey, Params)
-    local ability = self._AbilityInfos[InAbilityKey] ---@type AbilityClass
-    if not ability then
-        return false
-    end
-
-    if not ability:CanCast(Params) then
-        return false
-    end
-
-    ability:CastSkill(Params)
-    return true
+---@public
+---@param InAbilitiesKey string
+---@return AbilityClass[]
+function AbilityPartClass:FindAbilitiesByKey(InAbilitiesKey)
+    return self._ActiveAbilityContainer:FindAbilitiesByKey(InAbilitiesKey)
 end
 
 ---@public [Tag]
