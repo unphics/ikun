@@ -123,7 +123,7 @@ GameInit.BroadcastInit = function(InRing)
 end
 
 GameInit.RegisterInit(InitPoint.InitFinish, nil, function()
-    log.mark(log.key.gameinit, "All init finished")
+    log.mark(log.key.gameinit, "All init finished", "✅")
 end)
 
 return GameInit

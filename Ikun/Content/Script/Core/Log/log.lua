@@ -45,7 +45,7 @@ end
 
 ---@public 关键时机标记
 function log.mark(...)
-    sys_warn("[MARK]", ..., "✅")
+    sys_warn("[MARK]", ...)
 end
 
 ---@public 基础日志
