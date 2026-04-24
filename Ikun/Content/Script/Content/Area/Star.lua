@@ -41,7 +41,7 @@ end
 function StarClass:FindLocation(LocationId)
     local location = self._tbLocationRef[LocationId]
     if not location then
-        log.fatal('StarClass:FindLocation()', '不存在的Location', LocationId)
+        log.error_fmt('StarClass:FindLocation(): Invalid Location! LocationId=[%d]', LocationId)
         return nil
     end
     return location
