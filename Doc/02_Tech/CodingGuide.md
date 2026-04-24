@@ -34,3 +34,5 @@
 |Reload|重启VsCode|
 |SynthWave'84|常用主题|
 |EditCSV|好用的csv查看与编辑插件|
+## 注意:
+    - Lua语言的...后不要跟任何东西如(..., "qqq")
