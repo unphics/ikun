@@ -16,18 +16,21 @@
 
 local ffi = require ("ffi") ---@type ffilib
 local ffistate = require("Core/FFI/ffistate")
-local TimeLib = require('Core/TimeLib')
-local log = require('Core/Log/log') ---@type log
-local DebugUtils = require('Utils/DebugUtils')
+local TimeLib = require("Core/TimeLib")
+local log = require("Core/Log/log") ---@type log
+local DebugUtils = require("Utils/DebugUtils")
 
-_G.log = require('Core/Log/log') ---@type log
+_G.log = require("Core/Log/log") ---@type log
 
-local GameInit = require('Core/Init/GameInit')
-require('SharedPCH')
+local GameInit = require("Core/Init/GameInit")
+require("SharedPCH")
 GameInit.BroadcastInit(GameInit.InitRing.EnvInit)
 
-require('System/Ability/Test')
-local AbilitySystem = require('System/Ability/AbilitySystem')
+
+require("System/Ability/Test")
+local AbilitySystem = require("System/Ability/AbilitySystem")
+
+
 function ENetTick(dt, world)
     TimeLib.TickTimeLib()
     AbilitySystem.Get():TickAbilitySystem(0.033)
