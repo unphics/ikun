@@ -78,7 +78,7 @@ function LTask_SelectAbility:SelectAbilityRandom()
     -- 过滤
     local AbleSkill = {}
     for i, Ability in ipairs(AllActiveAbility) do
-        -- if not math_util.is_zero(Ability.DirExtendYaw) then -- 方向过滤 和 方向权重
+        -- if not MathUtils.IsZero(Ability.DirExtendYaw) then -- 方向过滤 和 方向权重
         -- end
         -- 距离过滤 和 距离权重
         -- 友方团队相关 团队过滤 及其 权重计算(团队组成/人数/健康度/斩首率/阵位)

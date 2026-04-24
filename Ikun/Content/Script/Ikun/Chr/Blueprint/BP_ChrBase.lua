@@ -7,7 +7,7 @@
 
 local UnLuaClass = require("Core/UnLua/Class")
 local log = require("Core/Log/log")
-local TagUtils = require("System/Ability/Tag/TagUtils")
+local MathUtils = require("Core/Utils/MathUtils")
 
 ---@class BP_ChrBase: BP_ChrBase_C
 ---@field Role RoleBaseClass
@@ -23,7 +23,7 @@ function BP_ChrBase:ReceiveTick(DeltaSeconds)
     self.Overridden.ReceiveTick(self, DeltaSeconds)
     if not self.bChrDead and net_util.is_server(self) then
         local HP = self.AttrSet:GetAttrValueByName("Health")
-        if math_util.is_zero(HP) then
+        if MathUtils.IsZero(HP) then
             self:ChrBeginDeath()
         end
     end

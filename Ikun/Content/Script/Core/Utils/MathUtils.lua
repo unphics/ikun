@@ -5,17 +5,17 @@
 ---@data    Sun May 04 2025 14:18:42 GMT+0800 (中国标准时间)
 ---
 
----@class math_util 数学库
-local math_util = {}
+---@class MathUtils 数学库
+local MathUtils = {}
 
 ---@public
 ---@param float number
-math_util.is_zero = function(float)
+MathUtils.IsZero = function(float)
     return (float < 0.001) and (float > -0.001)
 end
 
 ---@public
-math_util.point_to_line_dist_2d = function(px, py, x1, y1, x2, y2)
+MathUtils.PointToLineDist2D = function(px, py, x1, y1, x2, y2)
     local dx = x2 - x1
     local dy = y2 - y1
     local numerator = math.abs(dx * (y1 - py) - (x1 - px) * dy)
@@ -28,7 +28,7 @@ end
 ---@param min number
 ---@param max number
 ---@return number
-math_util.clamp = function(val, min, max)
+MathUtils.Clamp = function(val, min, max)
     if val < min then
         return min
     end
@@ -43,11 +43,11 @@ end
 ---@param b number
 ---@param alpha number
 ---@return number
-math_util.lerp = function(a, b, alpha)
+MathUtils.Lerp = function(a, b, alpha)
     return a + (b - a) * alpha
 end
 
-return math_util
+return MathUtils
 
 --[[
 ---@param value number

@@ -7,6 +7,7 @@
 
 local log =  require("Core/Log/log")
 local DebugUtils = require("Utils/DebugUtils")
+local MathUtils = require("Core/Utils/MathUtils")
 
 local actor_util = {}
 
@@ -115,7 +116,7 @@ actor_util.has_obstacles_box = function(pos1, pos2, width, allow_fn)
         local ActLoc = Actor:K2_GetActorLocation()
         local Movement = Actor:GetMovementComponent()
         local ActorRadius = Movement.NavAgentProps.AgentRadius + 30
-        local dist2d = math_util.point_to_line_dist_2d(ActLoc.X, ActLoc.Y, StartLoc.X, StartLoc.Y, EndLoc.X, EndLoc.Y)
+        local dist2d = MathUtils.PointToLineDist2D(ActLoc.X, ActLoc.Y, StartLoc.X, StartLoc.Y, EndLoc.X, EndLoc.Y)
         if dist2d > (ActorRadius + width) then
             goto continue
         end

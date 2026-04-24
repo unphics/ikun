@@ -7,6 +7,7 @@
 ---
 
 local UnLuaClass = require("Core/UnLua/Class")
+local MathUtils = require("Core/Utils/MathUtils")
 
 local VelBlendStruct = UE.UObject.Load('/Game/Ikun/Blueprint/Anim/VelBlend.VelBlend') ---@type FVelBlend
 local MoveDirEnum = UE.UObject.Load('/Game/Ikun/Blueprint/Anim/MoveDir.MoveDir') ---@type MoveDir
@@ -70,10 +71,10 @@ function ABP_Archer:UpdateMoveSpeed(DeltaTime)
         local velDirPer = relVelDir / velSumCount ---@type FVector 归一化的相对速度, 每个值都是百分比占比量
     
         local velBelnd = VelBlendStruct() ---@type FVelBlend
-        velBelnd.F = math_util.clamp(velDirPer.X, 0, 1)
-        velBelnd.B = math.abs(math_util.clamp(velDirPer.X, -1, 0))
-        velBelnd.L = math.abs(math_util.clamp(velDirPer.Y, -1, 0))
-        velBelnd.R = math_util.clamp(velDirPer.Y, 0, 1)
+        velBelnd.F = MathUtils.Clamp(velDirPer.X, 0, 1)
+        velBelnd.B = math.abs(MathUtils.Clamp(velDirPer.X, -1, 0))
+        velBelnd.L = math.abs(MathUtils.Clamp(velDirPer.Y, -1, 0))
+        velBelnd.R = MathUtils.Clamp(velDirPer.Y, 0, 1)
 
         ---@step 2.将当前混合速度插值到此时的瞬时混合速度
         local interp_speed = 50

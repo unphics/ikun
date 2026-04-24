@@ -16,7 +16,6 @@
 
 do
     class = require('Core/Class/class')
-    math_util = require('Core/Utils/math_util') ---@type math_util
 end
 
 
