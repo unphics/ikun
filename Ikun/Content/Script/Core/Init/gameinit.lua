@@ -17,6 +17,7 @@ local log = require("Core/Log/log")
 ---@diagnostic disable-next-line duplicate-type
 ---@enum InitPoint
 local InitPoint = {
+    ResetLevelInit = "ResetLevelInit",
     InitStar = "InitStar",
     InitQuest = "InitQuest",
     InitLoc = "InitLoc",
@@ -43,10 +44,11 @@ InitRing.GameInst_ReceiveInit = {
 }
 ---@type InitPoint[]
 InitRing.PC_BeginPlay = {
-    InitPoint.InitSite,
+    InitPoint.ResetLevelInit,
 }
 ---@type InitPoint[]
 InitRing.PC_BeginPlay_Delay_1 = {
+    InitPoint.InitSite,
     InitPoint.InitRole,
     InitPoint.OpenDefaultUI,
 }
@@ -121,6 +123,11 @@ GameInit.BroadcastInit = function(InRing)
         GameInit._InitedMark[key] = true
     end
 end
+
+GameInit.RegisterInit(InitPoint.ResetLevelInit, nil, function()
+    GameInit._InitedMark = {}
+    log.mark(log.key.gameinit, "ResetLevelInit", "✅")
+end)
 
 GameInit.RegisterInit(InitPoint.InitFinish, nil, function()
     log.mark(log.key.gameinit, "All init finished", "✅")

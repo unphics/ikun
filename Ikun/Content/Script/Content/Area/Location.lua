@@ -41,20 +41,20 @@ end
 ---@param LocationAvatar AActor
 function LocationClass:InitByLocationAvatar(LocationId, LocationAvatar)
     if not LocationAvatar:IsA(UE.AActor) then
-        log.error('LocationClass:InitByLocationAvatar 状态不对', LocationId, LocationAvatar, obj_util.dispname(LocationAvatar))
+        log.error_fmt('LocationClass:InitByLocationAvatar(): Invalid Actor! LocationId=[%d], Avatar=[%s], Dispname=[%s]', LocationId, LocationAvatar, obj_util.dispname(LocationAvatar))
         return
     end
     local allLocationConfig = ConfigMgr:GetConfig('Location')
     local locationConfig = allLocationConfig[LocationId] ---@type LocationConfig
     if not locationConfig then
-        log.error(log.key.sceneinit,'LocationClass:InitByLocationAvatar() ', LocationId)
+        log.error("%s, LocationClass:InitByLocationAvatar() Failed to found location config! LocationId=[%d]", log.key.sceneinit, LocationId)
         return
     end
 
     self._LocationId = LocationId
     self._Name = locationConfig.LocationName
     self.LocationAvatar = LocationAvatar
-    log.info(log.key.sceneinit, 'InitByLocationAvatar()', self._Name, self._LocationId)
+    log.info_fmt("%s LocationClass:InitByLocationAvatar(): Succeed to init location by avatar!, Name=[%s], LocaitonId=[%d]", log.key.sceneinit, self._Name, self._LocationId)
 
     ---@todo zys Location的所属Landform
 

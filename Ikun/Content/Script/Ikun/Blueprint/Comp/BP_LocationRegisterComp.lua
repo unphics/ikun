@@ -25,7 +25,7 @@ function BP_LocationRegisterComp:AvatarInitLocation()
         return
     end
     if self.LocationId <= 0 then
-        log.error('BP_LocationRegisterComp:AvatarInitLocation()', '未配置LocationId')
+        log.error_fmt('BP_LocationRegisterComp:AvatarInitLocation(): Found no LocationId config BP in scene! BPName=[%s]', obj_util.dispname(self:GetOwner()))
         return
     end
     local house = class.new'LocationClass'() ---@as LocationClass
