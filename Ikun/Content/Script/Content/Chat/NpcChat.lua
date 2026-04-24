@@ -8,6 +8,7 @@
 local log =  require("Core/Log/log")
 local ChatExecLib = require('Content/Chat/ChatExecLib')
 local DynaSelect = require('Content/Chat/DynaSelect')
+local table_util = require("Core/Utils/table_util")
 
 ---@class ChatConfig
 ---@field Id number
@@ -42,6 +43,9 @@ end
 ---@public
 function NpcChatClass:DoSelectIndex(Index)
     log.info(log.key.chat, '对话模块选择对话项', Index)
+    if not table_util.is_arr(self._CurSelectList) then
+        return
+    end
     local curSelectId = self._CurSelectList[Index]
     local data = self:GetChatData(curSelectId)
     if data.PostExecId then

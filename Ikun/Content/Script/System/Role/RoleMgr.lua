@@ -141,7 +141,7 @@ function RoleMgrClass:_LoadConfig() -- const
     local roleParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Role.csv"))
     self._RoleConfigData = roleParser:ToRows():ExtractHeaders():ToGrid():ToMap()
         :CastMapCol({"RoleSkills", "RoleAbility"})
-        :CastArrCol({"HoldLocations"})
+        :CastArrCol({"HoldLocations", "RoleChat"})
         :CastNumCol({"BelongKingdom", "RoleId"})
         :GetResult()
     roleParser:ReleaseParser()

@@ -79,9 +79,10 @@ end
 ---@private [Gaze] [Client] 注视物体
 ---@param DeltaTime number
 function InteractComp:_Gazing(DeltaTime)
-    if net_util.is_server(self) then
-        return
-    end
+    ---@todo zys: 交互先双端跑, 方便服务端测试
+    -- if net_util.is_server(self) then
+    --     return
+    -- end
     self.CurGazeCountTime = self.CurGazeCountTime + DeltaTime
     if self.CurGazeCountTime < self.GazeIntervalConst then
         return
