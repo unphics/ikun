@@ -55,7 +55,7 @@ end
 ---@public
 ---@return table
 function SkillBaseClass:GetSkillOwner() -- const
-    return self._Ability:GetAbilityOwner()
+    return self._Ability:GetAbilityOwnerPart()
 end
 
 return SkillBaseClass

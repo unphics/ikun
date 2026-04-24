@@ -5,7 +5,7 @@
 --  File        : WaitSkill.lua
 --  Author      : zhengyanshuai
 --  Date        : Fri Jan 02 2026 22:29:35 GMT+0800 (中国标准时间)
---  Description : 技能-等待
+--  Description : 测试技能
 --  License     : MIT License
 -- -----------------------------------------------------------------------------
 --  Copyright (c) 2026 zhengyanshuai
