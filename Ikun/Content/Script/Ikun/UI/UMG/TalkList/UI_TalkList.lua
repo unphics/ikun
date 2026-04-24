@@ -7,6 +7,7 @@
 
 local log =  require("Core/Log/log")
 local UnLuaClass = require("Core/UnLua/Class")
+local TableUtils = require('Core/Utils/TableUtils')
 
 ---@class UI_TalkList: UI_TalkList_C
 ---@field TalkingRoleList table<string, TalkListItem>
@@ -73,7 +74,7 @@ end
 function UI_TalkList:Test()
     self.test_idx = 1
     local talkConfig = ConfigMgr:GetConfig('Talk')
-    local len = table_util.map_len(talkConfig)
+    local len = TableUtils.DictLength(talkConfig)
     async_util.timer(self, function()
         ---@todo 此处不该直接硬编码47000
         local data = talkConfig[47000 + self.test_idx]

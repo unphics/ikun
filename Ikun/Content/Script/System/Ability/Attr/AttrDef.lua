@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local table_util = require("Core/Utils/table_util")
+local TableUtils = require("Core/Utils/TableUtils")
 
 ---@class AttrDef
 ---@field protected RefIdToKey table<integer, string>
@@ -47,8 +47,8 @@ end
 
 ---@public [Init]
 AttrDef.BuildIdToKey = function()
-    AttrDef.AttrCount = table_util.map_len(AttrDef.Attr)
-    AttrDef.RefIdToKey = table_util.make_arr(AttrDef.AttrCount, "Undefined")
+    AttrDef.AttrCount = TableUtils.DictLength(AttrDef.Attr)
+    AttrDef.RefIdToKey = TableUtils.MakeArray(AttrDef.AttrCount, "Undefined")
     for k, v in pairs(AttrDef.Attr) do
         if type(k) == "string" and type(v) == "number" then
             AttrDef.RefIdToKey[v] = k
@@ -59,7 +59,7 @@ end
 ---@public
 ---@return any[]
 AttrDef.NewAttrIdArr = function(InDefaultValue)
-    return table_util.make_arr(AttrDef.AttrCount, InDefaultValue)
+    return TableUtils.MakeArray(AttrDef.AttrCount, InDefaultValue)
 end
 
 return AttrDef

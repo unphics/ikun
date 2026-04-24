@@ -15,7 +15,7 @@
 local Class3 = require("Core/Class/Class3")
 local AttrDef = require("System/Ability/Attr/AttrDef")
 local log = require("Core/Log/log")
-local table_util = require("Core/Utils/table_util")
+local TableUtils = require("Core/Utils/TableUtils")
 local AttrConfigClass = require("System/Ability/Attr/AttrConfig")
 
 ---@class AttrSetClass
@@ -30,7 +30,7 @@ local AttrSetClass = Class3.Class("AttrSetClass")
 function AttrSetClass:Ctor(InAttributes, InAbilityPart)
     self._OwnerPart = InAbilityPart
     self._Attributes = InAttributes
-    self._Dirty = table_util.make_arr(AttrDef.AttrCount, false)
+    self._Dirty = TableUtils.MakeArray(AttrDef.AttrCount, false)
     self._Modifiers = {}
 
     self:_CollectOnChangedFuncs()

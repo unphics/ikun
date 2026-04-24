@@ -14,7 +14,6 @@ local Class3 = require("Core/Class/Class3")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local FileSystem = require("System/File/FileSystem")
 local log = require('Core/Log/log')
-local table_util = require("Core/Utils/table_util")
 local AbilityFactoryClass = require("System/Ability/Ability/AbilityFactory")
 local TagUtils = require("System/Ability/Tag/TagUtils")
 

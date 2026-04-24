@@ -12,7 +12,7 @@
 -- -----------------------------------------------------------------------------
 --]]
 
-local table_util = require("Core/Utils/table_util")
+local TableUtils = require("Core/Utils/TableUtils")
 local TagManager = require('System/Ability/Tag/TagManager').Get()
 
 local Tags = {
@@ -27,7 +27,7 @@ local Tags = {
 local TagDefine = {}
 
 TagDefine.tbNameToTag = {}
-TagDefine.tbTagToName = table_util.make_arr(table_util.map_len(Tags), -1)
+TagDefine.tbTagToName = TableUtils.MakeArray(TableUtils.DictLength(Tags), -1)
 
 for _, tag in ipairs(Tags) do
     local int = TagManager:Register(tag)

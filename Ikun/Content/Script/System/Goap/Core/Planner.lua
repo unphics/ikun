@@ -6,6 +6,7 @@
 ---
 
 local log =  require("Core/Log/log")
+local TableUtils = require('Core/Utils/TableUtils')
 
 ---@class GPlanner
 local GPlanner = class.class'GPlanner' {}
@@ -68,14 +69,14 @@ function GPlanner.Plan(InStart, InGoal, InActions)
             for _, action in ipairs(InActions) do
                 local name = action._ActionName
                 if action:CanPerform(curNode.States) then
-                    local newStates = action:ApplyEffect(table_util.deep_copy(curNode.States))
+                    local newStates = action:ApplyEffect(TableUtils.DeepCopy(curNode.States))
 
                     local newNode = {} ---@type openNode
                     newNode.States = newStates
                     newNode.h = goap.util.calc_no_cover_num(newStates, InGoal.DesiredStates)
                     newNode.g = curNode.g + action.ActionCost
                     newNode.f = newNode.h + newNode.g
-                    newNode.Actions = table_util.deep_copy(curNode.Actions)
+                    newNode.Actions = TableUtils.DeepCopy(curNode.Actions)
                     table.insert(newNode.Actions, action._ActionName)
                     table.insert(openList, newNode)
                 end

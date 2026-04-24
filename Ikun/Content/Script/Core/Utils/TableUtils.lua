@@ -2,7 +2,7 @@
 --[[
 -- -----------------------------------------------------------------------------
 --  Brief       : LuaTableUtils
---  File        : table_util.lua
+--  File        : TableUtils.lua
 --  Author      : zhengyanshuai
 --  Date        : Sun May 04 2025 14:15:45 GMT+0800 (中国标准时间)
 --  Description : 表工具方法
@@ -12,12 +12,12 @@
 -- -----------------------------------------------------------------------------
 --]]
 
----@class table_util
-local table_util = {}
+---@class TableUtils
+local TableUtils = {}
 
 ---@public 浅拷贝, 拷一层
 ---@param Table table
-table_util.shallow_copy = function(Table)
+TableUtils.ShallowCopy = function(Table)
     local tb = {}
     for i, ele in pairs(Table) do
         tb[i] = ele
@@ -27,11 +27,11 @@ end
 
 ---@public 深拷贝
 ---@param Table table
-table_util.deep_copy = function(Table)
+TableUtils.DeepCopy = function(Table)
     local tb = {}
     for k, v in pairs(Table) do
         if type(v) == "table" then
-            tb[k] = table_util.deep_copy(v)
+            tb[k] = TableUtils.DeepCopy(v)
         else
             tb[k] = v
         end
@@ -42,7 +42,7 @@ end
 ---@public 判断表是数组
 ---@param InTable table
 ---@return boolean
-table_util.is_arr = function(InTable)
+TableUtils.IsArray = function(InTable)
     if not InTable and type(InTable) ~= "table" then
         return false
     end
@@ -55,7 +55,7 @@ end
 ---@public 判断表是字典
 ---@param InTable table
 ---@return boolean
-table_util.is_map = function(InTable)
+TableUtils.IsDict = function(InTable)
     if not InTable and type(InTable) ~= "table" then
         return false
     end
@@ -69,7 +69,7 @@ end
 ---@param InLength integer
 ---@param InDefaultValue any @[opt]
 ---@return table
-table_util.make_arr = function(InLength, InDefaultValue)
+TableUtils.MakeArray = function(InLength, InDefaultValue)
     if not InLength or type(InLength) ~= "number" or InLength < 1 then
         return {}
     end
@@ -84,7 +84,7 @@ end
 ---@public 获取字典的长度
 ---@param InTable table
 ---@return integer
-table_util.map_len = function(InTable)
+TableUtils.DictLength = function(InTable)
     if not InTable or type(InTable) ~= "table" then
         return 0
     end
@@ -98,7 +98,7 @@ end
 ---@public
 ---@param InTable table
 ---@param InFn fun(InItem):boolean
-table_util.find_if = function(InTable, InFn)
+TableUtils.FindIf = function(InTable, InFn)
     for i = 1, #InTable do
         if InFn(InTable[i]) then
             return InTable[i]
@@ -108,7 +108,7 @@ end
 
 ---@public
 ---@param InTable table
-table_util.remove_value = function(InTable, InItem)
+TableUtils.RemoveValue = function(InTable, InItem)
     for i = 1, #InTable do
         if InTable[i] == InItem then
             table.remove(InTable, i)
@@ -120,7 +120,7 @@ end
 ---@public
 ---@param InTable table
 ---@param InItem any
-table_util.add_unique = function(InTable, InItem)
+TableUtils.AddUnique = function(InTable, InItem)
     for i = 1, #InTable do
         if InTable[i] == InItem then
             return
@@ -133,7 +133,7 @@ end
 ---@param InTable table
 ---@param InFn fun(InItem):boolean
 ---@return any
-table_util.remove_if = function(InTable, InFn)
+TableUtils.RemoveIf = function(InTable, InFn)
     for i = 1, #InTable do
         if InFn(InTable[i]) then
             return table.remove(InTable, i)
@@ -141,4 +141,4 @@ table_util.remove_if = function(InTable, InFn)
     end
 end
 
-return table_util
+return TableUtils

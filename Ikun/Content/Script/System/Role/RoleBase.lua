@@ -20,7 +20,7 @@ local TimeLib = require("Core/TimeLib")
 local TagUtils = require("System/Ability/Tag/TagUtils")
 local log = require("Core/Log/log")
 local AbilityFactoryClass = require("System/Ability/Ability/AbilityFactory")
-local table_util = require("Core/Utils/table_util")
+local TableUtils = require("Core/Utils/TableUtils")
 require("System/Role/RoleHoldLocation")
 
 ---@class RoleConfig
@@ -102,7 +102,7 @@ function RoleBaseClass:InitComplexPart()
     if config.RoleAttrSetClass then
         self.AbilityPart:InitAttrSet(config.RoleAttrSetClass)
     end
-    if table_util.is_map(config.RoleAbility) then
+    if TableUtils.IsDict(config.RoleAbility) then
         for _, abilityKey in pairs(config.RoleAbility) do
             local ability = AbilityFactoryClass.Get():CreateAbility(abilityKey,self.AbilityPart)
             if ability then
