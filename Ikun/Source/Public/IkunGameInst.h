@@ -21,6 +21,16 @@ public:
 	virtual void OnStart() override;
 	virtual void Shutdown() override;
 	virtual void OnWorldChanged(UWorld* OldWorld, UWorld* NewWorld) override;
+	void OnActorsInitialized(const FActorsInitializedParams&);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void ReceiveOnWorldChanged(UWorld* OldWorld, UWorld* NewWorld);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnPreLoadMap(const FString& LevelName);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnPostLoadMap(UWorld* LoadedWorld);
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveOnActorsInitialized();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnWorldBeginPlay();
 };

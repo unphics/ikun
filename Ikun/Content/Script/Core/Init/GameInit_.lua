@@ -12,6 +12,7 @@
 --]]
 
 local log = require("Core/Log/log")
+local TableUtils = require("Core/Utils/TableUtils")
 
 -- 初始化点: 定义了所有需要初始化的模块/系统
 ---@diagnostic disable-next-line duplicate-type
@@ -40,11 +41,15 @@ InitRing.EnvInit = {
 }
 ---@type InitPoint[]
 InitRing.GameInst_ReceiveInit = {
-    InitPoint.InitLoc,
+}
+InitRing.GameInst_ScenePreInit = {
+    InitPoint.ResetLevelInit,
+}
+InitRing.GameInst_ScenePostInit = {
 }
 ---@type InitPoint[]
 InitRing.PC_BeginPlay = {
-    InitPoint.ResetLevelInit,
+    InitPoint.InitLoc,
 }
 ---@type InitPoint[]
 InitRing.PC_BeginPlay_Delay_1 = {
@@ -111,6 +116,7 @@ GameInit.BroadcastInit = function(InRing)
         log.error(log.key.gameinit, "BroadcastInit failed: InRing is not a table")
         return
     end
+    log.info_fmt("[%s] BroadcastInit Ring=[%s]", log.key.gameinit, TableUtils.FindKeyByValue(InitRing, InRing))
 
     for _, key in ipairs(InRing) do
         local infos = GameInit._InitPointInfos[key]

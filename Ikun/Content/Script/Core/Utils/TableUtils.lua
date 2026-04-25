@@ -107,6 +107,15 @@ TableUtils.FindIf = function(InTable, InFn)
 end
 
 ---@public
+TableUtils.FindKeyByValue = function(InTable, InValue)
+    for k, v in pairs(InTable) do
+        if v == InValue then
+            return k
+        end
+    end
+end
+
+---@public
 ---@param InTable table
 TableUtils.RemoveValue = function(InTable, InItem)
     for i = 1, #InTable do
