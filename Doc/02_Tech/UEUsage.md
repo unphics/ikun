@@ -9,6 +9,7 @@
 - 使用自带Rotate_to_face_BB_entry任务时需勾选Chr的UseControllerRotationYaw, 同时开启Chr下的ChrMovementComp的UseControllerDesiredRotation
 ## 运行编辑器
 - 以AsClient模式运行时, 需打开EditorPreferences的LaunchSeparateServer
+- 多编辑器运行时要勾掉UseLessCPUWhenInBackground, 否则会导致服务器高ping
 ## UI开发-拖动
 ### 双方都要覆写()
 ```
