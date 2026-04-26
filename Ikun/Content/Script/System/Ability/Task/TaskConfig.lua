@@ -44,6 +44,7 @@ function TaskConfigClass.Get()
 end
 
 function TaskConfigClass:Ctor()
+    self.__TaskConfigData = {}
 end
 
 ---@public
@@ -55,6 +56,25 @@ function TaskConfigClass:LoadTaskConfigs()
     local data = parser:ToRows():ExtractHeaders():ToGrid():ToMap()
         :CastMapCol({"EmitEvent"})
         :GetResult()
+    local tb = {}
+    local curSkillId  = nil
+    for i, row in ipairs(data) do
+        if row.SkillId then
+            curSkillId = row.SkillId
+            tb[curSkillId] = tb[curSkillId] or {}
+        end
+        if curSkillId and row.TaskType then
+            row.SkillId = curSkillId
+            table.insert(tb[curSkillId], row)
+        end
+    end
+    self.__TaskConfigData = tb
+end
+
+---@public
+---@return TaskConfig?
+function TaskConfigClass:LookupTaskConfig(InId)
+    return self.__TaskConfigData[InId]
 end
 
 return TaskConfigClass
