@@ -1,9 +1,16 @@
 
----
----@brief   玩家控制器基类
----@author  zys
----@data    Sat Jul 19 2025 17:23:24 GMT+0800 (中国标准时间)
----
+--[[
+-- -----------------------------------------------------------------------------
+--  Brief       : 玩家控制器基类
+--  File        : PC_Base.lua
+--  Author      : zhengyanshuai
+--  Date        : Sat Jul 19 2025 17:23:24 GMT+0800 (中国标准时间)
+--  Warn        : 组织逻辑时注意不是Localplayer的PlayerController对象
+--  License     : MIT License
+-- -----------------------------------------------------------------------------
+--  Copyright (c) 2025-2026 zhengyanshuai
+-- -----------------------------------------------------------------------------
+--]]
 
 local UnLuaClass = require("Core/UnLua/Class")
 local EnhInput = require('Ikun/Module/Input/EnhInput')
@@ -21,22 +28,28 @@ EnhInput.BindActions(PC_Base)
 function PC_Base:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
     log.info(log.key.ueinit, ' PC_Base:ReceiveBeginPlay()', net_util.print(self))
+
     if net_util.is_server(self) then
+        -- 游戏流程初始化, 由权威端统一触发
         GameInit.BroadcastInit(GameInit.InitRing.PC_BeginPlay)
         GameInit.BroadcastInit(GameInit.InitRing.PC_BeginPlay_Delay_1)
         GameInit.BroadcastInit(GameInit.InitRing.PC_BeginPlay_Delay_2)
 
+        -- 关卡切换是服务端流程
         if not modules.GameLevelMgr:CheckLevel(self:GetWorld()) then
             modules.GameLevelMgr:OpenEntryLevel(self:GetWorld())
         end
     end
     
-    self.bShowMouseCursor = false
+    if self:IsLocalPlayerController() then
+        self.bShowMouseCursor = false -- 只有本地玩家的鼠标显示状态有意义, 远端PC改这个没意义
 
-    self:InitInputSystem()
-    self:InitPlayerInput()
-    
-    ui_util.init_ui_module(self:GetWorld())
+        self:InitInputSystem() -- 这里拿的是UEnhancedInputLocalPlayerSubsystem, 只对本地玩家存在
+
+        self:InitPlayerInput() -- 注册本地输入回调, 不该给远端PC注册
+
+        ui_util.init_ui_module(self:GetWorld()) -- UI只给本地视口创建, 不能对远端PC/服务端重复初始化
+    end
 end
 
 ---@override
@@ -52,7 +65,6 @@ function PC_Base:InitInputSystem()
     log.info('PC_Base:InitInputSystem()')
     EnhInput.InitByPlayerController(self)
     EnhInput.AddIMC(UE.UObject.Load(EnhInput.IMCDef.IMC_Base))
-
 end
 
 ---@private [Input]
