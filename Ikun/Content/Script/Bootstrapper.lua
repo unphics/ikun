@@ -24,6 +24,8 @@ _G.log = log ---@type log
 
 local GameInit = require("Core/Init/GameInit")
 require("SharedPCH")
+
+log.mark("Bootstrapper: EnvInit! (｀・ω・´)")
 GameInit.BroadcastInit(GameInit.InitRing.EnvInit)
 
 require("System/Ability/Test")
