@@ -43,7 +43,7 @@ end
 
 if true then
     local attrMgr = AbilitySystem.Get():GetAttrManager()
-    local set = AttrFactoryClass.Get():CreateAttrSet() ---@type AttrSetClass
+    local set = AttrFactoryClass.Get():CreateAttrSet("IkunAttrSet") ---@type AttrSetClass
 
     local mod_baseHealth_add_10 = AttrModifierFactoryClass.Get():AcquireModifier(AttrDef.Attr.BaseHealth, 10)
     assert(mod_baseHealth_add_10.ModValue == 10 and mod_baseHealth_add_10.ModAttrId == AttrDef.Attr.BaseHealth)
@@ -71,7 +71,7 @@ end
 if true then
     local attrMgr = AbilitySystem.Get():GetAttrManager()
     local part = AbilityPart:New(nil) ---@type AbilityPartClass
-    part:InitAttrSet()
+    part:InitAttrSet("IkunAttrSet")
     local mod_attack_add_10 = AttrModifierFactoryClass.Get():AcquireModifier(AttrDef.Attr.BaseAttack, 10)
     part:GetAttrSet():AddModifier(mod_attack_add_10)
     assert(part:GetAttrSet():GetAttrValue(AttrDef.Attr.BaseAttack) == 10)
