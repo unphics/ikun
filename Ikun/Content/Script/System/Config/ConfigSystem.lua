@@ -5,9 +5,11 @@
 ---@data    Sat Jan 03 2026 00:17:13 GMT+0800 (中国标准时间)
 ---
 
-local Class3 = require('Core/Class/Class3')
-local IConfigSystem = require('System/Config/Interface').IConfigSystem
-local ConfigParserClass = require('System/Config/ConfigParser')
+local Class3 = require("Core/Class/Class3")
+local IConfigSystem = require("System/Config/Interface").IConfigSystem
+local StrUtils = require("Core/Utils/StrUtils")
+local ConfigParserClass = require("System/Config/ConfigParser")
+local MultiRowConfigParserClass = require("System/Config/MultiRowConfigParser")
 
 ---@class ConfigSystem: IConfigSystem
 local ConfigSystem = Class3.Class('ConfigSystem', IConfigSystem)
@@ -35,10 +37,19 @@ end
 ---@param InConfigStr string
 ---@return ConfigParserClass?
 function ConfigSystem:CreateCSVParser(InConfigStr)
-    if not InConfigStr then
+    if StrUtils.IsEmpty(InConfigStr) then
         return
     end
     return ConfigParserClass:New(self, InConfigStr) ---@as ConfigParserClass
+end
+
+---@public
+---@return MultiRowConfigParserClass?
+function ConfigSystem:CreateMultiRowParser(InConfigStr)
+    if StrUtils.IsEmpty(InConfigStr) then
+        return
+    end
+    return MultiRowConfigParserClass:New(self, InConfigStr)
 end
 
 ---@public

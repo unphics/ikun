@@ -17,6 +17,15 @@ local log = require("Core/Log/log")
 local Delegate = require("Core/Delegate")
 local FileSystem = require("System/File/FileSystem")
 local ConfigSystem = require("System/Config/ConfigSystem")
+local StrUtils = require("Core/Utils/StrUtils")
+
+---@class TaskConfig
+---@field StartTime number
+---@field TaskType string
+---@field ListenEvent string[]
+---@field Duration number
+---@field EmitEvent table<string, string>
+---@field Condition any
 
 local TASK_CONFIG_PATH = "Ability/Ability/Task.csv"
 
@@ -42,9 +51,10 @@ function TaskConfigClass:LoadTaskConfigs()
     local file = FileSystem.Get():MustReadSConfigFile(TASK_CONFIG_PATH)
     log.assert_fmt(file, "TaskConfigClass:LoadTaskConfigs(): Failed to read [%s]", TASK_CONFIG_PATH)
 
-    local parser = ConfigSystem.Get():CreateCSVParser(file)
-    local data = parser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
-    local a = 1
+    local parser = ConfigSystem.Get():CreateMultiRowParser(file)
+    local data = parser:ToRows():ExtractHeaders():ToGrid():ToMap()
+        :CastMapCol({"EmitEvent"})
+        :GetResult()
 end
 
 return TaskConfigClass
