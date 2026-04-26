@@ -38,7 +38,7 @@ end
 ---@public
 ---@param InAbility AbilityClass
 function AbilityContainerClass:AddAbility(InAbility)
-    table.insert(InAbility)
+    table.insert(self.__Abilities, InAbility)
 end
 
 ---@public
