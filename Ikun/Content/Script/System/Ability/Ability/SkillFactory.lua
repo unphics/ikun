@@ -20,7 +20,7 @@ local SkillConfigClass = require("System/Ability/Ability/SkillConfig")
 local StrUtils = require("Core/Utils/StrUtils")
 
 ---@class SkillFactoryClass
----@field private __CachedClass table<string, SkillBaseClass>
+---@field private __CachedClasses table<string, SkillBaseClass>
 local SkillFactoryClass = Class3.Class("SkillFactoryClass")
 
 local SKILL_SCRIPT_PATH = "Module/Ability/Skill/"
@@ -35,7 +35,7 @@ function SkillFactoryClass.Get()
 end
 
 function SkillFactoryClass:Ctor()
-    self.__CachedClass = {}
+    self.__CachedClasses = {}
 end
 
 ---@public
@@ -66,14 +66,14 @@ end
 function SkillFactoryClass:__GetOrLoadSkillClass(InSkillClassName)
     local fullPath = nil
     if InSkillClassName then
-        local skillClass = self.__CachedClass[InSkillClassName]
+        local skillClass = self.__CachedClasses[InSkillClassName]
         if skillClass then
             return skillClass
         end
         local fullPath = SKILL_SCRIPT_PATH..InSkillClassName
         local success, skillClass = pcall(require, fullPath)
         if success and skillClass then
-            self.__CachedClass[InSkillClassName] = skillClass
+            self.__CachedClasses[InSkillClassName] = skillClass
             return skillClass
         end
     end

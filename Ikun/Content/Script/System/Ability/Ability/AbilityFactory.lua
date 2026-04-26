@@ -19,7 +19,7 @@ local AbilityConfigClass = require("System/Ability/Ability/AbilityConfig")
 local AbilityClass = require("System/Ability/Ability/Ability")
 
 ---@class AbilityFactoryClass
----@field private __CachedClass table<string, AbilityClass>
+---@field private __CachedClasses table<string, AbilityClass>
 local AbilityFactoryClass = Class3.Class("AbilityFactoryClass")
 
 local ABILITY_SCRIPT_PATH = "Module/Ability/Ability/"
@@ -57,17 +57,17 @@ end
 function AbilityFactoryClass:__GetOrLoadAbilityClass(InClassName)
     local fullPath = nil
     if InClassName then
-        local abilityClass = self.__CachedClass[InClassName]
+        local abilityClass = self.__CachedClasses[InClassName]
         if abilityClass then
             return abilityClass
         end
         local fullPath = ABILITY_SCRIPT_PATH..InClassName
         local success, abilityClass = pcall(require, fullPath)
         if success and abilityClass then
-            self.__CachedClass[InClassName] = abilityClass
+            self.__CachedClasses[InClassName] = abilityClass
             return abilityClass
         else ---@todo zys 这里临时都用base
-            self.__CachedClass[InClassName] = AbilityClass
+            self.__CachedClasses[InClassName] = AbilityClass
             return abilityClass
         end
     end

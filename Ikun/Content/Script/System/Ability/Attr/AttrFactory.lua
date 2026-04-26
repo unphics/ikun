@@ -23,7 +23,7 @@ local AttrSetClass = require("System/Ability/Attr/AttrSet")
 local AttrConfigClass = require("System/Ability/Attr/AttrConfig")
 
 ---@class AttrFactoryClass
----@field private __CachedClass table<string, AttrSetClass>
+---@field private __CachedClasses table<string, AttrSetClass>
 local AttrFactoryClass = Class3.Class("AttrConfigClass")
 
 AttrFactoryClass.ATTRSET_SCRIPT_PATH = "Module/Ability/Attr/"
@@ -40,7 +40,7 @@ function AttrFactoryClass.Get()
 end
 
 function AttrFactoryClass:Ctor()
-    self.__CachedClass = {}
+    self.__CachedClasses = {}
 end
 
 ---@public
@@ -61,14 +61,14 @@ end
 function AttrFactoryClass:__GetOrLoadAttrSetClass(InClassName)
     local fullPath = nil
     if InClassName then
-        local setClass = self.__CachedClass[InClassName]
+        local setClass = self.__CachedClasses[InClassName]
         if setClass then
             return setClass
         end
         fullPath = AttrFactoryClass.ATTRSET_SCRIPT_PATH..InClassName
         local success, setClass = pcall(require, fullPath)
         if success and setClass then
-            self.__CachedClass[InClassName] = setClass
+            self.__CachedClasses[InClassName] = setClass
             return setClass
         end
     end

@@ -21,7 +21,7 @@ local TagUtils = require("System/Ability/Tag/TagUtils")
 local EffectConfigClass = require("System/Ability/Effect/EffectConfig")
 
 ---@class EffectFactoryClass
----@field private __CachedClass table<string, EffectorBaseClass>
+---@field private __CachedClasses table<string, EffectorBaseClass>
 local EffectFactoryClass = Class3.Class()
 
 local EFFECTOR_SCRIPT_PATH = "Module/Ability/Effector/"
@@ -36,7 +36,7 @@ function EffectFactoryClass.Get()
 end
 
 function EffectFactoryClass:Ctor()
-    self.__CachedClass = {}
+    self.__CachedClasses = {}
 end
 
 ---@public
@@ -63,14 +63,14 @@ end
 function EffectFactoryClass:__GetOrLoadEffector(InEffectorClassName)
     local fullPath = nil
     if InEffectorClassName then
-        local effectorClass = self.__CachedClass[InEffectorClassName]
+        local effectorClass = self.__CachedClasses[InEffectorClassName]
         if effectorClass then
             return effectorClass
         end
         local fullPath = EFFECTOR_SCRIPT_PATH..InEffectorClassName
         local success, effectorClass = pcall(require, fullPath)
         if success and effectorClass then
-            self.__CachedClass[InEffectorClassName] = effectorClass
+            self.__CachedClasses[InEffectorClassName] = effectorClass
             return effectorClass
         end
     end
