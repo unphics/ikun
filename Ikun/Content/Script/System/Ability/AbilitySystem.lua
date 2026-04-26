@@ -17,6 +17,7 @@ local AbilityManager = require("System/Ability/Ability/AbilityManager")
 local AttrManager = require("System/Ability/Attr/AttrManager")
 local BuffManager = require("System/Ability/Buff/BuffManager")
 local EffectManager = require("System/Ability/Effect/EffectManager")
+local TaskManager = require("System/Ability/Task/TaskManager")
 local TimeLib = require("Core/TimeLib")
 
 ---@class AbilitySystem
@@ -24,6 +25,7 @@ local TimeLib = require("Core/TimeLib")
 ---@field AttrManager AttrManager
 ---@field BuffManager BuffManager
 ---@field EffectManager EffectManager
+---@field TaskManager TaskManager
 local AbilitySystem = Class3.Class("AbilitySystem")
 
 local system = nil
@@ -34,6 +36,7 @@ function AbilitySystem:Ctor()
     self.BuffManager = BuffManager:New(self)
     self.AbilityManager = AbilityManager:New(self)
     self.EffectManager = EffectManager:New(self)
+    self.TaskManager = TaskManager:New(self)
 end
 
 ---@public
@@ -51,6 +54,7 @@ function AbilitySystem:InitAbilitySystem()
     self.BuffManager:InitBuffManager()
     self.AbilityManager:InitAbilityManager()
     self.EffectManager:InitEffectManager()
+    self.TaskManager:InitTaskManager()
 end
 
 ---@public
