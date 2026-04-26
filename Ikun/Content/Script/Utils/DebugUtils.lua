@@ -33,7 +33,7 @@ DebugUtils.RotateColor = UE.FLinearColor(0, 1, 0)
 DebugUtils.MoveColor = UE.FLinearColor(1, 1, 0)
 
 -- [[
--- 调试方法
+-- 调试方法, 游戏中按~键使用
 -- ]]
 
 DebugUtils.qqq = function(a, b)
@@ -51,6 +51,19 @@ DebugUtils.gamespeed = function(speed)
     local time = TimeMgr ---@type TimeMgr
     time:SetGameSpeed(speed)
 end
+
+DebugUtils.debug_hud = function()
+    local ui = ui_util.uimgr:GetUIIfVisible(ui_util.uidef.UI_DebugHud)
+    if ui then
+        ui_util.uimgr:HideUI(ui_util.uidef.UI_DebugHud)
+    else
+        ui_util.uimgr:ShowUI(ui_util.uidef.UI_DebugHud)
+    end
+end
+
+-- [[
+-- 给其他代码模块的信息获取方法
+-- ]]
 
 ---@public
 ---@param Chr BP_ChrBase | RoleBaseClass | number
