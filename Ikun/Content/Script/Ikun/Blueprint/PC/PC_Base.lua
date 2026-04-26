@@ -27,7 +27,7 @@ EnhInput.BindActions(PC_Base)
 ---@override
 function PC_Base:ReceiveBeginPlay()
     self.Overridden.ReceiveBeginPlay(self)
-    log.info(log.key.ueinit, ' PC_Base:ReceiveBeginPlay()', net_util.print(self))
+    log.info_fmt("%s PC_Base:ReceiveBeginPlay() net=[%s]", log.key.ueinit, net_util.print(self))
 
     if net_util.is_server(self) then
         -- 游戏流程初始化, 由权威端统一触发
@@ -42,6 +42,8 @@ function PC_Base:ReceiveBeginPlay()
     end
     
     if self:IsLocalPlayerController() then
+        log.mark("PC_Base:ReceiveBeginPlay(): LocalPlayer init on pc!")
+
         self.bShowMouseCursor = false -- 只有本地玩家的鼠标显示状态有意义, 远端PC改这个没意义
 
         self:InitInputSystem() -- 这里拿的是UEnhancedInputLocalPlayerSubsystem, 只对本地玩家存在
@@ -50,6 +52,8 @@ function PC_Base:ReceiveBeginPlay()
 
         ui_util.init_ui_module(self:GetWorld()) -- UI只给本地视口创建, 不能对远端PC/服务端重复初始化
     end
+
+    -- is_client在ListenServer场景下会漏掉主机本地玩家, 主机那个窗口既是Server又是LocalPlayer, 写成is_client主机就不会初始化输入和UI了
 end
 
 ---@override
