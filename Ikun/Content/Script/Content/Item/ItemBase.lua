@@ -8,25 +8,25 @@
 local log =  require("Core/Log/log")
 
 ---@class ItemConfig
----@field ItemId id
----@field ItemName name
+---@field ItemId integer
+---@field ItemName string
 ---@field ItemDesc string
 ---@field ItemType integer
----@field StackNum count
+---@field StackNum integer
 ---@field ItemSubtype integer
----@field SpecialId id
+---@field SpecialId integer
 ---@field ItemTemplate string
 
 ---@class ItemBaseClass 物品类
----@field ItemId id 全局唯一id(对于同为消耗品,不同获得途径不进行合并)
----@field ItemCfgId id 物品配置表id
----@field ItemCount count 物品数量
+---@field ItemId integer 全局唯一id(对于同为消耗品,不同获得途径不进行合并)
+---@field ItemCfgId integer 物品配置表id
+---@field ItemCount integer 物品数量
 local ItemBaseClass = class.class 'ItemBaseClass' {}
 
 ---@public
----@param ItemId id
----@param ItemCfgId id
----@param ItemCount count
+---@param ItemId integer
+---@param ItemCfgId integer
+---@param ItemCount integer
 function ItemBaseClass:ctor(ItemId, ItemCfgId, ItemCount)
     self.ItemId = ItemId
     self.ItemCfgId = ItemCfgId

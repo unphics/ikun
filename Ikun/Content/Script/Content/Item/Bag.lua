@@ -8,11 +8,11 @@
 local log =  require("Core/Log/log")
 local make_weak = require("Utils/obj_util").make_weak
 
----@alias ItemChangeCallback fun(table:table, ItemCfgId: id, Count: count, ItemId: id)
+---@alias ItemChangeCallback fun(table:table, ItemCfgId: integer, Count: integer, ItemId: integer)
 
 ---@class BagClass
----@field private _ItemContainer table<id, ItemBaseClass> 物品容器<ItemId,物品对象>
----@field private __ItemRefByCfg table<id, ItemBaseClass[]> 根据配置id建立索引的物品容器
+---@field private _ItemContainer table<integer, ItemBaseClass> 物品容器<ItemId,物品对象>
+---@field private __ItemRefByCfg table<integer, ItemBaseClass[]> 根据配置id建立索引的物品容器
 ---@field private _Owner RoleBaseClass 拥有者
 ---@field private _OnItemAdd table[] 添加物品
 ---@field private _OnItemRemove table[] 移除物品
@@ -61,7 +61,7 @@ function BagClass:AddItem(Item)
 end
 
 ---@public 移除一个物品
----@param ItemId id
+---@param ItemId integer
 ---@return boolean
 function BagClass:RemoveItem(ItemId)
     if not self._ItemContainer[ItemId] then
@@ -89,8 +89,8 @@ end
 
 
 ---@public 移除一定数量的某类物品
----@param ItemCfgId id
----@param Count count
+---@param ItemCfgId integer
+---@param Count integer
 ---@return boolean
 function BagClass:RemoveItems(ItemCfgId, Count)
     if not self:CanRemoveItems(ItemCfgId, Count) then
@@ -126,8 +126,8 @@ function BagClass:RemoveItems(ItemCfgId, Count)
 end
 
 ---@public [Pure] 判断是否可以移除一定数量的某类物品
----@param ItemCfgId id
----@param Count count
+---@param ItemCfgId integer
+---@param Count integer
 ---@return boolean
 function BagClass:CanRemoveItems(ItemCfgId, Count)
     if not self.__ItemRefByCfg[ItemCfgId] then
@@ -144,8 +144,8 @@ function BagClass:CanRemoveItems(ItemCfgId, Count)
 end
 
 ---@public [Pure] 获取此类物品的数量
----@param ItemCfgId id
----@return count
+---@param ItemCfgId integer
+---@return integer
 function BagClass:GetItemCount(ItemCfgId)
     local total = 0
     if self.__ItemRefByCfg[ItemCfgId] then
@@ -157,7 +157,7 @@ function BagClass:GetItemCount(ItemCfgId)
 end
 
 ---@public 移动一定数量的某类物品到其他背包中
----@param Count count
+---@param Count integer
 ---@param TargetBag BagClass
 ---@return boolean
 function BagClass:TransferItems(ItemCfgId, Count, TargetBag)
