@@ -13,6 +13,7 @@ local UIDef = {
     UI_QuestMsg = '/Game/Ikun/UI/UMG/QuestMsg/UI_QuestMsg.UI_QuestMsg_C',
     UI_Bag = '/Game/Ikun/UI/UMG/Bag/UI_Bag.UI_Bag_C',
     UI_Entry = '/Game/Ikun/UI/UMG/Entry/UI_Entry.UI_Entry_C',
+    UI_DebugHud = '/Game/Ikun/UI/UMG/DebugHud/UI_DebugHud.UI_DebugHud_C',
 }
 
 return UIDef

@@ -42,7 +42,7 @@ function PC_Base:ReceiveBeginPlay()
     end
     
     if self:IsLocalPlayerController() then
-        log.mark("PC_Base:ReceiveBeginPlay(): LocalPlayer init on pc!")
+        log.info_fmt("PC_Base:ReceiveBeginPlay(): LocalPlayer init on pc! p=[%s], obj=[%s]", self, obj_util.dispname(self))
 
         self.bShowMouseCursor = false -- 只有本地玩家的鼠标显示状态有意义, 远端PC改这个没意义
 
