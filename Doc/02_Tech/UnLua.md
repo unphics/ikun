@@ -1,4 +1,5 @@
 # UnLua文档
+- 书签: 63行该写Push了
 
 ## 模块入口
 - 文件: UnLuaModule.h.cpp: UnLua的主入口文件
@@ -44,14 +45,25 @@
         - int GetBoundRef(UObject): 获取指定UObject在Lua里绑定的table的引用ID, 若没有绑定过则返回LUA_NOREF
         - void AddManualRef(L, UObject): 增加对指定对象的手动引用, 并将对应的代理对象压入栈顶
         - void RemoveManualRef(UObejct): 强制移除指定对象的手动引用
-    - 重要字段:
+    - 主要字段:
         - UnLua_ObjectMap: 对象映射表键, 存储所有已绑定的UObject对象
         - UnLua_ManualRefProxyMap: 手动引用代理映射, 存储手动引用的代理对象
         - 这两张表为弱引用表, 普通表会阻止对象gc, 弱引用表的value是弱引用, 当对象没有其他引用时可以被gc回收
         - ObjectRefs: UObject到Lua引用Id的映射表
     - 主要逻辑:
-
-- 疑问: 为啥AddManualRef的时候需要指定L, 但是Remove的时候又直接取this->Env->GetMainState了
+        - 构造: 
+            - 创建两个弱引用表
+            - 创建TSharedPtr元表: 当Lua中的TSharedPtr的userdata被gc时调用ReleaseSharedPtr
+            - 创建UnLuaManualRefProxy元表: 作用是当手动引用的代理对象被GC时, 调用ReleaseManualRef清理手动引用
+        - ReleaseSharedPtr:
+            1. 栈顶是要被gc的userdata, 当luaGC回收userdata时会吧要回收的userdata压入栈顶然后调用__gc, 此时栈上只有一个元素就是那个userdata
+            2. ptr->Reset
+        - ReleaseManualRef: 获取栈顶的Proxy, 根据弱引用表和Index表确认值正确, 然后调用RemoveManualObjectReference移除强引用
+        - NotifyUObjectDeleted: 对象销毁时Unbind
+        - NotifyUObjectLuaGC: 对象delete的时候this->Env->AutoObjectReference.Remove(Object)
+- 疑问: 
+    1.为啥AddManualRef的时候需要指定L, 但是Remove的时候又直接取this->Env->GetMainState了
+    2. Env->AutoObjectReference这啥
 ## 基础库
 - 文件: BaseLib/
 ## 数学库
