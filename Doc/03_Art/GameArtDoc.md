@@ -6,3 +6,5 @@
 > **目标读者:** 美术, 客户端程序
 ## 灯光
 - ProjectSetting/AutoExpsure : 自动曝光
+## 好的游戏参考
+- 像素: 星之海, 风来之国, 海柯:北境极光, AlabasterDawn, 八方旅人2
