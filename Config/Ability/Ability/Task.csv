@@ -7,3 +7,7 @@ Melee|0|PlayAnim||3|Success=PA_Success, Failed = PA_Failed||
 |-1|PlayAnim|PA_Success|1|||
 |-1|PlayAnim|PA_Failed|1|||
 |||||||
+|||||||
+Burn|0|PlayAnim||3|Success=PA_Success, Failed = PA_Failed||
+|-1|ApplyEffect|||||
+|||||||
