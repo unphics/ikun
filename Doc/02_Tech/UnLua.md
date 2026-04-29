@@ -61,6 +61,7 @@
         - ReleaseManualRef: 获取栈顶的Proxy, 根据弱引用表和Index表确认值正确, 然后调用RemoveManualObjectReference移除强引用
         - NotifyUObjectDeleted: 对象销毁时Unbind
         - NotifyUObjectLuaGC: 对象delete的时候this->Env->AutoObjectReference.Remove(Object)
+        - Push: todo
 - 疑问: 
     1.为啥AddManualRef的时候需要指定L, 但是Remove的时候又直接取this->Env->GetMainState了
     2. Env->AutoObjectReference这啥
