@@ -11,6 +11,10 @@
 -- -----------------------------------------------------------------------------
 --]]
 
+local log = require("Core/Log/log")
+
+local CHECK_NEW_INDEX_ON_NO_CTOR = true -- 非构造作用域的新类成员定义检查
+
 ---- 工具 ----
 
 local function DeepCopy(InObj)
@@ -74,11 +78,26 @@ local function New(InClass, ...)
             instance[k] = DeepCopy(v)
         end
     end
-    
-    setmetatable(instance, InClass)
+
+    if CHECK_NEW_INDEX_ON_NO_CTOR then
+        setmetatable(instance, {__index = InClass, __newindex = function(t, k, v)
+            if t.__field and t.__field[k] == nil then -- check new field
+                log.error_fmt("Class3: Can not set new field in no ctor function! key = [%s]", k)
+            end
+            rawset(t, k, v)
+        end})
+    else
+        setmetatable(instance, InClass)
+    end
 
     if instance.Ctor then
         instance:Ctor(...)
+        if CHECK_NEW_INDEX_ON_NO_CTOR then
+            instance.__field = {}
+            for k, _ in pairs(instance) do
+                instance.__field[k] = true
+            end
+        end
     end
     return instance
 end
@@ -88,7 +107,8 @@ local function Cast(InSelf, InTarget)
         return nil
     end
     local targetName = InTarget.__Name or InTarget.__ClassName
-    local current = getmetatable(InSelf)
+
+    local current = CHECK_NEW_INDEX_ON_NO_CTOR and getmetatable(InSelf).__index or getmetatable(InSelf)
 
     while current do
         if current.__ClassName == targetName then
