@@ -13,7 +13,7 @@
 
 local log = require("Core/Log/log")
 
-local CHECK_NEW_INDEX_ON_NO_CTOR = true -- 非构造作用域的新类成员定义检查
+local CHECK_NEW_INDEX_ON_NO_CTOR = false -- 非构造作用域的新类成员定义检查
 
 ---- 工具 ----
 
