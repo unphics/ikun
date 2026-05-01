@@ -72,7 +72,7 @@ end
 function RoleBaseClass:RoleTick(DeltaTime)
     self.AbilityPart:TickAbilityPart(DeltaTime, TimeLib.GetTimestampSec())
     if self.Agent then
-        self.Agent:TickAgent(DeltaTime)
+        -- self.Agent:TickAgent(DeltaTime)
     end
 end
 
