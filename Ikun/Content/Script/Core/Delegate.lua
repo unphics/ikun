@@ -28,7 +28,7 @@ function Delegate:Add(InObj, InFn)
     if not InObj or not InFn then
         return
     end
-    table.insert(self.tbCallback, make_weak({Obj = InObj, Fn = InFn}))
+    table.insert(self.tbCallback, setmetatable({Obj = InObj, Fn = InFn}, {__mode = "v"}))
 end
 
 ---@public
