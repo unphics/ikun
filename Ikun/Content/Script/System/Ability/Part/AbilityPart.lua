@@ -15,7 +15,6 @@
 
 local Class3 = require("Core/Class/Class3")
 local AbilitySystem = require("System/Ability/AbilitySystem")
-local AbilityClass = require("System/Ability/Ability/Ability")
 local TagUtils = require("System/Ability/Tag/TagUtils")
 local EffectorContainerClass = require("System/Ability/Effect/EffectorContainer")
 local log = require("Core/Log/log")
@@ -30,7 +29,7 @@ local AbilityContainerClass = require("System/Ability/Ability/AbilityContainer")
 ---@field protected _AttrSet AttrSetClass
 ---@field protected _PartTagContainer TagContainer
 ---@field protected _SlotInfos table<number, string[]> (SlotTag:AbilityKey[])
----@field protected _AbilityInfos table<string, AbilityClass> (AbilityKey:AbilityClass)
+---@field protected _AbilityInfos table<string, AbilityBaseClass> (AbilityKey:AbilityBaseClass)
 ---@field protected _RefAbilityToSlots table<string, string[]> (AbilityKey:number[])
 ---@field protected _ActiveEffectorContainer EffectorContainerClass
 ---@field protected _ActiveAbilityContainer AbilityContainerClass
@@ -65,27 +64,27 @@ function AbilityPartClass:GetAttrSet()
 end
 
 ---@public
----@param InAbility AbilityClass
+---@param InAbility AbilityBaseClass
 function AbilityPartClass:AddAbility(InAbility)
     self._ActiveAbilityContainer:AddAbility(InAbility)
 end
 
 ---@public
----@param InAbility AbilityClass
+---@param InAbility AbilityBaseClass
 function AbilityPartClass:RemoveAbility(InAbility)
     self._ActiveAbilityContainer:RemoveAbility(InAbility)
 end
 
 ---@public
 ---@param InTag integer
----@return AbilityClass[]
+---@return AbilityBaseClass[]
 function AbilityPartClass:FindAbilitiesByTag(InTag)
     return self._ActiveAbilityContainer:FindAbilitiesByTag(InTag)
 end
 
 ---@public
 ---@param InAbilitiesKey string
----@return AbilityClass[]
+---@return AbilityBaseClass[]
 function AbilityPartClass:FindAbilitiesByKey(InAbilitiesKey)
     return self._ActiveAbilityContainer:FindAbilitiesByKey(InAbilitiesKey)
 end

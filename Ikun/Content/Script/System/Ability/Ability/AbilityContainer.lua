@@ -18,7 +18,7 @@ local AbilityFactoryClass = require("System/Ability/Ability/AbilityFactory")
 local TagUtils = require("System/Ability/Tag/TagUtils")
 
 ---@class AbilityContainerClass
----@field private __Abilities AbilityClass[] 能力数组
+---@field private __Abilities AbilityBaseClass[] 能力数组
 ---@field private __OwnerPart AbilityPartClass
 local AbilityContainerClass = Class3.Class("AbilityContainerClass")
 
@@ -36,13 +36,13 @@ function AbilityContainerClass:TickAbilityContainer(InDeltaTime, InTimestampSec)
 end
 
 ---@public
----@param InAbility AbilityClass
+---@param InAbility AbilityBaseClass
 function AbilityContainerClass:AddAbility(InAbility)
     table.insert(self.__Abilities, InAbility)
 end
 
 ---@public
----@param InAbility AbilityClass
+---@param InAbility AbilityBaseClass
 function AbilityContainerClass:RemoveAbility(InAbility)
     for i = 1, #self.__Abilities do
         if self.__Abilities[i] == InAbility then

@@ -40,7 +40,7 @@ end
 
 ---@public
 ---@param InSkillKey string
----@param InAbility AbilityClass
+---@param InAbility AbilityBaseClass
 ---@return SkillBaseClass?
 function SkillFactoryClass:AcquireSkill(InSkillKey, InAbility)
     local config = SkillConfigClass.Get():LookupSkillConfig(InSkillKey)

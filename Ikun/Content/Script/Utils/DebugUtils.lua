@@ -92,7 +92,7 @@ DebugUtils.skill = function()
         local tagName = "Ability.Slot.Melee"
         local tag = TagUtils.RequestTag(tagName)
         local abilities = part:FindAbilitiesByTag(tag)
-        local aa = abilities[1] ---@type AbilityClass
+        local aa = abilities[1] ---@type AbilityBaseClass
         
         if aa:CanCast(_) then
             aa:CastSkill(_)

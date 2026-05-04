@@ -16,10 +16,10 @@ local ConfigSystem = require("System/Config/ConfigSystem")
 local FileSystem = require("System/File/FileSystem")
 local log = require('Core/Log/log')
 local AbilityConfigClass = require("System/Ability/Ability/AbilityConfig")
-local AbilityClass = require("System/Ability/Ability/Ability")
+local AbilityBaseClass = require("System/Ability/Ability/AbilityBase")
 
 ---@class AbilityFactoryClass
----@field private __CachedClasses table<string, AbilityClass>
+---@field private __CachedClasses table<string, AbilityBaseClass>
 local AbilityFactoryClass = Class3.Class("AbilityFactoryClass")
 
 local ABILITY_SCRIPT_PATH = "Module/Ability/Ability/"
@@ -40,7 +40,7 @@ end
 ---@public
 ---@param InAbilityKey string
 ---@param InOwnerAbilityPart AbilityPartClass
----@return AbilityClass?
+---@return AbilityBaseClass?
 function AbilityFactoryClass:CreateAbility(InAbilityKey, InOwnerAbilityPart)
     local config = AbilityConfigClass.Get():LookupAbilityConfig(InAbilityKey)
     if not config then
@@ -53,7 +53,7 @@ function AbilityFactoryClass:CreateAbility(InAbilityKey, InOwnerAbilityPart)
     return abilityClass:New(config, InOwnerAbilityPart)
 end
 
----@return AbilityClass?
+---@return AbilityBaseClass?
 function AbilityFactoryClass:__GetOrLoadAbilityClass(InClassName)
     local fullPath = nil
     if InClassName then
@@ -67,11 +67,11 @@ function AbilityFactoryClass:__GetOrLoadAbilityClass(InClassName)
             self.__CachedClasses[InClassName] = abilityClass
             return abilityClass
         else ---@todo zys 这里临时都用base
-            self.__CachedClasses[InClassName] = AbilityClass
+            self.__CachedClasses[InClassName] = AbilityBaseClass
             return abilityClass
         end
     end
-    log.error_fmt("AbilityFactoryClass:__GetOrLoadAbilityClass(): Invalid AbilityClass! path=[%s], name=[%s]", fullPath, InClassName)
+    log.error_fmt("AbilityFactoryClass:__GetOrLoadAbilityClass(): Invalid AbilityBaseClass! path=[%s], name=[%s]", fullPath, InClassName)
 end
 
 return AbilityFactoryClass

@@ -12,12 +12,6 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
-local AbilityClass = require("System/Ability/Ability/Ability")
-local FileSystem = require("System/File/FileSystem")
-local ConfigSystem = require("System/Config/ConfigSystem")
-local SkillBaseClass = require("System/Ability/Ability/SkillBase")
-local StrUtils = require("Core/Utils/StrUtils")
-local log = require("Core/Log/log")
 local AbilityConfigClass = require("System/Ability/Ability/AbilityConfig")
 local SkillConfigClass = require("System/Ability/Ability/SkillConfig")
 

@@ -17,7 +17,7 @@ local SkillFactoryClass = require("System/Ability/Ability/SkillFactory")
 ---@class SkillBaseClass
 ---@field protected _Manager AbilityManager
 ---@field protected _ConfigData SkillConfig
----@field protected _BelongAbility AbilityClass
+---@field protected _BelongAbility AbilityBaseClass
 local SkillBaseClass = Class3.Class("SkillBaseClass")
 
 function SkillBaseClass:Ctor(InConfigData)
@@ -25,7 +25,7 @@ function SkillBaseClass:Ctor(InConfigData)
 end
 
 ---@public
----@param InBelongAbility AbilityClass
+---@param InBelongAbility AbilityBaseClass
 ---@param InParams table
 ---@return boolean
 function SkillBaseClass:BeginSkill(InBelongAbility, InParams)

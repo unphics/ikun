@@ -27,16 +27,16 @@ local TagUtils = require("System/Ability/Tag/TagUtils")
 ---@field AbilityEffects table<string, string>
 ---@field Projectiles table<string, string>
 
----@class AbilityClass
+---@class AbilityBaseClass
 ---@field public AbilityTags TagContainer
 ---@field protected _AbilityConfigData AbilityConfig
 ---@field protected _AbilitySkills SkillBaseClass[]
 ---@field protected _OwnerPart AbilityPartClass
 ---@field protected _CastSkillTimeStamp number
-local AbilityClass = Class3.Class('AbilityClass')
+local AbilityBaseClass = Class3.Class('AbilityBaseClass')
 
 ---@public
-function AbilityClass:Ctor(InAbilityConfig, InOwner)
+function AbilityBaseClass:Ctor(InAbilityConfig, InOwner)
     self._AbilityConfigData = InAbilityConfig
     self._OwnerPart = InOwner
     self.AbilityTags = TagUtils.MakeContainer()
@@ -54,7 +54,7 @@ function AbilityClass:Ctor(InAbilityConfig, InOwner)
 end
 
 ---@public
-function AbilityClass:TickAbility(InDelaTime, InTimestampSec)
+function AbilityBaseClass:TickAbility(InDelaTime, InTimestampSec)
     for i = 1, #self._AbilitySkills do
         local skill = self._AbilitySkills[i]
         skill:TickSkill(InDelaTime, InTimestampSec)
@@ -64,7 +64,7 @@ end
 ---@public
 ---@param InParams table
 ---@return boolean
-function AbilityClass:CanCast(InParams) -- const
+function AbilityBaseClass:CanCast(InParams) -- const
     if (TimeLib.GetTimestampSec() - self._CastSkillTimeStamp) < self:GetAbilityConfig().AbilityCooldown then
         return false
     end
@@ -74,7 +74,7 @@ end
 ---@public
 ---@param InParams table
 ---@return boolean
-function AbilityClass:CastSkill(InParams)
+function AbilityBaseClass:CastSkill(InParams)
     self:StartCooldown()
     local key = self:GetAbilityConfig().AbilitySkills.EntrySkill
     local skill = SkillFactoryClass.Get():AcquireSkill(key, self)
@@ -94,18 +94,18 @@ end
 ---@public 由入口技能激活其他技能
 ---@param InSkillKey string
 ---@return boolean
-function AbilityClass:FollowSkill(InSkillKey)
+function AbilityBaseClass:FollowSkill(InSkillKey)
     return false
 end
 
 ---@public
-function AbilityClass:StartCooldown()
+function AbilityBaseClass:StartCooldown()
     self._CastSkillTimeStamp = TimeLib.GetTimestampSec()
 end
 
 ---@public
 ---@return number
-function AbilityClass:GetCooldown() -- const
+function AbilityBaseClass:GetCooldown() -- const
     if self:GetAbilityConfig().AbilityCooldown < 0.01 then
         return 0
     end
@@ -113,19 +113,19 @@ function AbilityClass:GetCooldown() -- const
 end
 
 ---@public
-function AbilityClass:GetTargetsInRange() -- const
+function AbilityBaseClass:GetTargetsInRange() -- const
 end
 
 ---@public
 ---@return AbilityConfig
-function AbilityClass:GetAbilityConfig() -- const
+function AbilityBaseClass:GetAbilityConfig() -- const
     return self._AbilityConfigData
 end
 
 ---@public
 ---@return AbilityPartClass
-function AbilityClass:GetAbilityOwnerPart() -- const
+function AbilityBaseClass:GetAbilityOwnerPart() -- const
     return self._OwnerPart
 end
 
-return AbilityClass
+return AbilityBaseClass

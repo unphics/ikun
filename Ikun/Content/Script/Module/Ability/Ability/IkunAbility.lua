@@ -13,9 +13,9 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
-local AbilityClass = require("System/Ability/Ability/Ability")
+local AbilityBaseClass = require("System/Ability/Ability/AbilityBase")
 
 ---@class IkunAbilityClass
-local IkunAbilityClass = Class3.Class("IkunAbilityClass", AbilityClass)
+local IkunAbilityClass = Class3.Class("IkunAbilityClass", AbilityBaseClass)
 
 return IkunAbilityClass
