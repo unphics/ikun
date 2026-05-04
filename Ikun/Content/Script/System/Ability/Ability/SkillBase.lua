@@ -17,7 +17,7 @@ local SkillFactoryClass = require("System/Ability/Ability/SkillFactory")
 ---@class SkillBaseClass
 ---@field protected _Manager AbilityManager
 ---@field protected _ConfigData SkillConfig
----@field protected _Ability AbilityClass
+---@field protected _BelongAbility AbilityClass
 local SkillBaseClass = Class3.Class("SkillBaseClass")
 
 function SkillBaseClass:Ctor(InConfigData)
@@ -25,11 +25,11 @@ function SkillBaseClass:Ctor(InConfigData)
 end
 
 ---@public
----@param InAbility AbilityClass
+---@param InBelongAbility AbilityClass
 ---@param InParams table
 ---@return boolean
-function SkillBaseClass:BeginSkill(InAbility, InParams)
-    self._Ability = InAbility
+function SkillBaseClass:BeginSkill(InBelongAbility, InParams)
+    self._BelongAbility = InBelongAbility
     return true
 end
 
@@ -40,7 +40,7 @@ end
 ---@public
 function SkillBaseClass:EndSkill()
     self:OnEndSKill()
-    self._Ability = nil
+    self._BelongAbility = nil
 end
 ---@protected
 function SkillBaseClass:OnEndSKill()
@@ -55,7 +55,7 @@ end
 ---@public
 ---@return table
 function SkillBaseClass:GetSkillOwner() -- const
-    return self._Ability:GetAbilityOwnerPart()
+    return self._BelongAbility:GetAbilityOwnerPart()
 end
 
 return SkillBaseClass

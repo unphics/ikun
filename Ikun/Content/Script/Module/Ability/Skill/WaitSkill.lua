@@ -15,7 +15,6 @@
 local Class3 = require("Core/Class/Class3")
 local SkillBaseClass = require("System/Ability/Ability/SkillBase")
 local log = require("Core/Log/log")
-
 local Task = require("System/Ability/Task/Task")
 
 ---@class WaitSkillClass: SkillBaseClass
@@ -24,8 +23,8 @@ local WaitSkillClass = Class3.Class('WaitSkillClass', SkillBaseClass)
 local mtg = UE.UObject.Load('/Game/Ikun/Chr/Mage/Montage/Mtg_Equip.Mtg_Equip')
 
 ---@override
-function WaitSkillClass:BeginSkill(InAbility, InParams)
-    SkillBaseClass.BeginSkill(self, InAbility, InParams)
+function WaitSkillClass:BeginSkill(InBelongAbility, InParams)
+    SkillBaseClass.BeginSkill(self, InBelongAbility, InParams)
     self.WaitTotalTime = self:GetSkillConfig().WaitTime
     self.WaitTiming = 0.0
 
