@@ -15,7 +15,7 @@
 local Class3 = require("Core/Class/Class3")
 local ConfigSystem = require("System/Config/ConfigSystem")
 local FileSystem = require("System/File/FileSystem")
-local log = require('Core/Log/log')
+local log = require("Core/Log/log")
 local SkillConfigClass = require("System/Ability/Ability/SkillConfig")
 local StrUtils = require("Core/Utils/StrUtils")
 

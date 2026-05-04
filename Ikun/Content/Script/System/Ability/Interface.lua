@@ -58,11 +58,5 @@ end
 function ICombatPart:FindBuffsByTag()
 end
 
-function ICombatPart:GetBuffContainer()
-end
-
-function ICombatPart:GetAttrSet()
-end
-
 function ICombatPart:OnAttributeChanged()
 end

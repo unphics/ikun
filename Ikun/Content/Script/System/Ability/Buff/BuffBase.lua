@@ -14,32 +14,20 @@
 
 local Class3 = require("Core/Class/Class3")
 local TagUtils = require("System/Ability/Tag/TagUtils")
-local BuffPolicyDef = require("System/Ability/Buff/BuffPolicyDef")
 local log = require("Core/Log/log")
-
----@class BuffConfig
----@field public BuffKey string
----@field public BuffName string
----@field public BuffTemplate string
----@field public BuffPolicy BuffPolicyDef
----@field public BuffDuration number
----@field public Period number
----@field public GrantedTags number[]        -- TagId[]
----@field public BlockTags number[]          -- TagId[]
----@field public CancelTags number[]         -- TagId[]
 
 ---@class BuffBaseClass
 ---@deprecated
 ---@field public BuffSource AbilityPartClass
 ---@field public BuffTarget AbilityPartClass
----@field protected _BuffConfig BuffConfig
+---@field private __BuffConfig BuffConfig
 ---@field protected _StartTime number
 ---@field protected _EndTime number
 local BuffBaseClass = Class3.Class("BuffBaseClass")
 
 ---@public
 function BuffBaseClass:Ctor(InConfig)
-    self._BuffConfig = InConfig
+    self.__BuffConfig = InConfig
     self._StartTime = 0
     self._EndTime = 0
 end
@@ -105,7 +93,7 @@ end
 ---@public
 ---@return BuffConfig
 function BuffBaseClass:GetBuffConfig() -- const
-    return self._BuffConfig
+    return self.__BuffConfig
 end
 
 return BuffBaseClass

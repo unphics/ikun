@@ -20,6 +20,8 @@ local BuffContainer = require("System/Ability/Buff/BuffContainer")
 local StrUtils = require("Core/Utils/StrUtils")
 local log = require("Core/Log/log")
 local BuffBaseClass = require("System/Ability/Buff/BuffBase")
+local BuffConfigClass = require("System/Ability/Buff/BuffConfig")
+local TimeLib = require("Core/TimeLib")
 
 ---@class BuffManager
 ---@deprecated
@@ -35,40 +37,15 @@ function BuffManager:Ctor(InSystem)
     self._BuffContainers = {}
 end
 
----@public [Init]
+---@public
 function BuffManager:InitBuffManager()
-    self:_LoadBuffConfig()
+    BuffConfigClass.Get()
 end
 
----@public [Config]
----@param InBuffKey string
----@return BuffConfig?
-function BuffManager:LookupBuffConfig(InBuffKey)
-    return self._BuffConfigs[InBuffKey]
-end
-
----@private [Config]
-function BuffManager:_LoadBuffConfig()
-    local file = FileSystem.Get():CreateConfigFileContext()
-    if not file then
-        log.error("zys BuffManager:_LoadBuffConfig(): Failed to create FileContext!")
-        return
-    end
-    file:ChangeDirectory("Ability")
-    file:ChangeDirectory("Buff")
-    local buffParser = ConfigSystem.Get():CreateCSVParser(file:ReadStringFile("Buff.csv"))
-    if not buffParser then
-        log.error("zys BuffManager:_LoadBuffConfig(): Failed to create CSVParser!")
-        return
-    end
-    self._BuffConfigs = buffParser:ToRows():ExtractHeaders():ToGrid():ToMap():GetResult()
-    buffParser:ReleaseParser()
-end
-
----@public [Tick]
+---@public
 ---@param InDeltaTime number
 function BuffManager:TickBuffManager(InDeltaTime)
-    local now = self:GetTimestampSec()
+    local now = TimeLib.GetTimestampSec()
     self:_TickBuffManager(InDeltaTime, now)
 end
 
@@ -115,24 +92,6 @@ function BuffManager:CreateBuff(InBuffKey)
     local buffClass = self:_LoadBuffClass(config.BuffTemplate)
     local buff = buffClass:New(config)
     return buff
-end
-
----@protected
----@return BuffBaseClass
-function BuffManager:_LoadBuffClass(InBuffClassName)
-    if StrUtils.IsEmpty(InBuffClassName) then 
-        return BuffBaseClass
-    else
-        local pathHeader = "Module/Ability/Buff/"
-        local buffClass = require(pathHeader..InBuffClassName) ---@type BuffBaseClass
-        return buffClass
-    end
-end
-
----@public [Pure]
----@return number
-function BuffManager:GetTimestampSec()
-    return self._System:GetTimestampSec()
 end
 
 return BuffManager
