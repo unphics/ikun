@@ -56,8 +56,11 @@ end
 ---@param InTag integer
 function AbilityContainerClass:FindAbilitiesByTag(InTag)
     local abilities = {}
-    ---@todo zys
     for i = 1, #self.__Abilities do
+        local ability = self.__Abilities[i]
+        if ability.AbilityTags:HasTag(InTag) then
+            table.insert(abilities, ability)
+        end
     end
     return abilities
 end

@@ -88,8 +88,9 @@ DebugUtils.skill = function()
     
     if role then
         local part = role.AbilityPart
-        local tagName = 'Ability.Slot.Melee'
-        local abilities = part:GetSlotAbility(TagUtils.RequestTag(tagName))
+        local tagName = "Ability.Slot.Melee"
+        local tag = TagUtils.RequestTag(tagName)
+        local abilities = part:FindAbilitiesByTag(tag)
         local aa = abilities[1] ---@type AbilityClass
         
         if aa:CanCast(_) then

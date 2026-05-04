@@ -7,7 +7,7 @@ RoleId|RoleName|RoleDesc|bUniqueRole|BelongKingdom|RoleAbility|RoleAttrSetClass|
 200005|布噜布噜布噜|||611001||IkunAttrSet|||410011, 410021|
 ||||||||||
 210001|刘秀||true|611001||IkunAttrSet|Equip=530001,UnEquip=530002,NormalOne=530201|||
-210002|鸽鸽||true|611001|Melee=AAMelee|IkunAttrSet|Equip=530001,UnEquip=530002,NormalOne=530201|||
+210002|鸽鸽||true|611001|AAMelee|IkunAttrSet|Equip=530001,UnEquip=530002,NormalOne=530201|||
 ||||||||||
 ||||||||||
 210101|村长|清瀑村npc|true|611001||IkunAttrSet||VillageHead|410011, 410021|

@@ -14,6 +14,7 @@
 local Class3 = require('Core/Class/Class3')
 local TimeLib = require('Core/TimeLib')
 local SkillFactoryClass = require('System/Ability/Ability/SkillFactory')
+local TagUtils = require("System/Ability/Tag/TagUtils")
 
 ---@class AbilityConfig
 ---@field AbilityKey string
@@ -27,6 +28,7 @@ local SkillFactoryClass = require('System/Ability/Ability/SkillFactory')
 ---@field Projectiles table<string, string>
 
 ---@class AbilityClass
+---@field public AbilityTags TagContainer
 ---@field protected _AbilityConfigData AbilityConfig
 ---@field protected _AbilitySkills SkillBaseClass[]
 ---@field protected _OwnerPart AbilityPartClass
@@ -37,6 +39,15 @@ local AbilityClass = Class3.Class('AbilityClass')
 function AbilityClass:Ctor(InAbilityConfig, InOwner)
     self._AbilityConfigData = InAbilityConfig
     self._OwnerPart = InOwner
+    self.AbilityTags = TagUtils.MakeContainer()
+
+    local tagNames = self:GetAbilityConfig().AbilityTags
+    for i = 1, #tagNames do
+        local tag = TagUtils.RequestTag(tagNames[i])
+        if tag then
+            self.AbilityTags:AddTag(tag)
+        end
+    end
 
     self._AbilitySkills = {}
     self._CastSkillTimeStamp = 0

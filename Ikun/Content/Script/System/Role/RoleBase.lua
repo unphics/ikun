@@ -102,8 +102,8 @@ function RoleBaseClass:InitComplexPart()
     if config.RoleAttrSetClass then
         self.AbilityPart:InitAttrSet(config.RoleAttrSetClass)
     end
-    if TableUtils.IsDict(config.RoleAbility) then
-        for _, abilityKey in pairs(config.RoleAbility) do
+    if TableUtils.IsArray(config.RoleAbility) then
+        for _, abilityKey in ipairs(config.RoleAbility) do
             local ability = AbilityFactoryClass.Get():CreateAbility(abilityKey,self.AbilityPart)
             if ability then
                 self.AbilityPart:AddAbility(ability)
