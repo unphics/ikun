@@ -12,7 +12,7 @@ function Task.PlayMontageAndWait(Skill, Montage)
     local task = Task:New()
     task.Skill = Skill
     task.Montage = Montage
-    local part = Skill:GetSkillOwner() ---@as AbilityPartClass
+    local part = Skill:GetSkillOwnerPart() ---@as AbilityPartClass
     task.Avatar = part:GetOwnerRole().Avatar
 
     return task

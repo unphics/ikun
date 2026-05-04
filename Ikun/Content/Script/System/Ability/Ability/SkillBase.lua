@@ -39,11 +39,7 @@ end
 
 ---@public
 function SkillBaseClass:EndSkill()
-    self:OnEndSKill()
     self._BelongAbility = nil
-end
----@protected
-function SkillBaseClass:OnEndSKill()
 end
 
 ---@public
@@ -53,8 +49,8 @@ function SkillBaseClass:GetSkillConfig() --const
 end
 
 ---@public
----@return table
-function SkillBaseClass:GetSkillOwner() -- const
+---@return AbilityPartClass
+function SkillBaseClass:GetSkillOwnerPart() -- const
     return self._BelongAbility:GetAbilityOwnerPart()
 end
 

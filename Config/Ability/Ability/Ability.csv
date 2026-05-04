@@ -2,3 +2,4 @@ AbilityKey|AbilityName|AbilityTemplate|AbilityCooldown|AbilityTags|AbilitySkills
 |||||||||
 Ability1|默认能力|IkunAbility|0||EntrySkill=Skill1||||
 AAMelee|近战攻击能力|IkunAbility|3|Ability.Slot.Melee|EntrySkill=ASMelee||||
+AAHitSelf|伤害自己能力|IkunAbility|3|Ability.Slot.Melee|EntrySkill=ASHitSelf||||

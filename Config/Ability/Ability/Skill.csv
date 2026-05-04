@@ -2,3 +2,4 @@ SkillKey|SkillName|SkillTemplate|Param1|Param2|Param3|Param4|Param5|Param6|Param
 ||||||||||||
 Skill1||||||||||||
 ASMelee|近战攻击技能|WaitSkill|WaitTime=3|||||||||
+ASHitSelf|攻击自己技能|HitSelfSkill||||||||||

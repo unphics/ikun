@@ -83,7 +83,8 @@ end
 
 DebugUtils.skill = function()
     log.mark("DebugUtils.skill begin")
-    local name = "鸽鸽"
+    -- local name = "鸽鸽"
+    local name = "刘秀"
     local role = RoleMgr:FindRoleByName(name)
     
     if role then

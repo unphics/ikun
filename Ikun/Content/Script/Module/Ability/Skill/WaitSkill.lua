@@ -28,7 +28,7 @@ function WaitSkillClass:BeginSkill(InBelongAbility, InParams)
     self.WaitTotalTime = self:GetSkillConfig().WaitTime
     self.WaitTiming = 0.0
 
-    local part = self:GetSkillOwner() ---@as AbilityPartClass
+    local part = self:GetSkillOwnerPart() ---@as AbilityPartClass
     local set = part:GetAttrSet()
     -- local effector = part:MakeEffector("Burn")
     local effector = part:MakeEffector("Burn")
@@ -52,8 +52,9 @@ function WaitSkillClass:TickSkill(InDeltaTime)
     self.WaitTiming = self.WaitTiming + InDeltaTime
 end
 
-function WaitSkillClass:OnEndSKill()
-    log.mark("WaitSkillClass:OnEndSKill()")
+function WaitSkillClass:EndSKill()
+    SkillBaseClass.EndSkill(self)
+    log.mark("WaitSkillClass:EndSKill()")
 end
 
 return WaitSkillClass
