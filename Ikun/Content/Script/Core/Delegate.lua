@@ -24,7 +24,7 @@ function Delegate:Ctor()
 end
 
 ---@public
-function Delegate:Add(InObj, InFn)
+function Delegate:AddCallback(InObj, InFn)
     if not InObj or not InFn then
         return
     end
@@ -32,7 +32,7 @@ function Delegate:Add(InObj, InFn)
 end
 
 ---@public
-function Delegate:Remove(InObj, InFn)
+function Delegate:RemoveCallback(InObj, InFn)
     for i, ele in pairs(self.tbCallback) do
         if ele.Obj == InObj and ele.Fn == InFn then
             table.remove(self.tbCallback, i)
@@ -42,7 +42,7 @@ function Delegate:Remove(InObj, InFn)
 end
 
 ---@public
-function Delegate:RemoveObj(InObj)
+function Delegate:RemoveCallbackByObj(InObj)
     for i = #self.tbCallback, 1, -1 do
         local ele = self.tbCallback[i]
         if ele.Obj == InObj then
@@ -52,12 +52,12 @@ function Delegate:RemoveObj(InObj)
 end
 
 ---@public
-function Delegate:Clear()
+function Delegate:ClearCallback()
     self.tbCallback = {}
 end
 
 ---@public
-function Delegate:Broadcast(...)
+function Delegate:BroadcastCallback(...)
     for _, ele in pairs(self.tbCallback) do
         ele.Fn(ele.Obj, ...)
     end

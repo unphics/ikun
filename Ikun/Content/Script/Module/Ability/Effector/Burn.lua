@@ -21,12 +21,14 @@ local AttrModifierFactoryClass = require("System/Ability/Attr/AttrModifierFactor
 ---@class BurnClass: EffectorBaseClass
 local BurnClass = Class3.Class("BurnClass", EffectorBaseClass)
 
-function BurnClass:OnActiveEffector()
+function BurnClass:ActiveEffector(InTimestampSec)
+    EffectorBaseClass.ActiveEffector(self, InTimestampSec)
     local mod_attack_add_10 = AttrModifierFactoryClass.Get():AcquireModifier(AttrDef.Attr.BaseAttack, 10)
     self.EffectorSource:GetAttrSet():AddModifier(mod_attack_add_10)
 end
 
-function BurnClass:OnApplyEffector()
+function BurnClass:ExecuteEffector()
+    EffectorBaseClass.ExecuteEffector(self)
     local ctx = self:MakeInteractContext()
     self:ApplyAttrInteract(ctx)
 end

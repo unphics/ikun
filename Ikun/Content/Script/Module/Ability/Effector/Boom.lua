@@ -21,7 +21,8 @@ local BoomClass = Class3.Class("BoomClass", EffectorBaseClass)
 function BoomClass:OnActiveEffector()
 end
 
-function BoomClass:OnApplyEffector()
+function BoomClass:ExecuteEffector()
+    EffectorBaseClass.ExecuteEffector(self)
     local ctx = self:MakeInteractContext()
     self:ApplyAttrInteract(ctx)
 end

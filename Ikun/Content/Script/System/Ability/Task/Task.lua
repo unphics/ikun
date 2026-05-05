@@ -34,7 +34,7 @@ function Task:_MontageEnd()
     local animInst = self.Avatar.Mesh:GetAnimInstance() ---@type UAnimInstance
     animInst.OnMontageEnded:Remove(self.Avatar, self._MontageEnd)
     log.mark("qqqqqq")
-    self.OnMontageEnd:Broadcast()
+    self.OnMontageEnd:BroadcastCallback()
 end
 
 return Task

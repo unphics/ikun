@@ -13,8 +13,6 @@
 --]]
 
 local Class3 = require("Core/Class/Class3")
-local log = require("Core/Log/log")
-local Delegate = require("Core/Delegate")
 
 ---@class TaskGraphClass
 local TaskGraphClass = Class3.Class("TaskGraph")

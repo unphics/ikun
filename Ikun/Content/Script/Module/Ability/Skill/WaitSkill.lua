@@ -33,7 +33,7 @@ function WaitSkillClass:BeginSkill(InBelongAbility, InParams)
     -- local effector = part:MakeEffector("Burn")
     local effector = part:MakeEffector("Burn")
     if effector then
-        part:TryApplyEffectorToSelf(effector)
+        part:ApplyEffectorToSelf(effector)
     end
     local task = Task.PlayMontageAndWait(self, mtg)
     self.fn = function() log.mark("task.OnMontageEnd") end
