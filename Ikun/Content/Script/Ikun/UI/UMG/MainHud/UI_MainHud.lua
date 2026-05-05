@@ -20,6 +20,9 @@ local UI_MainHud = UnLuaClass()
 
 ---@override
 function UI_MainHud:Construct()
+    local player = UE.UGameplayStatics.GetPlayerPawn(ui_util.uimgr.GameWorld, 0) ---@type BP_ChrBase
+    local role = player:GetRole()
+    role.AbilityPart:GetOnBuffChangedDelegate():AddCallback(self, self.__OnBuffChanged)
 end
 
 ---@override
@@ -36,6 +39,14 @@ function UI_MainHud:__UpdateHealthBar()
     if curHealth and maxHealth then
         self.BarHealth:SetPercent(curHealth / maxHealth)
     end
+end
+
+---@private
+function UI_MainHud:__OnBuffChanged()
+    local player = UE.UGameplayStatics.GetPlayerPawn(ui_util.uimgr.GameWorld, 0) ---@type BP_ChrBase
+    local role = player:GetRole()
+    local buffs = role.AbilityPart:GetAllBuffs()
+    ui_util.set_list_items(self.ListBuff, buffs)
 end
 
 return UI_MainHud
