@@ -127,3 +127,61 @@
     - 多数情况下, 这不是推翻, 而是: 抽象层次变细, 职责拆分更明确, 旧层被重新解释或下沉
     - 真正的大推翻通常发生在: 早期抽象方向错了, 一开始把所有东西都塞进一个Buff子类里, 后来发现完全不适合扩展
 - 结论: 会大幅重构, 但更理想得是: 通过逐步加层/拆职责来演化, 而不是一次性推倒重来
+# 职责下沉或者抽象新层的判断依据是什么?
+## 什么时候职责应该下沉?
+    - 职责下沉的本质是: 某个逻辑更贴近某个局部概念, 而不是高层协调逻辑; 也就是: 这个逻辑到底是谁自己的事情?
+    1. 逻辑是否属于局部业务语义，而不是高层协调
+        - 高层通常负责: orchestration(编排), lifecycle, scheduling, ownership
+        - 低层通常负责:  domain_logic,  local_rules, calculation
+        - 例如: RefreshDuration,RemoveOnExpire等生命周期逻辑应该留在Buff; CalculatePoisonDamage,SpreadNearby等具体玩法逻辑应该下沉到Effect
+        - 一句话: 协调上浮, 业务下沉
+    2. 高层开始出现大量if/switch_on_subtype
+        - 如if type == poison, if type == burn; 高层开始知道太多子类细节, 应该下沉, 因为高层不知道他们两个怎么算
+        - 应该直接变成effect.Execute
+        - 第二个信号: 高层开始分支处理具体业务类型
+    3. 同类逻辑只被某个局部使用; 如果一个逻辑只服务一个局部概念, 那么**通常应该靠近它**
+        - 第三个信号: 逻辑的使用范围很局部
+## 什么时候应该抽象新层
+    - 抽新层的本质: 发现多个对象共享同一变化维度，但当前没有一个独立概念承载它
+        - 比如一开始Buff有Duration, 后来发现：
+            - buff有duration
+            - sub_effect也有duration
+            - delayed_trigger也有duration
+        - duration不只属于Buff, 而是: timed_behavior, 这是新概念
+        - 于是抽: EffectRuntime, 新层出现
+    - 第一信号: 同一个概念在多个地方重复出现
+        - 比如: RemainTime/NextTick/RefreshPolicy出现在Buff/Effect/Trigger
+        - 说明: 这不是某一个私有类的独立实现, 而是一个独立的维度, 应该抽层
+    - 第二信号: 同一组字段一起移动
+        - 比如: Duration/Interval/NextTrigger/RepeatCount总是一起出现, 这通常说明他们共同描述某个概念, 比如(Schedule/Runtime), 应该成对象
+        - 这是经典 data_clump_smell(数据团块)
+    - 第三信号: 一个类承担多个独立变化轴
+        - 比如Buff同时处理:lifecycle,state,behavior,timing
+        - 变化原因不同: 策划改持续时间, 程序改tick, 新玩法改状态
+        - 说明: 变化轴太多, 该拆层
+        - 这其实对应SRP(单一职责原则)
+        - 问：这个类会因为几种不同原因而修改? 如果很多: 该拆
+    - 第四信号: 同类逻辑被不同系统共享
+## 什么时候不要抽层
+- 有时工程师容易过度抽象, 所以也有反信号: 
+    1. 只有一个地方用，而且变化不明显
+        - 例如InvincibleDuration只用一次
+        - 没必要: IDurationStrategyFactory
+        - 别把小猫包装成宇宙飞船
+    2. 抽象后名字很虚
+        - 例如你想抽层，但只能起名: ThingManager, DataProcessor, NodeHandler
+        - 危险信号: 说明概念还没成熟
+        - 好抽象通常名字自然: BuffState, EffectRuntime, Modifier
+        - 如果名字都起不出来, 先别抽
+    3. 抽象后没有减少变化传播
+        - 如果原来改3个文件, 抽一层后改4个文件, 那白忙
+        - 抽象应该让: 变化被局部吸收, 否则就是ceremoney
+## 一个判断流程
+- 纠结的时候问自己:
+    - 这个逻辑是谁的事情? 如果是明显是局部玩法, 下沉
+    - 高层是不是开始知道子类细节? 如果是: 下沉
+    - 这个概念是不是在多个地方重复出现? 如果是: 抽层
+    - 这些字段是不是总一起出现? 如果是: 抽对象/抽层
+    - 当前类是不是因为很多不同原因改动? 如果是: 拆层
+    - 抽出来后是否减少变化传播? 如果否: 别抽
+- 局部逻辑下沉, 共性维度抽层, 变化轴分离
