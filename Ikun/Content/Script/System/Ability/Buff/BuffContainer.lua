@@ -14,11 +14,14 @@
 
 local Class3 = require("Core/Class/Class3")
 local TimeLib = require("Core/TimeLib")
+local Delegate = require("Core/Delegate")
+local TableUtils = require("Core/Utils/TableUtils")
 
 ---@class BuffContainerClass
 ---@deprecated
 ---@field protected _OwnerPart AbilityPartClass
 ---@field protected _Buffs BuffBaseClass[]
+---@field protected _OnBuffChanged Delegate
 local BuffContainerClass = Class3.Class("BuffBaseClass")
 
 ---@public
@@ -27,6 +30,7 @@ local BuffContainerClass = Class3.Class("BuffBaseClass")
 function BuffContainerClass:Ctor(InBuffManager, InPart)
     self._BuffManager = InBuffManager
     self._OwnerPart = InPart
+    self._OnBuffChanged = Delegate:New()
     self._Buffs = {}
 end
 
@@ -49,6 +53,7 @@ end
 function BuffContainerClass:AddBuff(InBuffInst)
     InBuffInst:ApplyBuff(TimeLib.GetTimestampSec())
     table.insert(self._Buffs, InBuffInst)
+    self:GetOnBuffChangedDelegate():BroadcastCallback()
 end
 
 ---@public
@@ -59,9 +64,21 @@ function BuffContainerClass:RemoveBuff(InBuffInst)
         if buff == InBuffInst then
             InBuffInst:DeactivateBuff()
             table.remove(self._Buffs, i)
+            self:GetOnBuffChangedDelegate():BroadcastCallback()
             break
         end
     end
+end
+
+---@public
+---@return Delegate
+function BuffContainerClass:GetOnBuffChangedDelegate() -- const
+    return self._OnBuffChanged
+end
+
+---@public
+function BuffContainerClass:GetAllBuffs()
+    return TableUtils.ShallowCopy(self._Buffs)
 end
 
 return BuffContainerClass
