@@ -12,6 +12,8 @@
 --]]
 
 local UnLuaClass = require("Core/UnLua/Class")
+local log = require("Core/Log/log")
+local AttrDef = require("System/Ability/Attr/AttrDef")
 
 ---@class UI_MainHud: UI_MainHud_C
 local UI_MainHud = UnLuaClass()
@@ -20,8 +22,20 @@ local UI_MainHud = UnLuaClass()
 function UI_MainHud:Construct()
 end
 
--- ---@override
--- function UI_MainHud:Tick(MyGeometry, InDeltaTime)
--- end
+---@override
+function UI_MainHud:Tick(MyGeometry, InDeltaTime)
+    self:__UpdateHealthBar()
+end
+
+---@private
+function UI_MainHud:__UpdateHealthBar()
+    local player = UE.UGameplayStatics.GetPlayerPawn(ui_util.uimgr.GameWorld, 0) ---@type BP_ChrBase
+    local role = player:GetRole()
+    local curHealth = role.AbilityPart:GetAttrSet():GetAttrValue(AttrDef.Attr.CurHealth)
+    local maxHealth = role.AbilityPart:GetAttrSet():GetAttrValue(AttrDef.Attr.MaxHealth)
+    if curHealth and maxHealth then
+        self.BarHealth:SetPercent(curHealth / maxHealth)
+    end
+end
 
 return UI_MainHud
