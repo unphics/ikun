@@ -34,5 +34,7 @@
 |Reload|重启VsCode|
 |SynthWave'84|常用主题|
 |EditCSV|好用的csv查看与编辑插件|
+## Git
+- 如果Git管理的是mklink /J得到的目录, 那么需要配置"git config core.trustctime false"和"git config core.fsmonitor false"才能正常刷新
 ## 注意:
     - Lua语言的...后不要跟任何东西如(..., "qqq")
