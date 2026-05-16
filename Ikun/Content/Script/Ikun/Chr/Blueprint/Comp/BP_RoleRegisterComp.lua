@@ -7,6 +7,7 @@
 
 local UnLuaClass = require("Core/UnLua/Class")
 local GameInit = require("Core/Init/GameInit")
+local log = require("Core/Log/log")
 
 ---@class BP_RoleRegisterComp: BP_RoleRegisterComp_C
 ---@field Role RoleBaseClass

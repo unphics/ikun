@@ -45,8 +45,6 @@ InitRing.GameInst_ReceiveInit = {
 InitRing.GameInst_ScenePreInit = {
     InitPoint.ResetLevelInit,
 }
-InitRing.GameInst_ScenePostInit = {
-}
 ---@type InitPoint[]
 InitRing.PC_BeginPlay = {
     InitPoint.InitLoc,
@@ -55,12 +53,14 @@ InitRing.PC_BeginPlay = {
 InitRing.PC_BeginPlay_Delay_1 = {
     InitPoint.InitSite,
     InitPoint.InitRole,
-    InitPoint.OpenDefaultUI,
 }
 ---@type InitPoint[]
 InitRing.PC_BeginPlay_Delay_2 = {
     InitPoint.InitBagComp,
     InitPoint.InitFinish,
+}
+InitRing.GameInst_ScenePostInit = {
+    InitPoint.OpenDefaultUI,
 }
 
 ---@diagnostic disable-next-line duplicate-type

@@ -23,6 +23,7 @@ local EffectConfig = require("System/Ability/Effect/EffectConfig")
 local EffectFactoryClass = require("System/Ability/Effect/EffectFactory")
 local AbilityFactoryClass = require("System/Ability/Ability/AbilityFactory")
 local AbilityContainerClass = require("System/Ability/Ability/AbilityContainer")
+local BuffContainerClass = require("System/Ability/Buff/BuffContainer")
 
 ---@class AbilityPartClass
 ---@field protected _Owner RoleBaseClass
@@ -33,6 +34,7 @@ local AbilityContainerClass = require("System/Ability/Ability/AbilityContainer")
 ---@field protected _RefAbilityToSlots table<string, string[]> (AbilityKey:number[])
 ---@field protected _ActiveEffectorContainer EffectorContainerClass
 ---@field protected _ActiveAbilityContainer AbilityContainerClass
+---@field protected _ActiveBuffContainer BuffContainerClass
 local AbilityPartClass = Class3.Class("AbilityPartClass")
 
 ---@public
@@ -41,6 +43,7 @@ function AbilityPartClass:Ctor(InOwner)
     self._PartTagContainer = TagUtils.MakeContainer()
     self._ActiveEffectorContainer = EffectorContainerClass:New(AbilitySystem.Get():GetEffectManager(), self)
     self._ActiveAbilityContainer = AbilityContainerClass:New(self)
+    self._ActiveBuffContainer = BuffContainerClass:New(self)
 
     self._SlotInfos = {}
     self._AbilityInfos = {}
@@ -63,26 +66,26 @@ function AbilityPartClass:GetAttrSet()
     return self._AttrSet
 end
 
----@public
+---@public [Ability]
 ---@param InAbility AbilityBaseClass
 function AbilityPartClass:AddAbility(InAbility)
     self._ActiveAbilityContainer:AddAbility(InAbility)
 end
 
----@public
+---@public [Ability]
 ---@param InAbility AbilityBaseClass
 function AbilityPartClass:RemoveAbility(InAbility)
     self._ActiveAbilityContainer:RemoveAbility(InAbility)
 end
 
----@public
+---@public [Ability]
 ---@param InTag integer
 ---@return AbilityBaseClass[]
 function AbilityPartClass:FindAbilitiesByTag(InTag)
     return self._ActiveAbilityContainer:FindAbilitiesByTag(InTag)
 end
 
----@public
+---@public [Ability]
 ---@param InAbilitiesKey string
 ---@return AbilityBaseClass[]
 function AbilityPartClass:FindAbilitiesByKey(InAbilitiesKey)
@@ -128,7 +131,7 @@ end
 
 ---@public [Effect]
 ---@param InEffectorInst EffectorBaseClass
-function AbilityPartClass:TryApplyEffectorToSelf(InEffectorInst)
+function AbilityPartClass:ApplyEffectorToSelf(InEffectorInst)
     InEffectorInst.EffectorTarget = self
     if not InEffectorInst:CanActiveEffector() then
         return
@@ -136,7 +139,36 @@ function AbilityPartClass:TryApplyEffectorToSelf(InEffectorInst)
     self._ActiveEffectorContainer:AddEffector(InEffectorInst)
 end
 
----@public
+---@public [Buff]
+---@param InBuffInst BuffBaseClass
+function AbilityPartClass:ApplyBuffToSelf(InBuffInst)
+    self._ActiveBuffContainer:AddBuff(InBuffInst)
+end
+
+---@public [Buff]
+---@param InBuffInst BuffBaseClass
+function AbilityPartClass:RemoveBuff(InBuffInst)
+end
+
+---@public [Buff]
+function AbilityPartClass:RemoveBuffsByTag()
+end
+
+---@public [Buff]
+function AbilityPartClass:FindBuffsByTag()
+end
+
+---@public [Buff]
+function AbilityPartClass:GetAllBuffs()
+end
+
+---@public [Buff]
+---@return Delegate
+function AbilityPartClass:GetOnBuffChangedDelegate()
+    return self._ActiveBuffContainer:GetOnBuffChangedDelegate()
+end
+
+---@public [Info]
 function AbilityPartClass:GetOwnerRole() -- const
     return self._Owner
 end

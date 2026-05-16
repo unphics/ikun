@@ -91,6 +91,10 @@ function AbilityBaseClass:CastSkill(InParams)
     end
 end
 
+---@public
+function AbilityBaseClass:CancelSkill()
+end
+
 ---@public 由入口技能激活其他技能
 ---@param InSkillKey string
 ---@return boolean

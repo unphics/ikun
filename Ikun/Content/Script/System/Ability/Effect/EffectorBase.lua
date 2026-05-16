@@ -73,21 +73,18 @@ function EffectorBaseClass:ActiveEffector(InTimestampSec)
 
     if self._Interval >= 0 then
         self._LastApplyTime = self._StartTime
-        self:ApplyEffector()
+        self:ExecuteEffector()
     else
         self._LastApplyTime = -1
     end
-
-    self:OnActiveEffector(InTimestampSec)
 end
+
 ---@public
-function EffectorBaseClass:OnActiveEffector(InTimestampSec)
+function EffectorBaseClass:ReactiveEffector()
 end
 
 ---@public
 function EffectorBaseClass:InactiveEffector()
-    self:OnInactiveEffector()
-
     local grantedTags = self:GetEffectorConfig().GrantedTags
     if grantedTags then
         for i = 1, #grantedTags do
@@ -102,16 +99,12 @@ function EffectorBaseClass:InactiveEffector()
     self._ActiveModifiers = {}
 end
 
----@private
-function EffectorBaseClass:OnInactiveEffector()
-end
-
 ---@public
 function EffectorBaseClass:TickEffector(InDeltaTime, InTimestampSec)
     if self._Interval > 0 and self._LastApplyTime then
         local nextApplyTime = self._LastApplyTime + self._Interval
         while InTimestampSec >= nextApplyTime do
-            self:ApplyEffector()
+            self:ExecuteEffector()
             nextApplyTime = nextApplyTime + self._Interval
         end
         self._LastApplyTime = nextApplyTime - self._Interval -- 把多加以判断那个时间是否走了的未来时间剪掉
@@ -119,15 +112,7 @@ function EffectorBaseClass:TickEffector(InDeltaTime, InTimestampSec)
 end
 
 ---@private
-function EffectorBaseClass:ApplyEffector()
-    self:OnApplyEffector()
-end
----@private
-function EffectorBaseClass:OnApplyEffector()
-end
-
----@public
-function EffectorBaseClass:ReapplyEffector()
+function EffectorBaseClass:ExecuteEffector()
 end
 
 ---@public 判断是否过期
@@ -138,7 +123,7 @@ end
 
 ---@public
 ---@return EffectorConfig
-function EffectorBaseClass:GetEffectorConfig()
+function EffectorBaseClass:GetEffectorConfig() -- const
     return self._EffectConfig
 end
 
