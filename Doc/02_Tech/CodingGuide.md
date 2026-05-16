@@ -27,12 +27,15 @@
 |临时变量|小驼峰|
 ## 文件头
 - 时间格式转换工具: https://www.lddgo.net/convert/datetime-format-converter
-## VsCode插件
+## VsCode
 |插件|说明|
 |-|-|
 |EmmyLua|Lua调试, Lua开发智能提示|
 |Reload|重启VsCode|
 |SynthWave'84|常用主题|
 |EditCSV|好用的csv查看与编辑插件|
+|配置||
+|-|-|
+|Render Whitespace|渲染空白字符, 显示Tab或异常字符|
 ## 注意:
     - Lua语言的...后不要跟任何东西如(..., "qqq")
