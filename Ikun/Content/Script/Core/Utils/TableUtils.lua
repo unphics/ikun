@@ -150,4 +150,31 @@ TableUtils.RemoveIf = function(InTable, InFn)
     end
 end
 
+---@param InTable table
+---@param InDepth integer
+---@param InStr string
+---@param InBlank string
+local function __WatchTableRecurse(InTable, InDepth, InStr, InBlank)
+    InBlank = InBlank .. "|  "
+    for k, v in pairs(InTable) do
+        if type(v) == "table" then
+            InStr = __WatchTableRecurse(v, InDepth + 1, InStr, InBlank)
+            InStr = string.format
+        else
+            InStr = string.format("%s\n%s[%s] = %s", InStr, InBlank, tostring(k), tostring(v))
+        end
+    end
+    return InStr
+end
+
+---@todo 应该还没写完吧
+---@public
+---@return string
+TableUtils.WatchTable = function(InTable, InTableName)
+    InTableName = InTableName or ""
+    local str = __WatchTableRecurse(InTable, 0, "", "")
+    local fmt = string.format("WatchTable[%s,%s] = {\n%s\n}", InTableName, tostring(InTable), str)
+    return fmt
+end
+
 return TableUtils
