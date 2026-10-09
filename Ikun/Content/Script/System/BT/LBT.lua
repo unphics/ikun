@@ -181,6 +181,53 @@ function LBT:PrintBT()
 end
 
 --[[
+Name: BP_Enemy_C_0, Id : 1001
+BT: Team_Fight_2
+Root : Running    <---------
+        Select : Running    <---------
+                Sequence : Running    <---------
+                        Service : LService_NeedSwitchBT : Running    <---------
+                        Service : LService_ConsiderBehav : Running    <---------LastBehav:nil, CurBehav:进攻行为, NextBehav:nil
+                        Service : LService_MoveBehav : Running    <---------
+                        Sequence : Running    <---------
+                                Task : LTask_NextBehav : Success
+                                Select : Running    <---------
+                                        Decorator : LDecorator_IsBehav [特殊行为] : Failure
+                                        Sequence : Invalid
+                                                Task : LTask_ClearBBValue : Invalid
+                                                Task : LTask_GetTBInfo2BB : Invalid
+                                                Task : LTask_RotateSmooth : Invalid
+                                                Task : LTask_WaitMoveArrived : Invalid
+                                        Decorator : LDecorator_IsBehav [生存行为] : Failure
+                                        Sequence : Invalid
+                                                Task : LTask_NeedSupportSurvive : Invalid
+                                                Task : LTask_FindSafeArea : Invalid
+                                                Task : LTask_WaitMoveArrived : Invalid
+                                        Decorator : LDecorator_IsBehav [支援行为] : Failure
+                                        Sequence : Invalid
+                                                Task : LTask_FindSupportTarget : Invalid
+                                                Task : LTask_SelectAbility : Invalid
+                                                Task : LTask_ActiveAbility : Invalid
+                                        Decorator : LDecorator_IsBehav [进攻行为] : Running    <---------
+                                        Sequence : Running    <---------
+                                                Task : LTask_GetTBInfo2BB : Success
+                                                Decorator : LDecorator_BBCondition [FightTarget] : Running    <---------
+                                                Sequence : Running    <---------
+                                                        Task : LTask_SelectAbility : Success
+                                                        Select : Running    <---------
+                                                                Decorator : LDecorator_NeedRepos4Ability : Running    <---------
+                                                                Sequence : Running    <---------
+                                                                        Task : LTask_ClearBBValue : Success
+                                                                        Task : LTask_FindLoc4Ability : Success
+                                                                        Task : LTask_RotateSmooth : Success
+                                                                        Task : LTask_Wait-0.1 : Running    <---------
+                                                                        Task : LTask_Move4Repos : Invalid
+                                                                Task : LTask_RandomResult : Invalid
+                                                        Task : LTask_AimTarget : Invalid
+                                                        Task : LTask_ActiveAbility : Invalid
+]]
+
+--[[
                   Root
                     ↓
                   Select
